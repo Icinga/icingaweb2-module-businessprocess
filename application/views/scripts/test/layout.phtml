@@ -1,3 +1,69 @@
+<?php
+$bp = (object) [
+    'operator' => 'or',
+    'status'   => 'ok',
+    'handled'  => false,
+    'children' => [
+        'DNS Service' => (object) [
+            'status'   => 'ok',
+            'handled'  => false,
+            'children' => [],
+        ],
+        'Exchange' => (object) [
+            'operator' => 'and',
+            'status'   => 'critical',
+            'handled'  => false,
+            'children' => [
+                'Exchange 1' => (object) [
+                    'status'   => 'critical',
+                    'handled'  => false,
+                    'children' => [],
+                ],
+                'Exchange 2' => (object) [
+                    'status'   => 'warning',
+                    'handled'  => true,
+                    'children' => [],
+                ],
+                'Exchange 3' => (object) [
+                    'status'   => 'ok',
+                    'handled'  => false,
+                    'children' => [],
+                ]
+            ],
+        ]
+    ]
+];
+
+function renderProcess($name, $process)
+{
+    $html = sprintf('<table class="bp %s%s%s">
+  <tbody>
+    <tr><th%s><a href="#">%s</a></th><td><a href="#">%s</a></td></tr>
+',
+        $process->status,
+        $process->handled ? ' handled' : '',
+        empty($process->children) ? '' : ' operator',
+        empty($process->children) ? ' class="service"' : sprintf(' rowspan="%d"', count($process->children) + 1),
+        empty($process->children) ? '&nbsp;' : $process->operator,
+        $name
+    );
+    if (! empty($process->children)) {
+//        $html .= '<tbody>
+//';
+        foreach ($process->children as $name => $child) {
+            $html .= '<tr><td>' . renderProcess($name, $child) . '</td></tr>';
+        }
+//        $html .= '</tbody>';
+    }
+    $html .= '</tbody></table>';
+    return $html;
+}
+
+
+?>
 <div class="content">
 <h1>Testlayout</h1>
+
+<?= renderProcess('Mail Process', $bp) ?>
+
 </div>

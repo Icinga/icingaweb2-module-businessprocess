@@ -190,3 +190,133 @@ span.collapsible {
     color: transparent;
 }
 
+
+table.bp {
+  width: 100%;
+}
+table.bp td {
+    margin-bottom: 2px;
+}
+
+table.bp {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+/*
+
+// TEST BORDER
+table.bp {
+  border-collapse: separate;
+  border-spacing: 2px;
+}
+
+table.bp th {
+  border: 3px solid black;
+}
+
+table.bp td {
+  border: 1px solid black;
+}
+
+*/
+
+table.bp {
+    margin: 0;
+    padding: 0;
+}
+
+table.bp table.bp {
+    margin-top: 0.5em;
+    margin-bottom: 0.2em;
+    margin-left: 0.2em;
+}
+
+table.bp td {
+  padding: 0;
+}
+
+table.bp > tbody > tr > th.service {
+  width: 1em;
+}
+
+
+table.bp th > a, table.bp td > a {
+  display: block;
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+
+table.bp th > a {
+  width: 2em;
+  min-height: 1.6em;
+}
+
+table.bp td > a {
+  line-height: 1.6em;
+  padding-left: 0.2em;
+}
+
+table.bp th > a:hover, table.bp td > a:hover {
+  text-decoration: none;
+  display: block;
+  border: 1px solid black;
+}
+
+table.bp > tbody > tr > th {
+  color: white;
+  background-color: @colorUnknown;
+  border-left: 3px solid transparent;
+  width: 2em;
+}
+
+
+table.bp.ok > tbody > tr > th {
+  border-color: @colorOk;
+  background-color: transparent;
+}
+
+table.bp.warning > tbody > tr > th {
+  border-color: @colorWarning;
+  background-color: @colorWarning;
+}
+
+table.bp.critical > tbody > tr > th {
+  border-color: @colorCritical;
+  background-color: @colorCritical;
+}
+
+table.bp.handled > tbody > tr > th {
+  background-color: transparent;
+}
+
+table.bp > tbody > tr:first-child > * {
+  border-top: 3px solid transparent;
+}
+
+table.bp > tbody > tr > th {
+  border-left: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+}
+
+table.bp.operator > tbody > tr > th {
+  border-bottom: none;
+}
+
+table.bp.ok.operator > tbody > tr:first-child > * {
+  border-color: @colorOk;
+}
+
+table.bp.warning.operator > tbody > tr:first-child > * {
+  border-color: @colorWarning;
+}
+
+table.bp.critical.operator > tbody > tr:first-child > * {
+  border-color: @colorCritical;
+}
+
+.service {
+  background-image: url('../img/icons/host.png');
+  background-repeat: no-repeat;
+  background-position: 0.5em 0.5em;
+}
+
