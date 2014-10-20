@@ -1,0 +1,22 @@
+<div class="controls">
+<span style="float:right; margin-right: 1em; margin-top: 0.5em;">
+<a href="<?= $this->href('bpapp/process/show', array(
+    'bp' => $this->bpname
+)) ?>">Render</a>
+</span>
+<?= $this->tabs ?>
+</div>
+<pre>
+<?php
+
+$cnt = 0;
+$lines = preg_split('~\r?\n~', $this->source);
+$len = ceil(log(count($lines), 10));
+
+foreach ($lines as $line) {
+    $cnt++;
+    printf("%0" . $len . "d: %s\n", $cnt, $this->escape($line));
+}
+
+?>
+</pre>

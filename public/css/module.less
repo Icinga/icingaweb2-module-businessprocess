@@ -1,0 +1,192 @@
+
+.content a {
+  color: #333;
+  text-decoration: none;
+}
+
+.content a:hover {
+  text-decoration: underline;
+}
+
+table.businessprocess, table.businessprocess table {
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+table.businessprocess {
+    width: 100%;
+}
+
+table.businessprocess tr {
+    margin: 0;
+    padding: 0;
+    font-family: Verdana, Helvetica, Arial, sans-serif;
+    font-size: 0.97em; 
+}
+
+table.businessprocess tr tr tr tr {
+    font-size: 1em;
+}
+
+table.businessprocess th, table.businessprocess td {
+    margin: 0;
+    padding: 0.3em 0 0 0.3em;
+    text-align: left;
+    vertical-align: middle;
+    line-height: 1.7em;
+}
+
+table.businessprocess th {
+/* IE? */
+    padding: 0.2em 1em 0.2em 1em;
+    cursor: pointer;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+}
+
+table.businessprocess th.hovered.state {
+     text-decoration: underline; 
+}
+
+a img {
+    border: none;
+}
+
+table.businessprocess th.bptitle {
+    border-radius: 0.5em 0.5em 0.5em 0;
+    -moz-border-radius: 0.5em 0.5em 0.5em 0;
+}
+
+table.collapsed > tbody > tr > th.bptitle {
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+}
+
+table.businessprocess th.operator {
+    width: 1em;
+    padding: 0.5em;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 0 0 0.5em 0.5em;
+    -moz-border-radius: 0 0 0.5em 0.5em;
+
+}
+
+table.businessprocess td.service {
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5;
+    width: 6em;
+    text-align: center;
+    font-weight: bold;
+}
+
+table.businessprocess td.service img {
+    float: left;
+}
+
+table.businessprocess, table.businessprocess table {
+    border-top: 2px solid transparent;
+    border-left: 2px solid transparent;
+}
+
+table.businessprocess .state {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+}
+
+.state.unknown {
+    background-color: @colorUnknown;
+}
+
+.state.critical {
+    background-color: @colorCritical;
+    color: white;
+}
+
+.state.critical.handled {
+    background-color: @colorCriticalHandled;
+    color: #000;
+}
+
+.state.warning {
+    background-color: @colorWarning;
+}
+
+.state.unknown.handled {
+    background-color: @colorUnknownHandled;
+}
+
+.state.pending {
+    background-color: @colorPending;
+}
+
+.state.warning.handled {
+    background-color: @colorWarningHandled;
+    color: #000;
+}
+
+.state.ok {
+    background-color: @colorOk;
+    color: #fff;
+}
+
+th.hovered.state.unknown {
+    background-color: #aac;
+}
+
+table.businessprocess th p.problems {
+    font-weight: normal;
+    font-size: 0.7em;
+    margin: 0;
+    padding: 0;
+    display: none;
+}
+
+.collapsed > tbody > tr > th > p.problems {
+    display: inline;
+}
+
+table.businessprocess th p.problems span {
+    padding: 3px;
+}
+
+table.businessprocess th.hovered p.problems > .state {
+    text-decoration: none;
+}
+
+span.collapsible {
+    background-image: url("../img/bpapp/icon_collapse.png");
+    background-repeat: no-repeat;
+    width: 1.7em;
+    height: 1.7em;
+    background-position: left center;
+    display: block;
+    float: left;
+}
+
+.collapsed span.collapsible {
+    background: url("../img/bpapp/icon_expand.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+
+.collapsed tr.children {
+    display: none;
+}
+
+.inlinepie {
+    display: none;
+    width: 2em;
+    float: right;
+    margin-top: 0.1em;
+    text-align: center;
+    vertical-align: middle;
+    color: transparent;
+}
+

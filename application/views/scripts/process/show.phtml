@@ -1,0 +1,239 @@
+<?php
+
+// TODO: This view script is pretty ugly. Clean the mess up, use existing
+//       view helpers and create new ones (or Widgets) where needed
+
+use Icinga\Module\Bpapp\BpNode;
+use Icinga\Module\Bpapp\ServiceNode;
+
+if ($this->showMenu) {
+
+    if ($this->compact) {
+ 
+    } else {
+
+?>
+<div class="controls">
+<?= $this->tabs ?>
+</div>
+
+<?php
+
+    }
+}
+
+function stateName($state)
+{
+    $names = array('ok', 'warning', 'critical', 'unknown');
+    return $names[$state];
+}
+
+function showNode($self, $node, & $slas = array(), $opened_param, $id_prefix = '', $level = 0, $hidden = false)
+{
+    $opened = true;
+    $htm = '';
+
+    $opened_list = array();
+    foreach ($opened_param as $opened_cmps) {
+        if (strstr($opened_cmps, '_') === false) {
+            $key = $opened_cmps;
+            $opened_cmps = false;
+        } else {
+            list($key, $opened_cmps) = preg_split('/_/', $opened_cmps, 2);
+        }
+
+        if (! array_key_exists($key, $opened_list)) {
+            $opened_list[$key] = array();
+        }
+        if ($opened_cmps) {
+            $opened_list[$key][] = $opened_cmps;
+        }
+
+    }
+
+    if ($node instanceof BpNode && $node->getState() == 0) {
+        $opened = false;
+    }
+    if ($level > 0) $opened = false;
+    $opened = false;
+
+
+// Example "open three problem levels"
+    if ($node instanceof BpNode && $node->getState() > 0 && $level < 2) {
+//    $opened = true;
+    }
+
+    if ($hidden) {
+        $opened = false;
+    }
+    
+    $id = $id_prefix . $node->getAlias();
+
+    if (array_key_exists(md5($id), $opened_list)) {
+        $opened_list = $opened_list[md5($id)];
+        $opened = true;
+    } else {
+        $opened_list = array();
+    }
+    if (! $opened) {
+        $extra = ' collapsed';
+    } else {
+        $extra = '';
+    }
+
+    $htm .= '<table class="'
+          . ($level === 0 ? 'businessprocess' : '')
+          . $extra
+          . '" id="' . md5($id) . '" data-base-target="col2">';
+
+
+          
+    if ($node->isMissing()) {
+        $state_classes = 'state missing';
+    } else {
+        $state_classes = 'state ' . stateName($node->getState());
+    }
+    if ($node->isInDowntime() || $node->isAcknowledged()) {
+        $state_classes .= ' handled';
+    }
+
+    if ($node instanceof BpNode) {
+        $htm .= '<tr><th colspan="2" class="' . $state_classes . ' bptitle">'
+              . '<span class="collapsible">&nbsp;</span>'
+              . preg_replace('~^\d{2}\.\s*~', '', $node->getAlias());
+/*              . ': '
+              . $node->getState()
+              . '/'
+              . $node->getSortingState();
+        */
+        if ($node->isInDowntime())   $htm .= ' <img src="' . $self->baseUrl('/img/bpapp/downtime.gif') . '" alt="" title="' . mt('bpapp', 'Downtime') . '" class="icon" />';
+        if ($node->isAcknowledged()) $htm .= ' <img src="' . $self->baseUrl('/img/bpapp/ack.gif') . '" alt="" title="' . mt('bpapp', 'Acknowledged') . '" class="icon" />';
+
+        if ($node->hasUrl()) {
+            $htm .= ' <a href="' . $node->getUrl() . '" title="'
+                  . mt('bpapp', 'More information') . ': ' . $node->getUrl()
+                  . '"><img src="'
+                  . $self->baseUrl('/img/bpapp/help.gif')
+                  . '" alt="" class="icon" /></a>';
+        }
+
+        // Summaries, PIE
+if (! $self->compact) {
+        $summary = $node->getStateSummary();
+        $sumtxt = array();
+        foreach ($summary as $k => $v) {
+            if ($v > 0) {
+                $sumtxt[] = $v . 'x ' . stateName($k);
+            }
+        }
+        $sumtxt = implode(', ', $sumtxt);
+        if ($sumtxt === '') $sumtxt = '-';
+        if ($level === 0) {
+            $htm .= '<span class="inlinepie" title="'
+                 . $sumtxt
+                 . '">'
+                 . implode(',', $node->getStateSummary())
+                 . '</span>';
+        }        
+}
+        // END of PIE
+    $alias = $node->getAlias();
+    if (array_key_exists($alias, $slas)) {
+        $sla = $slas[$alias];
+        $sla_style = '';
+        if ($sla->level === null) $sla->level = 0;
+        if ($sla->value < $sla->level) {
+            $sla_style = ' color: red; font-weight: bold;';
+        } elseif ($sla->value < $sla->level * 1.002) {
+            $sla_style = ' color: orange;';
+        }
+        $htm .= sprintf(' <span style="float: right; font-weight: normal;">[SLA] <span style="' . $sla_style . '">%0.3f%%</span> (Soll: %0.2f%%)</span>',  $sla->value, $sla->level);
+    }
+
+        
+        // Problem info:
+        if ($node->getState() > 0) {
+            $problems = array();
+            foreach ($node->getChildren() as $child) {
+                if ($child->getState() > 0) {
+                    $problems[] = '<span class="state ' . stateName($child->getState()) . '">' . htmlspecialchars($child->getAlias()) . '</span>';
+                }
+            }
+            $htm .= ': <p class="problems">' . implode(', ', $problems) . '</p>';
+        }
+        // END of Problem Info
+        
+        $htm .= "</th></tr>\n";
+
+        if ($node->hasChildren()) {
+            $htm .= '<tr class="children">'
+                  . '<th class="' . $state_classes . ' operator"' . ($node->hasInfoCommand() ? ' rowspan="2"' : '') . '>'
+                  . $node->getOperator()
+                  . '</th><td>';
+//$htm .= '<!--';
+
+if ($node->hasInfoCommand()) {
+    $htm .= ' <b><i>' . nl2br(htmlspecialchars(strip_tags(
+
+     preg_replace('~(?:echo\s+(["\']))+(.+?)\1+~s', '$2',
+
+ preg_replace('~\<br\s*/?\>~', "\n", $node->getInfoCommand()
+
+ )
+ )))) . '</i></b></td></tr><tr class="children"><td>';
+}
+//$htm .= '-->';
+
+            foreach ($node->getChildren() as $name => $child) {
+                $htm .= showNode($self, $child, $slas, $opened_list, $id_prefix . $id . '_', $level + 1, ! $opened);
+            }
+            $htm .= "</td></tr>\n";
+        }
+    } else {
+        $htm .= '<tr><td class="service ' . $state_classes . '">';
+        if ($node->isInDowntime())   $htm .= ' <img src="' . $self->baseUrl('/img/bpapp/downtime.gif') . '" class="icon" alt="" />';
+        if ($node->isAcknowledged()) $htm .= ' <img src="' . $self->baseUrl('/img/bpapp/ack.gif') . '" class="icon" alt="" />';
+        $htm .= stateName($node->getState())
+              . '</td><td><a href="'
+              . $self->href('monitoring/show/host', array(
+                    'host' => $node->getHostname(),
+                    'backend' => $self->backend
+                ))
+              . '">'
+              . $node->getHostname()
+              . '</a>'
+              . ($node instanceof ServiceNode
+                 ? ' / <a href="' . $self->href('monitoring/show/service', array(
+                    'host'    => $node->getHostname(),
+                    'service' => $node->getServiceDescription(),
+                    'backend' => $self->backend
+                )) . '">' . $node->getServiceDescription() . '</a>'
+                 : '')
+/* DEBUG
+              . ': '
+              . $node->getState()
+              . '/'
+              . $node->getSortingState()*/
+              ;
+        $htm .= "</td></tr>\n";
+    }
+          
+    $htm .= '</table>';
+    $htm .= "\n";
+    return $htm;
+}
+
+echo '<div class="content">';
+
+if (! is_array($this->opened)) { $this->opened = array(); }
+
+?><? foreach ($this->bp->getRootNodes() as $name => $node): ?>
+<?= showNode($this, $node, $this->slas, $this->opened, 'bp_') ?>
+<? endforeach ?>
+<? if ($this->bp->hasWarnings()): ?>
+<h2>Warnings</h2>
+<? foreach ($this->bp->getWarnings() as $warning): ?>
+<?= $this->escape($warning) ?><br />
+<? endforeach ?>
+<? endif ?>
+</div>

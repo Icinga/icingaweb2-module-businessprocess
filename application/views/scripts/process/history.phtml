@@ -1,0 +1,94 @@
+<?php
+$months = array(
+	'Jänner',
+	'Februar',
+	'März',
+	'April',
+	'Mai',
+	'Juni',
+	'Juli',
+	'August',
+	'September',
+	'Oktober',
+	'November',
+	'Dezember',
+);
+?><table style="width: 100%;">
+<tr>
+<th style="width: 10%;">&nbsp;</th>
+<? for ($i = 1; $i <= 12; $i++): ?>
+<th style="width: 7.5%; border: 1px solid black;"><?= $months[$i - 1] ?></th>
+<? endfor ?>
+</tr>
+</table>
+
+<div style="overflow: auto">
+<table>
+<tr>
+<? for ($i = 1; $i <= 12; $i++): ?>
+<td style="border-right: 1px solid black;"><div style="width: 600px; height: 1px; overflow: hidden;">&nbsp;</div><?= $months[$i - 1] ?></td>
+<? endfor ?>
+</tr>
+</table>
+</div>
+
+<div style="overflow: auto; ">
+<?php
+
+function stateColor($state)
+{
+	switch($state) {
+		case 0:
+			$color = '#0f0';
+			break;
+		case 1:
+			$color = 'orange';
+			break;
+		case 2:
+			$color = '#f00';
+			break;
+		default: // und case 3
+			$color = '#ccc';
+	}
+	return $color;
+}
+
+$next_color = null;
+$color = null;
+
+$start = mktime(0, 0, 0, 0, 0, (int) date('Y'));
+$current_offset = $start;
+$htm = '';
+$cnt = 0;
+$last_host = null;
+$last_service = null;
+foreach ($this->history as $entry) {
+if ($entry->hostname !== $last_host || $entry->service !== $last_service) {
+
+echo '<span style="clear: both;" />' . "\n";
+}
+$cnt++;
+if ($cnt > 10000) break;
+	$duration = $entry->timestamp - $current_offset;
+	if ($next_color === null) {
+		$color = stateColor($entry->last_state);
+	} else {
+		$color = $next_color;
+	}
+	$next_color = stateColor($entry->state);
+
+	if ($entry->state == 0) {
+		$offset = ceil($duration / 3600 / 6);
+	} else {
+		$offset = floor($duration / 3600 / 6);
+	}
+	echo '<div style="overflow: hidden; height: 10px; float: left; width: ' . $offset . 'px; background-color:' . $color . ';">&nbsp;</div>';
+	$current_offset += $duration;
+	
+	$last_host = $entry->hostname;
+$last_service = $entry->service;
+
+}
+
+
+?></div>
