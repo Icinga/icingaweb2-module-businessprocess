@@ -1,322 +1,243 @@
-
-.content a {
-  color: #333;
-  text-decoration: none;
-}
-
-.content a:hover {
-  text-decoration: underline;
-}
-
-table.businessprocess, table.businessprocess table {
-    border-collapse: collapse;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-}
-
-table.businessprocess {
-    width: 100%;
-}
-
-table.businessprocess tr {
-    margin: 0;
-    padding: 0;
-    font-family: Verdana, Helvetica, Arial, sans-serif;
-    font-size: 0.97em; 
-}
-
-table.businessprocess tr tr tr tr {
-    font-size: 1em;
-}
-
-table.businessprocess th, table.businessprocess td {
-    margin: 0;
-    padding: 0.3em 0 0 0.3em;
-    text-align: left;
-    vertical-align: middle;
-    line-height: 1.7em;
-}
-
-table.businessprocess th {
-/* IE? */
-    padding: 0.2em 1em 0.2em 1em;
-    cursor: pointer;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-}
-
-table.businessprocess th.hovered.state {
-     text-decoration: underline; 
-}
-
-a img {
-    border: none;
-}
-
-table.businessprocess th.bptitle {
-    border-radius: 0.5em 0.5em 0.5em 0;
-    -moz-border-radius: 0.5em 0.5em 0.5em 0;
-}
-
-table.collapsed > tbody > tr > th.bptitle {
-    border-radius: 0.5em;
-    -moz-border-radius: 0.5em;
-}
-
-table.businessprocess th.operator {
-    width: 1em;
-    padding: 0.5em;
-    text-align: center;
-    vertical-align: middle;
-    border-radius: 0 0 0.5em 0.5em;
-    -moz-border-radius: 0 0 0.5em 0.5em;
-
-}
-
-table.businessprocess td.service {
-    border-radius: 0.5em;
-    -moz-border-radius: 0.5;
-    width: 6em;
-    text-align: center;
-    font-weight: bold;
-}
-
-table.businessprocess td.service img {
-    float: left;
-}
-
-table.businessprocess, table.businessprocess table {
-    border-top: 2px solid transparent;
-    border-left: 2px solid transparent;
-}
-
-table.businessprocess .state {
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-}
-
-.state.unknown {
-    background-color: @colorUnknown;
-}
-
-.state.critical {
-    background-color: @colorCritical;
+/* Default font settings */
+.content > h1 a {
     color: white;
-}
-
-.state.critical.handled {
-    background-color: @colorCriticalHandled;
-    color: #000;
-}
-
-.state.warning {
-    background-color: @colorWarning;
-}
-
-.state.unknown.handled {
-    background-color: @colorUnknownHandled;
-}
-
-.state.pending {
-    background-color: @colorPending;
-}
-
-.state.warning.handled {
-    background-color: @colorWarningHandled;
-    color: #000;
-}
-
-.state.ok {
-    background-color: @colorOk;
-    color: #fff;
-}
-
-th.hovered.state.unknown {
-    background-color: #aac;
-}
-
-table.businessprocess th p.problems {
+    float: right;
     font-weight: normal;
-    font-size: 0.7em;
+    margin-right: 1em;
+}
+
+div.bp {
+  font-size: 0.82em;
+  margin-bottom: 4px;
+}
+
+.simulation div.bp {
+    border-right: 1em solid @colorCriticalHandled;
+    padding-right: 1em;
+    background: white;
+}
+
+table.bp {
+    /* Business process table styling starts here */
+    width: 100%;
     margin: 0;
     padding: 0;
-    display: none;
+    color: #0a0a0a;
+    border-collapse: collapse;
+    border-spacing: 0;
+    box-sizing: border-box;
+    font-size: 1em;
+    font-weight: normal;
+
+    /* Reset all paddings and margins, just to be on the safe side */
+    th, td {
+        padding: 0;
+        margin: 0;
+    }
+
+    /* Left outer margin on nested BPs */
+    table.bp {
+
+        width: 99.6%;
+        margin-left: .4%;
+        margin-top: 4px;
+
+    }
 }
 
-.collapsed > tbody > tr > th > p.problems {
-    display: inline;
-}
-
-table.businessprocess th p.problems span {
-    padding: 3px;
-}
-
-table.businessprocess th.hovered p.problems > .state {
-    text-decoration: none;
-}
-
-span.collapsible {
-    background-image: url("../img/bpapp/icon_collapse.png");
-    background-repeat: no-repeat;
-    width: 1.7em;
-    height: 1.7em;
-    background-position: left center;
-    display: block;
-    float: left;
-}
-
-.collapsed span.collapsible {
-    background: url("../img/bpapp/icon_expand.png");
-    background-repeat: no-repeat;
-    background-position: left center;
-}
-
-.collapsed tr.children {
-    display: none;
-}
-
-.inlinepie {
-    display: none;
-    width: 2em;
-    float: right;
-    margin-top: 0.1em;
-    text-align: center;
-    vertical-align: middle;
-    color: transparent;
-}
-
-
-table.bp {
-  width: 100%;
-}
-table.bp td {
-    margin-bottom: 2px;
-}
-
-table.bp {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-/*
-
-// TEST BORDER
-table.bp {
-  border-collapse: separate;
-  border-spacing: 2px;
+/* We try our best to avoid flickering */
+table.bp th, table.bp td a {
+/* SHIT margin-bottom: 5px; */
 }
 
 table.bp th {
-  border: 3px solid black;
+  font-weight: bold;
 }
 
-table.bp td {
-  border: 1px solid black;
+/* END of font settings */
+
+/* No focus outline on our links, look ugly */
+table.bp a:focus {
+    outline: none;
 }
 
-*/
-
-table.bp {
-    margin: 0;
-    padding: 0;
+/* No link underlining */
+table.bp a, table.bp a:hover {
+  text-decoration: none;
 }
 
-table.bp table.bp {
-    margin-top: 0.5em;
-    margin-bottom: 0.2em;
-    margin-left: 0.2em;
+/* White font for all hovered objects */
+table.bp.hovered {
+    color: white;
 }
 
-table.bp td {
-  padding: 0;
+table.bp.handled.hovered {
+    color: #0a0a0a;
 }
 
-table.bp > tbody > tr > th.service {
-  width: 1em;
+table.bp a {
+    color: inherit;
 }
 
+/* Show a pointer when hovering th, highlighting is JS-triggered */
+table.bp tr th   {
+    cursor: pointer;
+}
+
+/* Expand / collapse styling */
+table.bp.process {
+    > tbody > tr > th {
+        background-image: url('../img/bpapp/icon_collapse.png');
+        background-repeat: no-repeat;
+        background-position: 0.3em 0.3em;
+    }
+
+    &.collapsed {
+        > tbody > tr > th {
+            background-image: url('../img/bpapp/icon_expand.png');
+        }
+        table.bp, th span {
+            display: none;
+        }
+    }
+}
 
 table.bp th > a, table.bp td > a {
-  display: block;
-  text-decoration: none;
-  border: 1px solid transparent;
+    display: block;
+    text-decoration: none;
 }
 
-table.bp th > a {
-  width: 2em;
-  min-height: 1.6em;
+table.bp span.op {
+    width: 1.5em;
+    min-height: 1.5em;
+    margin-top: 1em;
+    display: block;
+    line-height: 2em;
+    transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
 }
 
 table.bp td > a {
-  line-height: 1.6em;
-  padding-left: 0.2em;
+    line-height: 2em;
+    padding-left: 0.5em;
+    display: block;
 }
 
-table.bp th > a:hover, table.bp td > a:hover {
-  text-decoration: none;
-  display: block;
-  border: 1px solid black;
+table.bp.node td > a {
+    padding-left: 2.5em;
+    background-repeat: no-repeat;
+    background-position: 0.5em 0.5em;
 }
 
-table.bp > tbody > tr > th {
-  color: white;
-  background-color: @colorUnknown;
-  border-left: 3px solid transparent;
-  width: 2em;
+table.bp .icon {
+    float: left;
+    margin-top: 0.4em;
+    margin-right: 0.4em;
 }
 
-
-table.bp.ok > tbody > tr > th {
-  border-color: @colorOk;
-  background-color: transparent;
+table.bp.node.service td > a {
+    background-image: url('../img/icons/service.png');
 }
 
-table.bp.warning > tbody > tr > th {
-  border-color: @colorWarning;
-  background-color: @colorWarning;
+table.bp.node.host td > a {
+    background-image: url('../img/icons/host.png');
 }
 
-table.bp.critical > tbody > tr > th {
-  border-color: @colorCritical;
-  background-color: @colorCritical;
+/* Border defaults */
+table.bp {
+    border-width: 0;
+    border-style: solid;
+    border-color: transparent;
 }
 
-table.bp.handled > tbody > tr > th {
-  background-color: transparent;
+table.bp tr, table.bp tbody, table.bp th, table.bp td, table.bp.node td > a {
+    border-width: 0;
+    border-style: inherit;
+    border-color: inherit;
 }
 
-table.bp > tbody > tr:first-child > * {
-  border-top: 3px solid transparent;
+table.bp th {
+    border-left-width: 0.5em;
+    width: 1.5em;
 }
 
-table.bp > tbody > tr > th {
-  border-left: 3px solid transparent;
-  border-bottom: 3px solid transparent;
+table.bp.node td > a {
+    border-left-width: 0.5em;
 }
 
-table.bp.operator > tbody > tr > th {
-  border-bottom: none;
+/* Operator: upper line */
+table.bp.operator > tbody > tr:first-child > * {
+    border-top-width: 1px;
+    border-top-style: dotted;
+}
+table.bp.operator.hovered > tbody > tr:first-child > * {
+    border-top-style: solid;
 }
 
-table.bp.ok.operator > tbody > tr:first-child > * {
-  border-color: @colorOk;
+table.bp {
+    &.ok               { border-color: @colorOk; }
+    &.warning          { border-color: @colorWarning; }
+    &.warning.handled  { border-color: @colorWarningHandled; }
+    &.critical         { border-color: @colorCritical; }
+    &.critical.handled { border-color: @colorCriticalHandled; }
+    &.unknown          { border-color: @colorUnknown; }
+    &.unknown.handled  { border-color: @colorUnknownHandled; }
+    &.hovered {
+        &.ok > tbody > tr > {
+            th, td > a { background-color: @colorOk; }
+        }
+        &.warning > tbody > tr > {
+            th, td > a { background-color: @colorWarning; }
+        }
+        &.warning.handled > tbody > tr {
+            > th, > td > a { background-color: @colorWarningHandled; }
+        }
+        &.critical > tbody > tr > {
+            th, td > a { background-color: @colorCritical; }
+        }
+        &.critical.handled > tbody > tr > {
+            th, td > a { background-color: @colorCriticalHandled; }
+        }
+        &.unknown > tbody > tr > {
+            th, td > a { background-color: @colorUnknown; }
+        }
+        &.unknown.handled > tbody > tr > {
+            th, td > a { background-color: @colorCUnknownHandled; }
+        }
+    }
 }
 
-table.bp.warning.operator > tbody > tr:first-child > * {
-  border-color: @colorWarning;
+table.bp table.bp table.bp table.bp {
+    font-size: 0.9em;
+}
+table.bp table.bp table.bp table.bp table.bp {
+    font-size: 1em;
+}
+/* Transitions */
+table.bp {
+
+    // That's ugly, I know
+    .transition(@val1, @val2) {
+        transition: @val1, @val2;
+        -moz-transition: @val1, @val2;
+        -o-transition: @val1, @val2;
+        -webkit-transition: @val1, @val2;
+    }
+    > tbody > tr > td > a, > tbody > tr > th {
+        // Fade out
+        .transition(color 0.5s 0.1s step-start,
+         background-color 0.5s 0.1s ease-out
+        );
+    }
+
+    &.hovered > tbody > tr {
+        > td > a, > th {
+            // Fade in
+            .transition(color 0.0s 0.0s step-start,
+             background-color 0.0s 0.0s ease-out
+            );
+        }
+    }
 }
 
-table.bp.critical.operator > tbody > tr:first-child > * {
-  border-color: @colorCritical;
-}
-
-.service {
-  background-image: url('../img/icons/host.png');
-  background-repeat: no-repeat;
-  background-position: 0.5em 0.5em;
-}
 
