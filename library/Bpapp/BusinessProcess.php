@@ -153,7 +153,7 @@ class BusinessProcess
         );
     }
 
-    protected function addNode($name, Node $node)
+    public function addNode($name, Node $node)
     {
         if (array_key_exists($name, $this->nodes)) {
             $this->warn(
