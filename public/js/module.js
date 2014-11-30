@@ -24,9 +24,11 @@
             this.module.on('beforerender', this.rememberOpenedBps);
             this.module.on('rendered',     this.fixOpenedBps);
 
-            this.module.on('mouseenter', 'table.businessprocess th.bptitle', this.titleMouseOver);
-            this.module.on('mouseleave', 'table.businessprocess th.bptitle', this.titleMouseOut);
             this.module.on('click', 'table.businessprocess th', this.titleClicked);
+
+            this.module.on('mouseenter', 'table.bp > tbody > tr > td > a', this.procMouseOver);
+            this.module.on('mouseenter', 'table.bp > tbody > tr > th', this.procMouseOver);
+            this.module.on('mouseleave', 'div.bp', this.procMouseOut);
 
             this.module.icinga.logger.debug('BP module loaded');
         },
@@ -36,10 +38,23 @@
          *
          * TODO: Skip on tablets
          */
-        titleMouseOver: function (event) {
+        procMouseOver: function (event) {
             event.stopPropagation();
-            var el = $(event.currentTarget);
-            el.addClass('hovered');
+            var $hovered = $(event.currentTarget);
+            var $el = $hovered.closest('table.bp');
+
+            if ($el.is('.operator')) {
+                if (!$hovered.closest('tr').is('tr:first-child')) {
+                    // Skip hovered space between cols
+                    return;
+                }
+            } else {
+               // return;
+            }
+
+            $('table.bp.hovered').not($el.parents('table.bp')).removeClass('hovered'); // not self & parents
+            $el.addClass('hovered');
+            $el.parents('table.bp').addClass('hovered');
         },
 
         /**
@@ -47,10 +62,8 @@
          *
          * TODO: Skip on tablets
          */
-        titleMouseOut: function (event) {
-            event.stopPropagation();
-            var el = $(event.currentTarget);
-            el.removeClass('hovered');
+        procMouseOut: function (event) {
+            $('table.bp.hovered').removeClass('hovered');
         },
 
         /**
