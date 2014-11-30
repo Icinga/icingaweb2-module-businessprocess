@@ -82,9 +82,9 @@
                 }
             });
 
-            $container.data('refreshParams', {
+            /*$container.data('refreshParams', {
                 opened: self.listOpenedBps($container)
-            });
+            });*/
         },
 
         fixOpenedBps: function(event) {
