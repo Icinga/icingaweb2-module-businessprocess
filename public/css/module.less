@@ -93,16 +93,30 @@ table.bp tr th   {
 
 /* Expand / collapse styling */
 table.bp.process {
-    > tbody > tr > th {
-        background-image: url('../img/bpapp/icon_collapse.png');
-        background-repeat: no-repeat;
-        background-position: 0.3em 0.3em;
+
+    position: relative;
+
+    > tbody > tr:first-child > td:before {
+        content: '\e81d';
+        font-family: ifont;
+        position: absolute;
+        font-size: 1.5em;
+        margin-left: -0.8em;
+        -webkit-transition: -webkit-transform 0.3s;
+        -moz-transition: -moz-transform 0.3s;
+        -o-transition: -o-transform 0.3s;
+        transition: transform 0.3s;
     }
 
     &.collapsed {
-        > tbody > tr > th {
-            background-image: url('../img/bpapp/icon_expand.png');
+
+        > tbody > tr:first-child > td:before {
+            -webkit-transform:rotate(-90deg);
+            -moz-transform:rotate(-90deg);
+            -o-transform:rotate(-90deg);
+            .rotate(360deg);
         }
+
         table.bp, th span {
             display: none;
         }
@@ -124,30 +138,30 @@ table.bp span.op {
     -moz-transform: rotate(-90deg);
 }
 
-table.bp td > a {
-    line-height: 2em;
-    padding-left: 0.5em;
-    display: block;
-}
-
-table.bp.node td > a {
-    padding-left: 2.5em;
-    background-repeat: no-repeat;
-    background-position: 0.5em 0.5em;
-}
-
 table.bp .icon {
     float: left;
     margin-top: 0.4em;
     margin-right: 0.4em;
 }
 
-table.bp.node.service td > a {
-    background-image: url('../img/icons/service.png');
+table.bp.node.service td:before {
+    font-family: ifont;
+    z-index: 10;
+    font-size: 1.25em;
+    content: '\e840';
+    position: absolute;
+    margin-left: 1.25em;
+    margin-top: 0.25em;
 }
 
-table.bp.node.host td > a {
-    background-image: url('../img/icons/host.png');
+table.bp.node.host td:before {
+    font-family: ifont;
+    z-index: 10;
+    font-size: 1.25em;
+    content: '\e866';
+    position: absolute;
+    margin-left: 1.25em;
+    margin-top: 0.25em;
 }
 
 /* Border defaults */
