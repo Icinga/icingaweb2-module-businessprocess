@@ -144,15 +144,13 @@ abstract class Node
         return false;
     }
 
-    public function __destruct()
-    {
-        // required to avoid memleeks in PHP < 5.3:
-        $this->parent = null;
-        $this->children = array();
-    }
-
     public function __toString()
     {
         return $this->name;
+    }
+
+    public function __destruct()
+    {
+        unset($this->parent);
     }
 }
