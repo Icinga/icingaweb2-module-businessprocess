@@ -2,11 +2,13 @@
 <?= $this->tabs ?>
   <h1><?= $this->escape($this->title) ?>
   <a href="<?= $this->url()->with('mode', 'toplevel') ?>" title="<?= $this->escape('Switch to toplevel view') ?>"><?= $this->icon('dashboard') ?></a>
+  <?= $this->render('simulationlink.phtml') ?>
+  <?= $this->render('editlink.phtml') ?>
 </h1>
 </div>
 
 <div class="content" data-base-target="_next">
-  <form method="post" action="<?= $this->url()->without('process') ?>" data-base-target="_self">  <?= $this->bp->renderHtml($this) ?>
+  <?= $this->bp->renderHtml($this) ?>
   <?= $this->render('warnings.phtml') ?>
 </div>
 

@@ -36,7 +36,17 @@ class Bpapp_ProcessController extends Controller
         if ($this->params->get('edit')) {
             $bp->setEditMode();
         }
+    }
 
+    protected function addSimulation($bp)
+    {
+        $simulations = $this->session()->get('simulations', array());
+        foreach ($simulations as $node => $s) {
+            $bp->getNode($node)
+               ->setState($s->state)
+               ->setAck($s->acknowledged)
+               ->setDowntime($s->in_downtime);
+        }
     }
 
     public function sourceAction()
