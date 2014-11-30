@@ -23,6 +23,8 @@ class LegacyStorage extends Storage
                 ->getModuleManager()
                 ->getModule('businessprocess')
                 ->getConfigDir();
+
+            // TODO: This is silly. We need Config::requireDirectory().
             if (! is_dir($dir)) {
                 if (! is_dir(dirname($dir))) {
                     if (! @mkdir(dirname($dir))) {
