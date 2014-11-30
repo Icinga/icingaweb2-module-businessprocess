@@ -1,5 +1,5 @@
 Name: BPapp
-Version: 0.0.1
+Version: 2.0.0-beta1
 Depends: monitoring
 Description: BPapp is a viewer for BPaddon business process config files
  That's it
