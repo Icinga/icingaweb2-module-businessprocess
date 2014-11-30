@@ -70,6 +70,12 @@ class BusinessProcess
         return $this;
     }
 
+    public function addRootNode($name)
+    {
+        $this->root_nodes[$name] = $this->getNode($name);
+        return $this;
+    }
+
     public function retrieveStatesFromBackend($backend)
     {
         $this->backend = $backend;
