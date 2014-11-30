@@ -59,12 +59,4 @@ class Bpapp_ProcessController extends Controller
         $this->view->title = 'Source: ' . $this->bpconf->title;
         $this->view->source = file_get_contents($this->filename);
     }
-
-
-    public function historyAction()
-    {
-        $bp = BusinessProcess::parse($this->filename);
-        echo '<pre>' . print_r($bp, 1) . '</pre>';
-        exit;
-    }
 }
