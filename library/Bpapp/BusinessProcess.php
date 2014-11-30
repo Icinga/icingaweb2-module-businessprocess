@@ -144,6 +144,7 @@ class BusinessProcess
                 )
             );
             $node->setMissing();
+            $this->nodes[$name] = $node;
             return $node;
         }
 
