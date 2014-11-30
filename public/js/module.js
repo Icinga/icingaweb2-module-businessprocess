@@ -24,13 +24,43 @@
             this.module.on('beforerender', this.rememberOpenedBps);
             this.module.on('rendered',     this.fixOpenedBps);
 
-            this.module.on('click', 'table.businessprocess th', this.titleClicked);
+            this.module.on('click', 'table.bp.process > tbody > tr:first-child > td > a:first-child', this.processTitleClick);
+            this.module.on('click', 'table.bp > tbody > tr:first-child > th', this.processOperatorClick);
 
             this.module.on('mouseenter', 'table.bp > tbody > tr > td > a', this.procMouseOver);
             this.module.on('mouseenter', 'table.bp > tbody > tr > th', this.procMouseOver);
             this.module.on('mouseleave', 'div.bp', this.procMouseOut);
 
             this.module.icinga.logger.debug('BP module loaded');
+        },
+
+        processTitleClick: function (event) {
+            event.stopPropagation();
+            var $el = $(event.currentTarget).closest('table.bp');
+            $el.toggleClass('collapsed');
+        },
+
+        processOperatorClick: function (event) {
+            event.stopPropagation();
+            var $el = $(event.currentTarget).closest('table.bp');
+
+            // Click on arrow
+            $el.removeClass('collapsed');
+
+            var children = $el.find('> tbody > tr > td > table.bp.process');
+            if (children.length === 0) {
+                $el.toggleClass('collapsed');
+                return;
+            }
+            if (children.filter('.collapsed').length) {
+                children.removeClass('collapsed');
+            } else {
+                children.each(function(idx, el) {
+                    var $el = $(el);
+                    $el.addClass('collapsed');
+                    $el.find('table.bp.process').addClass('collapsed');
+                });
+            }
         },
 
         /**
