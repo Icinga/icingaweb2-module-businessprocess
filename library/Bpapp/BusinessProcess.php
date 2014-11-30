@@ -51,33 +51,26 @@ class BusinessProcess
         $check_results = array();
         $hostFilter = array_keys($this->hosts);
         if ($this->state_type === self::HARD_STATE) {
-            $db_states = $this->backend/*->module('Bpapp')*/
-                ->fetchHardStatesForBpHosts(array_keys($this->hosts));
+            $hostStateColumn    = 'host_hard_state';
+            $serviceStateColumn = 'service_hard_state';
         } else {
-// TOM 2014
-//            $db_states = $this->backend/*->module('Bpapp')*/
-//                ->fetchSoftStatesForBpHosts(array_keys($this->hosts));
-          $hostStatus = $backend->select()->from(
-              'hostStatus',
-              array(
-                  'hostname'    => 'host_name',
-                  'in_downtime' => 'host_in_downtime',
-                  'ack'         => 'host_acknowledged',
-                  'state'       => 'host_state'
-              )
-          )->where('host_name', $hostFilter)->getQuery()->fetchAll();
-          $serviceStatus = $backend->select()->from(
-              'serviceStatus',
-              array(
-                  'hostname'    => 'host_name',
-                  'service'     => 'service_description',
-                  'in_downtime' => 'service_in_downtime',
-                  'ack'         => 'service_acknowledged',
-                  'state'       => 'service_state'
-              )
-          )->where('host_name', $hostFilter)->getQuery()->fetchAll();
-
+            $hostStateColumn    = 'host_state';
+            $serviceStateColumn = 'service_state';
         }
+        $hostStatus = $backend->select()->from('hostStatus', array(
+            'hostname'    => 'host_name',
+            'in_downtime' => 'host_in_downtime',
+            'ack'         => 'host_acknowledged',
+            'state'       => $hostStateColumn
+        ))->where('host_name', $hostFilter)->getQuery()->fetchAll();
+
+        $serviceStatus = $backend->select()->from('serviceStatus', array(
+            'hostname'    => 'host_name',
+            'service'     => 'service_description',
+            'in_downtime' => 'service_in_downtime',
+            'ack'         => 'service_acknowledged',
+            'state'       => $serviceStateColumn
+        ))->where('host_name', $hostFilter)->getQuery()->fetchAll();
 
         foreach ($serviceStatus + $hostStatus as $row) {
             $key = $row->hostname;
