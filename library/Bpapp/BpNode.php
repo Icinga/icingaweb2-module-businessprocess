@@ -57,14 +57,20 @@ class BpNode extends Node
         return $this->operator;
     }
 
-    public function setUrl($url)
+    public function setInfoUrl($url)
     {
         $this->url = $url;
+        return $this;
     }
 
-    public function hasUrl()
+    public function hasInfoUrl()
     {
         return $this->url !== null;
+    }
+
+    public function getInfoUrl()
+    {
+        return $this->url;
     }
 
     public function setInfoCommand($cmd)
@@ -75,11 +81,6 @@ class BpNode extends Node
     public function hasInfoCommand()
     {
         return $this->info_command !== null;
-    }
-
-    public function getUrl()
-    {
-        return $this->url;
     }
 
     public function getInfoCommand()
