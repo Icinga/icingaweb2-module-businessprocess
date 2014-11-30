@@ -234,4 +234,15 @@ class BusinessProcess
             $this->warnings[] = $msg;
         }
     }
+
+    public function renderHtml($view)
+    {
+        $html = '<div class="bp">';
+        foreach ($this->getRootNodes() as $name => $node) {
+            // showNode($this, $node, $this->slas, $this->opened, 'bp_')
+            $html .= $node->renderHtml($view);
+        }
+        $html .= '</div>';
+        return $html;
+    }
 }

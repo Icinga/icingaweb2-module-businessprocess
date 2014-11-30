@@ -14,6 +14,19 @@ class HostNode extends Node
         $this->setState($object->state);
     }
 
+    public function renderLink($view)
+    {
+        if ($this->bp->isSimulationMode()) {
+            return $view->qlink($this->getHostname(), 'bpapp/host/simulate', array(
+                'node' => $this->name
+            ));
+        } else {
+            return $view->qlink($this->getHostname(), 'monitoring/host/show', array(
+                'host' => $this->getHostname
+            ));
+        }
+    }
+
     public function getHostname()
     {
         return $this->hostname;

@@ -49,6 +49,11 @@ abstract class Node
         return $this->missing;
     }
 
+    public function hasInfoUrl()
+    {
+        return false;
+    }
+
     public function addChild(Node $node)
     {
         if (array_key_exists((string) $node, $this->children)) {
@@ -173,6 +178,89 @@ abstract class Node
     public function getChildren()
     {
         return array();
+    }
+
+    protected function renderHtmlForChildren($view)
+    {
+        $html = '';
+        if ($this->hasChildren()) {
+            foreach ($this->getChildren() as $name => $child) {
+                $html .= '<tr><td>'
+                       . $child->renderHtml($view)
+                       . '</td></tr>';
+            }
+        }
+
+        return $html;
+    }
+
+    protected function getId($prefix = '')
+    {
+        return md5($prefix . (string) $this);
+    }
+     
+    public function renderHtml($view, $prefix = '')
+    {
+        $id = $this->getId($prefix);
+        $state = strtolower($this->getStateName());
+        $handled = $this->isAcknowledged() || $this->isInDowntime();
+        $html = sprintf(
+            '<table class="bp %s%s%s" id="%s"><tbody><tr>',
+            $state === 'ok' ? 'ok' : 'problem ' . $state,
+            $handled ? ' handled' : '',
+            $this->hasChildren() ? ' operator process' : ' node service',
+            $id
+        );
+
+        if ($this->hasChildren()) {
+            $html .= sprintf(
+                '<th%s><span class="op">%s</span></th>',
+                sprintf(' rowspan="%d"', $this->countChildren() + 1),
+                $this->operatorHtml()
+            );
+        }
+
+
+        $title = preg_replace('~(</a>)~', implode('', $this->getIcons($view)) . '$1', $this->renderLink($view));
+        if ($this->hasInfoUrl()) {
+            $title = ' <a href="' . $this->getInfoUrl() . '" title="'
+                  . mt('bpapp', 'More information') . ': ' . $this->getInfoUrl()
+                  . '" style="float: right">'
+                  . $view->icon('help')
+                  . '</a>' . $title;
+        }
+
+        $html .= sprintf(
+            '<td>%s</td></tr>',
+            $title
+        );
+        foreach ($this->getChildren() as $name => $child) {
+            $html .= '<tr><td>' . $child->renderHtml($view, $id . '-') . '</td></tr>';
+        }
+        $html .= '</tbody></table>';
+        return $html;
+    }
+
+    public function renderLink($view)
+    {
+        return '<a href="#">' . $this->name . '</a>';
+    }
+
+    public function getIcons($view)
+    {
+        $icons = array();
+        if ($this->isInDowntime()) {
+            $icons[] = $view->icon('moon');
+        }
+        if ($this->isAcknowledged()) {
+            $icons[] = $view->icon('ok');
+        }
+        return $icons;
+    }
+
+    public function operatorHtml()
+    {
+        return '&nbsp;';
     }
 
     public function __toString()
