@@ -177,13 +177,33 @@ table.bp tr, table.bp tbody, table.bp th, table.bp td, table.bp.node td > a {
     border-color: inherit;
 }
 
-table.bp th {
-    border-left-width: 0.5em;
-    width: 1.5em;
+table.bp td > a {
+    line-height: 2em;
+    padding-left: 0.5em;
+    display: block;
 }
 
 table.bp.node td > a {
-    border-left-width: 0.5em;
+    padding-left: 2.5em;
+    background-repeat: no-repeat;
+    background-position: 0.5em 0.5em;
+    border-left-width: 0.8em;
+}
+
+table.bp.node.handled td > a, table.bp.node.ok td > a {
+    border-left-width: 0.3em;
+    background-position: 1em 0.5em;
+    padding-left: 3em;
+}
+
+table.bp th {
+    border-left-width: 0.8em;
+    width: 1.2em;
+}
+
+table.bp.handled > tbody > tr > th, table.bp.ok > tbody > tr > th {
+    border-left-width: 0.3em;
+    width: 2em;
 }
 
 /* Operator: upper line */
@@ -195,6 +215,7 @@ table.bp.operator.hovered > tbody > tr:first-child > * {
     border-top-style: solid;
 }
 
+/* Set colors based on element state */
 table.bp {
     &.ok               { border-color: @colorOk; }
     &.warning          { border-color: @colorWarning; }
