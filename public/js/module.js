@@ -21,10 +21,12 @@
             /**
              * Tell Icinga about our event handlers
              */
+            this.module.on('beforerender', this.rememberOpenedBps);
+            this.module.on('rendered',     this.fixOpenedBps);
+
             this.module.on('mouseenter', 'table.businessprocess th.bptitle', this.titleMouseOver);
             this.module.on('mouseleave', 'table.businessprocess th.bptitle', this.titleMouseOut);
             this.module.on('click', 'table.businessprocess th', this.titleClicked);
-            this.module.on('rendered', this.fixOpenedBps);
 
             this.module.icinga.logger.debug('BP module loaded');
         },
@@ -113,36 +115,20 @@
          *
          * Only get the deepest nodes to keep requests as small as possible
          */
-        listOpenedBps: function ($container) {
+        rememberOpenedBps: function (event) {
+            var $container = $(event.currentTarget);
             var ids = [];
-            
-            $('.businessprocess', $container).add('.businessprocess table', $container)
-            .not('.collapsed').each(function (key, el) {
-                var $el = $(el);
-                if ($el.find('table').not('.collapsed').length === 0) {
-                    var search = true,
-                       this_id = $el.attr('id'),
-                       cnt     = 0,
-                       current = el,
-                       parent;
-                    while (search && cnt < 40) {
-                        cnt++;
-                        parent = $(current).parent().closest('table')[0];
-                        if (!parent || $(parent).hasClass('bps')) {
-                            search = false;
-                        } else {
-                            current = parent;
-                            this_id = parent.id + '_' + this_id;
-                        }
-                    }
-
-                    if (this_id) {
-                        ids.push(this_id);
-                    }
-                }
+            $('table.process', $container)
+                .not('table.process.collapsed')
+                .not('table.process.collapsed table.process')
+                .each(function (key, el) {
+                ids.push($(el).attr('id'));
             });
+            if (ids.length === 0) {
+                return;
+            }
 
-            return ids;
+            this.idCache[$container.attr('id')] = ids;
         }
     };
 
