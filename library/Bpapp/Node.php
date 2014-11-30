@@ -39,6 +39,11 @@ abstract class Node
         return $this;
     }
 
+    public function hasBeenChanged()
+    {
+        return false;
+    }
+
     public function isMissing()
     {
         return $this->missing;
@@ -123,6 +128,11 @@ abstract class Node
         return $this->duration;
     }
 
+    public function isHandled()
+    {
+        return $this->isInDowntime() || $this->isAcknowledged();
+    }
+
     public function isInDowntime()
     {
         if ($this->downtime === null) {
@@ -139,9 +149,30 @@ abstract class Node
         return $this->ack;
     }
 
+
+    public function isSimulationMode()
+    {
+        return $this->bp->isSimulationMode();
+    }
+
+    public function isEditMode()
+    {
+        return $this->bp->isEditMode();
+    }
+
     public function hasChildren()
     {
         return false;
+    }
+
+    public function countChildren()
+    {
+        return 0;
+    }
+
+    public function getChildren()
+    {
+        return array();
     }
 
     public function __toString()

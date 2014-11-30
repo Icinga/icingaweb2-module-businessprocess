@@ -18,9 +18,38 @@ class BusinessProcess
     protected $root_nodes = array();
     protected $all_checks = array();
     protected $hosts = array();
+    protected $simulationMode = false;
+    protected $editMode = false;
 
     public function __construct()
     {
+    }
+
+    public function hasBeenChanged()
+    {
+        return false;
+    }
+
+    public function setSimulationMode($mode = true)
+    {
+        $this->simulationMode = (bool) $mode;
+        return $this;
+    }
+
+    public function isSimulationMode()
+    {
+        return $this->simulationMode;
+    }
+
+    public function setEditMode($mode = true)
+    {
+        $this->editMode = (bool) $mode;
+        return $this;
+    }
+
+    public function isEditMode()
+    {
+        return $this->editMode;
     }
 /*
     public function getObjectIds()
@@ -113,9 +142,24 @@ class BusinessProcess
         return $this;
     }
 
+    public function getChildren()
+    {
+        return $this->getRootNodes();
+    }
+
+    public function countChildren()
+    {
+        return count($this->root_nodes);
+    }
+
     public function getRootNodes()
     {
         return $this->root_nodes;
+    }
+
+    public function getNodes()
+    {
+        return $this->nodes;
     }
 
     public function hasNode($name)
