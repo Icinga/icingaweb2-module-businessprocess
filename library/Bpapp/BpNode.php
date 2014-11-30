@@ -190,4 +190,43 @@ class BpNode extends Node
         }
         return $this->children;
     }
+
+    protected function assertNumericOperator()
+    {
+        if (! is_numeric($this->operator)) {
+            // TODO: ConfigurationError
+            throw new Exception(
+                sprintf(
+                    'Got invalid operator: %s',
+                    $this->operator
+                )
+            );
+        }
+    }
+
+    public function renderLink($view)
+    {
+        if (! $this->bp->isEditMode()) {
+            return parent::renderLink($view);
+        }
+        return $view->qlink($this->name, 'bpapp/node/edit', array(
+            'node' => $this->name
+        ));
+    }
+
+    public function operatorHtml()
+    {
+        switch ($this->operator) {
+            case self::OP_AND:
+                return 'and';
+                break;
+            case self::OP_OR:
+                return 'or';
+                break;
+            default:
+                // MIN
+                $this->assertNumericOperator();
+                return 'min:' . $this->operator;
+        }
+    }
 }
