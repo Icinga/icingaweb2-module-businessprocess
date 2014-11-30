@@ -1,6 +1,6 @@
 <?php
 
-namespace Icinga\Module\Bpapp;
+namespace Icinga\Module\Businessprocess;
 
 use Exception;
 

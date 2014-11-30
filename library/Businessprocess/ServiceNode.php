@@ -1,6 +1,6 @@
 <?php
 
-namespace Icinga\Module\Bpapp;
+namespace Icinga\Module\Businessprocess;
 
 class ServiceNode extends Node
 {
@@ -19,7 +19,7 @@ class ServiceNode extends Node
     public function renderLink($view)
     {
         if ($this->bp->isSimulationMode()) {
-            return $view->qlink($this->getAlias(), 'bpapp/node/simulate', array(
+            return $view->qlink($this->getAlias(), 'businessprocess/node/simulate', array(
                 'node' => $this->name
             ));
         } else {

@@ -175,7 +175,7 @@
         }
     };
 
-    Icinga.availableModules.bpapp = Bp;
+    Icinga.availableModules.businessprocess = Bp;
 
 }(Icinga));
 

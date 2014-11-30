@@ -1,9 +1,9 @@
 <?php
 
-namespace Icinga\Module\Bpapp\Storage;
+namespace Icinga\Module\Businessprocess\Storage;
 
 use Icinga\Data\ConfigObject;
-use Icinga\Module\Bpapp\BusinessProcess;
+use Icinga\Module\Businessprocess\BusinessProcess;
 
 abstract class Storage
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Icinga\Module\Bpapp;
+namespace Icinga\Module\Businessprocess;
 
 use Exception;
 
@@ -209,7 +209,7 @@ class BpNode extends Node
         if (! $this->bp->isEditMode()) {
             return parent::renderLink($view);
         }
-        return $view->qlink($this->name, 'bpapp/node/edit', array(
+        return $view->qlink($this->name, 'businessprocess/node/edit', array(
             'node' => $this->name
         ));
     }

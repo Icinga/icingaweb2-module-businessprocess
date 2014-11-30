@@ -1,12 +1,12 @@
 <?php
 
-namespace Icinga\Module\Bpapp\Storage;
+namespace Icinga\Module\Businessprocess\Storage;
 
 use Icinga\Application\Icinga;
 use Icinga\Data\ConfigObject;
-use Icinga\Module\Bpapp\BusinessProcess;
-use Icinga\Module\Bpapp\BpNode;
-use Icinga\Module\Bpapp\Storage\Storage;
+use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpNode;
+use Icinga\Module\Businessprocess\Storage\Storage;
 use DirectoryIterator;
 use Icinga\Exception\SystemPermissionException;
 
@@ -21,7 +21,7 @@ class LegacyStorage extends Storage
         if ($this->configDir === null) {
             $dir = Icinga::app()
                 ->getModuleManager()
-                ->getModule('bpapp')
+                ->getModule('businessprocess')
                 ->getConfigDir();
             if (! is_dir($dir)) {
                 if (! is_dir(dirname($dir))) {

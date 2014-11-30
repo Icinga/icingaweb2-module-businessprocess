@@ -1,10 +1,10 @@
 <?php
 
-namespace Icinga\Module\Bpapp\Forms;
+namespace Icinga\Module\Businessprocess\Forms;
 
 use Icinga\Web\Form;
 use Icinga\Web\Request;
-use Icinga\Module\Bpapp\BpNode;
+use Icinga\Module\Businessprocess\BpNode;
 
 class ProcessForm extends Form
 {
@@ -26,7 +26,7 @@ class ProcessForm extends Form
 
     protected function translate($string)
     {
-        return mt('bpapp', $string);
+        return mt('businessprocess', $string);
     }
 
     public function setup()

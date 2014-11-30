@@ -1,9 +1,9 @@
 <?php
 
-use Icinga\Module\Bpapp\Controller;
-use Icinga\Module\Bpapp\Storage\LegacyStorage;
+use Icinga\Module\Businessprocess\Controller;
+use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 
-class Bpapp_ProcessController extends Controller
+class Businessprocess_ProcessController extends Controller
 {
     public function showAction()
     {

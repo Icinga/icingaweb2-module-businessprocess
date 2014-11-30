@@ -1,13 +1,13 @@
 <?php
 
-namespace Icinga\Module\Bpapp;
+namespace Icinga\Module\Businessprocess;
 
 use Icinga\Web\Controller\ModuleActionController;
 use Icinga\Module\Monitoring\Backend;
-use Icinga\Module\Bpapp\Storage\LegacyStorage;
-use Icinga\Module\Bpapp\BusinessProcess;
-use Icinga\Module\Bpapp\Form\ProcessForm;
-use Icinga\Module\Bpapp\Form\SimulationForm;
+use Icinga\Module\Businessprocess\Storage\LegacyStorage;
+use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\Form\ProcessForm;
+use Icinga\Module\Businessprocess\Form\SimulationForm;
 use Icinga\Web\Url;
 use Icinga\Web\Widget;
 
@@ -33,7 +33,7 @@ class Controller extends ModuleActionController
         $url = Url::fromRequest();
         $tabs = Widget::create('tabs')->add('show', array(
             'title' => $this->translate('Show'),
-            'url' => 'bpapp/process/show',
+            'url' => 'businessprocess/process/show',
         ));
         if ($process = $this->params->get('process')) {
             foreach ($tabs->getTabs() as $tab) {
@@ -45,7 +45,7 @@ class Controller extends ModuleActionController
 
     protected function session()
     {
-        return $this->Window()->getSessionNamespace('bpapp');
+        return $this->Window()->getSessionNamespace('businessprocess');
     }
 
     protected function xxxloadBp()

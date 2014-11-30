@@ -1,6 +1,6 @@
 <?php
 
-namespace Icinga\Module\Bpapp;
+namespace Icinga\Module\Businessprocess;
 
 use Exception;
 
@@ -224,7 +224,7 @@ abstract class Node
         $title = preg_replace('~(</a>)~', implode('', $this->getIcons($view)) . '$1', $this->renderLink($view));
         if ($this->hasInfoUrl()) {
             $title = ' <a href="' . $this->getInfoUrl() . '" title="'
-                  . mt('bpapp', 'More information') . ': ' . $this->getInfoUrl()
+                  . mt('businessprocess', 'More information') . ': ' . $this->getInfoUrl()
                   . '" style="float: right">'
                   . $view->icon('help')
                   . '</a>' . $title;

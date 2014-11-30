@@ -1,6 +1,6 @@
 <?php
 
-namespace Icinga\Module\Bpapp;
+namespace Icinga\Module\Businessprocess;
 
 class HostNode extends Node
 {
@@ -17,7 +17,7 @@ class HostNode extends Node
     public function renderLink($view)
     {
         if ($this->bp->isSimulationMode()) {
-            return $view->qlink($this->getHostname(), 'bpapp/host/simulate', array(
+            return $view->qlink($this->getHostname(), 'businessprocess/host/simulate', array(
                 'node' => $this->name
             ));
         } else {

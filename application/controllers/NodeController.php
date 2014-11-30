@@ -1,11 +1,11 @@
 <?php
 
-use Icinga\Module\Bpapp\Controller;
-use Icinga\Module\Bpapp\Forms\ProcessForm;
-use Icinga\Module\Bpapp\Forms\SimulationForm;
+use Icinga\Module\Businessprocess\Controller;
+use Icinga\Module\Businessprocess\Forms\ProcessForm;
+use Icinga\Module\Businessprocess\Forms\SimulationForm;
 use Icinga\Web\Url;
 
-class Bpapp_NodeController extends Controller
+class Businessprocess_NodeController extends Controller
 {
     public function editAction()
     {
@@ -28,7 +28,7 @@ class Bpapp_NodeController extends Controller
         $nodename = $this->getParam('node');
         $node = $bp->getNode($nodename);
         $detail = Url::fromPath(
-            'bpapp/node/simulate',
+            'businessprocess/node/simulate',
             array('node' => $nodename)
         );
         $form = new SimulationForm();
@@ -38,7 +38,7 @@ class Bpapp_NodeController extends Controller
               ->setSession($this->session())
               ->setNode($node)
                // TODO: find a better way to handle redirects
-              ->setRedirectUrl('bpapp/process/simulate#!' . $detail->getAbsoluteUrl())
+              ->setRedirectUrl('businessprocess/process/simulate#!' . $detail->getAbsoluteUrl())
               ->handleRequest();
 
         $this->view->form = $form;

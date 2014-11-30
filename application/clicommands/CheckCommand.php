@@ -1,9 +1,9 @@
 <?php
 
-namespace Icinga\Module\Bpapp\Clicommands;
+namespace Icinga\Module\Businessprocess\Clicommands;
 
 use Icinga\Cli\Command;
-use Icinga\Module\Bpapp\BusinessProcess;
+use Icinga\Module\Businessprocess\BusinessProcess;
 use Icinga\Application\Config;
 use Icinga\Module\Monitoring\Backend;
 
