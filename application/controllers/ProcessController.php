@@ -27,6 +27,11 @@ class Bpapp_ProcessController extends Controller
             }
         }
         $this->setAutorefreshInterval(10);
+
+        if ($this->params->get('simulation')) {
+            $bp->setSimulationMode();
+            $this->addSimulation($bp);
+        }
     }
 
     public function sourceAction()

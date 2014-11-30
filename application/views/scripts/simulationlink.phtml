@@ -1,0 +1,6 @@
+  <?php if ($this->bp->isSimulationMode()): ?>
+  <a href="<?= $this->url()->without('simulation') ?>" title="<?= $this->escape('Switch to live mode') ?>"><?= $this->icon('globe') ?></a>
+  <?php else: ?>
+  <a href="<?= $this->url()->with('simulation', true) ?>" title="<?= $this->escape('Switch to simulation mode') ?>"><?= $this->icon('magic') ?></a>
+  <?php endif ?>
+
