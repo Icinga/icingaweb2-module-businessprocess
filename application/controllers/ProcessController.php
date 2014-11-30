@@ -36,6 +36,11 @@ class Bpapp_ProcessController extends Controller
         if ($this->params->get('edit')) {
             $bp->setEditMode();
         }
+
+        if ($this->params->get('mode') === 'toplevel') {
+            $this->render('toplevel');
+        }
+
     }
 
     protected function addSimulation($bp)

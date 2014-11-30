@@ -1,0 +1,33 @@
+<?php
+$count = $this->bp->countChildren();
+$howMany = 'normal';
+
+if ($count < 20) {
+    $howMany = 'few';
+} elseif ($count > 50) {
+    $howMany = 'many';
+}
+
+?>
+<div class="controls">
+<?= $this->tabs ?>
+  <h1><?= $this->escape($this->title) ?>
+  <a href="<?= $this->url()->without('mode') ?>" title="<?= $this->escape('Switch to tree view') ?>" style="float: right"><?= $this->icon('sitemap') ?></a>
+  <?= $this->render('simulationlink.phtml') ?>
+  <?= $this->render('editlink.phtml') ?>
+  </h1>
+</div>
+
+<div class="content" data-base-target="_next">
+  <form method="post" action="<?= $this->url()->without('process') ?>" data-base-target="_self">
+  <?= $this->formSelect('processName', $this->processName, array('class' => 'autosubmit'), $this->processList) ?>
+  </form>
+  <div class="toplevel <?= $howMany ?>" data-base-target="_next">
+  <?php foreach ($this->bp->getChildren() as $name => $node): ?>
+  <div class="<?= strtolower($node->getStateName()) ?><?= $node->isHandled() ? ' handled' : '' ?>">
+  <a href="<?= $this->url('bpapp/process/show', array('processName' => $this->processName, 'process' => $name)) ?>"><?= $this->escape($name) ?></a>
+  </div>
+  <?php endforeach ?>
+  </div>
+  <?= $this->render('warnings.phtml') ?>
+</div>
