@@ -10,7 +10,6 @@ class BusinessProcess
     const HARD_STATE = 1;
     protected $ido;
     protected $filename;
-    protected $parsing_line_number;
     protected $bps;
     protected $state_type = self::HARD_STATE;
     protected $warnings = array();
@@ -30,14 +29,6 @@ class BusinessProcess
     }
 */
 
-    public static function parse($filename)
-    {
-        $bp = new BusinessProcess();
-        $bp->filename = $filename;
-        $bp->doParse();
-        return $bp;
-    }
-
     public function useSoftStates()
     {
         $this->state_type = self::SOFT_STATE;
@@ -48,95 +39,6 @@ class BusinessProcess
     {
         $this->state_type = self::HARD_STATE;
         return $this;
-    }
-
-    protected function doParse()
-    {
-        $fh = @fopen($this->filename, 'r');
-        if (! $fh) {
-            throw new Exception('Could not open ' . $this->filename);
-        }
-
-        $this->parsing_line_number = 0;
-        while ($line = fgets($fh)) {
-            $line = trim($line);
-
-            $this->parsing_line_number++;
-
-            if (preg_match('~^#~', $line)) {
-                continue;
-            }
-
-            if (preg_match('~^$~', $line)) {
-                continue;
-            }
-
-            if (preg_match('~^display~', $line)) {
-                list($display, $name, $desc) = preg_split('~\s*;\s*~', substr($line, 8), 3);
-                $node = $this->getNode($name)->setAlias($desc)->setDisplay($display);
-                if ($display > 0) {
-                    $this->root_nodes[$name] = $node;
-                }
-            }
-
-            if (preg_match('~^external_info~', $line)) {
-                list($name, $script) = preg_split('~\s*;\s*~', substr($line, 14), 2);
-                $node = $this->getNode($name)->setInfoCommand($script);
-            }
-
-            if (preg_match('~^info_url~', $line)) {
-                list($name, $url) = preg_split('~\s*;\s*~', substr($line, 9), 2);
-                $node = $this->getNode($name)->setUrl($url);
-            }
-
-            if (strpos($line, '=') === false) {
-                continue;
-            }
-            
-            list($name, $value) = preg_split('~\s*=\s*~', $line, 2);
-
-            if (strpos($name, ';') !== false) {
-                $this->parseError('No semicolon allowed in varname');
-            }
-
-            $op = '&';
-            if (preg_match_all('~([\|\+&])~', $value, $m)) {
-                $op = implode('', $m[1]);
-                for ($i = 1; $i < strlen($op); $i++) {
-                    if ($op[$i] !== $op[$i - 1]) {
-                        $this->parseError('Mixing operators is not allowed');
-                    }
-                }
-            }
-            $op = $op[0];
-            $op_name = $op;
-
-            if ($op === '+') {
-                if (! preg_match('~^(\d+)\s*of:\s*(.+?)$~', $value, $m)) {
-                    $this->parseError('syntax: <var> = <num> of: <var1> + <var2> [+ <varn>]*');
-                }
-                $op_name = $m[1];
-                $value   = $m[2];
-            }
-            $cmps = preg_split('~\s*\\' . $op . '\s*~', $value);
-
-            foreach ($cmps as & $val) {
-                if (strpos($val, ';') !== false) {
-                    list($host, $service) = preg_split('~;~', $val, 2);
-                    $this->all_checks[$val] = 1;
-                    $this->hosts[$host] = 1;
-                }
-            }
-            $node = new BpNode($this, (object) array(
-                'name'        => $name,
-                'operator'    => $op_name,
-                'child_names' => $cmps
-            ));
-            $this->addNode($name, $node);
-        }
-
-        fclose($fh);
-        unset($this->parsing_line_number);
     }
 
     public function retrieveStatesFromBackend($backend)
@@ -293,17 +195,5 @@ class BusinessProcess
         } else {
             $this->warnings[] = $msg;
         }
-    }
-
-    protected function parseError($msg)
-    {
-        throw new Exception(
-            sprintf(
-                'Parse error on %s:%s: %s',
-                $this->filename,
-                $this->parsing_line_number,
-                $msg
-            )
-        );
     }
 }
