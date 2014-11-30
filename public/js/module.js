@@ -7,6 +7,8 @@
          */
         this.module = module;
 
+        this.idCache = {};
+
         this.initialize();
 
         this.module.icinga.logger.debug('BP module loaded');
@@ -87,17 +89,23 @@
 
         fixOpenedBps: function(event) {
             var $container = $(event.currentTarget);
-            var opened = $container.data('refreshParams');
-            if (typeof opened === 'undefined' || typeof opened.opened === 'undefined') {
+            var container_id = $container.attr('id');
+
+            if (typeof this.idCache[container_id] === 'undefined') {
                 return;
             }
+            var $procs = $('table.process', $container);
+            $.each(this.idCache[$container.attr('id')], function(idx, id) {
+                var $el = $('#' + id);
+                $procs = $procs.not($el);
 
-            opened = opened.opened;
-            $.each(opened, function(idx, ids) {
-                $.each(ids.split('_'), function(idx, id) {
-                    $('#' + id, $container).removeClass('collapsed');
+                $el.parents('table.process').each(function (idx, el) {
+                    $procs = $procs.not($(el));
+
                 });
             });
+
+            $procs.addClass('collapsed');
         },
 
         /**
