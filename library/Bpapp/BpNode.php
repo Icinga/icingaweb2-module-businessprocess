@@ -156,9 +156,14 @@ class BpNode extends Node
         }
     }
 
+    public function countChildren()
+    {
+        return count($this->getChildren());
+    }
+
     public function hasChildren()
     {
-        return count($this->children) > 0;
+        return $this->countChildren() > 0;
     }
 
     public function setDisplay($display)
