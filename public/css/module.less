@@ -285,4 +285,97 @@ table.bp {
     }
 }
 
+.toplevel:after {
+    content:'';
+    display:block;
+    clear: both;
+}
+
+.toplevel.few {
+    font-size: 3em;
+}
+
+.toplevel.normal {
+    font-size: 2em;
+}
+
+.toplevel.many {
+    font-size: 1.5em;
+}
+
+
+#layout.twocols, #layout.layout-minimal {
+    .toplevel.few {
+        font-size: 1.9em;
+    }
+
+    .toplevel.normal {
+        font-size: 1.5em;
+    }
+
+    .toplevel.many {
+        font-size: 1em;
+    }
+}
+
+.toplevel > div {
+    width: 5em;
+    height: 5em;
+    float: left;
+    margin-right: 0.2em;
+    margin-bottom: 0.2em;
+    color: white;
+    background: #ccc;
+}
+
+.toplevel > div > a {
+    text-decoration: none;
+    font-size: 0.5em;
+    color: inherit;
+    vertical-align: middle;
+    text-align: center;
+    display: block;
+    padding: 1em;
+    font-weight: bold;
+    word-wrap: break-word;
+    height: 10em;
+    width: 10em;
+    box-sizing: border-box;
+}
+
+.toplevel > div > a:hover {
+    color: black;
+}
+
+.toplevel > div.critical {
+    background: @colorCritical;
+}
+
+.toplevel > div.critical.handled {
+    background: @colorCriticalHandled;
+}
+
+.toplevel > div.unknown {
+    background: @colorUnknown;
+}
+
+.toplevel > div.unknown.handled {
+    background: @colorUnknownHandled;
+}
+
+.toplevel > div.warning {
+    background: @colorWarning;
+}
+
+.toplevel > div.warning.handled {
+    background: @colorWarningHandled;
+}
+
+.toplevel > div.ok {
+    background: @colorOk;
+}
+
+.toplevel > div.pending {
+    background: @colorPending;
+}
 
