@@ -32,6 +32,11 @@ class Bpapp_ProcessController extends Controller
             $bp->setSimulationMode();
             $this->addSimulation($bp);
         }
+
+        if ($this->params->get('edit')) {
+            $bp->setEditMode();
+        }
+
     }
 
     public function sourceAction()

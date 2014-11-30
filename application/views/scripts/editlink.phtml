@@ -1,0 +1,9 @@
+  <?php if ($this->bp->isEditMode()): ?>
+  <?php if ($this->bp->hasBeenChanged()): ?>
+  <a href="<?= $this->url()->without('edit') ?>" title="<?= $this->escape('Store modifications') ?>"><?= $this->icon('ok') ?></a>
+  <?php endif ?>
+  <a href="<?= $this->url()->without('edit') ?>" title="<?= $this->escape('Dismiss modifications') ?>"><?= $this->icon('cancel') ?></a>
+  <?php else: ?>
+  <a href="<?= $this->url()->with('edit', true) ?>" title="<?= $this->escape('Modify this process') ?>"><?= $this->icon('wrench') ?></a>
+  <?php endif ?>
+
