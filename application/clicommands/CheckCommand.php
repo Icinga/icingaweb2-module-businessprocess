@@ -19,7 +19,7 @@ class CheckCommand extends Command
     public function init()
     {
         $this->app->getModuleManager()->loadModule('monitoring');
-        $this->config = Config::module($this->moduleName);
+        $this->config = $this->Config();
         $this->readConfig();
         $this->prepareBackend();
     }
