@@ -14,6 +14,8 @@ class LegacyStorage extends Storage
 {
     protected $configDir;
 
+    protected $parsing_line_number;
+
     public function getConfigDir()
     {
         if ($this->configDir === null) {
