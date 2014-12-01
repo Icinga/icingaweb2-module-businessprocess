@@ -57,10 +57,33 @@ class LegacyStorage extends Storage
             $filename = $file->getFilename();
             if (substr($filename, -5) === '.conf') {
                 $name = substr($filename, 0, -5);
-                $files[$name] = $name;
+                $header = $this->readHeader($file->getPathname(), $name);
+                $files[$name] = $header['Title'];
             }
         }
         return $files;
+    }
+
+    protected function readHeader($file, $name)
+    {
+        $fh = fopen($file, 'r');
+        $cnt = 0;
+        $header = array(
+            'Title'     => $name,
+            'Owner'     => null,
+            'Backend'   => null,
+            'Statetype' => 'soft',
+            'SLA Hosts' => null
+        );
+        while ($cnt < 15 && false !== ($line = fgets($fh))) {
+            $cnt++;
+            if (preg_match('/^\s*#\s+(.+?)\s*:\s*(.+)$/', $line, $m)) {
+                if (array_key_exists($m[1], $header)) {
+                    $header[$m[1]] = $m[2];
+                }
+            }
+        }
+        return $header;
     }
 
     /**
@@ -84,7 +107,7 @@ class LegacyStorage extends Storage
         $bp = new BusinessProcess();
         $fh = @fopen($file, 'r');
         if (! $fh) {
-            throw new \Exception('Could not open ' . $file);
+            throw new SystemPermissionException('Could not open ' . $file);
         }
 
         $this->parsing_line_number = 0;
