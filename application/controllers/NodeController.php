@@ -38,7 +38,13 @@ class Businessprocess_NodeController extends Controller
               ->setSession($this->session())
               ->setNode($node)
                // TODO: find a better way to handle redirects
-              ->setRedirectUrl('businessprocess/process/simulate#!' . $detail->getAbsoluteUrl())
+              ->setRedirectUrl(
+                  sprintf(
+                      'businessprocess/process/show?simulation=1&processName=%s#!%s',
+                      $bp->getName(),
+                      $detail->getAbsoluteUrl()
+                  )
+              )
               ->handleRequest();
 
         $this->view->form = $form;
