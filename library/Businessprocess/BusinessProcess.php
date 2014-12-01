@@ -10,6 +10,7 @@ class BusinessProcess
     const HARD_STATE = 1;
     protected $ido;
     protected $filename;
+    protected $name;
     protected $bps;
     protected $state_type = self::HARD_STATE;
     protected $warnings = array();
@@ -23,6 +24,17 @@ class BusinessProcess
 
     public function __construct()
     {
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 
     public function hasBeenChanged()
