@@ -88,9 +88,14 @@ class BpNode extends Node
         return $this->info_command;
     }
 
+    public function hasAlias()
+    {
+        return $this->alias !== null;
+    }
+
     public function getAlias()
     {
-        return $this->alias;
+        return $this->alias ? preg_replace('~_~', ' ', $this->alias) : $this->name;
     }
 
     public function setAlias($name)
