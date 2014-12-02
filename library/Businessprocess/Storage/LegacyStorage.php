@@ -92,7 +92,10 @@ class LegacyStorage extends Storage
     public function loadProcess($name)
     {
         // Parse
-        return $this->parse($this->getConfigDir() . '/' . $name . '.conf');
+        return $this->parse(
+            $this->getConfigDir() . '/' . $name . '.conf',
+            $name
+        );
     }
 
     /**
@@ -102,9 +105,10 @@ class LegacyStorage extends Storage
     }
 
 
-    protected function parse($file)
+    protected function parse($file, $name)
     {
         $bp = new BusinessProcess();
+        $bp->setName($name);
         $fh = @fopen($file, 'r');
         if (! $fh) {
             throw new SystemPermissionException('Could not open ' . $file);
