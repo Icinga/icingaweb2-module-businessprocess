@@ -263,6 +263,9 @@ abstract class Node
         return '&nbsp;';
     }
 
+    public function toLegacyConfigString() { return '';}
+    //abstract public function toLegacyConfigString();
+
     public function __toString()
     {
         return $this->name;
