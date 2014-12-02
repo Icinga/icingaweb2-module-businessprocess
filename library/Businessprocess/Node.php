@@ -243,7 +243,7 @@ abstract class Node
 
     public function renderLink($view)
     {
-        return '<a href="#">' . $this->name . '</a>';
+        return '<a href="#">' . ($this->hasAlias() ? $this->getAlias() : $this->name) . '</a>';
     }
 
     public function getIcons($view)
