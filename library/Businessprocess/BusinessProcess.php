@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess;
 
+use Icinga\Data\Filter\Filter;
 use Exception;
 
 class BusinessProcess
@@ -104,12 +105,16 @@ class BusinessProcess
             $hostStateColumn    = 'host_state';
             $serviceStateColumn = 'service_state';
         }
+        $filter = Filter::matchAny();
+        foreach ($hostFilter as $host) {
+            $filter->addFilter(Filter::match('host_name', $host));
+        }
         $hostStatus = $backend->select()->from('hostStatus', array(
             'hostname'    => 'host_name',
             'in_downtime' => 'host_in_downtime',
             'ack'         => 'host_acknowledged',
             'state'       => $hostStateColumn
-        ))->where('host_name', $hostFilter)->getQuery()->fetchAll();
+        ))->applyFilter($filter)->getQuery()->fetchAll();
 
         $serviceStatus = $backend->select()->from('serviceStatus', array(
             'hostname'    => 'host_name',
@@ -117,7 +122,7 @@ class BusinessProcess
             'in_downtime' => 'service_in_downtime',
             'ack'         => 'service_acknowledged',
             'state'       => $serviceStateColumn
-        ))->where('host_name', $hostFilter)->getQuery()->fetchAll();
+        ))->applyFilter($filter)->getQuery()->fetchAll();
 
         foreach ($serviceStatus + $hostStatus as $row) {
             $key = $row->hostname;
@@ -172,6 +177,7 @@ class BusinessProcess
 
     public function getRootNodes()
     {
+        ksort($this->root_nodes);
         return $this->root_nodes;
     }
 
