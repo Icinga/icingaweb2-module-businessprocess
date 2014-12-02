@@ -20,12 +20,14 @@ class ServiceNode extends Node
     {
         if ($this->bp->isSimulationMode()) {
             return $view->qlink($this->getAlias(), 'businessprocess/node/simulate', array(
-                'node' => $this->name
+                'node' => $this->name,
+                'processName' => $this->bp->getName()
             ));
         } else {
             return $view->qlink($this->getAlias(), 'monitoring/show/service', array(
                 'host'    => $this->getHostname(),
-                'service' => $this->getServiceDescription()
+                'service' => $this->getServiceDescription(),
+                'processName' => $this->bp->getName()
             ));
         }
     }

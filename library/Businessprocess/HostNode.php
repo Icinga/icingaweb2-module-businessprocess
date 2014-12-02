@@ -18,11 +18,13 @@ class HostNode extends Node
     {
         if ($this->bp->isSimulationMode()) {
             return $view->qlink($this->getHostname(), 'businessprocess/host/simulate', array(
-                'node' => $this->name
+                'node' => $this->name,
+                'processName' => $this->bp->getName()
             ));
         } else {
             return $view->qlink($this->getHostname(), 'monitoring/host/show', array(
-                'host' => $this->getHostname
+                'host' => $this->getHostname,
+                'processName' => $this->bp->getName()
             ));
         }
     }
