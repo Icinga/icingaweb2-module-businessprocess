@@ -215,8 +215,54 @@ class BpNode extends Node
             return parent::renderLink($view);
         }
         return $view->qlink($this->name, 'businessprocess/node/edit', array(
-            'node' => $this->name
+            'node'        => $this->name,
+            'processName' => $this->bp->getName()
         ));
+    }
+
+
+    public function toLegacyConfigString()
+    {
+        $cfg = '';
+        $children = array();
+        
+        foreach ($this->getChildren() as $name => $child) {
+            $children[] = (string) $child;
+            if ($child instanceof BpNode) {
+                $cfg .= $child->toLegacyConfigString() . "\n";
+            }
+        }
+        $eq = '=';
+        $op = $this->operator;
+        if (is_numeric($op)) {
+            $eq = '= ' . $op . ' of:';
+            $op = '+';
+        }
+        $cfg .= sprintf(
+            "%s %s %s\n",
+            $this->name,
+            $eq,
+            implode(' ' . $op . ' ', $children)
+        );
+        if ($this->hasAlias()/* || $this->hasPrio()*/) {
+            $prio = 1; // TODO: $this->getPrio()
+            $cfg .= sprintf(
+                "display_name %s;%s;%s\n",
+                $prio,
+                $this->name,
+                $this->getAlias()
+            );
+        }
+        if ($this->hasInfoUrl()) {
+            $prio = 1; // TODO: $this->getPrio()
+            $cfg .= sprintf(
+                "info_url;%s;%s\n",
+                $this->name,
+                $this->getInfoUrl()
+            );
+        }
+
+        return $cfg;
     }
 
     public function operatorHtml()

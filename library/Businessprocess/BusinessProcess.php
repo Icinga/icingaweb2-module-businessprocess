@@ -259,6 +259,15 @@ class BusinessProcess
         }
     }
 
+    public function toLegacyConfigString()
+    {
+        $conf = '';
+        foreach ($this->getChildren() as $child) {
+            $conf .= $child->toLegacyConfigString();
+        }
+        return $conf;
+    }
+
     public function renderHtml($view)
     {
         $html = '<div class="bp">';
