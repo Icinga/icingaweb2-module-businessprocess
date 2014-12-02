@@ -8,10 +8,13 @@
 </div>
 
 <div class="content" data-base-target="_next">
-  <form method="post" action="<?= $this->url()->without('process') ?>" data-base-target="_self">
+<form method="post" action="<?= $this->url()->without('process') ?>" data-base-target="_self">
   <?= $this->formSelect('processName', $this->processName, array('class' => 'autosubmit'), $this->processList) ?>
-  </form>
-  <?= $this->bp->renderHtml($this) ?>
-  <?= $this->render('warnings.phtml') ?>
+</form>
+<?= $this->bp->renderHtml($this) ?>
+<!--<pre>
+<?= $this->bp->toLegacyConfigString() ?>
+</pre>-->
+<?= $this->render('warnings.phtml') ?>
 </div>
 
