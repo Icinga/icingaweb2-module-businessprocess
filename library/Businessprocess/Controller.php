@@ -73,7 +73,7 @@ class Controller extends ModuleActionController
            || (isset($bpconf->states) && $bpconf->states === 'soft')) {
             $bp->useSoftStates();
         }
-        //$bp->retrieveStatesFromBackend($this->backend);
+        $bp->retrieveStatesFromBackend($this->backend);
         return $bp;
 
     }
