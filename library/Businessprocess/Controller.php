@@ -10,6 +10,7 @@ use Icinga\Module\Businessprocess\Form\ProcessForm;
 use Icinga\Module\Businessprocess\Form\SimulationForm;
 use Icinga\Web\Url;
 use Icinga\Web\Widget;
+use Exception;
 
 class Controller extends ModuleActionController
 {
