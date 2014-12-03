@@ -25,7 +25,7 @@ class Controller extends ModuleActionController
     public function init()
     {
         $this->config = $this->Config();
-        $this->readConfig();
+        // $this->readConfig();
         $this->prepareBackend();
     }
 
