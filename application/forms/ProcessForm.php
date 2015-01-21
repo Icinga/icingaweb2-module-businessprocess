@@ -24,11 +24,6 @@ class ProcessForm extends Form
         $this->setup();
     }
 
-    protected function translate($string)
-    {
-        return mt('businessprocess', $string);
-    }
-
     public function setup()
     {
         $this->addElement('text', 'name', array(
