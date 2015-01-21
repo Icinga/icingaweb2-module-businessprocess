@@ -24,7 +24,7 @@ class ServiceNode extends Node
                 'processName' => $this->bp->getName()
             ));
         } else {
-            return $view->qlink($this->getAlias(), 'monitoring/show/service', array(
+            return $view->qlink($this->getAlias(), 'monitoring/service/show', array(
                 'host'    => $this->getHostname(),
                 'service' => $this->getServiceDescription(),
                 'processName' => $this->bp->getName()
