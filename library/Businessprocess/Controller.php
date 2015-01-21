@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess;
 
+use Icinga\Application\Icinga;
 use Icinga\Web\Controller\ModuleActionController;
 use Icinga\Module\Monitoring\Backend;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
@@ -24,6 +25,11 @@ class Controller extends ModuleActionController
 
     public function init()
     {
+        $m = Icinga::app()->getModuleManager();
+        if (! $m->hasLoaded('monitoring') && $m->hasInstalled('monitoring')) {
+            $m->loadModule('monitoring');
+        }
+
         $this->config = $this->Config();
         // $this->readConfig();
         $this->prepareBackend();
