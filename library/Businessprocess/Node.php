@@ -12,16 +12,58 @@ abstract class Node
     const FLAG_NONE     = 8;
     const SHIFT_FLAGS   = 4;
 
+    /**
+     * Main business process object
+     *
+     * @var BusinessProcess
+     */
     protected $bp;
+
+    /**
+     * Parent node
+     *
+     * @var Node
+     */
     protected $parent;
+
+    /**
+     * Node identifier
+     *
+     * @var string
+     */
     protected $name;
+
+    /**
+     * Node state
+     *
+     * @var int
+     */
     protected $state;
-    protected $description;
-    # protected $flags = 0;
+
+    /**
+     * Whether this nodes state has been acknowledged
+     *
+     * @var bool
+     */
     protected $ack;
+
+    /**
+     * Whether this node is in a scheduled downtime
+     *
+     * @var bool
+     */
     protected $downtime;
-    protected $recent_problems = array();
+
+    // obsolete
     protected $duration;
+
+    /**
+     * Last state change, unix timestamp
+     *
+     * @var int
+     */
+    protected $lastStateChange;
+
     protected $missing = false;
 
     protected static $state_names = array(
