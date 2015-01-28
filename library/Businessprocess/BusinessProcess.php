@@ -99,59 +99,53 @@ class BusinessProcess
         $check_results = array();
         $hostFilter = array_keys($this->hosts);
         if ($this->state_type === self::HARD_STATE) {
-            $hostStateColumn    = 'host_hard_state';
-            $serviceStateColumn = 'service_hard_state';
+            $hostStateColumn          = 'host_hard_state';
+            $hostStateChangeColumn    = 'host_last_hard_state_change';
+            $serviceStateColumn       = 'service_hard_state';
+            $serviceStateChangeColumn = 'service_last_hard_state_change';
         } else {
-            $hostStateColumn    = 'host_state';
-            $serviceStateColumn = 'service_state';
+            $hostStateColumn          = 'host_state';
+            $hostStateChangeColumn    = 'host_last_state_change';
+            $serviceStateColumn       = 'service_state';
+            $serviceStateChangeColumn = 'service_last_state_change';
         }
         $filter = Filter::matchAny();
         foreach ($hostFilter as $host) {
             $filter->addFilter(Filter::match('host_name', $host));
         }
         $hostStatus = $backend->select()->from('hostStatus', array(
-            'hostname'    => 'host_name',
-            'in_downtime' => 'host_in_downtime',
-            'ack'         => 'host_acknowledged',
-            'state'       => $hostStateColumn
+            'hostname'          => 'host_name',
+            'last_state_change' => $hostStateChangeColumn, 
+            'in_downtime'       => 'host_in_downtime',
+            'ack'               => 'host_acknowledged',
+            'state'             => $hostStateColumn
         ))->applyFilter($filter)->getQuery()->fetchAll();
 
         $serviceStatus = $backend->select()->from('serviceStatus', array(
-            'hostname'    => 'host_name',
-            'service'     => 'service_description',
-            'in_downtime' => 'service_in_downtime',
-            'ack'         => 'service_acknowledged',
-            'state'       => $serviceStateColumn
+            'hostname'          => 'host_name',
+            'service'           => 'service_description',
+            'last_state_change' => $serviceStateChangeColumn, 
+            'in_downtime'       => 'service_in_downtime',
+            'ack'               => 'service_acknowledged',
+            'state'             => $serviceStateColumn
         ))->applyFilter($filter)->getQuery()->fetchAll();
 
         foreach ($serviceStatus + $hostStatus as $row) {
             $key = $row->hostname;
             if ($row->service) {
                 $key .= ';' . $row->service;
-                // Ignore unused services, we are fetching more than we need
-                if (! array_key_exists($key, $this->all_checks)) {
-                    continue;
-                }
-                $node = new ServiceNode($this, $row);
-                // $this->object_ids[$row->object_id] = 1;
             } else {
                 $key .= ';Hoststatus';
-                if (! array_key_exists($key, $this->all_checks)) {
-                    continue;
-                }
-                $node = new HostNode($this, $row);
-                // $this->object_ids[$row->object_id] = 1;
             }
-            if ($row->state === null) {
-                $node = new ServiceNode(
-                    $this,
-                    (object) array(
-                        'hostname' => $row->hostname,
-                        'service'  => $row->service,
-                        'state'    => 0
-                    )
-                );
-                $node->setMissing();
+            // We fetch more states than we need, so skip unknown ones
+            if (! $this->hasNode($key)) continue;
+            $node = $this->getNode($key);
+
+            if ($row->state !== null) {
+                $node->setState($row->state)->setMissing(false);
+            }
+            if ($row->last_state_change !== null) {
+                $node->setLastStateChange($row->last_state_change);
             }
             if ((int) $row->in_downtime === 1) {
                 $node->setDowntime(true);
@@ -159,7 +153,6 @@ class BusinessProcess
             if ((int) $row->ack === 1) {
                 $node->setAck(true);
             }
-            $this->addNode($key, $node);
         }
         ksort($this->root_nodes);
         return $this;
@@ -223,17 +216,7 @@ class BusinessProcess
         if ($pos !== false) {
             $host = substr($name, 0, $pos);
             $service = substr($name, $pos + 1);
-            $node = new ServiceNode(
-                $this,
-                (object) array(
-                    'hostname' => $host,
-                    'service'  => $service,
-                    'state'    => 0
-                )
-            );
-            $node->setMissing();
-            $this->nodes[$name] = $node;
-            return $node;
+            return $this->createService($host, $service);
         }
 
         throw new Exception(
