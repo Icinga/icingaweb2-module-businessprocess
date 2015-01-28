@@ -191,6 +191,26 @@ class BusinessProcess
         return array_key_exists($name, $this->nodes);
     }
 
+    public function createService($host, $service)
+    {
+        $node = new ServiceNode(
+            $this,
+            (object) array(
+                'hostname' => $host,
+                'service'  => $service
+            )
+        );
+        $this->nodes[$host . ';' . $service] = $node;
+        return $node;
+    }
+
+    public function createHost($host)
+    {
+        $node = new HostNode($this, (object) array('hostname' => $host));
+        $this->nodes[$host . ';Hoststatus'] = $node;
+        return $node;
+    }
+
     public function getNode($name)
     {
         if (array_key_exists($name, $this->nodes)) {
@@ -219,6 +239,12 @@ class BusinessProcess
         throw new Exception(
             sprintf('The node "%s" doesn\'t exist', $name)
         );
+    }
+
+    public function addObjectName($name)
+    {
+        $this->all_checks[$name] = 1;
+        return $this;
     }
 
     public function addNode($name, Node $node)
