@@ -185,11 +185,17 @@ class LegacyStorage extends Storage
 
             foreach ($cmps as & $val) {
                 if (strpos($val, ';') !== false) {
+                    if ($bp->hasNode($val)) continue;
+
                     list($host, $service) = preg_split('~;~', $val, 2);
-                    $this->all_checks[$val] = 1;
-                    $this->hosts[$host] = 1;
+                    if ($service === 'Hoststatus') {
+                        $bp->createHost($host);
+                    } else {
+                        $bp->createService($host, $service);
+                    }
                 }
             }
+
             $node = new BpNode($bp, (object) array(
                 'name'        => $name,
                 'operator'    => $op_name,
