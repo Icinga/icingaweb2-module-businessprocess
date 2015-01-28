@@ -23,7 +23,7 @@ class Businessprocess_ProcessController extends Controller
         } else {
             $this->view->bp = $bp;
             if ($bp->hasWarnings()) {
-                $this->view->warnings = $bp->getWarings();
+                $this->view->warnings = $bp->getWarnings();
             }
         }
         $this->setAutorefreshInterval(10);
