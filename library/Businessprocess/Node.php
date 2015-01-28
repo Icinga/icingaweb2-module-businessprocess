@@ -164,6 +164,17 @@ abstract class Node
         return $state;
     }
 
+    public function getLastStateChange()
+    {
+        return $this->lastStateChange;
+    }
+
+    public function setLastStateChange($timestamp)
+    {
+        $this->lastStateChange = $timestamp;
+        return $this;
+    }
+
     public function setParent(Node $parent)
     {
         $this->parent = $parent;
