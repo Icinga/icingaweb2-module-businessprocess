@@ -13,7 +13,11 @@ class ServiceNode extends Node
         $this->hostname = $object->hostname;
         $this->service  = $object->service;
         $this->bp       = $bp;
-        $this->setState($object->state);
+        if (isset($object->state)) {
+            $this->setState($object->state);
+        } else {
+            $this->setState(0)->setMissing();
+        }
     }
 
     public function renderLink($view)

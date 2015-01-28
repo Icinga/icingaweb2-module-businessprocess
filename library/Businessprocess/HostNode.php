@@ -11,7 +11,11 @@ class HostNode extends Node
         $this->name     = $object->hostname . ';Hoststate';
         $this->hostname = $object->hostname;
         $this->bp       = $bp;
-        $this->setState($object->state);
+        if (isset($object->state)) {
+            $this->setState($object->state);
+        } else {
+            $this->setState(0)->setMissing();
+        }
     }
 
     public function renderLink($view)
