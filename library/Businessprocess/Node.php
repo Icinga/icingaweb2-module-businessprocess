@@ -256,6 +256,7 @@ abstract class Node
     {
         $id = $this->getId($prefix);
         $state = strtolower($this->getStateName());
+        if ($this->isMissing()) $state = 'missing';
         $handled = $this->isAcknowledged() || $this->isInDowntime();
         $html = sprintf(
             '<table class="bp %s%s%s" id="%s"><tbody><tr>',
