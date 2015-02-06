@@ -1,0 +1,18 @@
+name: businessprocess
+description: "file:///README.md"
+url: "https://www.icinga.org/"
+tags: BusinessProcess
+vendor: Icinga
+target: Icinga Web 2
+type: Module
+license: gplv2
+releases:
+  -
+    name: v1.0.0
+    description: "Current"
+    files:
+      -
+        name: icingaweb2-module-businessprocess.zip
+        url: "file:///icingaweb2-module-businessprocess.zip"
+        description: Module file for Icinga Web 2
+        checksum: dbfecce9af814a3ea6d23db6891a535e
