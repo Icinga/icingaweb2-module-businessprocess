@@ -31,7 +31,6 @@ class Controller extends ModuleActionController
         }
 
         $this->config = $this->Config();
-        $this->prepareBackend();
     }
 
     protected function tabs()
@@ -72,7 +71,7 @@ class Controller extends ModuleActionController
             }
         }
 
-        $bp->retrieveStatesFromBackend($this->backend);
+        $bp->retrieveStatesFromBackend();
         return $bp;
     }
 
@@ -100,18 +99,5 @@ class Controller extends ModuleActionController
         return $this->backend
             ->module('BpAddon')
             ->getBpSlaValues($sla_hosts, $start, $end);
-    }
-
-    protected function prepareBackend()
-    {
-        if ($this->backend === null) {
-            $name = $this->config->get('global', 'default_backend');
-            if (isset($this->bpconf->backend)) {
-                $name = $this->bpconf->backend;
-            }
-
-            $this->backend = Backend::createBackend($name);
-        }
-        return $this->backend;
     }
 }

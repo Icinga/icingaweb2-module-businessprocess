@@ -115,6 +115,12 @@ class BusinessProcess
         return $this->title ?: $this->getName();
     }
 
+    public function loadBackendByName($name)
+    {
+        $this->backend = MonitoringBackend::createBackend($name);
+        return $this;
+    }
+
     public function setBackend(MonitoringBackend $backend)
     {
         $this->backend = $backend;
@@ -123,6 +129,9 @@ class BusinessProcess
 
     public function getBackend()
     {
+        if ($this->backend === null) {
+            $this->backend = MonitoringBackend::createBackend();
+        }
         return $this->backend;
     }
 
@@ -176,9 +185,9 @@ class BusinessProcess
         return $this;
     }
 
-    public function retrieveStatesFromBackend(MonitoringBackend $backend)
+    public function retrieveStatesFromBackend()
     {
-        $this->backend = $backend;
+        $backend = $this->getBackend();
         // TODO: Split apart, create a dedicated function.
         //       Separate "parse-logic" from "retrieve-state-logic"
         //       Allow DB-based backend

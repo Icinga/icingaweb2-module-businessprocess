@@ -210,6 +210,9 @@ class LegacyStorage extends Storage
         // TODO: do not open twice, this is quick and dirty based on existing code
         $header = $this->readHeader($file, $name);
         $bp->setTitle($header['Title']);
+        if ($header['Backend']) {
+            $bp->loadBackendByName($header['Backend']);
+        }
 
         return $bp;
     }
