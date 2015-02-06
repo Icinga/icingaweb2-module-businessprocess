@@ -94,7 +94,7 @@ class BusinessProcess
         return $this;
     }
 
-    public function retrieveStatesFromBackend($backend)
+    public function retrieveStatesFromBackend(MonitoringBackend $backend)
     {
         $this->backend = $backend;
         // TODO: Split apart, create a dedicated function.
