@@ -18,13 +18,10 @@ class BusinessProcess
      */
     protected $backend;
 
-    protected $filename;
     protected $name;
-    protected $bps;
     protected $state_type = self::HARD_STATE;
     protected $warnings = array();
     protected $nodes = array();
-//    protected $object_ids = array();
     protected $root_nodes = array();
     protected $all_checks = array();
     protected $hosts = array();
