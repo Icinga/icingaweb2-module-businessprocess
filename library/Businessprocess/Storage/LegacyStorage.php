@@ -206,6 +206,11 @@ class LegacyStorage extends Storage
 
         fclose($fh);
         unset($this->parsing_line_number);
+
+        // TODO: do not open twice, this is quick and dirty based on existing code
+        $header = $this->readHeader($file, $name);
+        $bp->setTitle($header['Title']);
+
         return $bp;
     }
 
