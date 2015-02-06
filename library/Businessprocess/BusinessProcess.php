@@ -27,6 +27,13 @@ class BusinessProcess
     protected $name;
 
     /**
+     * Business process title
+     *
+     * @var string
+     */
+    protected $title;
+
+    /**
      * State type, soft or hard
      *
      * @var int
@@ -95,6 +102,17 @@ class BusinessProcess
     public function getName()
     {
         return $this->name;
+    }
+
+    public function setTitle($title)
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    public function getTitle()
+    {
+        return $this->title ?: $this->getName();
     }
 
     public function hasBeenChanged()
