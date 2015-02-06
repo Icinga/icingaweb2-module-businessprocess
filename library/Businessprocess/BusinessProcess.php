@@ -9,6 +9,7 @@ use Exception;
 class BusinessProcess
 {
     const SOFT_STATE = 0;
+
     const HARD_STATE = 1;
 
     /**
@@ -18,14 +19,67 @@ class BusinessProcess
      */
     protected $backend;
 
+    /**
+     * Business process name
+     *
+     * @var string
+     */
     protected $name;
+
+    /**
+     * State type, soft or hard
+     *
+     * @var int
+     */
     protected $state_type = self::HARD_STATE;
+
+    /**
+     * Warnings, usually filled at process build time
+     *
+     * @var array
+     */
     protected $warnings = array();
+
+    /**
+     * All used node objects
+     *
+     * @var array
+     */
     protected $nodes = array();
+
+    /**
+     * Root node objects
+     *
+     * @var array
+     */
     protected $root_nodes = array();
+
+    /**
+     * All check names { 'hostA;ping' => true, ... }
+     *
+     * @var array
+     */
     protected $all_checks = array();
+
+    /**
+     * All host names { 'hostA' => true, ... }
+     *
+     * @var array
+     */
     protected $hosts = array();
+
+    /**
+     * Whether we are in simulation mode
+     *
+     * @var boolean
+     */
     protected $simulationMode = false;
+
+    /**
+     * Whether we are in edit mode
+     *
+     * @var boolean
+     */
     protected $editMode = false;
 
     public function __construct()
@@ -69,12 +123,6 @@ class BusinessProcess
     {
         return $this->editMode;
     }
-/*
-    public function getObjectIds()
-    {
-        return array_keys($this->object_ids);
-    }
-*/
 
     public function useSoftStates()
     {
@@ -103,6 +151,7 @@ class BusinessProcess
         //       Use IcingaWeb2 Multi-Backend-Support
         $check_results = array();
         $hostFilter = array_keys($this->hosts);
+
         if ($this->state_type === self::HARD_STATE) {
             $hostStateColumn          = 'host_hard_state';
             $hostStateChangeColumn    = 'host_last_hard_state_change';
