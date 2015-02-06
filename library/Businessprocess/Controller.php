@@ -31,7 +31,6 @@ class Controller extends ModuleActionController
         }
 
         $this->config = $this->Config();
-        // $this->readConfig();
         $this->prepareBackend();
     }
 
@@ -55,18 +54,6 @@ class Controller extends ModuleActionController
         return $this->Window()->getSessionNamespace('businessprocess');
     }
 
-    protected function xxxloadBp()
-    {
-        $bpconf = $this->bpconf;
-        $bp = BusinessProcess::parse($this->filename);
-
-        if ($this->_getParam('state_type') === 'soft'
-           || (isset($bpconf->states) && $bpconf->states === 'soft')) {
-            $bp->useSoftStates();
-        }
-        $bp->retrieveStatesFromBackend($this->backend);
-        return $bp;
-    }
     protected function loadBp()
     {
         $storage = new LegacyStorage($this->Config()->getSection('global'));
@@ -108,38 +95,6 @@ class Controller extends ModuleActionController
         return $this->backend
             ->module('BpAddon')
             ->getBpSlaValues($sla_hosts, $start, $end);
-    }
-
-    protected function readConfig()
-    {
-        $this->views = array();
-        $this->aliases = array();
-        foreach ($this->config->keys() as $key) {
-            if (! preg_match('~^view-(.+)$~', $key, $match)) continue;
-            $conf = $this->config->getSection($key);
-            $this->views[$match[1]] = (object) $conf->toArray();
-            $this->aliases[(string) $conf->title] = $match[1];
-            if ($conf->aliases) {
-                foreach (preg_split('~\s*,\s*~', $conf->aliases, -1, PREG_SPLIT_NO_EMPTY) as $alias) {
-                    $this->aliases[$alias] = $match[1];
-                }
-            }
-        }
-
-        $bpname = $this->_getParam('bp', key($this->views));
-
-        if (array_key_exists($bpname, $this->aliases)) {
-            $bpname = $this->aliases[$bpname];
-        }
-        if (! array_key_exists($bpname, $this->views)) {
-            throw new Exception('Got invalid bp name: ' . $bpname);
-        }
-        $this->bpconf = $this->views[$bpname];
-
-        $this->bpname = $bpname;
-
-        $this->filename = $this->config->get('global', 'bp_config_dir')
-            . '/' . $this->bpconf->file . '.conf';
     }
 
     protected function prepareBackend()
