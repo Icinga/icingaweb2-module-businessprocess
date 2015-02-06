@@ -63,14 +63,19 @@ class Controller extends ModuleActionController
 
         $bp = $storage->loadProcess($process);
 
-        if ($this->_getParam('state_type') === 'soft'
-           || (isset($bpconf->states) && $bpconf->states === 'soft')) {
-            $bp->useSoftStates();
+        if (null !== ($stateType = $this->params->get('state_type'))) {
+            if ($stateType === 'soft') {
+                $bp->useSoftStates();
+            }
+            if ($stateType === 'soft') {
+                $bp->useHardStates();
+            }
         }
+
         $bp->retrieveStatesFromBackend($this->backend);
         return $bp;
-
     }
+
     protected function loadSlas()
     {
         $bpconf = $this->bpconf;
