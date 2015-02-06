@@ -1,6 +1,6 @@
-name: businessprocess
+name: Business Process
 description: "file:///README.md"
-url: "https://www.icinga.org/"
+url: "https://dev.icinga.org/projects/businessprocess"
 tags: BusinessProcess
 vendor: Icinga
 target: Icinga Web 2
