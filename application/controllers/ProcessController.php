@@ -28,6 +28,10 @@ class Businessprocess_ProcessController extends Controller
         }
         $this->setAutorefreshInterval(10);
 
+        if ($this->params->get('showSource')) {
+            $this->view->source = $bp->toLegacyConfigString();
+            $this->render('source');
+        }
         if ($this->params->get('simulation')) {
             $bp->setSimulationMode();
             $this->addSimulation($bp);

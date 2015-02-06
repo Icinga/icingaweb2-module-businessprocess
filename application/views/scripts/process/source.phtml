@@ -1,11 +1,13 @@
 <div class="controls">
-<span style="float:right; margin-right: 1em; margin-top: 0.5em;">
-<a href="<?= $this->href('businessprocess/process/show', array(
-    'bp' => $this->bpname
-)) ?>">Render</a>
-</span>
 <?= $this->tabs ?>
+  <h1><?= $this->escape($this->title) ?>
+  <a href="<?= $this->url()->without('mode') ?>" title="<?= $this->escape('Switch to tree view') ?>" style="float: right"><?= $this->icon('sitemap') ?></a>
+  <?= $this->render('simulationlink.phtml') ?>
+  <?= $this->render('editlink.phtml') ?>
+  </h1>
 </div>
+
+<div class="content" data-base-target="_next">
 <pre>
 <?php
 
@@ -20,3 +22,4 @@ foreach ($lines as $line) {
 
 ?>
 </pre>
+</div>
