@@ -115,6 +115,22 @@ class BusinessProcess
         return $this->title ?: $this->getName();
     }
 
+    public function setBackend(MonitoringBackend $backend)
+    {
+        $this->backend = $backend;
+        return $this;
+    }
+
+    public function getBackend()
+    {
+        return $this->backend;
+    }
+
+    public function hasBackend()
+    {
+        return $this->backend !== null;
+    }
+
     public function hasBeenChanged()
     {
         return false;
