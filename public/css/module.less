@@ -224,6 +224,7 @@ table.bp {
     &.critical.handled { border-color: @colorCriticalHandled; }
     &.unknown          { border-color: @colorUnknown; }
     &.unknown.handled  { border-color: @colorUnknownHandled; }
+    &.missing          { border-color: #ccc; }
     &.hovered {
         &.ok > tbody > tr > {
             th, td > a { background-color: @colorOk; }
@@ -245,6 +246,9 @@ table.bp {
         }
         &.unknown.handled > tbody > tr > {
             th, td > a { background-color: @colorCUnknownHandled; }
+        }
+        &.missing > tbody > tr > {
+            th, td > a { background-color: #ccc; }
         }
     }
 }
@@ -377,5 +381,9 @@ table.bp {
 
 .toplevel > div.pending {
     background: @colorPending;
+}
+
+.toplevel > div.missing {
+    background: #ccc;
 }
 
