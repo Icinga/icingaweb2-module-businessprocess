@@ -245,7 +245,7 @@ class BpNode extends Node
             implode(' ' . $op . ' ', $children)
         );
         if ($this->hasAlias()/* || $this->hasPrio()*/) {
-            $prio = 1; // TODO: $this->getPrio()
+            $prio = $this->display; // TODO: $this->getPrio() ??
             $cfg .= sprintf(
                 "display_name %s;%s;%s\n",
                 $prio,
@@ -254,7 +254,6 @@ class BpNode extends Node
             );
         }
         if ($this->hasInfoUrl()) {
-            $prio = 1; // TODO: $this->getPrio()
             $cfg .= sprintf(
                 "info_url;%s;%s\n",
                 $this->name,
