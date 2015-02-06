@@ -116,8 +116,9 @@ class BusinessProcess
         }
         $filter = Filter::matchAny();
         foreach ($hostFilter as $host) {
-            $filter->addFilter(Filter::match('host_name', $host));
+            $filter->addFilter(Filter::where('host_name', $host));
         }
+
         $hostStatus = $backend->select()->from('hostStatus', array(
             'hostname'          => 'host_name',
             'last_state_change' => $hostStateChangeColumn, 
@@ -199,6 +200,7 @@ class BusinessProcess
             )
         );
         $this->nodes[$host . ';' . $service] = $node;
+        $this->hosts[$host] = true;
         return $node;
     }
 
@@ -206,6 +208,7 @@ class BusinessProcess
     {
         $node = new HostNode($this, (object) array('hostname' => $host));
         $this->nodes[$host . ';Hoststatus'] = $node;
+        $this->hosts[$host] = true;
         return $node;
     }
 
@@ -245,6 +248,7 @@ class BusinessProcess
                 )
             );
         }
+
         $this->nodes[$name] = $node;
         return $this;
     }
