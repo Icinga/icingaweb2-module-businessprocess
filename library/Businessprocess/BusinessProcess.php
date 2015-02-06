@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess;
 
+use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 use Icinga\Data\Filter\Filter;
 use Exception;
 
@@ -9,7 +10,14 @@ class BusinessProcess
 {
     const SOFT_STATE = 0;
     const HARD_STATE = 1;
-    protected $ido;
+
+    /**
+     * Monitoring backend to retrieve states from
+     *
+     * @var MonitoringBackend
+     */
+    protected $backend;
+
     protected $filename;
     protected $name;
     protected $bps;
