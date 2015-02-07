@@ -66,7 +66,7 @@ class Controller extends ModuleActionController
             if ($stateType === 'soft') {
                 $bp->useSoftStates();
             }
-            if ($stateType === 'soft') {
+            if ($stateType === 'hard') {
                 $bp->useHardStates();
             }
         }
