@@ -2,7 +2,7 @@
 
 namespace Icinga\Module\Businessprocess;
 
-use Exception;
+use Icinga\Exception\ConfigurationError;
 
 class BpNode extends Node
 {
@@ -128,11 +128,9 @@ class BpNode extends Node
             default:
                 // MIN:
                 if (! is_numeric($this->operator)) {
-                    throw new Exception(
-                        sprintf(
-                            'Got invalid operator: %s',
-                            $this->operator
-                        )
+                    throw new ConfigurationError(
+                        'Got invalid operator: %s',
+                        $this->operator
                     );
                 }
                 sort($sort_states);
@@ -199,13 +197,7 @@ class BpNode extends Node
     protected function assertNumericOperator()
     {
         if (! is_numeric($this->operator)) {
-            // TODO: ConfigurationError
-            throw new Exception(
-                sprintf(
-                    'Got invalid operator: %s',
-                    $this->operator
-                )
-            );
+            throw new ConfigurationError('Got invalid operator: %s', $this->operator);
         }
     }
 
