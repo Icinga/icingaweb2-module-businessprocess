@@ -13,10 +13,9 @@ class Businessprocess_NodeController extends Controller
         $node = $bp->getNode($this->getParam('node'));
 
         $form = new ProcessForm();
-        $form->setBackend($this->backend)
-              ->setProcess($bp)
-              ->setNode($node)
-              ->handleRequest();
+        $form->setProcess($bp)
+             ->setNode($node)
+             ->handleRequest();
 
         $this->view->form = $form;
         $this->view->node = $node;
@@ -33,19 +32,18 @@ class Businessprocess_NodeController extends Controller
         );
         $form = new SimulationForm();
 
-        $form->setBackend($this->backend)
-              ->setProcess($bp)
-              ->setSession($this->session())
-              ->setNode($node)
-               // TODO: find a better way to handle redirects
-              ->setRedirectUrl(
-                  sprintf(
-                      'businessprocess/process/show?simulation=1&processName=%s#!%s',
-                      $bp->getName(),
-                      $detail->getAbsoluteUrl()
-                  )
-              )
-              ->handleRequest();
+        $form->setProcess($bp)
+             ->setSession($this->session())
+             ->setNode($node)
+              // TODO: find a better way to handle redirects
+             ->setRedirectUrl(
+                 sprintf(
+                     'businessprocess/process/show?simulation=1&processName=%s#!%s',
+                     $bp->getName(),
+                     $detail->getAbsoluteUrl()
+                 )
+             )
+             ->handleRequest();
 
         $this->view->form = $form;
         $this->view->node = $node;

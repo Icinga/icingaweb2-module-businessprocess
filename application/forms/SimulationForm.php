@@ -60,6 +60,7 @@ class SimulationForm extends Form
     public function setProcess($process)
     {
         $this->process = $process;
+        $this->setBackend($process->getBackend());
         return $this;
     }
 

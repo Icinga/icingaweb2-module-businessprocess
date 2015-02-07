@@ -72,6 +72,7 @@ class ProcessForm extends Form
     public function setProcess($process)
     {
         $this->process = $process;
+        $this->setBackend($process->getBackend());
         $this->processList = array();
         foreach ($process->getNodes() as $node) {
             if ($node instanceof BpNode) {
