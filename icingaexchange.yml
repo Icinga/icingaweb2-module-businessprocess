@@ -8,11 +8,11 @@ type: Module
 license: gplv2
 releases:
   -
-    name: v1.0.0
+    name: v0.0.9
     description: "Current"
     files:
       -
         name: icingaweb2-module-businessprocess.zip
         url: "file:///icingaweb2-module-businessprocess.zip"
         description: Module file for Icinga Web 2
-        checksum: 94af71f414779c28caeca2ed7b87986e
+        checksum: be0fa3fe4bd813431f31664dd5008132
