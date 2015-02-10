@@ -13,6 +13,6 @@ releases:
     files:
       -
         name: icingaweb2-module-businessprocess.zip
-        url: "file:///icingaweb2-module-businessprocess.zip"
+        url: "https://dev.icinga.org/attachments/download/2251/icingaweb2-module-businessprocess.zip"
         description: Module file for Icinga Web 2
         checksum: be0fa3fe4bd813431f31664dd5008132
