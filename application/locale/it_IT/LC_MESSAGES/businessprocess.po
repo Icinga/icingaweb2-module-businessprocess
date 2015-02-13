@@ -1,0 +1,123 @@
+# Icinga Web 2 - Head for multiple monitoring backends.
+# Copyright (C) 2015 Icinga Development Team
+# This file is distributed under the same license as Businessprocess Module.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Businessprocess Module (2.0.0-beta1)\n"
+"Report-Msgid-Bugs-To: dev@icinga.org\n"
+"POT-Creation-Date: 2015-02-13 01:29+0100\n"
+"PO-Revision-Date: 2015-02-13 01:46+0100\n"
+"Last-Translator: Thomas Gelf <thomas@gelf.net>\n"
+"Language: it_IT\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:38
+msgid "AND"
+msgstr "E"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:44
+msgid "Acknowledged"
+msgstr "Gestito"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:51
+msgid "Apply"
+msgstr "Applica"
+
+#: /usr/local/icingaweb-modules/businessprocess/configuration.php:4
+msgid "Business Processes"
+msgstr "Processi Business"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:34
+msgid "CRITICAL"
+msgstr "CRITICO"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:49
+msgid ""
+"Hosts, services or other processes that should be part of this business "
+"process"
+msgstr ""
+"Host, servizi o altri processi che devono far parte di questo processo "
+"business"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:48
+msgid "In downtime"
+msgstr "In manutenzione"
+
+#: /usr/local/icingaweb-modules/businessprocess/library/Businessprocess/Node.php:304
+msgid "More information"
+msgstr "Ulteriori informazioni"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:32
+msgid "OK"
+msgstr "OK"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:39
+msgid "OR"
+msgstr "O"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:35
+msgid "Operator"
+msgstr "Operatore"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:66
+msgid "Other Business Processes"
+msgstr "Altri processi business"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:40
+msgid "Plugin output"
+msgstr "Output del plugin"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:45
+msgid "Process components"
+msgstr "Componenti del processo"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:30
+msgid "Process name"
+msgstr "Nome processo"
+
+#: /usr/local/icingaweb-modules/businessprocess/configuration.php:3
+msgid "Reporting"
+msgstr "Reportistica"
+
+#: /usr/local/icingaweb-modules/businessprocess/library/Businessprocess/Controller.php:40
+msgid "Show"
+msgstr "Mostra"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:111
+msgid "Simulation has been removed"
+msgstr "La simulazione è stata rimossa"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:29
+msgid "State"
+msgstr "Stato"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:51
+msgid "Store"
+msgstr "Salva"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:35
+msgid "UNKNOWN"
+msgstr "SCONOSCIUTO"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:31
+msgid "Use current state"
+msgstr "Usa lo stato attuale"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:33
+msgid "WARNING"
+msgstr "AVVISO"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/views/scripts/warnings.phtml:2
+msgid "Warnings"
+msgstr "Avvisi"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:40
+msgid "min"
+msgstr "min"
