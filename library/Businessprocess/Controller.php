@@ -40,11 +40,14 @@ class Controller extends ModuleActionController
             'title' => $this->translate('Show'),
             'url' => 'businessprocess/process/show',
         ));
-        if ($process = $this->params->get('process')) {
-            foreach ($tabs->getTabs() as $tab) {
-                $tab->setUrlParams(array('process' => $process));
+        foreach (array('processName', 'process') as $param) {
+            if ($process = $this->params->get($param)) {
+                foreach ($tabs->getTabs() as $tab) {
+                    $tab->setUrlParams(array($param => $process));
+                }
             }
         }
+
         return $tabs;
     }
 
