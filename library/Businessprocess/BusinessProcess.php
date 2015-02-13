@@ -179,6 +179,16 @@ class BusinessProcess
         return $this;
     }
 
+    public function usesSoftStates()
+    {
+        return $this->state_type === self::SOFT_STATE;
+    }
+
+    public function usesHardStates()
+    {
+        $this->state_type === self::HARD_STATE;
+    }
+
     public function addRootNode($name)
     {
         $this->root_nodes[$name] = $this->getNode($name);
@@ -301,6 +311,13 @@ class BusinessProcess
         $node = new HostNode($this, (object) array('hostname' => $host));
         $this->nodes[$host . ';Hoststatus'] = $node;
         $this->hosts[$host] = true;
+        return $node;
+    }
+
+    public function createImportedNode($config, $name)
+    {
+        $node = new ImportedNode($this, (object) array('name' => $name, 'configName' => $config));
+        $this->nodes[$name] = $node;
         return $node;
     }
 
