@@ -4,6 +4,7 @@ namespace Icinga\Module\Businessprocess\Storage;
 
 use Icinga\Application\Icinga;
 use Icinga\Data\ConfigObject;
+use Icinga\Exception\ConfigurationError;
 use Icinga\Module\Businessprocess\BusinessProcess;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\Storage\Storage;
@@ -15,6 +16,8 @@ class LegacyStorage extends Storage
     protected $configDir;
 
     protected $parsing_line_number;
+
+    protected $currentFilename;
 
     public function getConfigDir()
     {
@@ -91,11 +94,7 @@ class LegacyStorage extends Storage
      */
     public function loadProcess($name)
     {
-        // Parse
-        return $this->parse(
-            $this->getConfigDir() . '/' . $name . '.conf',
-            $name
-        );
+        return $this->parse($name);
     }
 
     /**
@@ -104,9 +103,14 @@ class LegacyStorage extends Storage
     {
     }
 
-
-    protected function parse($file, $name)
+    public function getFilename($name)
     {
+        return $this->getConfigDir() . '/' . $name . '.conf';
+    }
+
+    protected function parse($name)
+    {
+        $file = $this->currentFilename = $this->getFilename($name);
         $bp = new BusinessProcess();
         $bp->setName($name);
         $fh = @fopen($file, 'r');
@@ -194,6 +198,11 @@ class LegacyStorage extends Storage
                         $bp->createService($host, $service);
                     }
                 }
+                if ($val[0] === '@' && strpos($val, ':') !== false) {
+                    list($config, $nodeName) = preg_split('~:\s*~', substr($val, 1), 2);
+                    $bp->createImportedNode($config, $nodeName);
+                    $val = $nodeName;
+                }
             }
 
             $node = new BpNode($bp, (object) array(
@@ -206,6 +215,7 @@ class LegacyStorage extends Storage
 
         fclose($fh);
         unset($this->parsing_line_number);
+        unset($this->currentFilename);
 
         // TODO: do not open twice, this is quick and dirty based on existing code
         $header = $this->readHeader($file, $name);
@@ -219,10 +229,10 @@ class LegacyStorage extends Storage
 
     protected function parseError($msg)
     {
-        throw new Exception(
+        throw new ConfigurationError(
             sprintf(
                 'Parse error on %s:%s: %s',
-                $this->filename,
+                $this->currentFilename,
                 $this->parsing_line_number,
                 $msg
             )
