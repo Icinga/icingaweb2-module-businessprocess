@@ -43,8 +43,6 @@ class CheckCommand extends Command
             }
         }
 
-        $bp->retrieveStatesFromBackend();
-
         $node = $bp->getNode($this->params->shift());
         $bp->retrieveStatesFromBackend();
         printf("Business Process %s: %s\n", $node->getStateName(), $node->getAlias());
