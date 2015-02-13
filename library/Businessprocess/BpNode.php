@@ -212,7 +212,6 @@ class BpNode extends Node
         ));
     }
 
-
     public function toLegacyConfigString()
     {
         $cfg = '';
