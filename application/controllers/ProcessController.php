@@ -10,6 +10,7 @@ class Businessprocess_ProcessController extends Controller
         if ($this->getRequest()->isPost()) {
             $this->redirectNow($this->getRequest()->getUrl()->with('processName', $this->getRequest()->getPost('processName')));
         }
+        $this->view->compact = $this->params->get('view') === 'compact';
         $storage = new LegacyStorage($this->Config()->getSection('global'));
         $this->view->processList = $storage->listProcesses();
         $process = $this->params->get('processName', key($this->view->processList));
