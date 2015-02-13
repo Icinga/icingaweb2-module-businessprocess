@@ -1,0 +1,104 @@
+<?php
+
+namespace Icinga\Module\Businessprocess;
+
+use Icinga\Application\Config;
+use Icinga\Module\Businessprocess\Storage\LegacyStorage;
+
+class ImportedNode extends Node
+{
+    protected $configName;
+
+    protected $importedBp;
+
+    protected $importedNode;
+
+    public function __construct(BusinessProcess $bp, $object)
+    {
+        $this->name       = $object->name;
+        $this->configName = $object->configName;
+        $this->bp         = $bp;
+        if (isset($object->state)) {
+            $this->setState($object->state);
+        } else {
+            $this->setMissing();
+        }
+    }
+
+    public function getConfigName()
+    {
+        return $this->configName;
+    }
+
+    public function getState()
+    {
+        if ($this->state === null) {
+            $this->state = $this->importedNode()->getState();
+        }
+        return $this->state;
+    }
+
+    public function getSortingState()
+    {
+        return $this->importedNode()->getSortingState();
+    }
+
+    public function getAlias()
+    {
+        return $this->importedNode()->getAlias();
+    }
+
+    public function isMissing()
+    {
+        return $this->getState() === null;
+    }
+
+    public function isInDowntime()
+    {
+        if ($this->downtime === null) {
+            $this->downtime = $this->importedNode()->isInDowntime();
+        }
+        return $this->downtime;
+    }
+
+    public function isAcknowledged()
+    {
+        if ($this->ack === null) {
+            $this->downtime = $this->importedNode()->isAcknowledged();
+        }
+        return $this->ack;
+    }
+
+    protected function importedNode()
+    {
+        if ($this->importedNode === null) {
+            $storage = new LegacyStorage(
+                Config::module('businessprocess')->getSection('global')
+            );
+            $this->importedBp = $storage->loadProcess($this->configName);
+            if ($this->bp->usesSoftStates()) {
+                $this->importedBp->useSoftStates();
+            } else {
+                $this->importedBp->useHardStates();
+            }
+            $this->importedBp->retrieveStatesFromBackend();
+            $this->importedNode = $this->importedBp->getNode($this->name);
+        }
+        return $this->importedNode;
+    }
+
+    public function renderLink($view)
+    {
+        if ($this->bp->isSimulationMode()) {
+            return $view->qlink($this->getAlias(), 'businessprocess/importednode/simulate', array(
+                'processName' => $this->configName,
+                'node' => $this->name
+            ));
+        } else {
+           return $view->qlink($this->getAlias(), 'businessprocess/process/show', array(
+                'processName' => $this->configName,
+                'process' => $this->name
+            ));
+        }
+    }
+}
