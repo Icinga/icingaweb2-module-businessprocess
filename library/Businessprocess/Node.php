@@ -207,7 +207,6 @@ abstract class Node
         return $this->ack;
     }
 
-
     public function isSimulationMode()
     {
         return $this->bp->isSimulationMode();
@@ -231,6 +230,16 @@ abstract class Node
     public function getChildren()
     {
         return array();
+    }
+
+    public function hasAlias()
+    {
+        return false;
+    }
+
+    public function getAlias()
+    {
+        return $this->name;
     }
 
     protected function renderHtmlForChildren($view)
