@@ -238,7 +238,7 @@ class BpNode extends Node
         if ($this->hasAlias()/* || $this->hasPrio()*/) {
             $prio = $this->display; // TODO: $this->getPrio() ??
             $cfg .= sprintf(
-                "display_name %s;%s;%s\n",
+                "display %s;%s;%s\n",
                 $prio,
                 $this->name,
                 $this->getAlias()
