@@ -411,7 +411,7 @@ class BusinessProcess
         foreach ($this->getChildren() as $child) {
             $conf .= $child->toLegacyConfigString();
         }
-        return $conf;
+        return $conf . "\n";
     }
 
     public function renderHtml($view)
