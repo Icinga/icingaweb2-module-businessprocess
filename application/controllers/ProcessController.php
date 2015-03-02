@@ -18,7 +18,7 @@ class Businessprocess_ProcessController extends Controller
 
         $this->view->tabs = $this->tabs()->activate('show');
         $this->view->title = 'Business Processes';
-        $bp = $this->loadBp();
+        $bp = $this->loadBp()->retrieveStatesFromBackend();
         if ($process = $this->params->get('process')) {
             $this->view->bp = $bp->getNode($process);
         } else {

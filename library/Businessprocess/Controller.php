@@ -74,7 +74,6 @@ class Controller extends ModuleActionController
             }
         }
 
-        $bp->retrieveStatesFromBackend();
         return $bp;
     }
 
