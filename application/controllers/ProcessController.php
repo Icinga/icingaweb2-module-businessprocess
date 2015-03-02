@@ -58,10 +58,4 @@ class Businessprocess_ProcessController extends Controller
                ->setDowntime($s->in_downtime);
         }
     }
-
-    public function sourceAction()
-    {
-        $this->view->title = 'Source: ' . $this->bpconf->title;
-        $this->view->source = file_get_contents($this->filename);
-    }
 }
