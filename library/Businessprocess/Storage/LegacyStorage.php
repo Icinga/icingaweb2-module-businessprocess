@@ -99,8 +99,14 @@ class LegacyStorage extends Storage
 
     /**
      */
-    public function storeProcess(BusinessProcess $name)
+    public function storeProcess(BusinessProcess $process)
     {
+        $filename = $this->getFilename($process->getName());
+        $content = $process->toLegacyConfigString();
+        file_put_contents(
+            $filename,
+            $content
+        );
     }
 
     public function getFilename($name)

@@ -42,6 +42,11 @@ class Businessprocess_ProcessController extends Controller
             $bp->setEditMode();
         }
 
+        if ($this->params->get('store')) {
+            $storage->storeProcess($bp);
+            $this->redirectNow($this->getRequest()->getUrl()->without('store'));
+        }
+
         if ($this->params->get('mode') === 'toplevel') {
             $this->render('toplevel');
         }
