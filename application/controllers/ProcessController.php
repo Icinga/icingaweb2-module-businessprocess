@@ -2,10 +2,27 @@
 
 use Icinga\Module\Businessprocess\Controller;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
-use Exception;
+use \Exception;
 
 class Businessprocess_ProcessController extends Controller
 {
+    public function downloadAction()
+    {
+        $bp = $this->loadBp();
+        header(
+            sprintf(
+                'Content-Disposition: attachment; filename="%s.conf";',
+                $bp->getName()
+            )
+        );
+        header('Content-Type: text/plain');
+
+        echo $bp->toLegacyConfigString();
+        // Didn't have time to lookup how to correctly disable our renderers
+        // TODO: no exit :)
+        exit;
+    }
+
     public function showAction()
     {
         if ($this->getRequest()->isPost()) {

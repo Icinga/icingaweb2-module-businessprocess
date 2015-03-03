@@ -13,10 +13,12 @@ if ($count < 20) {
 ?>
 <?php if (! $this->compact): ?>
 <div class="controls">
+<?= $this->tabs ?>
   <h1><?= $this->escape($this->title) ?>
   <a href="<?= $this->url()->without('mode') ?>" title="<?= $this->escape('Switch to tree view') ?>" style="float: right"><?= $this->icon('sitemap') ?></a>
   <?= $this->render('simulationlink.phtml') ?>
   <?= $this->render('editlink.phtml') ?>
+  <?= $this->render('downloadlink.phtml') ?>
   </h1>
 </div>
 <?php endif ?>
