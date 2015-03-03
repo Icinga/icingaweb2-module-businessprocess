@@ -27,7 +27,7 @@ class HostNode extends Node
             ));
         } else {
             return $view->qlink($this->getHostname(), 'monitoring/host/show', array(
-                'host' => $this->getHostname,
+                'host' => $this->getHostname(),
                 'processName' => $this->bp->getName()
             ));
         }

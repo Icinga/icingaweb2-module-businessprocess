@@ -340,7 +340,7 @@ abstract class Node
         return '&nbsp;';
     }
 
-    public function toLegacyConfigString() { return '';}
+    public function toLegacyConfigString(& $rendered = array()) { return '';}
     //abstract public function toLegacyConfigString();
 
     public function __toString()

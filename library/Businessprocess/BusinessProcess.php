@@ -408,8 +408,9 @@ class BusinessProcess
             date('Y-m-d H:i:s')
         );
 
+        $rendered = array();
         foreach ($this->getChildren() as $child) {
-            $conf .= $child->toLegacyConfigString();
+            $conf .= $child->toLegacyConfigString($rendered);
         }
         return $conf . "\n";
     }

@@ -246,16 +246,18 @@ class BpNode extends Node
         ));
     }
 
-    public function toLegacyConfigString()
+    public function toLegacyConfigString(& $rendered = array())
     {
         $cfg = '';
         $children = array();
         
         foreach ($this->getChildren() as $name => $child) {
             $children[] = (string) $child;
+            if (array_key_exists($name, $rendered)) { continue; }
             if ($child instanceof BpNode) {
-                $cfg .= $child->toLegacyConfigString() . "\n";
+                $cfg .= $child->toLegacyConfigString($rendered) . "\n";
             }
+            $rendered[$name] = true;
         }
         $eq = '=';
         $op = $this->operator;
