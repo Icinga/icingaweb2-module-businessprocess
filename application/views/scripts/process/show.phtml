@@ -1,3 +1,4 @@
+<?php if (! $this->compact): ?>
 <div class="controls">
 <?= $this->tabs ?>
   <h1><?= $this->escape($this->title) ?>
@@ -6,11 +7,14 @@
   <?= $this->render('editlink.phtml') ?>
 </h1>
 </div>
+<?php endif ?>
 
-<div class="content" data-base-target="_next">
-<form method="post" action="<?= $this->url()->without('process') ?>" data-base-target="_self">
+<div class="content<?= $this->compact ? ' compact' : '' ?>" data-base-target="_next">
+<?php if (! $this->compact): ?>
+  <form method="post" action="<?= $this->url()->without('process') ?>" data-base-target="_self">
   <?= $this->formSelect('processName', $this->processName, array('class' => 'autosubmit'), $this->processList) ?>
-</form>
+  </form>
+<?php endif ?>
 <?php if (! empty($this->errors)): ?>
 <ul class="error">
 <?php foreach ($this->errors as $error): ?>
