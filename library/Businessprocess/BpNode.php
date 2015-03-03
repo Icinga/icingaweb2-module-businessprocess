@@ -16,6 +16,7 @@ class BpNode extends Node
     protected $child_names = array();
     protected $alias;
     protected $counters;
+    protected $missing = null;
 
     public function __construct(
         BusinessProcess $bp,
@@ -50,6 +51,20 @@ class BpNode extends Node
             }
         }
         return $this->counters;
+    }
+
+    public function isMissing()
+    {
+        if ($this->missing === null) {
+            $exists = false;
+            foreach ($this->getChildren() as $child) {
+                if (! $child->isMissing()) {
+                    $exists = true;
+                }
+            }
+            $this->missing = ! $exists;
+        }
+        return $this->missing;
     }
 
     public function getOperator()
