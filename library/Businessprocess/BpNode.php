@@ -29,7 +29,7 @@ class BpNode extends Node
     ) {
         $this->bp = $bp;
         $this->name = $object->name;
-        $this->operator = $object->operator;
+        $this->setOperator($object->operator);
         $this->setChildNames($object->child_names);
     }
 
@@ -70,6 +70,31 @@ class BpNode extends Node
     public function getOperator()
     {
         return $this->operator;
+    }
+
+    public function setOperator($operator)
+    {
+        $this->assertValidOperator($operator);
+        $this->operator = $operator;
+        return $this;
+    }
+
+    protected function assertValidOperator($operator)
+    {
+        switch ($operator) {
+            case self::OP_AND:
+            case self::OP_OR:
+                return;
+            default:
+                if (is_numeric($operator)) {
+                    return;
+                }
+        }
+
+        throw new ConfigurationError(
+            'Got invalid operator: %s',
+            $operator
+        );
     }
 
     public function setInfoUrl($url)
@@ -142,12 +167,6 @@ class BpNode extends Node
                 break;
             default:
                 // MIN:
-                if (! is_numeric($this->operator)) {
-                    throw new ConfigurationError(
-                        'Got invalid operator: %s',
-                        $this->operator
-                    );
-                }
                 sort($sort_states);
 
                 // default -> unknown
