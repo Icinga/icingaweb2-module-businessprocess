@@ -2,6 +2,7 @@
 
 use Icinga\Module\Businessprocess\Controller;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
+use Exception;
 
 class Businessprocess_ProcessController extends Controller
 {
@@ -18,7 +19,15 @@ class Businessprocess_ProcessController extends Controller
 
         $this->view->tabs = $this->tabs()->activate('show');
         $this->view->title = 'Business Processes';
-        $bp = $this->loadBp()->retrieveStatesFromBackend();
+
+        $bp = $this->loadBp();
+        try {
+            $bp->retrieveStatesFromBackend();
+        } catch (Exception $e) {
+            $this->view->errors = array(
+                'Could not retrieve process state: ' . $e->getMessage()
+            );
+        }
         if ($process = $this->params->get('process')) {
             $this->view->bp = $bp->getNode($process);
         } else {

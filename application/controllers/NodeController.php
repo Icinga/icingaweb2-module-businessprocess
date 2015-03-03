@@ -14,6 +14,7 @@ class Businessprocess_NodeController extends Controller
 
         $form = new ProcessForm();
         $form->setProcess($bp)
+             ->setSession($this->session())
              ->setNode($node)
              ->handleRequest();
 

@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess\Forms;
 
 use Icinga\Web\Form;
+use Icinga\Web\Notification;
 use Icinga\Web\Request;
 use Icinga\Module\Businessprocess\BpNode;
 
@@ -17,6 +18,8 @@ class ProcessForm extends Form
     protected $objectList = array();
 
     protected $processList = array();
+
+    protected $session;
 
     public function __construct($options = null)
     {
@@ -35,8 +38,8 @@ class ProcessForm extends Form
             'label'        => $this->translate('Operator'),
             'required'     => true,
             'multiOptions' => array(
-                'and' => $this->translate('AND'),
-                'or ' => $this->translate('OR'),
+                '&' => $this->translate('AND'),
+                '|' => $this->translate('OR'),
                 'min' => $this->translate('min')
             )
         ));
@@ -129,8 +132,21 @@ class ProcessForm extends Form
         return $this;
     }
 
+    public function setSession($session)
+    {
+        $this->session = $session;
+        return $this;
+    }
+
     public function onSuccess()
     {
-        Notification::success(sprintf($message, $this->getElement('name')->getValue()));
+        $modifications = $this->session->get('modifications', array());
+        $node = $this->process->getNode($this->getValue('name'));
+        $node->setChildNames($this->getValue('children'));
+        $node->setOperator($this->getValue('operator'));
+        $modifications[$this->process->getName()] = $this->process->toLegacyConfigString();
+        $this->session->set('modifications', $modifications);
+        $message = 'Process %s has been modified';
+        Notification::success(sprintf($message, $this->process->getName()));
     }
 }

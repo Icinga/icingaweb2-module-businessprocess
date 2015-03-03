@@ -11,6 +11,13 @@
 <form method="post" action="<?= $this->url()->without('process') ?>" data-base-target="_self">
   <?= $this->formSelect('processName', $this->processName, array('class' => 'autosubmit'), $this->processList) ?>
 </form>
+<?php if (! empty($this->errors)): ?>
+<ul class="error">
+<?php foreach ($this->errors as $error): ?>
+<li><?= $this->escape($error) ?></li>
+<?php endforeach ?>
+</ul>
+<?php endif ?>
 <?= $this->bp->renderHtml($this) ?>
 <?= $this->render('warnings.phtml') ?>
 </div>
