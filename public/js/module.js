@@ -24,7 +24,7 @@
             this.module.on('beforerender', this.rememberOpenedBps);
             this.module.on('rendered',     this.fixOpenedBps);
 
-            this.module.on('click', 'table.bp.process > tbody > tr:first-child > td > a:first-child', this.processTitleClick);
+            this.module.on('click', 'table.bp.process > tbody > tr:first-child > td > a:last-child', this.processTitleClick);
             this.module.on('click', 'table.bp > tbody > tr:first-child > th', this.processOperatorClick);
 
             this.module.on('mouseenter', 'table.bp > tbody > tr > td > a', this.procMouseOver);

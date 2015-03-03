@@ -298,13 +298,24 @@ abstract class Node
         }
 
 
-        $title = preg_replace('~(</a>)~', implode('', $this->getIcons($view)) . '$1', $this->renderLink($view));
+        $title = preg_replace(
+            '~(</a>)~',
+            implode('', $this->getIcons($view)) . '$1',
+            $this->renderLink($view)
+        );
+
         if ($this->hasInfoUrl()) {
-            $title = ' <a href="' . $this->getInfoUrl() . '" title="'
-                  . mt('businessprocess', 'More information') . ': ' . $this->getInfoUrl()
-                  . '" style="float: right">'
-                  . $view->icon('help')
-                  . '</a>' . $title;
+            $url = $this->getInfoUrl();
+            $target = preg_match('~^https?://~', $url) ? ' target="_blank"' : '';
+            $title = sprintf(
+                ' <a href="%s" %stitle="%s: %s" style="float: right">%s</a>%s',
+                $url,
+                $target,
+                mt('businessprocess', 'More information'),
+                $url,
+                $view->icon('help'),
+                $title
+            );
         }
 
         $html .= sprintf(
