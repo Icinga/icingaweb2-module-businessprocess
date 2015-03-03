@@ -111,17 +111,14 @@ class SimulationForm extends Form
                 Notification::success($this->translate('Simulation has been removed'));
                 unset($simulations[$node]);
                 $this->session->set('simulations', $simulations);
-//                $this->session->write();
             }
         } else {
-            // Notification::success($this->translate('Simulation has been updated'));
             $simulations[$node] = (object) array(
                 'state'        => $this->getValue('state'),
                 'acknowledged' => $this->getValue('acknowledged'),
                 'in_downtime' => $this->getValue('in_downtime'),
             );
             $this->session->set('simulations', $simulations);
-//            $this->session->write();
         }
     }
 }
