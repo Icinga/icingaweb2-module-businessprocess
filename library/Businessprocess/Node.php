@@ -314,7 +314,7 @@ abstract class Node
         foreach ($this->getChildren() as $name => $child) {
             $html .= '<tr><td>' . $child->renderHtml($view, $id . '-') . '</td></tr>';
         }
-        $html .= '</tbody></table>';
+        $html .= "</tbody></table>\n";
         return $html;
     }
 
