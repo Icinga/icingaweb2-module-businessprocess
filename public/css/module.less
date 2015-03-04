@@ -186,14 +186,14 @@ table.bp td > a {
     display: block;
 }
 
-table.bp.node td > a {
+table.bp.node td > a:last-child {
     padding-left: 2.5em;
     background-repeat: no-repeat;
     background-position: 0.5em 0.5em;
     border-left-width: 0.8em;
 }
 
-table.bp.node.handled td > a, table.bp.node.ok td > a {
+table.bp.node.handled td > a:last-child, table.bp.node.ok td > a:last-child {
     border-left-width: 0.3em;
     background-position: 1em 0.5em;
     padding-left: 3em;
@@ -275,7 +275,7 @@ table.bp {
         -o-transition: @val1, @val2;
         -webkit-transition: @val1, @val2;
     }
-    > tbody > tr > td > a, > tbody > tr > th {
+    > tbody > tr > td > a:last-child, > tbody > tr > th {
         // Fade out
         .transition(color 0.5s 0.1s step-start,
          background-color 0.5s 0.1s ease-out
@@ -283,7 +283,7 @@ table.bp {
     }
 
     &.hovered > tbody > tr {
-        > td > a, > th {
+        > td > a:last-child, > th {
             // Fade in
             .transition(color 0.0s 0.0s step-start,
              background-color 0.0s 0.0s ease-out
