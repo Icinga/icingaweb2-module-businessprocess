@@ -144,34 +144,27 @@ table.bp .icon {
     margin-right: 0.4em;
 }
 
+table.bp.node.subtree, table.bp.node.service, table.bp.node.host {
+    td:before {
+        font-family: ifont;
+        z-index: 10;
+        font-size: 1.25em;
+        position: absolute;
+        margin-left: 1.25em;
+        margin-top: 0.25em;
+    }
+}
+
 table.bp.node.subtree td:before {
-    font-family: ifont;
-    z-index: 10;
-    font-size: 1.25em;
     content: '\e80e';
-    position: absolute;
-    margin-left: 1.25em;
-    margin-top: 0.25em;
 }
 
 table.bp.node.service td:before {
-    font-family: ifont;
-    z-index: 10;
-    font-size: 1.25em;
     content: '\e840';
-    position: absolute;
-    margin-left: 1.25em;
-    margin-top: 0.25em;
 }
 
 table.bp.node.host td:before {
-    font-family: ifont;
-    z-index: 10;
-    font-size: 1.25em;
     content: '\e866';
-    position: absolute;
-    margin-left: 1.25em;
-    margin-top: 0.25em;
 }
 
 /* Border defaults */
