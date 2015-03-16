@@ -134,7 +134,29 @@ class BpConfigForm extends Form
 
             Notification::success(sprintf('Process %s has been created', $name));
         } else {
-            Notification::success(sprintf('Process %s has NOT YET been modified', $name));
+            $config = $this->config;
+
+            if ($title) {
+                $config->setTitle($title);
+            }
+            if ($backend) {
+                $config->setBackendName($backend);
+            }
+            if ($this->getValue('state_type') === 'soft') {
+                $config->useSoftStates();
+            } else {
+                $config->useHardStates();
+            }
+
+            $this->storage->storeProcess($config);
+            $config->clearAppliedChanges();
+            $this->setRedirectUrl(
+                Url::fromPath(
+                    $this->getRedirectUrl(),
+                    array('config' => $name)
+                )
+            );
+            Notification::success(sprintf('Process %s has been stored', $name));
         }
     }
 }
