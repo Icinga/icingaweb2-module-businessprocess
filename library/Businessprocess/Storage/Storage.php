@@ -32,4 +32,6 @@ abstract class Storage
     /**
      */
     abstract public function storeProcess(BusinessProcess $name);
+
+    abstract public function deleteProcess($name);
 }

@@ -1,29 +1,66 @@
 <?php if (! $this->compact): ?>
 <div class="controls">
 <?= $this->tabs ?>
-  <h1><?= $this->escape($this->title) ?>
-  <a href="<?= $this->url()->with('mode', 'toplevel') ?>" title="<?= $this->escape('Switch to toplevel view') ?>"><?= $this->icon('dashboard') ?></a>
-  <?= $this->render('simulationlink.phtml') ?>
-  <?= $this->render('editlink.phtml') ?>
-  <?= $this->render('downloadlink.phtml') ?>
+  <h1><form method="post" action="<?= $this->url()->without('node')->without('unlocked') ?>">
+  <?= $this->formSelect('config', $this->configName, array('class' => 'autosubmit'), $this->processList) ?>
+  </form>
+
+<a href="<?= $this->url()->with('mode', 'toplevel')->without('unlocked') ?>" title="<?= $this->escape('Switch to toplevel view') ?>" data-base-target="_main"><?= $this->icon('dashboard') ?></a>
+<?php if ($this->bpconfig->isLocked()): ?>
+<a href="<?= $this->url()->with('unlocked', true) ?>" title="<?= $this->escape($this->translate('Unlock this process')) ?>"><?= $this->icon('lock') ?></a>
+<?php else: ?>
+<?php if (! $this->bpconfig->isEmpty()): ?>
+<a href="<?= $this->url()->without('unlocked') ?>" style="color: red" title="<?= $this->escape($this->translate('Lock this process')) ?>" data-base-target="_main"><?= $this->icon('lock-open') ?></a>
+<?php endif ?>
+<a href="<?= $this->url('businessprocess/process/config', array('config' => $this->configName)) ?>" title="<?= $this->escape('Modify this process') ?>" data-base-target="_next"><?= $this->icon('wrench') ?></a>
+<?php endif ?>
+<a href="<?= $this->url('businessprocess/process/create') ?>" title="<?= $this->escape('Create a new business process configuration') ?>" data-base-target="_main"><?= $this->icon('plus') ?></a>
 </h1>
 </div>
 <?php endif ?>
 
 <div class="content<?= $this->compact ? ' compact' : '' ?>" data-base-target="_next">
-<?php if (! $this->compact): ?>
-  <form method="post" action="<?= $this->url()->without('process') ?>" data-base-target="_self">
-  <?= $this->formSelect('processName', $this->processName, array('class' => 'autosubmit'), $this->processList) ?>
-  </form>
+<?php if (! $this->bpconfig->isLocked()): ?>
+<?= $this->qlink('Add new node', 'businessprocess/node/add', array('config' => $this->configName)) ?>
 <?php endif ?>
-<?php if (! empty($this->errors)): ?>
+<?php if ($this->bpconfig->hasErrors() || $this->bpconfig->hasChanges() || $this->bpconfig->hasSimulations()): ?>
 <ul class="error">
-<?php foreach ($this->errors as $error): ?>
+<?php foreach ($this->bpconfig->getErrors() as $error): ?>
 <li><?= $this->escape($error) ?></li>
 <?php endforeach ?>
+<?php if ($this->bpconfig->hasChanges()): ?>
+<li><?= sprintf(
+    $this->translate('This process has %d pending change(s).'),
+    $this->bpconfig->countChanges()
+) ?> <?= $this->qlink(
+    $this->translate('Store'),
+    'businessprocess/process/config',
+    array('config' => $this->configName)
+) ?> <?= $this->qlink(
+    $this->translate('Dismiss'),
+    $this->url()->with('dismissChanges', true),
+    null,
+    array('data-base-target' => '_main')
+) ?></li>
+<?php endif ?>
+<?php if ($this->bpconfig->hasSimulations()): ?>
+<li><?= sprintf(
+    $this->translate('This process shows %d simulated state(s).'),
+    $this->bpconfig->countSimulations()
+) ?> <?= $this->qlink(
+    $this->translate('Dismiss'),
+    $this->url()->with('dismissSimulations', true),
+    null,
+    array('data-base-target' => '_main')
+) ?></li>
+<?php endif ?>
 </ul>
 <?php endif ?>
+<div class="bp">
 <?= $this->bp->renderHtml($this) ?>
+<?php if (! $this->bpconfig->isLocked()): ?>
+<?= $this->bp->renderUnbound($this) ?>
+<?php endif ?>
+</div>
 <?= $this->render('warnings.phtml') ?>
 </div>
-

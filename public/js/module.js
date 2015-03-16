@@ -29,6 +29,7 @@
 
             this.module.on('mouseenter', 'table.bp > tbody > tr > td > a', this.procMouseOver);
             this.module.on('mouseenter', 'table.bp > tbody > tr > th', this.procMouseOver);
+            this.module.on('mouseenter', 'table.node.missing > tbody > tr > td > span', this.procMouseOver);
             this.module.on('mouseleave', 'div.bp', this.procMouseOut);
 
             this.module.icinga.logger.debug('BP module loaded');

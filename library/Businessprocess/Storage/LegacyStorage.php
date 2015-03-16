@@ -10,6 +10,7 @@ use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\Storage\Storage;
 use DirectoryIterator;
 use Icinga\Exception\SystemPermissionException;
+use Icinga\Application\Benchmark;
 
 class LegacyStorage extends Storage
 {
@@ -61,7 +62,11 @@ class LegacyStorage extends Storage
             if (substr($filename, -5) === '.conf') {
                 $name = substr($filename, 0, -5);
                 $header = $this->readHeader($file->getPathname(), $name);
-                $files[$name] = $header['Title'];
+                if ($header['Title'] === null) {
+                    $files[$name] = $name;
+                } else {
+                    $files[$name] = sprintf('%s (%s)', $header['Title'], $name);
+                }
             }
         }
         return $files;
@@ -72,7 +77,7 @@ class LegacyStorage extends Storage
         $fh = fopen($file, 'r');
         $cnt = 0;
         $header = array(
-            'Title'     => $name,
+            'Title'     => null,
             'Owner'     => null,
             'Backend'   => null,
             'Statetype' => 'soft',
@@ -101,6 +106,11 @@ class LegacyStorage extends Storage
         );
     }
 
+    public function getSource($name)
+    {
+        return file_get_contents($this->getFilename($name));
+    }
+
     public function getFilename($name)
     {
         return $this->getConfigDir() . '/' . $name . '.conf';
@@ -115,15 +125,22 @@ class LegacyStorage extends Storage
         return $bp;
     }
 
+    public function deleteProcess($name)
+    {
+        unlink($this->getFilename($name));
+    }
+
     /**
      * @return BusinessProcess
      */
     public function loadProcess($name)
     {
+        Benchmark::measure('Loading business process ' . $name);
         $bp = new BusinessProcess();
         $bp->setName($name);
         $this->parseFile($name, $bp);
         $this->loadHeader($name, $bp);
+        Benchmark::measure('Business process ' . $name . ' loaded');
         return $bp;
     }
 
@@ -134,7 +151,10 @@ class LegacyStorage extends Storage
         $header = $this->readHeader($file, $name);
         $bp->setTitle($header['Title']);
         if ($header['Backend']) {
-            $bp->loadBackendByName($header['Backend']);
+            $bp->setBackendName($header['Backend']);
+        }
+        if ($header['Statetype'] === 'soft') {
+            $bp->useSoftStates();
         }
     }
 

@@ -2,42 +2,125 @@
 # Copyright (C) 2015 Icinga Development Team
 # This file is distributed under the same license as Businessprocess Module.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
-#, fuzzy
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Businessprocess Module (2.0.0-beta1)\n"
 "Report-Msgid-Bugs-To: dev@icinga.org\n"
-"POT-Creation-Date: 2015-03-03 13:25+0100\n"
-"PO-Revision-Date: 2015-03-03 13:25+0100\n"
+"POT-Creation-Date: 2015-03-16 06:19+0100\n"
+"PO-Revision-Date: 2015-03-16 09:04+0100\n"
 "Last-Translator: Thomas Gelf <thomas@gelf.net>\n"
 "Language: de_DE\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.5.4\n"
 
-#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:41
+#: /usr/local/icingaweb-modules/businessprocess/application/controllers/ProcessController.php:83
+#, php-format
+msgid "%d applied simulation(s) have been dropped"
+msgstr "%d angewendete Simulation(en) wurde(n) entfernt"
+
+#: /usr/local/icingaweb-modules/businessprocess/library/Businessprocess/Controller.php:73
+#, php-format
+msgid "%d pending change(s) have been dropped"
+msgstr "%d vorgenommene Änderung(en) wurde(n) verworfen"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/controllers/ProcessController.php:165
+#, php-format
+msgid "%s: Configuration"
+msgstr "%s: Konfiguration"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/controllers/ProcessController.php:129
+#, php-format
+msgid "%s: Source Code"
+msgstr "%s: Quellcode"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/controllers/ProcessController.php:124
+#, php-format
+msgid "%s: Source Code Differences"
+msgstr "%s: Quellcode Unterschiede"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:48
 msgid "AND"
 msgstr "UND"
 
-#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:44
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:42
 msgid "Acknowledged"
 msgstr "Bestätigt"
 
-#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:51
+#: /usr/local/icingaweb-modules/businessprocess/application/views/scripts/node/add.phtml:8
+msgid "Add new process node"
+msgstr "Neuen Knoten hinzufügen"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:49
 msgid "Apply"
 msgstr "Anwenden"
 
+#: /usr/local/icingaweb-modules/businessprocess/application/views/scripts/index/index.phtml:8
+#, php-format
+msgid ""
+"As no business process has been defined yet you might want to create a %s or "
+"upload an %s."
+msgstr ""
+"Nachdem noch kein Business-Prozess definiert wurde, möchtest du vermutlich "
+"einen %s erstellen oder einen %s hochladen."
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/BpConfigForm.php:47
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/_CreateConfigForm.php:27
+msgid "Backend"
+msgstr "Backend"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/controllers/ProcessController.php:206
+msgid "Business Process"
+msgstr "Business-Prozess"
+
 #: /usr/local/icingaweb-modules/businessprocess/configuration.php:4
+#: /usr/local/icingaweb-modules/businessprocess/application/controllers/IndexController.php:13
 msgid "Business Processes"
 msgstr "Business-Prozesse"
 
-#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:34
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:31
 msgid "CRITICAL"
 msgstr "KRITISCH"
 
-#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:52
+#: /usr/local/icingaweb-modules/businessprocess/application/views/scripts/index/index.phtml:6
+msgid "Configure your first business process"
+msgstr "Konfiguriere deinen ersten Business-Prozess"
+
+#: /usr/local/icingaweb-modules/businessprocess/library/Businessprocess/BusinessProcess.php:297
+#, php-format
+msgid "Could not retrieve process state: %s"
+msgstr "Konnte den Prozess-Status nicht ermitteln: %s"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/controllers/ProcessController.php:214
+msgid "Create"
+msgstr "Erstelle"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/controllers/ProcessController.php:21
+msgid "Create a new business process"
+msgstr "Neuen Business-Prozess erstellen"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/DeleteConfigForm.php:18
+msgid "Delete this process"
+msgstr "Lösche diesen Prozess"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/views/scripts/process/show.phtml:40
+#: /usr/local/icingaweb-modules/businessprocess/application/views/scripts/process/show.phtml:51
+msgid "Dismiss"
+msgstr "Verwerfen"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/views/scripts/process/source.phtml:6
+msgid "Download process configuration"
+msgstr "Prozess-Konfiguration herunterladen"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/views/scripts/process/source.phtml:10
+msgid "Highlight changes"
+msgstr "Änderungen hervorheben"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:80
 msgid ""
 "Hosts, services or other processes that should be part of this business "
 "process"
@@ -45,71 +128,261 @@ msgstr ""
 "Hosts, Services oder andere Prozesse welche Teil dieses Business-Prozesses "
 "sein sollen"
 
-#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:48
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/BpConfigForm.php:49
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/_CreateConfigForm.php:29
+msgid ""
+"Icinga Web Monitoring Backend where current object states for this process "
+"should be retrieved from"
+msgstr ""
+"Das Icinga Web Monitoring Backend von welchem die Status-Informationen für "
+"diesen Prozess bezogen werden sollen"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:46
 msgid "In downtime"
 msgstr "In Downtime"
 
-#: /usr/local/icingaweb-modules/businessprocess/library/Businessprocess/Node.php:304
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:86
+msgid "Info URL"
+msgstr "Info-URL"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/views/scripts/process/show.phtml:13
+msgid "Lock this process"
+msgstr "Sperre diesen Prozess"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:50
+msgid "MIN 1"
+msgstr "MIN 1"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:51
+msgid "MIN 2"
+msgstr "MIN 2"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:52
+msgid "MIN 3"
+msgstr "MIN 3"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:53
+msgid "MIN 4"
+msgstr "MIN 4"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:54
+msgid "MIN 5"
+msgstr "MIN 5"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:55
+msgid "MIN 6"
+msgstr "MIN 6"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:56
+msgid "MIN 7"
+msgstr "MIN 7"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:57
+msgid "MIN 8"
+msgstr "MIN 8"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:58
+msgid "MIN 9"
+msgstr "MIN 9"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/views/scripts/node/edit.phtml:10
+#, php-format
+msgid "Modify process node: %s"
+msgstr "Bearbeite Knoten: %s"
+
+#: /usr/local/icingaweb-modules/businessprocess/library/Businessprocess/BpNode.php:268
+msgid "Modify this node"
+msgstr "Bearbeite diesen Knoten"
+
+#: /usr/local/icingaweb-modules/businessprocess/library/Businessprocess/Node.php:350
 msgid "More information"
 msgstr "Weitere Informationen"
 
-#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:32
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/BpConfigForm.php:31
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/_CreateConfigForm.php:16
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:29
+msgid "Name"
+msgstr "Name"
+
+#: /usr/local/icingaweb-modules/businessprocess/library/Businessprocess/BusinessProcess.php:519
+#, php-format
+msgid "No business process nodes for \"%s\" have been defined yet"
+msgstr "Es wurden noch keine Business-Prozess Knoten für \"%s\" definiert"
+
+#: /usr/local/icingaweb-modules/businessprocess/library/Businessprocess/BusinessProcess.php:467
+#, php-format
+msgid "Node \"%s\" has been defined twice"
+msgstr "Der Knoden \"%s\" wurde doppelt definiert"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:29
 msgid "OK"
 msgstr "OK"
 
-#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:42
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:49
 msgid "OR"
 msgstr "ODER"
 
-#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:38
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:45
 msgid "Operator"
 msgstr "Operator"
 
-#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:69
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:109
 msgid "Other Business Processes"
 msgstr "Andere Business-Prozesse"
 
-#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:40
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:33
+msgid "PENDING"
+msgstr "PENDING"
+
+#: /usr/local/icingaweb-modules/businessprocess/library/Businessprocess/BusinessProcess.php:538
+#, php-format
+msgid "Parser waring on %s:%s: %s"
+msgstr "Parse-Warnung an %s:%s: %s"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:38
 msgid "Plugin output"
 msgstr "Plugin-Ausgabe"
 
-#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:48
+#: /usr/local/icingaweb-modules/businessprocess/application/controllers/ProcessController.php:225
+msgid "Process Configuration"
+msgstr "Prozess-Konfiguration"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:75
 msgid "Process components"
 msgstr "Prozess-Komponenten"
-
-#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:33
-msgid "Process name"
-msgstr "Prozess-Name"
 
 #: /usr/local/icingaweb-modules/businessprocess/configuration.php:3
 msgid "Reporting"
 msgstr "Reporting"
 
-#: /usr/local/icingaweb-modules/businessprocess/library/Businessprocess/Controller.php:40
-msgid "Show"
-msgstr "Zeige"
+#: /usr/local/icingaweb-modules/businessprocess/application/views/scripts/process/source.phtml:8
+msgid "Show source code"
+msgstr "Quellcode anzeigen"
 
-#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:111
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:86
 msgid "Simulation has been removed"
 msgstr "Simulation wurde entfernt"
 
-#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:29
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:89
+msgid "Simulation has been set"
+msgstr "Simulation wurde gesended"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/controllers/ProcessController.php:228
+msgid "Source"
+msgstr "Quelle"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:26
 msgid "State"
 msgstr "Status"
 
-#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:54
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/BpConfigForm.php:58
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/_CreateConfigForm.php:36
+msgid "State Type"
+msgstr "Statustyp"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/views/scripts/process/show.phtml:36
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/BpConfigForm.php:68
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/_CreateConfigForm.php:44
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:92
 msgid "Store"
 msgstr "Speichern"
 
-#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:35
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:69
+msgid "Subprocess only"
+msgstr "Nur Sub-Prozess"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/views/scripts/process/upload.phtml:8
+msgid "This has not been implemented yet"
+msgstr "Das wurde noch nicht implementiert"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/BpConfigForm.php:34
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/_CreateConfigForm.php:18
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:32
+msgid "This is the unique identifier of this process"
+msgstr "Das ist der eindeutige Identifier dieses Prozesses"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/views/scripts/process/show.phtml:33
+#, php-format
+msgid "This process has %d pending change(s)."
+msgstr "Dieser Prozess hat %d ungespeicherte Änderung(en)"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/views/scripts/process/show.phtml:48
+#, php-format
+msgid "This process shows %d simulated state(s)."
+msgstr "Dieser Prozess zeigt %d simulierte Zustände"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/BpConfigForm.php:39
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/_CreateConfigForm.php:22
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:37
+msgid "Title"
+msgstr "Titel"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:70
+msgid "Toplevel Process"
+msgstr "Toplevel-Prozess"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:32
 msgid "UNKNOWN"
 msgstr "UNBEKANNT"
 
-#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:31
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:88
+msgid "URL pointing to more information about this node"
+msgstr "URL zu mehr Informationen über diesen Knoten"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/views/scripts/process/show.phtml:10
+msgid "Unlock this process"
+msgstr "Entsperre diesen Prozess"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/controllers/ProcessController.php:217
+msgid "Upload"
+msgstr "Upload"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/controllers/ProcessController.php:35
+msgid "Upload a business process config file"
+msgstr "Lade eine Business-Prozess Konfigurationsdatei hoch"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/BpConfigForm.php:64
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/_CreateConfigForm.php:40
+msgid "Use HARD states"
+msgstr "HARD-States benutzen"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/BpConfigForm.php:65
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/_CreateConfigForm.php:41
+msgid "Use SOFT states"
+msgstr "SOFT-States benutzen"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/_CreateConfigForm.php:31
+msgid "Use current default backend"
+msgstr "Aktuelles Standard-Backend benutzen"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:28
 msgid "Use current state"
 msgstr "Aktuellen Status benutzen"
 
-#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:33
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/BpConfigForm.php:53
+msgid "Use the configured default backend"
+msgstr "Benutze das konfigurierte Standard-Backend"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:39
+msgid ""
+"Usually this title will be shown for this node. Equals name if not given"
+msgstr ""
+"Für gewöhnlich wird dieser Titel für diesen Knoten angezeigt. Entspricht dem "
+"Namen, wenn nicht angegeben"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/BpConfigForm.php:41
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/_CreateConfigForm.php:23
+msgid ""
+"Usually this title will be shown for this process. Equals name if not given"
+msgstr ""
+"Für gewöhnlich wird dieser Titel für diesen Prozess angezeigt. Entspricht "
+"dem Namen, wenn nicht angegeben"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:63
+msgid "Visualization"
+msgstr "Darstellung"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/SimulationForm.php:30
 msgid "WARNING"
 msgstr "WARNUNG"
 
@@ -117,6 +390,25 @@ msgstr "WARNUNG"
 msgid "Warnings"
 msgstr "Warnungen"
 
-#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:43
-msgid "min"
-msgstr "min"
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/ProcessForm.php:66
+msgid "Where to show this process"
+msgstr "Wo soll dieser Prozess angezeigt werden"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/BpConfigForm.php:61
+#: /usr/local/icingaweb-modules/businessprocess/application/forms/_CreateConfigForm.php:38
+msgid "Whether this process should be based on Icinga hard or soft states"
+msgstr "Ob dieser Prozess auf Icinga's hard- oder soft-states basieren soll"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/views/scripts/index/index.phtml:10
+msgid "existing one"
+msgstr "einen existierenden"
+
+#: /usr/local/icingaweb-modules/businessprocess/application/views/scripts/index/index.phtml:9
+msgid "new business process"
+msgstr "neuen Business-Prozess"
+
+#~ msgid "Show"
+#~ msgstr "Zeige"
+
+#~ msgid "min"
+#~ msgstr "min"

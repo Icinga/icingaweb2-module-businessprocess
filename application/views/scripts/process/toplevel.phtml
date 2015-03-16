@@ -14,28 +14,22 @@ if ($count < 20) {
 <?php if (! $this->compact): ?>
 <div class="controls">
 <?= $this->tabs ?>
-  <h1><?= $this->escape($this->title) ?>
+  <h1><form method="post" action="<?= $this->url()->without('process') ?>" data-base-target="_self">
+  <?= $this->formSelect('node', $this->nodeName, array('class' => 'autosubmit'), $this->processList) ?>
+  </form>
   <a href="<?= $this->url()->without('mode') ?>" title="<?= $this->escape('Switch to tree view') ?>" style="float: right"><?= $this->icon('sitemap') ?></a>
-  <?= $this->render('simulationlink.phtml') ?>
-  <?= $this->render('editlink.phtml') ?>
-  <?= $this->render('downloadlink.phtml') ?>
   </h1>
 </div>
 <?php endif ?>
 
 <div class="content<?= $this->compact ? ' compact' : '' ?>" data-base-target="_next">
-<?php if (! $this->compact): ?>
-  <form method="post" action="<?= $this->url()->without('process') ?>" data-base-target="_self">
-  <?= $this->formSelect('processName', $this->processName, array('class' => 'autosubmit'), $this->processList) ?>
-  </form>
-<?php endif ?>
   <div class="toplevel <?= $howMany ?>" data-base-target="_next">
   <?php foreach ($this->bp->getChildren() as $name => $node): ?>
   <div class="<?= strtolower($node->getStateName()) ?><?= $node->isHandled() ? ' handled' : '' ?>">
 <?php if ($node instanceof ImportedNode): ?>
-  <a href="<?= $this->url('businessprocess/process/show', array('processName' => $node->getConfigName(), 'process' => $name)) ?>"><?= $this->escape($node->getAlias()) ?></a>
+  <a href="<?= $this->url('businessprocess/process/show', array('config' => $this->configName, 'node' => $name)) ?>"><?= $this->escape($node->getAlias()) ?></a>
 <?php else: ?>
-  <a href="<?= $this->url('businessprocess/process/show', array('processName' => $this->processName, 'process' => $name)) ?>"><?= $this->escape($node->getAlias()) ?></a>
+  <a href="<?= $this->url('businessprocess/process/show', array('config' => $this->configName, 'node' => $this->nodeName)) ?>"><?= $this->escape($node->getAlias()) ?></a>
 <?php endif ?>
   </div>
   <?php endforeach ?>

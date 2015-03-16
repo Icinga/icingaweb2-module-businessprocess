@@ -9,6 +9,10 @@ h1 {
     font-weight: normal;
 }
 
+.controls h1 form {
+    display: inline;
+}
+
 h1 a:focus {
     outline: none;
 }
@@ -50,11 +54,6 @@ table.bp {
         margin-top: 4px;
 
     }
-}
-
-/* We try our best to avoid flickering */
-table.bp th, table.bp td a {
-/* SHIT margin-bottom: 5px; */
 }
 
 table.bp th {
@@ -123,7 +122,7 @@ table.bp.process {
     }
 }
 
-table.bp th > a, table.bp td > a {
+table.bp th > a, table.bp td > a, table.bp td > span {
     display: block;
     text-decoration: none;
 }
@@ -174,26 +173,28 @@ table.bp {
     border-color: transparent;
 }
 
-table.bp tr, table.bp tbody, table.bp th, table.bp td, table.bp.node td > a {
+table.bp tr, table.bp tbody, table.bp th, table.bp td, table.bp.node td > a, table.node.missing td > span {
     border-width: 0;
     border-style: inherit;
     border-color: inherit;
 }
 
-table.bp td > a {
+table.bp td > a, table.node.missing td > span {
     line-height: 2em;
     padding-left: 0.5em;
     display: block;
 }
 
-table.bp.node td > a:last-child {
+table.bp.node td > a:last-child, table.node.missing td > span {
     padding-left: 2.5em;
     background-repeat: no-repeat;
     background-position: 0.5em 0.5em;
     border-left-width: 0.8em;
 }
 
-table.bp.node.handled td > a:last-child, table.bp.node.ok td > a:last-child {
+table.bp.node.handled td > a:last-child, table.bp.node.ok td > a:last-child,
+    table.node.missing td > span
+{
     border-left-width: 0.3em;
     background-position: 1em 0.5em;
     padding-left: 3em;
@@ -214,6 +215,7 @@ table.bp.operator > tbody > tr:first-child > * {
     border-top-width: 1px;
     border-top-style: dotted;
 }
+
 table.bp.operator.hovered > tbody > tr:first-child > * {
     border-top-style: solid;
 }
@@ -227,6 +229,7 @@ table.bp {
     &.critical.handled { border-color: @colorCriticalHandled; }
     &.unknown          { border-color: @colorUnknown; }
     &.unknown.handled  { border-color: @colorUnknownHandled; }
+    &.pending          { border-color: @colorPending; }
     &.missing          { border-color: #ccc; }
     &.hovered {
         &.ok > tbody > tr > {
@@ -250,8 +253,11 @@ table.bp {
         &.unknown.handled > tbody > tr > {
             th, td > a { background-color: @colorCUnknownHandled; }
         }
+        &.pending > tbody > tr > {
+            th, td > a { background-color: @colorPending; }
+        }
         &.missing > tbody > tr > {
-            th, td > a { background-color: #ccc; }
+            th, td > a, td > span { background-color: #ccc; }
         }
     }
 }
@@ -275,7 +281,7 @@ table.bp {
         -o-transition: @val1, @val2;
         -webkit-transition: @val1, @val2;
     }
-    > tbody > tr > td > a:last-child, > tbody > tr > th {
+    > tbody > tr > td > a:last-child, > tbody > tr > td > span, > tbody > tr > th {
         // Fade out
         .transition(color 0.5s 0.1s step-start,
          background-color 0.5s 0.1s ease-out
@@ -283,7 +289,7 @@ table.bp {
     }
 
     &.hovered > tbody > tr {
-        > td > a:last-child, > th {
+        > td > a:last-child, > td > span, > th {
             // Fade in
             .transition(color 0.0s 0.0s step-start,
              background-color 0.0s 0.0s ease-out
@@ -401,4 +407,47 @@ ul.error {
         color: white;
         padding: 0.3em 0.8em;
     }
+
+    li a {
+        color: inherit;
+    }
 }
+
+table.sourcecode {
+    font-family: monospace;
+    white-space: pre-wrap;
+
+    th {
+        vertical-align: top;
+        padding-right: 0.5em;
+        user-select: none;
+        -moz-user-select: none;
+        -o-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        font-weight: bold;
+    }
+    td {
+        vertical-align: top;
+    }
+}
+
+.diff {
+    font-family: monospace;
+    white-space: pre-wrap;
+
+    del, ins {
+        text-decoration: none;
+    }
+
+    del {
+        color: @colorCritical;
+        background-color: #fdd;
+    }
+
+    ins {
+        color: @colorOk;
+        background-color: #dfd;
+    }
+}
+

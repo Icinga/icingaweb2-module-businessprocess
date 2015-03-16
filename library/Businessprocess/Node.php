@@ -2,6 +2,8 @@
 
 namespace Icinga\Module\Businessprocess;
 
+use Icinga\Web\Url;
+use Icinga\Exception\ProgrammingError;
 use Exception;
 
 abstract class Node
@@ -12,6 +14,15 @@ abstract class Node
     const FLAG_NONE     = 8;
     const SHIFT_FLAGS   = 4;
 
+    const ICINGA_OK          = 0;
+    const ICINGA_WARNING     = 1;
+    const ICINGA_CRITICAL    = 2;
+    const ICINGA_UNKNOWN     = 3;
+    const ICINGA_UP          = 0;
+    const ICINGA_DOWN        = 1;
+    const ICINGA_UNREACHABLE = 2;
+    const ICINGA_PENDING     = 99;
+
     /**
      * Main business process object
      *
@@ -20,11 +31,11 @@ abstract class Node
     protected $bp;
 
     /**
-     * Parent node
+     * Parent nodes
      *
-     * @var Node
+     * @var array
      */
-    protected $parent;
+    protected $parents = array();
 
     /**
      * Node identifier
@@ -70,7 +81,8 @@ abstract class Node
         'OK',
         'WARNING',
         'CRITICAL',
-        'UNKNOWN'
+        'UNKNOWN',
+        99 => 'PENDING'
     );
 
     abstract public function __construct(BusinessProcess $bp, $object);
@@ -107,7 +119,7 @@ abstract class Node
             );
         }
         $this->childs[(string) $node] = $node;
-        $node->setParent($this);
+        $node->addParent($this);
         return $this;
     }
 
@@ -137,7 +149,7 @@ abstract class Node
     public function getState()
     {
         if ($this->state === null) {
-            throw new Exception(
+            throw new ProgrammingError(
                 sprintf(
                     'Node %s is unable to retrieve it\'s state',
                     $this->name
@@ -150,18 +162,32 @@ abstract class Node
     public function getSortingState()
     {
         $state = $this->getState();
-        if ($state === 3) {
-            $state = 2;
-        } elseif ($state === 2) {
-            $state = 3;
+        switch ($state) {
+            case 0:
+                $sort = 0;
+                break;
+            case 1:
+                $sort = 2;
+                break;
+            case 2:
+                $sort = 4;
+                break;
+            case 3:
+                $sort = 3;
+                break;
+            case 99:
+                $sort = 1;
+                break;
+            default:
+                throw new ProgrammingError('Got invalid state %d', $state);
         }
-        $state = ($state << self::SHIFT_FLAGS)
+        $sort = ($sort << self::SHIFT_FLAGS)
                + ($this->isInDowntime() ? self::FLAG_DOWNTIME : 0)
                + ($this->isAcknowledged() ? self::FLAG_ACK : 0);
-        if (! ($state & (self::FLAG_DOWNTIME | self::FLAG_ACK))) {
-            $state |= self::FLAG_NONE;
+        if (! ($sort & (self::FLAG_DOWNTIME | self::FLAG_ACK))) {
+            $sort |= self::FLAG_NONE;
         }
-        return $state;
+        return $sort;
     }
 
     public function getLastStateChange()
@@ -175,9 +201,9 @@ abstract class Node
         return $this;
     }
 
-    public function setParent(Node $parent)
+    public function addParent(Node $parent)
     {
-        $this->parent = $parent;
+        $this->parents[] = $parent;
         return $this;
     }
 
@@ -242,6 +268,11 @@ abstract class Node
         return $this->name;
     }
 
+    public function hasParents()
+    {
+        return count($this->parents) > 0;
+    }
+
     protected function renderHtmlForChildren($view)
     {
         $html = '';
@@ -304,19 +335,22 @@ abstract class Node
             $this->renderLink($view)
         );
 
+        $icons = array();
+
+        foreach ($this->getActionIcons($view) as $icon) {
+            $icons[] = $icon;
+        }
+        
         if ($this->hasInfoUrl()) {
             $url = $this->getInfoUrl();
-            $target = preg_match('~^https?://~', $url) ? ' target="_blank"' : '';
-            $title = sprintf(
-                ' <a href="%s" %stitle="%s: %s" style="float: right">%s</a>%s',
+            $icons[] = $this->actionIcon(
+                $view,
+                'help',
                 $url,
-                $target,
-                mt('businessprocess', 'More information'),
-                $url,
-                $view->icon('help'),
-                $title
+                sprintf('%s: %s', mt('businessprocess', 'More information'), $url)
             );
         }
+        $title = implode("\n", $icons) . $title;
 
         $html .= sprintf(
             '<td>%s</td></tr>',
@@ -327,6 +361,28 @@ abstract class Node
         }
         $html .= "</tbody></table>\n";
         return $html;
+    }
+
+    protected function getActionIcons($view)
+    {
+        return array();
+    }
+
+    protected function actionIcon($view, $icon, $url, $title)
+    {
+        if ($url instanceof Url || ! preg_match('~^https?://~', $url)) {
+            $target = '';
+        } else {
+            $target = ' target="_blank"';
+        }
+
+        return sprintf(
+            ' <a href="%s" %stitle="%s" style="float: right">%s</a>',
+            $url,
+            $target,
+            $view->escape($title),
+            $view->icon($icon)
+        );
     }
 
     public function renderLink($view)
@@ -361,6 +417,6 @@ abstract class Node
 
     public function __destruct()
     {
-        unset($this->parent);
+        $this->parents = array();
     }
 }

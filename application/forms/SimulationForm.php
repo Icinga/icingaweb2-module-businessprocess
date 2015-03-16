@@ -2,20 +2,17 @@
 
 namespace Icinga\Module\Businessprocess\Forms;
 
-use Icinga\Web\Form;
-use Icinga\Web\Request;
-use Icinga\Web\Notification;
 use Icinga\Module\Businessprocess\BpNode;
+use Icinga\Module\Businessprocess\Form;
+use Icinga\Module\Businessprocess\Simulation;
+use Icinga\Web\Notification;
+use Icinga\Web\Request;
 
 class SimulationForm extends Form
 {
-    protected $backend;
-
-    protected $process;
-
     protected $node;
 
-    protected $session;
+    protected $simulation;
 
     public function __construct($options = null)
     {
@@ -33,6 +30,7 @@ class SimulationForm extends Form
                 '1' => $this->translate('WARNING'),
                 '2' => $this->translate('CRITICAL'),
                 '3' => $this->translate('UNKNOWN'),
+                '99' => $this->translate('PENDING'),
             )
         ));
 
@@ -51,19 +49,6 @@ class SimulationForm extends Form
         $this->addElement('submit', $this->translate('Apply'));
     }
 
-    public function setBackend($backend)
-    {
-        $this->backend = $backend;
-        return $this;
-    }
-
-    public function setProcess($process)
-    {
-        $this->process = $process;
-        $this->setBackend($process->getBackend());
-        return $this;
-    }
-
     public function setNode($node)
     {
         $this->node = $node;
@@ -72,53 +57,41 @@ class SimulationForm extends Form
             'acknowledged' => $node->isAcknowledged(),
             'in_downtime'  => $node->isInDowntime(),
         ));
-        return $this->checkNodeSession();
+        return $this->checkDefaults();
     }
 
-    public function setSession($session)
+    public function setSimulation($simulation)
     {
-        $this->session = $session;
-        return $this->checkNodeSession();
+        $this->simulation = $simulation;
+        return $this->checkDefaults();
     }
 
-    protected function checkNodeSession()
+    protected function checkDefaults()
     {
-        if ($this->node === null || $this->session === null) {
-            return $this;
+        if ($this->node !== null
+            && $this->simulation !== null
+            && $this->simulation->hasNode((string) $this->node)
+        ) {
+            $this->setDefaults((array) $this->simulation->getNode((string) $this->node));
         }
-
-        $simulations = $this->session->get('simulations', array());
-        $node = (string) $this->node;
-        if (array_key_exists($node, $simulations)) {
-            $this->setDefaults(array(
-                'simulate'     => true,
-                'state'        => $simulations[$node]->state,
-                'in_downtime'  => $simulations[$node]->in_downtime,
-                'acknowledged' => $simulations[$node]->acknowledged,
-            ));
-        }
-
         return $this;
     }
 
     public function onSuccess()
     {
         $node = (string) $this->node;
-        $simulations = $this->session->get('simulations', array());
 
         if ($this->getValue('state') === '') {
-            if (array_key_exists($node, $simulations)) {
+            if ($this->simulation->remove($node)) {
                 Notification::success($this->translate('Simulation has been removed'));
-                unset($simulations[$node]);
-                $this->session->set('simulations', $simulations);
             }
         } else {
-            $simulations[$node] = (object) array(
+                Notification::success($this->translate('Simulation has been set'));
+            $this->simulation->set($node, (object) array(
                 'state'        => $this->getValue('state'),
                 'acknowledged' => $this->getValue('acknowledged'),
-                'in_downtime' => $this->getValue('in_downtime'),
-            );
-            $this->session->set('simulations', $simulations);
+                'in_downtime'  => $this->getValue('in_downtime'),
+            ));
         }
     }
 }

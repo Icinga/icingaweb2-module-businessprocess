@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess;
 
 use Icinga\Exception\ConfigurationError;
+use Icinga\Exception\ProgrammingError;
 
 class BpNode extends Node
 {
@@ -37,7 +38,7 @@ class BpNode extends Node
     {
         if ($this->counters === null) {
             $this->getState();
-            $this->counters = array(0, 0, 0, 0);
+            $this->counters = array(0, 0, 0, 0, 99 => 0);
             foreach ($this->children as $child) {
                 if ($child instanceof BpNode) {
                     $counters = $child->getStateSummary();
@@ -160,36 +161,42 @@ class BpNode extends Node
         }
         switch ($this->operator) {
             case self::OP_AND:
-                $state = max($sort_states);
+                $sort_state = max($sort_states);
                 break;
             case self::OP_OR:
-                $state = min($sort_states);
+                $sort_state = min($sort_states);
                 break;
             default:
                 // MIN:
                 sort($sort_states);
 
                 // default -> unknown
-                $state = 2 << self::SHIFT_FLAGS;
+                $sort_state = 3 << self::SHIFT_FLAGS;
 
                 for ($i = 1; $i <= $this->operator; $i++) {
-                    $state = array_shift($sort_states);
+                    $sort_state = array_shift($sort_states);
                 }
         }
-        if ($state & self::FLAG_DOWNTIME) {
+        if ($sort_state & self::FLAG_DOWNTIME) {
             $this->setDowntime(true);
         }
-        if ($state & self::FLAG_ACK) {
+        if ($sort_state & self::FLAG_ACK) {
             $this->setAck(true);
         }
-        $state = $state >> self::SHIFT_FLAGS;
+        $sort_state = $sort_state >> self::SHIFT_FLAGS;
 
-        if ($state === 3) {
+        if ($sort_state === 4) {
             $this->state = 2;
-        } elseif ($state === 2) {
+        } elseif ($sort_state === 3) {
             $this->state = 3;
+        } elseif ($sort_state === 2) {
+            $this->state = 1;
+        } elseif ($sort_state === 1) {
+            $this->state = 99;
+        } elseif ($sort_state === 0) {
+            $this->state = 0;
         } else {
-            $this->state = $state;
+            throw new ProgrammingError('Got invalid sorting state %s', $sort_state);
         }
     }
 
@@ -209,11 +216,22 @@ class BpNode extends Node
         return $this;
     }
 
+    public function getDisplay()
+    {
+        return $this->display;
+    }
+
     public function setChildNames($names)
     {
+        sort($names);
         $this->child_names = $names;
         $this->children = null;
         return $this;
+    }
+
+    public function getChildNames()
+    {
+        return $this->child_names;
     }
 
     public function getChildren()
@@ -223,6 +241,7 @@ class BpNode extends Node
             natsort($this->child_names);
             foreach ($this->child_names as $name) {
                 $this->children[$name] = $this->bp->getNode($name);
+                $this->children[$name]->addParent($this);
             }
         }
         return $this->children;
@@ -235,15 +254,21 @@ class BpNode extends Node
         }
     }
 
-    public function renderLink($view)
+    protected function getActionIcons($view)
     {
-        if (! $this->bp->isEditMode()) {
-            return parent::renderLink($view);
+        $icons = array();
+        if (! $this->bp->isLocked()) {
+            $icons[] = $this->actionIcon(
+                $view,
+                'wrench',
+                $view->url('businessprocess/node/edit', array(
+                    'config' => $this->bp->getName(),
+                    'node'   => $this->name
+                )),
+                mt('businessprocess', 'Modify this node')
+            );
         }
-        return $view->qlink($this->name, 'businessprocess/node/edit', array(
-            'node'        => $this->name,
-            'processName' => $this->bp->getName()
-        ));
+        return $icons;
     }
 
     public function toLegacyConfigString(& $rendered = array())

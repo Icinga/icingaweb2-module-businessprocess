@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess;
 
 use Icinga\Application\Config;
+use Icinga\Web\Url;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 
 class ImportedNode extends Node
@@ -38,11 +39,6 @@ class ImportedNode extends Node
         return $this->state;
     }
 
-    public function getSortingState()
-    {
-        return $this->importedNode()->getSortingState();
-    }
-
     public function getAlias()
     {
         return $this->importedNode()->getAlias();
@@ -50,7 +46,8 @@ class ImportedNode extends Node
 
     public function isMissing()
     {
-        return $this->getState() === null;
+        return $this->importedNode()->isMissing();
+        // TODO: WHY? return $this->getState() === null;
     }
 
     public function isInDowntime()
@@ -86,19 +83,34 @@ class ImportedNode extends Node
         }
         return $this->importedNode;
     }
+    
+    protected function getActionIcons($view)
+    {
+        $icons = array();
+
+        if (! $this->bp->isLocked()) {
+
+            $url = Url::fromPath( 'businessprocess/node/simulate', array(
+                'config' => $this->bp->getName(),
+                'node' => $this->name
+            ));
+
+            $icons[] = $this->actionIcon(
+                $view,
+                'magic',
+                $url,
+                'Simulation'
+            );
+        }
+
+        return $icons;
+    }
 
     public function renderLink($view)
     {
-        if ($this->bp->isSimulationMode()) {
-            return $view->qlink($this->getAlias(), 'businessprocess/importednode/simulate', array(
-                'processName' => $this->configName,
-                'node' => $this->name
-            ));
-        } else {
-           return $view->qlink($this->getAlias(), 'businessprocess/process/show', array(
-                'processName' => $this->configName,
-                'process' => $this->name
-            ));
-        }
+        return $view->qlink($this->getAlias(), 'businessprocess/process/show', array(
+            'config'  => $this->configName,
+            'process' => $this->name
+        ));
     }
 }

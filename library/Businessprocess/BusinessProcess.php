@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess;
 
+use Icinga\Application\Benchmark;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 use Icinga\Data\Filter\Filter;
 use Exception;
@@ -11,6 +12,13 @@ class BusinessProcess
     const SOFT_STATE = 0;
 
     const HARD_STATE = 1;
+
+    /**
+     * Name of the configured monitoring backend
+     *
+     * @var string
+     */
+    protected $backendName;
 
     /**
      * Monitoring backend to retrieve states from
@@ -48,6 +56,13 @@ class BusinessProcess
     protected $warnings = array();
 
     /**
+     * Errors, usually filled at process build time
+     *
+     * @var array
+     */
+    protected $errors = array();
+
+    /**
      * All used node objects
      *
      * @var array
@@ -76,11 +91,11 @@ class BusinessProcess
     protected $hosts = array();
 
     /**
-     * Whether we are in simulation mode
+     * Applied state simulation
      *
-     * @var boolean
+     * @var Simulation
      */
-    protected $simulationMode = false;
+    protected $simulation;
 
     /**
      * Whether we are in edit mode
@@ -89,8 +104,53 @@ class BusinessProcess
      */
     protected $editMode = false;
 
+    protected $locked = true;
+
+    protected $changeCount = 0;
+
+    protected $simulationCount = 0;
+
     public function __construct()
     {
+    }
+
+    public function applyChanges(ProcessChanges $changes)
+    {
+        $cnt = 0;
+        foreach ($changes->getChanges() as $change) {
+            $cnt++;
+            $change->applyTo($this);
+        }
+        $this->changeCount = $cnt;
+
+        return $this;
+    }
+
+    public function applySimulation(Simulation $simulation)
+    {
+        $cnt = 0;
+
+        foreach ($simulation->simulations() as $node => $s) {
+            if (! $this->hasNode($node)) {
+                continue;
+            }
+            $cnt++;
+            $this->getNode($node)
+                 ->setState($s->state)
+                 ->setAck($s->acknowledged)
+                 ->setDowntime($s->in_downtime);
+        }
+
+        $this->simulationCount = $cnt;
+    }
+    public function countChanges()
+    {
+        return $this->changeCount;
+    }
+
+    public function hasChanges()
+    {
+        return $this->countChanges() > 0;
     }
 
     public function setName($name)
@@ -115,10 +175,25 @@ class BusinessProcess
         return $this->title ?: $this->getName();
     }
 
-    public function loadBackendByName($name)
+    public function hasTitle()
     {
-        $this->backend = MonitoringBackend::createBackend($name);
+        return $this->title !== null;
+    }
+
+    public function setBackendName($name)
+    {
+        $this->backendName = $name;
         return $this;
+    }
+
+    public function getBackendName()
+    {
+        return $this->backendName;
+    }
+
+    public function hasBackendName()
+    {
+        return $this->backendName !== null;
     }
 
     public function setBackend(MonitoringBackend $backend)
@@ -130,8 +205,11 @@ class BusinessProcess
     public function getBackend()
     {
         if ($this->backend === null) {
-            $this->backend = MonitoringBackend::createBackend();
+            $this->backend = MonitoringBackend::createBackend(
+                $this->getBackendName()
+            );
         }
+
         return $this->backend;
     }
 
@@ -145,15 +223,30 @@ class BusinessProcess
         return false;
     }
 
-    public function setSimulationMode($mode = true)
+    public function isLocked()
     {
-        $this->simulationMode = (bool) $mode;
+        return $this->locked;
+    }
+
+    public function lock($lock = true)
+    {
+        $this->locked = (bool) $lock;
         return $this;
     }
 
-    public function isSimulationMode()
+    public function unlock()
     {
-        return $this->simulationMode;
+        return $this->lock(false);
+    }
+
+    public function hasSimulations()
+    {
+        return $this->countSimulations() > 0;
+    }
+
+    public function countSimulations()
+    {
+        return $this->simulationCount;
     }
 
     public function setEditMode($mode = true)
@@ -197,6 +290,19 @@ class BusinessProcess
 
     public function retrieveStatesFromBackend()
     {
+        try {
+            $this->reallyRetrieveStatesFromBackend();
+        } catch (Exception $e) {
+            $this->error(
+                $this->translate('Could not retrieve process state: %s'),
+                $e->getMessage()
+            );
+        }
+    }
+
+    public function reallyRetrieveStatesFromBackend()
+    {
+        Benchmark::measure('Retrieving states for business process ' . $this->getName());
         $backend = $this->getBackend();
         // TODO: Split apart, create a dedicated function.
         //       Separate "parse-logic" from "retrieve-state-logic"
@@ -219,6 +325,10 @@ class BusinessProcess
         $filter = Filter::matchAny();
         foreach ($hostFilter as $host) {
             $filter->addFilter(Filter::where('host_name', $host));
+        }
+
+        if ($filter->isEmpty()) {
+            return $this;
         }
 
         $hostStatus = $backend->select()->from('hostStatus', array(
@@ -263,6 +373,8 @@ class BusinessProcess
             }
         }
         ksort($this->root_nodes);
+        Benchmark::measure('Got states for business process ' . $this->getName());
+
         return $this;
     }
 
@@ -352,7 +464,7 @@ class BusinessProcess
         if (array_key_exists($name, $this->nodes)) {
             $this->warn(
                 sprintf(
-                    'Node "%s" has been defined twice',
+                    mt('businessprocess', 'Node "%s" has been defined twice'),
                     $name
                 )
             );
@@ -360,6 +472,27 @@ class BusinessProcess
 
         $this->nodes[$name] = $node;
         return $this;
+    }
+
+    public function getUnboundNodes()
+    {
+        $nodes = array();
+
+        foreach ($this->nodes as $node) {
+            if (! $node instanceof BpNode) {
+                continue;
+            }
+
+            if ($node->hasParents()) {
+                continue;
+            }
+
+            if ($node->getDisplay() === '0') {
+                $nodes[(string) $node] = $node;
+            }
+        }
+
+        return $nodes;
     }
 
     public function hasWarnings()
@@ -372,35 +505,73 @@ class BusinessProcess
         return $this->warnings;
     }
 
+    public function hasErrors()
+    {
+        return ! empty($this->errors) || $this->isEmpty();
+    }
+
+    public function getErrors()
+    {
+        $errors = $this->errors;
+        if ($this->isEmpty()) {
+            $errors[] = sprintf(
+                $this->translate(
+                    'No business process nodes for "%s" have been defined yet'
+                ),
+                $this->getTitle()
+            );
+        }
+        return $errors;
+    }
+
+    protected function translate($msg)
+    {
+        return mt('businessprocess', $msg);
+    }
+
     protected function warn($msg)
     {
+        $args = func_get_args();
+        array_shift($args);
         if (isset($this->parsing_line_number)) {
             $this->warnings[] = sprintf(
-                'Parser waring on %s:%s: %s',
+                $this->translate('Parser waring on %s:%s: %s'),
                 $this->filename,
                 $this->parsing_line_number,
-                $msg
+                vsprintf($msg, $args)
             );
         } else {
-            $this->warnings[] = $msg;
+            $this->warnings[] = vsprintf($msg, $args);
         }
+    }
+
+    protected function error($msg)
+    {
+        $args = func_get_args();
+        array_shift($args);
+        $this->errors[] = vsprintf($msg, $args);
     }
 
     public function toLegacyConfigString()
     {
-        $conf = sprintf(
-            "### Busines Process Config File ###\n"
-          . "#\n"
-          . "# Title     : %s\n"
-          // . "# Owner     : %s\n"
-          . "# Backend   : %s\n"
-          . "# Statetype : %s\n",
-            $this->getTitle(),
-            $this->backend->getName(),
-            $this->state_type = self::SOFT_STATE ? 'soft' : 'hard'
-        );
+        $settings = array();
+        if ($this->hasTitle()) {
+            $settings['Title'] = $this->getTitle();
+        }
+        // TODO: backendName?
+        if ($this->backend) {
+            $settings['Backend'] = $this->backend->getName();
+        }
+        $settings['Statetype'] = $this->usesSoftStates() ? 'soft' : 'hard';
 
-        if (false) $conf .= sprintf("# xSLA Hosts: %s\n", implode(', ', array()));
+        if (false) {
+            $settings['SLA Hosts'] = implode(', ', array());
+        }
+
+        $conf = "### Business Process Config File ###\n#\n";
+        foreach ($settings as $key => $value) {
+            $conf .= sprintf("# %-9s : %s\n", $key, $value);
+        }
 
         $conf .= sprintf(
             "#\n"
@@ -412,17 +583,46 @@ class BusinessProcess
         foreach ($this->getChildren() as $child) {
             $conf .= $child->toLegacyConfigString($rendered);
         }
+        foreach ($this->getUnboundNodes() as $node) {
+            $conf .= $node->toLegacyConfigString($rendered);
+        }
         return $conf . "\n";
+    }
+
+    public function isEmpty()
+    {
+        return $this->countChildren() === 0;
     }
 
     public function renderHtml($view)
     {
-        $html = '<div class="bp">';
+        $html = '';
         foreach ($this->getRootNodes() as $name => $node) {
-            // showNode($this, $node, $this->slas, $this->opened, 'bp_')
             $html .= $node->renderHtml($view);
         }
-        $html .= '</div>';
+        return $html;
+    }
+
+    public function renderUnbound($view)
+    {
+        $html = '';
+        $unbound = $this->getUnboundNodes();
+        if (empty($unbound)) {
+            return $html;
+        }
+
+        $parent = new BpNode($this, (object) array(
+            'name'        => '__unbound__',
+            'operator'    => '|',
+            'child_names' => array_keys($unbound)
+        ));
+        $parent->getState();
+        $parent->setMissing()
+            ->setDowntime(false)
+            ->setAck(false)
+            ->setAlias('Unbound nodes');
+
+        $html .= $parent->renderHtml($view);
         return $html;
     }
 }

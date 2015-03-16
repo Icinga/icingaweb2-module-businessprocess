@@ -1,25 +1,37 @@
 <div class="controls">
 <?= $this->tabs ?>
   <h1><?= $this->escape($this->title) ?>
-  <a href="<?= $this->url()->without('mode') ?>" title="<?= $this->escape('Switch to tree view') ?>" style="float: right"><?= $this->icon('sitemap') ?></a>
-  <?= $this->render('simulationlink.phtml') ?>
-  <?= $this->render('editlink.phtml') ?>
+  <a href="<?= $this->url('businessprocess/process/download', array(
+'config' => $this->configName
+)) ?>" target="_self" title="<?= $this->escape($this->translate('Download process configuration')) ?>"><?= $this->icon('download') ?></a>
+<?php if ($this->showDiff): ?>
+  <a href="<?= $this->url()->without('showDiff') ?>" title="<?= $this->escape($this->translate('Show source code')) ?>"><?= $this->icon('doc-text') ?></a>
+<?php else: ?>
+  <a href="<?= $this->url()->with('showDiff', true) ?>" title="<?= $this->escape($this->translate('Highlight changes')) ?>"><?= $this->icon('flapping') ?></a>
+<?php endif ?>
   </h1>
 </div>
 
-<div class="content" data-base-target="_next">
-<pre>
+<div class="content">
+<?php if ($this->showDiff): ?>
+<div class="diff">
+<?= $this->diff->renderHtml() ?>
+</div>
+<?php else: ?>
+<table class="sourcecode">
 <?php
 
 $cnt = 0;
 $lines = preg_split('~\r?\n~', $this->source);
 $len = ceil(log(count($lines), 10));
+$rowhtml = sprintf('<tr><th>%%0%dd: </th><td>%%s<br></td></tr>', $len);
 
 foreach ($lines as $line) {
     $cnt++;
-    printf("%0" . $len . "d: %s\n", $cnt, $this->escape($line));
+    printf($rowhtml, $cnt, $this->escape($line));
 }
 
 ?>
-</pre>
+</table>
+<?php endif ?>
 </div>

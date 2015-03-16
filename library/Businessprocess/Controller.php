@@ -2,26 +2,27 @@
 
 namespace Icinga\Module\Businessprocess;
 
+use Exception;
 use Icinga\Application\Icinga;
-use Icinga\Web\Controller\ModuleActionController;
-use Icinga\Module\Monitoring\Backend;
-use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Businessprocess\BusinessProcess;
 use Icinga\Module\Businessprocess\Form\ProcessForm;
 use Icinga\Module\Businessprocess\Form\SimulationForm;
+use Icinga\Module\Businessprocess\Storage\LegacyStorage;
+use Icinga\Module\Monitoring\Backend;
+use Icinga\Web\Controller as ModuleController;
+use Icinga\Web\Notification;
 use Icinga\Web\Url;
 use Icinga\Web\Widget;
-use Exception;
 
-class Controller extends ModuleActionController
+class Controller extends ModuleController
 {
     protected $config;
 
     protected $backend;
 
-    protected $views;
+    private $storage;
 
-    protected $aliases;
+    private $url;
 
     public function init()
     {
@@ -29,26 +30,25 @@ class Controller extends ModuleActionController
         if (! $m->hasLoaded('monitoring') && $m->hasInstalled('monitoring')) {
             $m->loadModule('monitoring');
         }
+        $this->view->errors = array();
 
-        $this->config = $this->Config();
+        $this->view->compact = $this->params->get('view') === 'compact';
+    }
+
+    protected function url()
+    {
+        if ($this->url === null) {
+            $this->url = clone $this->getRequest()->getUrl();
+        }
+        return $this->url;
     }
 
     protected function tabs()
     {
-        $url = Url::fromRequest();
-        $tabs = Widget::create('tabs')->add('show', array(
-            'title' => $this->translate('Show'),
-            'url' => 'businessprocess/process/show',
-        ));
-        foreach (array('processName', 'process') as $param) {
-            if ($process = $this->params->get($param)) {
-                foreach ($tabs->getTabs() as $tab) {
-                    $tab->setUrlParams(array($param => $process));
-                }
-            }
+        if ($this->view->tabs === null) {
+            $this->view->tabs = Widget::create('tabs');
         }
-
-        return $tabs;
+        return $this->view->tabs;
     }
 
     protected function session()
@@ -56,15 +56,54 @@ class Controller extends ModuleActionController
         return $this->Window()->getSessionNamespace('businessprocess');
     }
 
-    protected function loadBp()
+    protected function setTitle($title)
     {
-        $storage = new LegacyStorage($this->Config()->getSection('global'));
+        $args = func_get_args();
+        array_shift($args);
+        $this->view->title = vsprintf($title, $args);
+    }
+
+    protected function loadModifiedBpConfig()
+    {
+        $bp = $this->loadBpConfig();
+        $changes = ProcessChanges::construct($bp, $this->session());
+        if ($this->params->get('dismissChanges')) {
+            Notification::success(
+                sprintf(
+                    $this->translate('%d pending change(s) have been dropped'),
+                    $changes->count()
+                )
+            );
+            $changes->clear();
+            $this->redirectNow($this->url()->without('dismissChanges')->without('unlocked'));
+        }
+        $bp->applyChanges($changes);
+        return $bp;
+    }
+
+    protected function loadBpConfig()
+    {
+        $storage = $this->storage();
         $this->view->processList = $storage->listProcesses();
-        $process = $this->params->get('processName', key($this->view->processList));
-        $this->view->processName = $process;
 
-        $bp = $storage->loadProcess($process);
+        // No process found? Go to welcome page
+        if (empty($this->view->processList)) {
+            $this->redirectNow('businessprocess');
+        }
 
+        $name = $this->params->get(
+            'config',
+            key($this->view->processList)
+        );
+
+        $modifications = $this->session()->get('modifications', array());
+        if (array_key_exists($name, $modifications)) {
+            $bp = $storage->loadFromString($name, $modifications[$name]);
+        } else {
+            $bp = $storage->loadProcess($name);
+        }
+
+        // allow URL parameter to override configured state type
         if (null !== ($stateType = $this->params->get('state_type'))) {
             if ($stateType === 'soft') {
                 $bp->useSoftStates();
@@ -74,7 +113,21 @@ class Controller extends ModuleActionController
             }
         }
 
+        $this->view->bpconfig = $bp;
+        $this->view->configName = $bp->getName();
+
         return $bp;
+    }
+
+    protected function storage()
+    {
+        if ($this->storage === null) {
+            $this->storage = new LegacyStorage(
+                $this->Config()->getSection('global')
+            );
+        }
+
+        return $this->storage;
     }
 
     protected function loadSlas()
