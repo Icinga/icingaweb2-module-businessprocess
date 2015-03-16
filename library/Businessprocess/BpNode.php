@@ -212,7 +212,7 @@ class BpNode extends Node
 
     public function setDisplay($display)
     {
-        $this->display = $display;
+        $this->display = (int) $display;
         return $this;
     }
 
@@ -296,8 +296,8 @@ class BpNode extends Node
             $eq,
             implode(' ' . $op . ' ', $children)
         );
-        if ($this->hasAlias()/* || $this->hasPrio()*/) {
-            $prio = $this->display; // TODO: $this->getPrio() ??
+        if ($this->hasAlias() || $this->getDisplay() > 0) {
+            $prio = $this->getDisplay();
             $cfg .= sprintf(
                 "display %s;%s;%s\n",
                 $prio,
