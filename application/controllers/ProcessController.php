@@ -173,7 +173,7 @@ class Businessprocess_ProcessController extends Controller
         );
         $this->view->form = BpConfigForm::construct()
             ->setProcessConfig($bp)
-            ->setSession($this->session())
+            ->setStorage($this->storage())
             ->setRedirectUrl($url)
             ->handleRequest();
 
