@@ -125,6 +125,7 @@ class BpConfigForm extends Form
                 $config->useHardStates();
             }
             $this->storage->storeProcess($config);
+            $config->clearAppliedChanges();
             $this->setRedirectUrl(
                 Url::fromPath(
                     $this->getRedirectUrl(),
@@ -134,6 +135,7 @@ class BpConfigForm extends Form
 
             Notification::success(sprintf('Process %s has been created', $name));
         } else {
+            // Existing config
             $config = $this->config;
 
             if ($title) {
