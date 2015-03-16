@@ -29,7 +29,7 @@ if ($count < 20) {
 <?php if ($node instanceof ImportedNode): ?>
   <a href="<?= $this->url('businessprocess/process/show', array('config' => $this->configName, 'node' => $name)) ?>"><?= $this->escape($node->getAlias()) ?></a>
 <?php else: ?>
-  <a href="<?= $this->url('businessprocess/process/show', array('config' => $this->configName, 'node' => $this->nodeName)) ?>"><?= $this->escape($node->getAlias()) ?></a>
+  <a href="<?= $this->url('businessprocess/process/show', array('config' => $this->configName, 'node' => $name)) ?>"><?= $this->escape($node->getAlias()) ?></a>
 <?php endif ?>
   </div>
   <?php endforeach ?>
