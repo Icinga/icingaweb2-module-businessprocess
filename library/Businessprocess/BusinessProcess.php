@@ -619,9 +619,11 @@ class BusinessProcess
 
         $rendered = array();
         foreach ($this->getChildren() as $child) {
+            $rendered[(string) $child] = true;
             $conf .= $child->toLegacyConfigString($rendered);
         }
         foreach ($this->getUnboundNodes() as $node) {
+            $rendered[(string) $child] = true;
             $conf .= $node->toLegacyConfigString($rendered);
         }
         return $conf . "\n";
