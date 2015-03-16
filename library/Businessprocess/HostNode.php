@@ -2,6 +2,8 @@
 
 namespace Icinga\Module\Businessprocess;
 
+use Icinga\Web\Url;
+
 class HostNode extends Node
 {
     protected $hostname;
@@ -20,17 +22,40 @@ class HostNode extends Node
 
     public function renderLink($view)
     {
-        if ($this->bp->isSimulationMode()) {
-            return $view->qlink($this->getHostname(), 'businessprocess/host/simulate', array(
-                'config' => $this->bp->getName(),
-                'node'   => $this->name
-            ));
-        } else {
-            return $view->qlink($this->getHostname(), 'monitoring/host/show', array(
-                'config' => $this->bp->getName(),
-                'host'   => $this->getHostname()
-            ));
+        if ($this->isMissing()) {
+            return '<span class="missing">' . $view->escape($this->hostname) . '</span>';
         }
+
+        $params = array(
+            'host'    => $this->getHostname(),
+        );
+
+        if ($this->bp->hasBackendName()) {
+            $params['backend'] = $this->bp->getBackendName();
+        }
+        return $view->qlink($this->hostname, 'monitoring/host/show', $params);
+    }
+
+    protected function getActionIcons($view)
+    {
+        $icons = array();
+
+        if (! $this->bp->isLocked()) {
+
+            $url = Url::fromPath( 'businessprocess/node/simulate', array(
+                'config' => $this->bp->getName(),
+                'node' => $this->name
+            ));
+
+            $icons[] = $this->actionIcon(
+                $view,
+                'magic',
+                $url,
+                'Simulation'
+            );
+        }
+
+        return $icons;
     }
 
     public function getHostname()
