@@ -300,6 +300,20 @@ class BusinessProcess
         return $this;
     }
 
+    public function removeRootNode($name)
+    {
+        if ($this->isRootNode($name)) {
+            unset($this->root_nodes[$name]);
+        }
+
+        return $this;
+    }
+
+    public function isRootNode($name)
+    {
+        return array_key_exists($name, $this->root_nodes);
+    }
+
     public function retrieveStatesFromBackend()
     {
         try {
@@ -483,6 +497,18 @@ class BusinessProcess
         }
 
         $this->nodes[$name] = $node;
+
+        if ($node->getDisplay() > 0) {
+            if (! $this->isRootNode($name)) {
+                $this->addRootNode($name);
+            }
+        } else {
+            if ($this->isRootNode($name)) {
+                $this->removeRootNode($name);
+            }
+        }
+
+
         return $this;
     }
 
@@ -499,7 +525,7 @@ class BusinessProcess
                 continue;
             }
 
-            if ($node->getDisplay() === '0') {
+            if ($node->getDisplay() === 0) {
                 $nodes[(string) $node] = $node;
             }
         }
