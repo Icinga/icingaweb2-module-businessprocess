@@ -110,6 +110,8 @@ class BusinessProcess
 
     protected $simulationCount = 0;
 
+    protected $appliedChanges;
+
     public function __construct()
     {
     }
@@ -122,6 +124,8 @@ class BusinessProcess
             $change->applyTo($this);
         }
         $this->changeCount = $cnt;
+
+        $this->appliedChanges = $changes;
 
         return $this;
     }
@@ -258,6 +262,14 @@ class BusinessProcess
     public function isEditMode()
     {
         return $this->editMode;
+    }
+
+    public function clearAppliedChanges()
+    {
+        if ($this->appliedChanges !== null) {
+            $this->appliedChanges->clear();
+        }
+        return $this;
     }
 
     public function useSoftStates()
@@ -606,6 +618,7 @@ class BusinessProcess
     public function renderUnbound($view)
     {
         $html = '';
+
         $unbound = $this->getUnboundNodes();
         if (empty($unbound)) {
             return $html;
