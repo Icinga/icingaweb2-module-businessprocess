@@ -23,8 +23,6 @@ class BpConfigForm extends Form
 
     protected $processList = array();
 
-    protected $session;
-
     public function setup()
     {
         $this->addElement('text', 'name', array(
@@ -74,12 +72,6 @@ class BpConfigForm extends Form
         return array_combine($keys, $keys);
     }
 
-    public function XXsetBackend($backend)
-    {
-        $this->backend = $backend;
-        return $this;
-    }
-
     public function setStorage($storage)
     {
         $this->storage = $storage;
@@ -107,12 +99,6 @@ class BpConfigForm extends Form
             $this->getElement('state_type')->setValue('hard');
         }
 
-        return $this;
-    }
-
-    public function setSession($session)
-    {
-        $this->session = $session;
         return $this;
     }
 
@@ -149,16 +135,5 @@ class BpConfigForm extends Form
         } else {
             Notification::success(sprintf('Process %s has NOT YET been modified', $name));
         }
-/*
-        $storage->storeProcess($bp);
-        $modifications = $this->session->get('modifications', array());
-        $node = $this->config->getNode($this->getValue('name'));
-        $node->setChildNames($this->getValue('children'));
-        $node->setOperator($this->getValue('operator'));
-        $modifications[$this->config->getName()] = $this->config->toLegacyConfigString();
-        $this->session->set('modifications', $modifications);
-        $message = 'Process %s has been modified';
-        Notification::success(sprintf($message, $this->config->getName()));
-*/
     }
 }
