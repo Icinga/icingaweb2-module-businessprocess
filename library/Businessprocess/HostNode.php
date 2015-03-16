@@ -10,7 +10,7 @@ class HostNode extends Node
 
     public function __construct(BusinessProcess $bp, $object)
     {
-        $this->name     = $object->hostname . ';Hoststate';
+        $this->name     = $object->hostname . ';Hoststatus';
         $this->hostname = $object->hostname;
         $this->bp       = $bp;
         if (isset($object->state)) {
