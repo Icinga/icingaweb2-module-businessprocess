@@ -257,7 +257,7 @@ class BpNode extends Node
     protected function getActionIcons($view)
     {
         $icons = array();
-        if (! $this->bp->isLocked()) {
+        if (! $this->bp->isLocked() && $this->name !== '__unbound__') {
             $icons[] = $this->actionIcon(
                 $view,
                 'wrench',
