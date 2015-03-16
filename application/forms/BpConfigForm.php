@@ -82,6 +82,7 @@ class BpConfigForm extends Form
     {
         $this->config = $config;
         $this->getElement('name')->setValue($config->getName());
+        $this->getElement('name')->setAttrib('readonly', true);
 
         if ($config->hasTitle()) {
             $this->getElement('title')->setValue($config->getTitle());
