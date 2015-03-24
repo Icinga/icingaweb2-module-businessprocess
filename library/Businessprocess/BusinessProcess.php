@@ -623,7 +623,7 @@ class BusinessProcess
             $conf .= $child->toLegacyConfigString($rendered);
         }
         foreach ($this->getUnboundNodes() as $node) {
-            $rendered[(string) $child] = true;
+            $rendered[(string) $node] = true;
             $conf .= $node->toLegacyConfigString($rendered);
         }
         return $conf . "\n";
