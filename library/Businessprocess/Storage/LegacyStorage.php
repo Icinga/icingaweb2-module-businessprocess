@@ -203,11 +203,13 @@ class LegacyStorage extends Storage
             if ($display > 0) {
                 $bp->addRootNode($name);
             }
+            return;
         }
 
         if (preg_match('~^external_info~', $line)) {
             list($name, $script) = preg_split('~\s*;\s*~', substr($line, 14), 2);
             $node = $bp->getNode($name)->setInfoCommand($script);
+            return;
         }
 
         // New feature:
@@ -219,12 +221,9 @@ class LegacyStorage extends Storage
         if (preg_match('~^info_url~', $line)) {
             list($name, $url) = preg_split('~\s*;\s*~', substr($line, 9), 2);
             $node = $bp->getNode($name)->setInfoUrl($url);
-        }
-
-        if (strpos($line, '=') === false) {
             return;
         }
-        
+
         list($name, $value) = preg_split('~\s*=\s*~', $line, 2);
 
         if (strpos($name, ';') !== false) {
