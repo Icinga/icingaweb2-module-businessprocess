@@ -374,34 +374,44 @@ class BusinessProcess
             'state'             => $serviceStateColumn
         ))->applyFilter($filter)->getQuery()->fetchAll();
 
-        foreach ($serviceStatus + $hostStatus as $row) {
-            $key = $row->hostname;
-            if ($row->service) {
-                $key .= ';' . $row->service;
-            } else {
-                $key .= ';Hoststatus';
-            }
-            // We fetch more states than we need, so skip unknown ones
-            if (! $this->hasNode($key)) continue;
-            $node = $this->getNode($key);
-
-            if ($row->state !== null) {
-                $node->setState($row->state)->setMissing(false);
-            }
-            if ($row->last_state_change !== null) {
-                $node->setLastStateChange($row->last_state_change);
-            }
-            if ((int) $row->in_downtime === 1) {
-                $node->setDowntime(true);
-            }
-            if ((int) $row->ack === 1) {
-                $node->setAck(true);
-            }
+        foreach ($serviceStatus as $row) {
+            $this->handleDbRow($row);
         }
+
+        foreach ($hostStatus as $row) {
+            $this->handleDbRow($row);
+         }
+
         ksort($this->root_nodes);
         Benchmark::measure('Got states for business process ' . $this->getName());
 
         return $this;
+    }
+
+    protected function handleDbRow($row)
+    {
+        $key = $row->hostname;
+        if (property_exists($row, 'service')) {
+            $key .= ';' . $row->service;
+        } else {
+            $key .= ';Hoststatus';
+        }
+        // We fetch more states than we need, so skip unknown ones
+        if (! $this->hasNode($key)) return;
+        $node = $this->getNode($key);
+
+        if ($row->state !== null) {
+            $node->setState($row->state)->setMissing(false);
+        }
+        if ($row->last_state_change !== null) {
+            $node->setLastStateChange($row->last_state_change);
+        }
+        if ((int) $row->in_downtime === 1) {
+            $node->setDowntime(true);
+        }
+        if ((int) $row->ack === 1) {
+            $node->setAck(true);
+        }
     }
 
     public function getChildren()
