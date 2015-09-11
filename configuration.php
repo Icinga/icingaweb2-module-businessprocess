@@ -1,6 +1,7 @@
 <?php
 
-$section = $this->menuSection($this->translate('Reporting'))
+$section = $this->menuSection(mt('monitoring', 'Overview'))
     ->add($this->translate('Business Processes'))
+    ->setPriority(45)
     ->setUrl('businessprocess');
 
