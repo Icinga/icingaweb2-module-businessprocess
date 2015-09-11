@@ -27,10 +27,17 @@ if ($count < 20) {
   <?php foreach ($this->bp->getChildren() as $name => $node): ?>
   <div class="<?= strtolower($node->getStateName()) ?><?= $node->isHandled() ? ' handled' : '' ?>">
 <?php if ($node instanceof ImportedNode): ?>
-  <a href="<?= $this->url('businessprocess/process/show', array('config' => $node->getConfigName(), 'node' => $name)) ?>"><?= $this->escape($node->getAlias()) ?></a>
+  <a href="<?= $this->url('businessprocess/process/show', array('config' => $node->getConfigName(), 'node' => $name)) ?>">
 <?php else: ?>
-  <a href="<?= $this->url('businessprocess/process/show', array('config' => $this->configName, 'node' => $name)) ?>"><?= $this->escape($node->getAlias()) ?></a>
+  <a href="<?= $this->url('businessprocess/process/show', array('config' => $this->configName, 'node' => $name)) ?>">
 <?php endif ?>
+<?= $this->escape($node->getAlias()) ?><?php
+
+if ($node instanceof BpNode) {
+    echo $this->renderStateBadges($node->getStateSummary());
+}
+
+?></a>
   </div>
   <?php endforeach ?>
   </div>
