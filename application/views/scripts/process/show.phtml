@@ -1,3 +1,8 @@
+<?php
+
+use Icinga\Module\Businessprocess\BusinessProcess;
+
+?>
 <?php if (! $this->compact): ?>
 <div class="controls">
 <?= $this->tabs ?>
@@ -59,7 +64,9 @@
 <div class="bp">
 <?= $this->bp->renderHtml($this) ?>
 <?php if (! $this->bpconfig->isLocked()): ?>
+<?php if ($this->bp instanceof BusinessProcess): /* do not render when showing subtree */ ?>
 <?= $this->bp->renderUnbound($this) ?>
+<?php endif ?>
 <?php endif ?>
 </div>
 <?= $this->render('warnings.phtml') ?>
