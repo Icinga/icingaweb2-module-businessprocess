@@ -152,12 +152,7 @@ class BpConfigForm extends Form
 
             $this->storage->storeProcess($config);
             $config->clearAppliedChanges();
-            $this->setRedirectUrl(
-                Url::fromPath(
-                    $this->getRedirectUrl(),
-                    array('config' => $name)
-                )
-            );
+            $this->getRedirectUrl()->setParam('config', $name);
             Notification::success(sprintf('Process %s has been stored', $name));
         }
     }
