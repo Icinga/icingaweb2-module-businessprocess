@@ -36,7 +36,8 @@ class ServiceNode extends Node
         if ($this->bp->hasBackendName()) {
             $params['backend'] = $this->bp->getBackendName();
         }
-        return $view->qlink($this->getAlias(), 'monitoring/service/show', $params);
+        $link = $view->qlink($this->getAlias(), 'monitoring/service/show', $params);
+        return preg_replace('#</a>#', ' ' . $view->timeSince($this->getLastStateChange()) . '</a>', $link);
     }
     
     protected function getActionIcons($view)
