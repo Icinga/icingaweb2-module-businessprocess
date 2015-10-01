@@ -163,7 +163,7 @@ class LegacyStorage extends Storage
         $file = $this->currentFilename = $this->getFilename($name);
         $fh = @fopen($file, 'r');
         if (! $fh) {
-            throw new SystemPermissionException('Could not open ' . $file);
+            throw new SystemPermissionException('Could not open "%s"', $file);
         }
 
         $this->parsing_line_number = 0;
