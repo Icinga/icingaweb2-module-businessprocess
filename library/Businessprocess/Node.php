@@ -335,6 +335,7 @@ abstract class Node
             $this->renderLink($view)
         );
 
+        $title = preg_replace('#</a>#', ' ' . $view->timeSince($this->getLastStateChange()) . '</a>', $title);
         $icons = array();
 
         foreach ($this->getActionIcons($view) as $icon) {
