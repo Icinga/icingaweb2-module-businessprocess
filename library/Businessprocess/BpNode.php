@@ -19,6 +19,22 @@ class BpNode extends Node
     protected $counters;
     protected $missing = null;
 
+    protected static $sortStateToStateMap = array(
+        4 => 2,
+        3 => 3,
+        2 => 1,
+        1 => 99,
+        0 => 0
+    );
+
+    protected static $stateToSortStateMap = array(
+        99 => 1,
+        3  => 3,
+        2  => 4,
+        1  => 2,
+        0  => 0,
+    );
+
     public function __construct(
         BusinessProcess $bp,
         $object
@@ -187,21 +203,28 @@ class BpNode extends Node
         if ($sort_state & self::FLAG_ACK) {
             $this->setAck(true);
         }
-        $sort_state = $sort_state >> self::SHIFT_FLAGS;
 
-        if ($sort_state === 4) {
-            $this->state = 2;
-        } elseif ($sort_state === 3) {
-            $this->state = 3;
-        } elseif ($sort_state === 2) {
-            $this->state = 1;
-        } elseif ($sort_state === 1) {
-            $this->state = 99;
-        } elseif ($sort_state === 0) {
-            $this->state = 0;
-        } else {
-            throw new ProgrammingError('Got invalid sorting state %s', $sort_state);
+        $this->state = $this->sortStateTostate($sort_state);
+    }
+
+    protected function stateToSortState($state)
+    {
+        if (array_key_exists(self::$stateToSortStateMap, $state)) {
+            return self::$stateToSortStateMap[$state];
         }
+
+        throw new ProgrammingError('Got invalid state %s', $sort_state);
+    }
+
+    protected function sortStateTostate($sortState)
+    {
+        $sortState = $sortState >> self::SHIFT_FLAGS;
+
+        if (array_key_exists(self::$sortStateToState, $sortState)) {
+            return self::$sortStateToSortState[$sortState];
+        }
+
+        throw new ProgrammingError('Got invalid sorting state %s', $sort_state);
     }
 
     public function countChildren()
