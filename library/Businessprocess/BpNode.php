@@ -156,9 +156,13 @@ class BpNode extends Node
     protected function calculateState()
     {
         $sort_states = array();
+        $lastStateChange = 0;
         foreach ($this->getChildren() as $child) {
             $sort_states[] = $child->getSortingState();
+            $lastStateChange = max($lastStateChange, $child->getLastStateChange());
         }
+        $this->setLastStateChange($lastStateChange);
+
         switch ($this->operator) {
             case self::OP_AND:
                 $sort_state = max($sort_states);
