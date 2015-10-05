@@ -161,7 +161,7 @@ abstract class Node
 
     public function getStateName()
     {
-        return self::$state_names[ $this->getState() ];
+        return static::$state_names[ $this->getState() ];
     }
 
     public function getState()
@@ -179,26 +179,7 @@ abstract class Node
 
     public function getSortingState()
     {
-        $state = $this->getState();
-        switch ($state) {
-            case 0:
-                $sort = 0;
-                break;
-            case 1:
-                $sort = 2;
-                break;
-            case 2:
-                $sort = 4;
-                break;
-            case 3:
-                $sort = 3;
-                break;
-            case 99:
-                $sort = 1;
-                break;
-            default:
-                throw new ProgrammingError('Got invalid state %d', $state);
-        }
+        $sort = $this->stateToSortState($this->getState());
         $sort = ($sort << self::SHIFT_FLAGS)
                + ($this->isInDowntime() ? self::FLAG_DOWNTIME : 0)
                + ($this->isAcknowledged() ? self::FLAG_ACK : 0);
@@ -293,8 +274,8 @@ abstract class Node
 
     protected function stateToSortState($state)
     {
-        if (array_key_exists($state, self::$stateToSortStateMap)) {
-            return self::$stateToSortStateMap[$state];
+        if (array_key_exists($state, static::$stateToSortStateMap)) {
+            return static::$stateToSortStateMap[$state];
         }
 
         throw new ProgrammingError('Got invalid state %s', $sort_state);
@@ -304,8 +285,8 @@ abstract class Node
     {
         $sortState = $sortState >> self::SHIFT_FLAGS;
 
-        if (array_key_exists($sortState, self::$sortStateToStateMap)) {
-            return self::$sortStateToStateMap[$sortState];
+        if (array_key_exists($sortState, static::$sortStateToStateMap)) {
+            return static::$sortStateToStateMap[$sortState];
         }
 
         throw new ProgrammingError('Got invalid sorting state %s', $sort_state);
@@ -338,6 +319,7 @@ abstract class Node
     protected function getStateClassNames()
     {
         $state = strtolower($this->getStateName());
+
         if ($this->isMissing()) {
             return array('missing');
         } elseif ($state === 'ok') {
