@@ -156,7 +156,7 @@ table.bp .icon {
     margin-right: 0.4em;
 }
 
-table.bp.node.subtree, table.bp.node.service, table.bp.node.host {
+table.bp.node {
     td:before {
         font-family: ifont;
         z-index: 10;
@@ -235,17 +235,25 @@ table.bp.operator.hovered > tbody > tr:first-child > * {
 
 /* Set colors based on element state */
 table.bp {
-    &.ok               { border-color: @colorOk; }
-    &.warning          { border-color: @colorWarning; }
-    &.warning.handled  { border-color: @colorWarningHandled; }
-    &.critical         { border-color: @colorCritical; }
-    &.critical.handled { border-color: @colorCriticalHandled; }
-    &.unknown          { border-color: @colorUnknown; }
-    &.unknown.handled  { border-color: @colorUnknownHandled; }
-    &.pending          { border-color: @colorPending; }
-    &.missing          { border-color: #ccc; }
+    &.ok                  { border-color: @colorOk; }
+    &.up                  { border-color: @colorOk; }
+    &.warning             { border-color: @colorWarning; }
+    &.warning.handled     { border-color: @colorWarningHandled; }
+    &.critical            { border-color: @colorCritical; }
+    &.critical.handled    { border-color: @colorCriticalHandled; }
+    &.down                { border-color: @colorCritical; }
+    &.down.handled        { border-color: @colorCriticalHandled; }
+    &.unknown             { border-color: @colorUnknown; }
+    &.unknown.handled     { border-color: @colorUnknownHandled; }
+    &.unreachable         { border-color: @colorUnknown; }
+    &.unreachable.handled { border-color: @colorUnknownHandled; }
+    &.pending             { border-color: @colorPending; }
+    &.missing             { border-color: #ccc; }
     &.hovered {
         &.ok > tbody > tr > {
+            th, td > a { background-color: @colorOk; }
+        }
+        &.up > tbody > tr > {
             th, td > a { background-color: @colorOk; }
         }
         &.warning > tbody > tr > {
@@ -260,11 +268,23 @@ table.bp {
         &.critical.handled > tbody > tr > {
             th, td > a { background-color: @colorCriticalHandled; }
         }
+        &.down > tbody > tr > {
+            th, td > a { background-color: @colorCritical; }
+        }
+        &.down.handled > tbody > tr > {
+            th, td > a { background-color: @colorCriticalHandled; }
+        }
         &.unknown > tbody > tr > {
             th, td > a { background-color: @colorUnknown; }
         }
         &.unknown.handled > tbody > tr > {
             th, td > a { background-color: @colorCUnknownHandled; }
+        }
+        &.unreachable > tbody > tr > {
+            th, td > a { background-color: @colorUnknown; }
+        }   
+        &.unreachable.handled > tbody > tr > {
+            th, td > a { background-color: @colorCUnreachableHandled; }
         }
         &.pending > tbody > tr > {
             th, td > a { background-color: @colorPending; }
@@ -381,11 +401,27 @@ table.bp {
     background: @colorCriticalHandled;
 }
 
+.toplevel > div.down {
+    background: @colorCritical;
+}
+
+.toplevel > div.down.handled {
+    background: @colorCriticalHandled;
+}
+
 .toplevel > div.unknown {
     background: @colorUnknown;
 }
 
 .toplevel > div.unknown.handled {
+    background: @colorUnknownHandled;
+}
+
+.toplevel > div.unreachable {
+    background: @colorUnknown;
+}
+
+.toplevel > div.unreachable.handled {
     background: @colorUnknownHandled;
 }
 
