@@ -93,6 +93,8 @@ abstract class Node
 
     protected $missing = false;
 
+    protected $className = 'unknown';
+
     protected static $state_names = array(
         'OK',
         'WARNING',
@@ -327,32 +329,25 @@ abstract class Node
     {
         return md5($prefix . (string) $this);
     }
-     
+
+    protected function getObjectClassName()
+    {
+        return $this->className;
+    }
+
     public function renderHtml($view, $prefix = '')
     {
         $id = $this->getId($prefix);
         $state = strtolower($this->getStateName());
         if ($this->isMissing()) $state = 'missing';
         $handled = $this->isAcknowledged() || $this->isInDowntime();
-        if ($this instanceof BpNode) {
-            $typeClass = 'process';
-        } elseif ($this instanceof HostNode) {
-            $typeClass = 'host';
-        } elseif ($this instanceof ServiceNode) {
-            $typeClass = 'service';
-        } elseif ($this instanceof ImportedNode) {
-            $typeClass = 'subtree';
-        } else {
-            // WTF?
-            var_dump($this); exit;
-        }
 
         $html = sprintf(
             '<table class="bp %s%s%s%s" id="%s"><tbody><tr>',
             $state === 'ok' ? 'ok' : 'problem ' . $state,
             $handled ? ' handled' : '',
             ($this->hasChildren() ? ' operator ' : ' node '),
-            $typeClass,
+            $this->getObjectClassName(),
             $id
         );
 

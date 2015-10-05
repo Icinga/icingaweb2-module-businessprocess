@@ -8,6 +8,8 @@ class HostNode extends Node
 {
     protected $hostname;
 
+    protected $className = 'host';
+
     public function __construct(BusinessProcess $bp, $object)
     {
         $this->name     = $object->hostname . ';Hoststatus';

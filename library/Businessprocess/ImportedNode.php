@@ -14,6 +14,8 @@ class ImportedNode extends Node
 
     protected $importedNode;
 
+    protected $className = 'subtree';
+
     public function __construct(BusinessProcess $bp, $object)
     {
         $this->name       = $object->name;

@@ -10,6 +10,8 @@ class ServiceNode extends Node
 
     protected $service;
 
+    protected $className = 'service';
+
     public function __construct(BusinessProcess $bp, $object)
     {
         $this->name = $object->hostname . ';' . $object->service;
