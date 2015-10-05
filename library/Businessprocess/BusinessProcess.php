@@ -621,11 +621,7 @@ class BusinessProcess
             $conf .= sprintf("# %-9s : %s\n", $key, $value);
         }
 
-        $conf .= sprintf(
-            "#\n"
-          . "####################################\n\n",
-            date('Y-m-d H:i:s')
-        );
+        $conf .= "#\n###################################\n\n";
 
         $rendered = array();
         foreach ($this->getChildren() as $child) {
