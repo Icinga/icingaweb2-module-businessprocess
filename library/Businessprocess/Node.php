@@ -335,16 +335,26 @@ abstract class Node
         return $this->className;
     }
 
+    protected function getStateClassNames()
+    {
+        $state = strtolower($this->getStateName());
+        if ($this->isMissing()) {
+            return array('missing');
+        } elseif ($state === 'ok') {
+            return array('ok');
+        } else {
+            return array('problem', $state);
+        }
+    }
+
     public function renderHtml($view, $prefix = '')
     {
         $id = $this->getId($prefix);
-        $state = strtolower($this->getStateName());
-        if ($this->isMissing()) $state = 'missing';
         $handled = $this->isAcknowledged() || $this->isInDowntime();
 
         $html = sprintf(
             '<table class="bp %s%s%s%s" id="%s"><tbody><tr>',
-            $state === 'ok' ? 'ok' : 'problem ' . $state,
+            implode(' ', $this->getStateClassNames()),
             $handled ? ' handled' : '',
             ($this->hasChildren() ? ' operator ' : ' node '),
             $this->getObjectClassName(),
