@@ -19,20 +19,6 @@ class BpNode extends Node
     protected $counters;
     protected $missing = null;
 
-    protected static $sortStateToStateMap = array(
-        4 => 2,
-        3 => 3,
-        2 => 1,
-        1 => 99,
-        0 => 0
-    );
-
-    protected static $stateToSortStateMap = array(
-        99 => 1,
-        3  => 3,
-        2  => 4,
-        1  => 2,
-        0  => 0,
     );
 
     public function __construct(
@@ -205,26 +191,6 @@ class BpNode extends Node
         }
 
         $this->state = $this->sortStateTostate($sort_state);
-    }
-
-    protected function stateToSortState($state)
-    {
-        if (array_key_exists(self::$stateToSortStateMap, $state)) {
-            return self::$stateToSortStateMap[$state];
-        }
-
-        throw new ProgrammingError('Got invalid state %s', $sort_state);
-    }
-
-    protected function sortStateTostate($sortState)
-    {
-        $sortState = $sortState >> self::SHIFT_FLAGS;
-
-        if (array_key_exists(self::$sortStateToState, $sortState)) {
-            return self::$sortStateToSortState[$sortState];
-        }
-
-        throw new ProgrammingError('Got invalid sorting state %s', $sort_state);
     }
 
     public function countChildren()

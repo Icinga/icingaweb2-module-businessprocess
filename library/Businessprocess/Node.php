@@ -23,6 +23,22 @@ abstract class Node
     const ICINGA_UNREACHABLE = 2;
     const ICINGA_PENDING     = 99;
 
+    protected static $sortStateToStateMap = array(
+        4 => 2,
+        3 => 3,
+        2 => 1,
+        1 => 99,
+        0 => 0
+    );
+
+    protected static $stateToSortStateMap = array(
+        99 => 1,
+        3  => 3,
+        2  => 4,
+        1  => 2,
+        0  => 0,
+    );
+
     /**
      * Main business process object
      *
@@ -271,6 +287,26 @@ abstract class Node
     public function hasParents()
     {
         return count($this->parents) > 0;
+    }
+
+    protected function stateToSortState($state)
+    {
+        if (array_key_exists($state, self::$stateToSortStateMap)) {
+            return self::$stateToSortStateMap[$state];
+        }
+
+        throw new ProgrammingError('Got invalid state %s', $sort_state);
+    }
+
+    protected function sortStateTostate($sortState)
+    {
+        $sortState = $sortState >> self::SHIFT_FLAGS;
+
+        if (array_key_exists($sortState, self::$sortStateToStateMap)) {
+            return self::$sortStateToStateMap[$sortState];
+        }
+
+        throw new ProgrammingError('Got invalid sorting state %s', $sort_state);
     }
 
     protected function renderHtmlForChildren($view)
