@@ -24,19 +24,19 @@ abstract class Node
     const ICINGA_PENDING     = 99;
 
     protected static $sortStateToStateMap = array(
-        4 => 2,
-        3 => 3,
-        2 => 1,
-        1 => 99,
-        0 => 0
+        4 => self::ICINGA_CRITICAL,
+        3 => self::ICINGA_UNKNOWN,
+        2 => self::ICINGA_WARNING,
+        1 => self::ICINGA_PENDING,
+        0 => self::ICINGA_OK
     );
 
     protected static $stateToSortStateMap = array(
-        99 => 1,
-        3  => 3,
-        2  => 4,
-        1  => 2,
-        0  => 0,
+        self::ICINGA_PENDING  => 1,
+        self::ICINGA_UNKNOWN  => 3,
+        self::ICINGA_CRITICAL => 4,
+        self::ICINGA_WARNING  => 2,
+        self::ICINGA_OK       => 0,
     );
 
     /**
