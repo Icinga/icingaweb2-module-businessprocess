@@ -6,6 +6,27 @@ use Icinga\Web\Url;
 
 class HostNode extends Node
 {
+    protected static $sortStateToStateMap = array(
+        4 => self::ICINGA_DOWN,
+        3 => self::ICINGA_UNREACHABLE,
+        1 => self::ICINGA_PENDING,
+        0 => self::ICINGA_UP
+    );
+
+    protected static $stateToSortStateMap = array(
+        self::ICINGA_PENDING     => 1,
+        self::ICINGA_UNREACHABLE => 3,
+        self::ICINGA_DOWN        => 4,
+        self::ICINGA_UP          => 0,
+    );
+
+    protected static $state_names = array(
+        'UP',
+        'DOWN',
+        'UNREACHABLE',
+        99 => 'PENDING'
+    );
+
     protected $hostname;
 
     protected $className = 'host';
