@@ -262,6 +262,10 @@ class BpNode extends Node
     public function toLegacyConfigString(& $rendered = array())
     {
         $cfg = '';
+        if (array_key_exists($this->name, $rendered)) {
+            return $cfg;
+        }
+        $rendered[$this->name] = true;
         $children = array();
         
         foreach ($this->getChildren() as $name => $child) {
@@ -270,7 +274,6 @@ class BpNode extends Node
             if ($child instanceof BpNode) {
                 $cfg .= $child->toLegacyConfigString($rendered) . "\n";
             }
-            $rendered[$name] = true;
         }
         $eq = '=';
         $op = $this->operator;
@@ -278,11 +281,16 @@ class BpNode extends Node
             $eq = '= ' . $op . ' of:';
             $op = '+';
         }
+
+        $strChildren = implode(' ' . $op . ' ', $children);
+        if ((count($children) < 2) && $op !== '&') {
+            $strChildren = $op . ' ' . $strChildren;
+        }
         $cfg .= sprintf(
             "%s %s %s\n",
             $this->name,
             $eq,
-            implode(' ' . $op . ' ', $children)
+            $strChildren
         );
         if ($this->hasAlias() || $this->getDisplay() > 0) {
             $prio = $this->getDisplay();
