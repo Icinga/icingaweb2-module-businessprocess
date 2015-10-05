@@ -47,6 +47,7 @@ class ProcessForm extends Form
             'multiOptions' => array(
                 '&' => $this->translate('AND'),
                 '|' => $this->translate('OR'),
+                '!' => $this->translate('NOT'),
                 '1' => $this->translate('MIN 1'),
                 '2' => $this->translate('MIN 2'),
                 '3' => $this->translate('MIN 3'),

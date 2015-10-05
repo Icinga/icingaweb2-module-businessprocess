@@ -9,6 +9,7 @@ class BpNode extends Node
 {
     const OP_AND = '&';
     const OP_OR  = '|';
+    const OP_NOT  = '!';
     protected $operator = '&';
     protected $url;
     protected $info_command;
@@ -19,6 +20,12 @@ class BpNode extends Node
     protected $counters;
     protected $missing = null;
 
+    protected static $sortStateInversionMap = array(
+        4 => 0,
+        3 => 0,
+        2 => 2,
+        1 => 1,
+        0 => 4
     );
 
     protected $className = 'process';
@@ -82,6 +89,7 @@ class BpNode extends Node
         switch ($operator) {
             case self::OP_AND:
             case self::OP_OR:
+            case self::OP_NOT:
                 return;
             default:
                 if (is_numeric($operator)) {
@@ -150,6 +158,11 @@ class BpNode extends Node
         return $this->state;
     }
 
+    protected function invertSortingState($state)
+    {
+        return self::$sortStateInversionMap[$state >> self::SHIFT_FLAGS] << self::SHIFT_FLAGS;
+    }
+
     protected function calculateState()
     {
         $sort_states = array();
@@ -158,11 +171,15 @@ class BpNode extends Node
             $sort_states[] = $child->getSortingState();
             $lastStateChange = max($lastStateChange, $child->getLastStateChange());
         }
+
         $this->setLastStateChange($lastStateChange);
 
         switch ($this->operator) {
             case self::OP_AND:
                 $sort_state = max($sort_states);
+                break;
+            case self::OP_NOT:
+                $sort_state = $this->invertSortingState(max($sort_states));
                 break;
             case self::OP_OR:
                 $sort_state = min($sort_states);
@@ -320,6 +337,9 @@ class BpNode extends Node
                 break;
             case self::OP_OR:
                 return 'or';
+                break;
+            case self::OP_NOT:
+                return 'not';
                 break;
             default:
                 // MIN

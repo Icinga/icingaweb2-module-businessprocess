@@ -231,7 +231,7 @@ class LegacyStorage extends Storage
         }
 
         $op = '&';
-        if (preg_match_all('~([\|\+&])~', $value, $m)) {
+        if (preg_match_all('~([\|\+&\!])~', $value, $m)) {
             $op = implode('', $m[1]);
             for ($i = 1; $i < strlen($op); $i++) {
                 if ($op[$i] !== $op[$i - 1]) {
