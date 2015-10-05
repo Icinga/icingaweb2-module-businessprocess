@@ -249,7 +249,7 @@ class LegacyStorage extends Storage
             $op_name = $m[1];
             $value   = $m[2];
         }
-        $cmps = preg_split('~\s*\\' . $op . '\s*~', $value);
+        $cmps = preg_split('~\s*\\' . $op . '\s*~', $value, -1, PREG_SPLIT_NO_EMPTY);
 
         foreach ($cmps as & $val) {
             if (strpos($val, ';') !== false) {
