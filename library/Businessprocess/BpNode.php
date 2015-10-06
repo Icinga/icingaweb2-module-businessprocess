@@ -20,6 +20,18 @@ class BpNode extends Node
     protected $counters;
     protected $missing = null;
 
+    protected static $emptyStateSummary = array(
+        'OK'          => 0,
+        'WARNING'     => 0,
+        'CRITICAL'    => 0,
+        'UNKNOWN'     => 0,
+        'PENDING'     => 0,
+        'UP'          => 0,
+        'DOWN'        => 0,
+        'UNREACHABLE' => 0,
+        'MISSING'     => 0,
+    );
+
     protected static $sortStateInversionMap = array(
         4 => 0,
         3 => 0,
@@ -42,7 +54,8 @@ class BpNode extends Node
     {
         if ($this->counters === null) {
             $this->getState();
-            $this->counters = array(0, 0, 0, 0, 99 => 0);
+            $this->counters = self::$emptyStateSummary;
+
             foreach ($this->children as $child) {
                 if ($child instanceof BpNode) {
                     $counters = $child->getStateSummary();
@@ -50,7 +63,7 @@ class BpNode extends Node
                         $this->counters[$k] += $v;
                     }
                 } else {
-                    $state = $child->getState();
+                    $state = $child->getStateName();
                     $this->counters[$state]++;
                 }
             }
