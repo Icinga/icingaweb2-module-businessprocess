@@ -229,7 +229,7 @@ class BpNode extends Node
         return $this->child_names;
     }
 
-    public function getChildren()
+    public function getChildren($filter = null)
     {
         if ($this->children === null) {
             $this->children = array();
