@@ -242,19 +242,29 @@ abstract class Node
         return $this->bp->isEditMode();
     }
 
-    public function hasChildren()
+    public function hasChildren($filter = null)
     {
         return false;
     }
 
-    public function countChildren()
-    {
-        return 0;
-    }
-
-    public function getChildren()
+    public function getChildren($filter = null)
     {
         return array();
+    }
+
+    public function countChildren($filter = null)
+    {
+        return count($this->getChildren($filter));
+    }
+
+    public function hasChildren($filter = null)
+    {
+        return $this->countChildren($filter) > 0;
+    }
+
+    public function isEmpty()
+    {
+        return $this->countChildren() === 0;
     }
 
     public function hasAlias()

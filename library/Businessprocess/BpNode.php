@@ -205,16 +205,6 @@ class BpNode extends Node
         $this->state = $this->sortStateTostate($sort_state);
     }
 
-    public function countChildren()
-    {
-        return count($this->getChildren());
-    }
-
-    public function hasChildren()
-    {
-        return $this->countChildren() > 0;
-    }
-
     public function setDisplay($display)
     {
         $this->display = (int) $display;
