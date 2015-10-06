@@ -67,6 +67,10 @@ table.bp {
         margin-top: 4px;
 
     }
+
+    .time-since {
+        display: none;
+    }
 }
 
 table.bp th {
@@ -88,6 +92,10 @@ table.bp a, table.bp a:hover {
 /* White font for all hovered objects */
 table.bp.hovered {
     color: white;
+
+    > tbody > tr > td > a > .time-since {
+        display: inline;
+    }
 }
 
 table.bp.handled.hovered {
