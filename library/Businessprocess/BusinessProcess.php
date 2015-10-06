@@ -142,7 +142,8 @@ class BusinessProcess
             $this->getNode($node)
                  ->setState($s->state)
                  ->setAck($s->acknowledged)
-                 ->setDowntime($s->in_downtime);
+                 ->setDowntime($s->in_downtime)
+                 ->setMissing(false);
         }
 
         $this->simulationCount = $cnt;
