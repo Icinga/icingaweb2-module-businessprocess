@@ -242,11 +242,6 @@ abstract class Node
         return $this->bp->isEditMode();
     }
 
-    public function hasChildren($filter = null)
-    {
-        return false;
-    }
-
     public function getChildren($filter = null)
     {
         return array();
