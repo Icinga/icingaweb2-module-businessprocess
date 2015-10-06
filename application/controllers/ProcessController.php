@@ -69,7 +69,6 @@ class Businessprocess_ProcessController extends Controller
                 $this->view->warnings = $bp->getWarnings();
             }
         }
-        $this->setAutorefreshInterval(10);
 
         $bp->retrieveStatesFromBackend();
 
@@ -89,6 +88,15 @@ class Businessprocess_ProcessController extends Controller
             }
 
             $bp->applySimulation($simulation);
+        }
+
+        if ($this->isXhr()) {
+            $this->setAutorefreshInterval(10);
+        } else {
+            // This will trigger the very first XHR refresh immediately on page
+            // load. Please not that this may hammer the server in case we would
+            // decide to use autorefreshInterval for HTML meta-refreshes also.
+            $this->setAutorefreshInterval(1);
         }
 
         if ($this->params->get('mode') === 'toplevel') {
