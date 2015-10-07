@@ -13,6 +13,7 @@ h1 {
 
   .text-small {
     color: inherit;
+    font-size: inherit;
   }
 
 }
@@ -401,7 +402,7 @@ table.bp {
     color: black;
 }
 
-.toplevel > div.critical {
+.toplevel > div.critical, .toplevel .badge-critical {
     background: @colorCritical;
 }
 
@@ -409,7 +410,7 @@ table.bp {
     background: @colorCriticalHandled;
 }
 
-.toplevel > div.down {
+.toplevel > div.down, .toplevel .badge-down {
     background: @colorCritical;
 }
 
@@ -417,7 +418,7 @@ table.bp {
     background: @colorCriticalHandled;
 }
 
-.toplevel > div.unknown {
+.toplevel > div.unknown, .toplevel .badge-unknown {
     background: @colorUnknown;
 }
 
@@ -425,7 +426,7 @@ table.bp {
     background: @colorUnknownHandled;
 }
 
-.toplevel > div.unreachable {
+.toplevel > div.unreachable, .toplevel .badge-unreachable {
     background: @colorUnknown;
 }
 
@@ -433,7 +434,7 @@ table.bp {
     background: @colorUnknownHandled;
 }
 
-.toplevel > div.warning {
+.toplevel > div.warning, .toplevel .badge-warning {
     background: @colorWarning;
 }
 
@@ -445,11 +446,11 @@ table.bp {
     background: @colorOk;
 }
 
-.toplevel > div.pending {
+.toplevel > div.pending, .toplevel .badge-pending {
     background: @colorPending;
 }
 
-.toplevel > div.missing {
+.toplevel > div.missing, .toplevel .badge-missing {
     background: #ccc;
 }
 
