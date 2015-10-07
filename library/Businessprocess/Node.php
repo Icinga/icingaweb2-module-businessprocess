@@ -4,6 +4,7 @@ namespace Icinga\Module\Businessprocess;
 
 use Icinga\Web\Url;
 use Icinga\Exception\ProgrammingError;
+use Icinga\Data\Filter\Filter;
 use Exception;
 
 abstract class Node
@@ -406,7 +407,7 @@ abstract class Node
         }
 
         return sprintf(
-            ' <a href="%s" %stitle="%s" style="float: right">%s</a>',
+            ' <a href="%s" %stitle="%s" style="float: right" data-base-target="bp-overlay">%s</a>',
             $url,
             $target,
             $view->escape($title),
