@@ -22,17 +22,42 @@
              * Tell Icinga about our event handlers
              */
             this.module.on('beforerender', this.rememberOpenedBps);
-            this.module.on('rendered',     this.fixOpenedBps);
+            this.module.on('rendered',     this.rendered);
 
             this.module.on('click', 'table.bp.process > tbody > tr:first-child > td > a:last-child', this.processTitleClick);
             this.module.on('click', 'table.bp > tbody > tr:first-child > th', this.processOperatorClick);
+            this.module.on('click', '.bp-overlay-controls a', this.closeOverlay);
+            this.module.on('click', 'a', this.checkOverlay);
 
             this.module.on('mouseenter', 'table.bp > tbody > tr > td > a', this.procMouseOver);
             this.module.on('mouseenter', 'table.bp > tbody > tr > th', this.procMouseOver);
             this.module.on('mouseenter', 'table.node.missing > tbody > tr > td > span', this.procMouseOver);
             this.module.on('mouseleave', 'div.bp', this.procMouseOut);
+            if ($('#bp-overlay').length < 1) {
+                $('#layout').append('<div id="bp-module-overlay" class="icinga-module module-businessprocess"><div id="bp-overlay-container"><div class="bp-overlay-controls"><a href="">X</a></div><div id="bp-overlay" class="container"></div></div></div>');
+            }
 
             this.module.icinga.logger.debug('BP module loaded');
+        },
+
+        closeOverlay: function(event) {
+            $('#bp-overlay-container').hide();
+            $('#bp-overlay').html('');
+        },
+
+        checkOverlay: function(event) {
+            $el = $(event.currentTarget);
+            $sourceContainer = $el.closest('.container');
+            $target = $el.closest('[data-base-target]');
+            if ($target.length < 1) { return; }
+
+            targetId = $target.data('baseTarget');
+            if ($target.data('baseTarget') !== 'bp-overlay') { return; }
+
+            $('#bp-overlay').data('sourceContainer', $sourceContainer.attr('id'));
+            $('#bp-overlay-container').css({
+                'display': 'block'
+            });
         },
 
         processTitleClick: function (event) {
@@ -133,15 +158,22 @@
             });*/
         },
 
-        fixOpenedBps: function(event) {
+        rendered: function(event) {
             var $container = $(event.currentTarget);
+            if ($container.attr('id') === 'bp-overlay') {
+                this.onOverlayRendered();
+            }
+            this.fixOpenedBps($container);
+        },
+
+        fixOpenedBps: function($container) {
             var container_id = $container.attr('id');
 
             if (typeof this.idCache[container_id] === 'undefined') {
                 return;
             }
             var $procs = $('table.process', $container);
-            $.each(this.idCache[$container.attr('id')], function(idx, id) {
+            $.each(this.idCache[container_id], function(idx, id) {
                 var $el = $('#' + id);
                 $procs = $procs.not($el);
 
@@ -152,6 +184,18 @@
             });
 
             $procs.addClass('collapsed');
+        },
+
+        onOverlayRendered: function()
+        {
+            // close overlay if required:
+            $overlay = $('#bp-overlay');
+            $overlayContainer = $('#bp-overlay-container');
+            if ($overlayContainer.css('display') === 'block' && $overlay.html().match(/^__CLOSEME__/)) {
+                $source = $('#' + $overlay.data('sourceContainer'));
+                $overlayContainer.hide();
+                self.icinga.loader.loadUrl($source.data('icingaUrl'), $source, undefined, undefined, undefined, true);
+            }
         },
 
         /**
