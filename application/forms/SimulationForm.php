@@ -3,55 +3,64 @@
 namespace Icinga\Module\Businessprocess\Forms;
 
 use Icinga\Module\Businessprocess\BpNode;
-use Icinga\Module\Businessprocess\Form;
+use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 use Icinga\Module\Businessprocess\Simulation;
-use Icinga\Web\Notification;
 use Icinga\Web\Request;
 
-class SimulationForm extends Form
+class SimulationForm extends QuickForm
 {
     protected $node;
 
-    protected $simulation;
+    protected $simulatedNode;
 
-    public function __construct($options = null)
-    {
-        parent::__construct($options);
-        $this->setup();
-    }
+    protected $simulation;
 
     public function setup()
     {
+        $states = array(
+            null  => sprintf(
+                $this->translate('Use current state (%s)'),
+                $this->translate($this->node->getStateName())
+            ),
+            '0'  => $this->translate('OK'),
+            '1'  => $this->translate('WARNING'),
+            '2'  => $this->translate('CRITICAL'),
+            '3'  => $this->translate('UNKNOWN'),
+            '99' => $this->translate('PENDING'),
+        );
+
+        // TODO: Fetch state from object
+        if ($this->simulatedNode) {
+            $states[$this->simulatedNode->getState()] . sprintf(' (%s)', $this->translate('Current simulation'));
+            $node = $this->simulatedNode;
+        } else {
+            $node = $this->node;
+        }
+
         $this->addElement('select', 'state', array(
             'label'        => $this->translate('State'),
-            'multiOptions' => array(
-                ''  => $this->translate('Use current state'),
-                '0' => $this->translate('OK'),
-                '1' => $this->translate('WARNING'),
-                '2' => $this->translate('CRITICAL'),
-                '3' => $this->translate('UNKNOWN'),
-                '99' => $this->translate('PENDING'),
-            )
-        ));
-
-        $this->addElement('text', 'output', array(
-            'label'        => $this->translate('Plugin output'),
+            'multiOptions' => $states,
+            'value'        => $this->simulatedNode ? $node->getState() : null,
         ));
 
         $this->addElement('checkbox', 'acknowledged', array(
             'label' => $this->translate('Acknowledged'),
+            'value' => $node->isAcknowledged(),
         ));
 
         $this->addElement('checkbox', 'in_downtime', array(
             'label' => $this->translate('In downtime'),
+            'value' => $node->isInDowntime(),
         ));
 
-        $this->addElement('submit', $this->translate('Apply'));
+        $this->setSubmitLabel($this->translate('Apply'));
     }
 
     public function setNode($node)
     {
         $this->node = $node;
+        return $this;
+
         $this->setDefaults(array(
             // TODO: extend descr 'state' => (string) $node->getState(),
             'acknowledged' => $node->isAcknowledged(),
@@ -63,35 +72,35 @@ class SimulationForm extends Form
     public function setSimulation($simulation)
     {
         $this->simulation = $simulation;
-        return $this->checkDefaults();
-    }
 
-    protected function checkDefaults()
-    {
-        if ($this->node !== null
-            && $this->simulation !== null
-            && $this->simulation->hasNode((string) $this->node)
-        ) {
-            $this->setDefaults((array) $this->simulation->getNode((string) $this->node));
+        $nodeName = (string) $this->node;
+        if ($simulation->hasNode($nodeName)) {
+            $this->simulatedNode = clone($this->node);
+            $s = $simulation->getNode($nodeName);
+            $this->simulatedNode->setState($s->state)
+                ->setAck($s->acknowledged)
+                ->setDowntime($s->in_downtime)
+                ->setMissing(false);
         }
+
         return $this;
     }
 
     public function onSuccess()
     {
-        $node = (string) $this->node;
+        $nodeName = (string) $this->node;
 
-        if ($this->getValue('state') === '') {
-            if ($this->simulation->remove($node)) {
-                Notification::success($this->translate('Simulation has been removed'));
-            }
-        } else {
-                Notification::success($this->translate('Simulation has been set'));
-            $this->simulation->set($node, (object) array(
+        if (ctype_digit($this->getValue('state'))) {
+            $this->notifySuccess($this->translate('Simulation has been set'));
+            $this->simulation->set($nodeName, (object) array(
                 'state'        => $this->getValue('state'),
                 'acknowledged' => $this->getValue('acknowledged'),
                 'in_downtime'  => $this->getValue('in_downtime'),
             ));
+        } else {
+            if ($this->simulation->remove($nodeName)) {
+                $this->notifySuccess($this->translate('Simulation has been removed'));
+            }
         }
     }
 }
