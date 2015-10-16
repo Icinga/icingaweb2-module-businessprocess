@@ -5,6 +5,7 @@ namespace Icinga\Module\Businessprocess;
 use Icinga\Application\Config;
 use Icinga\Web\Url;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
+use Exception;
 
 class ImportedNode extends Node
 {
@@ -74,14 +75,31 @@ class ImportedNode extends Node
             $storage = new LegacyStorage(
                 Config::module('businessprocess')->getSection('global')
             );
-            $this->importedBp = $storage->loadProcess($this->configName);
-            if ($this->bp->usesSoftStates()) {
-                $this->importedBp->useSoftStates();
-            } else {
-                $this->importedBp->useHardStates();
+            try {
+                $this->importedBp = $storage->loadProcess($this->configName);
+                if ($this->bp->usesSoftStates()) {
+                    $this->importedBp->useSoftStates();
+                } else {
+                    $this->importedBp->useHardStates();
+                }
+                $this->importedBp->retrieveStatesFromBackend();
+                $this->importedNode = $this->importedBp->getNode($this->name);
+            } catch (Exception $e) {
+
+
+                $node = new BpNode($this->bp, (object) array(
+                    'name'        => $this->name,
+                    'operator'    => '&',
+                    'child_names' => array()
+                ));
+                $node->setState(2);
+                $node->setMissing(false)
+                    ->setDowntime(false)
+                    ->setAck(false)
+                    ->setAlias($e->getMessage());
+
+                $this->importedNode = $node;
             }
-            $this->importedBp->retrieveStatesFromBackend();
-            $this->importedNode = $this->importedBp->getNode($this->name);
         }
         return $this->importedNode;
     }
