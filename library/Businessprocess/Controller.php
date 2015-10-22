@@ -11,7 +11,7 @@ use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Monitoring\Backend;
 use Icinga\Web\Controller as ModuleController;
 use Icinga\Web\Notification;
-use Icinga\Module\Director\Web\Form\FormLoader;
+use Icinga\Module\Businessprocess\Web\Form\FormLoader;
 use Icinga\Web\Url;
 use Icinga\Web\Widget;
 
