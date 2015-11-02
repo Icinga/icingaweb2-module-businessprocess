@@ -69,6 +69,8 @@ class LegacyStorage extends Storage
                 }
             }
         }
+
+        natsort($files);
         return $files;
     }
 
