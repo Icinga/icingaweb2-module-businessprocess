@@ -523,6 +523,24 @@ class BusinessProcess
         return $this;
     }
 
+    public function listBpNodes()
+    {
+        $nodes = array();
+
+        foreach ($this->nodes as $node) {
+            if (! $node instanceof BpNode) {
+                continue;
+            }
+
+            $name = (string) $node;
+            $alias = $node->getAlias();
+            $nodes[$name] = $name === $alias ? $name : sprintf('%s (%s)', $alias, $node);
+        }
+
+        natsort($nodes);
+        return $nodes;
+    }
+
     public function getUnboundNodes()
     {
         $nodes = array();
