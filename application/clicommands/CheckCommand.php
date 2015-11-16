@@ -45,6 +45,14 @@ class CheckCommand extends Command
 
         $node = $bp->getNode($this->params->shift());
         $bp->retrieveStatesFromBackend();
+        if ($bp->hasErrors()) {
+            printf(
+                "Checking Business Process %s failed: %s\n",
+                $node->getAlias(),
+                implode("\n", $bp->getErrors())
+            );
+            exit(3);
+        }
         printf("Business Process %s: %s\n", $node->getStateName(), $node->getAlias());
         exit($node->getState());
     }
