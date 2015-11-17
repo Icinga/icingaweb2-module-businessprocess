@@ -25,9 +25,9 @@ class ProcessController extends Controller
         $this->setTitle($this->translate('Create a new business process'));
         $this->tabsForCreate()->activate('create');
 
-        $this->view->form = BpConfigForm::construct()
+        $this->view->form = $this->loadForm('bpConfig')
             ->setStorage($this->storage())
-            ->setRedirectUrl('businessprocess/process/show')
+            ->setSuccessUrl('businessprocess/process/show')
             ->handleRequest();
     }
 
@@ -170,21 +170,15 @@ class ProcessController extends Controller
             $bp->getTitle()
         );
 
-        $url = sprintf(
-            'businessprocess/process/show?config=%s&unlocked#!%s',
-            $bp->getName(),
-            $this->getRequest()->getUrl()
+        $url = Url::fromPath(
+            'businessprocess/process/show?unlocked',
+            array('config' => $bp->getName())
         );
-        $this->view->form = BpConfigForm::construct()
+
+        $this->view->form = $this->loadForm('bpConfig')
             ->setProcessConfig($bp)
             ->setStorage($this->storage())
-            ->setRedirectUrl($url)
-            ->handleRequest();
-
-        $this->view->deleteForm = DeleteConfigForm::construct()
-            ->setStorage($this->storage())
-            ->setController($this)
-            ->setBpConfig($bp)
+            ->setSuccessUrl($url)
             ->handleRequest();
     }
 
