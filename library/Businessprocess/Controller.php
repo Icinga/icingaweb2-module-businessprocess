@@ -21,6 +21,8 @@ class Controller extends ModuleController
 
     protected $backend;
 
+    protected $bp;
+
     private $storage;
 
     private $url;
@@ -125,7 +127,7 @@ class Controller extends ModuleController
             }
         }
 
-        $this->view->bpconfig = $bp;
+        $this->view->bpconfig = $this->bp = $bp;
         $this->view->configName = $bp->getName();
 
         return $bp;
