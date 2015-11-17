@@ -127,8 +127,7 @@ class BpConfigForm extends Form
             $this->storage->storeProcess($config);
             $config->clearAppliedChanges();
             $this->setRedirectUrl(
-                Url::fromPath(
-                    $this->getRedirectUrl(),
+                $this->getRedirectUrl()->setParams(
                     array('config' => $name, 'unlocked' => true)
                 )
             );
