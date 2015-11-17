@@ -11,10 +11,6 @@ class CheckCommand extends Command
 
     public function init()
     {
-        // WTF? I do not want to have to take care about this!!
-        $this->app->setupZendAutoloader();
-
-        $this->app->getModuleManager()->loadModule('monitoring');
         $this->storage = new LegacyStorage($this->Config()->getSection('global'));
     }
 
