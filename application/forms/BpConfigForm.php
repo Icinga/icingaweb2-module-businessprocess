@@ -4,12 +4,12 @@ namespace Icinga\Module\Businessprocess\Forms;
 
 use Icinga\Application\Config;
 use Icinga\Module\Businessprocess\BusinessProcess;
-use Icinga\Module\Businessprocess\Form;
+use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 use Icinga\Web\Notification;
 use Icinga\Web\Request;
 use Icinga\Web\Url;
 
-class BpConfigForm extends Form
+class BpConfigForm extends QuickForm
 {
     protected $storage;
 
@@ -23,8 +23,11 @@ class BpConfigForm extends Form
 
     protected $processList = array();
 
+    protected $deleteButtonName;
+
     public function setup()
     {
+
         $this->addElement('text', 'name', array(
             'label'       => $this->translate('Name'),
             'required'    => true,
@@ -63,7 +66,43 @@ class BpConfigForm extends Form
                 'soft' => $this->translate('Use SOFT states'),
             )
         ));
-        $this->addElement('submit', $this->translate('Store'));
+
+        if ($this->config === null) {
+            $this->setSubmitLabel(
+                $this->translate('Add')
+            );
+        } else {
+            $config = $this->config;
+
+            $this->getElement('name')
+                 ->setValue($config->getName())
+                 ->setAttrib('readonly', true);
+
+            if ($config->hasTitle()) {
+                $this->getElement('title')->setValue($config->getTitle());
+            }
+
+            if ($config->hasBackend()) {
+                $this->getElement('backend_name')->setValue(
+                    $config->getBackend()->getName()
+                );
+            }
+            if ($config->usesSoftStates()) {
+                $this->getElement('state_type')->setValue('soft');
+            } else {
+                $this->getElement('state_type')->setValue('hard');
+            }
+
+            $this->setSubmitLabel(
+                $this->translate('Store')
+            );
+            $label = $this->translate('Delete');
+            $el = $this->createElement('submit', $label)
+                ->setLabel($label)
+                ->setDecorators(array('ViewHelper'));
+            $this->deleteButtonName = $el->getName();
+            $this->addElement($el);
+        }
     }
 
     protected function listAvailableBackends()
@@ -81,26 +120,20 @@ class BpConfigForm extends Form
     public function setProcessConfig($config)
     {
         $this->config = $config;
-        $this->getElement('name')->setValue($config->getName());
-        $this->getElement('name')->setAttrib('readonly', true);
-
-        if ($config->hasTitle()) {
-            $this->getElement('title')->setValue($config->getTitle());
-        }
-
-        if ($config->hasBackend()) {
-            $this->getElement('backend_name')->setValue(
-                $config->getBackend()->getName()
-            );
-        }
-
-        if ($config->usesSoftStates()) {
-            $this->getElement('state_type')->setValue('soft');
-        } else {
-            $this->getElement('state_type')->setValue('hard');
-        }
-
         return $this;
+        return $this;
+    }
+
+    protected function onRequest()
+    {
+        $name = $this->getValue('name');
+
+        if ($this->shouldBeDeleted()) {
+            $this->config->clearAppliedChanges();
+            $this->storage->deleteProcess($name);
+            $this->setSuccessUrl('businessprocess');
+            $this->redirectOnSuccess(sprintf('Process %s has been deleted', $name));
+        }
     }
 
     public function onSuccess()
@@ -126,17 +159,14 @@ class BpConfigForm extends Form
             }
             $this->storage->storeProcess($config);
             $config->clearAppliedChanges();
-            $this->setRedirectUrl(
-                $this->getRedirectUrl()->setParams(
+            $this->setSuccessUrl(
+                $this->getSuccessUrl()->setParams(
                     array('config' => $name, 'unlocked' => true)
                 )
             );
 
-            Notification::success(sprintf('Process %s has been created', $name));
+            $this->redirectOnSuccess(sprintf('Process %s has been created', $name));
         } else {
-            // Existing config
-            $config = $this->config;
-
             if ($title) {
                 $config->setTitle($title);
             }
@@ -151,8 +181,21 @@ class BpConfigForm extends Form
 
             $this->storage->storeProcess($config);
             $config->clearAppliedChanges();
-            $this->getRedirectUrl()->setParam('config', $name);
+            $this->getSuccessUrl()->setParam('config', $name);
             Notification::success(sprintf('Process %s has been stored', $name));
         }
+    }
+
+    public function hasDeleteButton()
+    {
+        return $this->deleteButtonName !== null;
+    }
+
+    public function shouldBeDeleted()
+    {
+        if (! $this->hasDeleteButton()) return false;
+
+        $name = $this->deleteButtonName;
+        return $this->getSentValue($name) === $this->getElement($name)->getLabel();
     }
 }
