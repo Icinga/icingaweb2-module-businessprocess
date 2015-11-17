@@ -107,14 +107,6 @@ class ProcessController extends Controller
     }
 
     /**
-     * Show a business process from a toplevel perspective
-     */
-    public function toplevelAction()
-    {
-        $this->redirectOnConfigSwitch();
-    }
-
-    /**
      * Show the source code for a process
      */
     public function sourceAction()
