@@ -20,6 +20,8 @@ class ProcessController extends Controller
      */
     public function createAction()
     {
+        $this->assertPermission('businessprocess/create');
+
         $this->setTitle($this->translate('Create a new business process'));
         $this->tabsForCreate()->activate('create');
 

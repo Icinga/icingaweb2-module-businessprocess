@@ -5,3 +5,5 @@ $section = $this->menuSection(N_('Overview'))
     ->setPriority(45)
     ->setUrl('businessprocess');
 
+$this->providePermission('businessprocess/create', 'Allow to create new configs');
+$this->providePermission('businessprocess/modify', 'Allow to modify processes');

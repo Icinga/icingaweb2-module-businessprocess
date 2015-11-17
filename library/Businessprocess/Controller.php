@@ -85,7 +85,14 @@ class Controller extends ModuleController
     protected function loadBpConfig()
     {
         $storage = $this->storage();
-        $this->view->processList = $storage->listProcesses();
+        if ($this->hasPermission('businessprocess/create')) {
+            $this->view->processList = array_merge(
+                $storage->listProcesses(),
+                array('.new' => $this->translate('Create new configuration'))
+            );
+        } else {
+            $this->view->processList = $storage->listProcesses();
+        }
 
         // No process found? Go to welcome page
         if (empty($this->view->processList)) {
@@ -96,6 +103,10 @@ class Controller extends ModuleController
             'config',
             key($this->view->processList)
         );
+
+        if ($name === '.new') {
+            $this->redirectNow('businessprocess/process/create');
+        }
 
         $modifications = $this->session()->get('modifications', array());
         if (array_key_exists($name, $modifications)) {
