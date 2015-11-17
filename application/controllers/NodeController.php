@@ -3,6 +3,7 @@
 use Icinga\Module\Businessprocess\Controller;
 use Icinga\Module\Businessprocess\Simulation;
 use Icinga\Module\Businessprocess\Forms\ProcessForm;
+use Icinga\Module\Businessprocess\Forms\SimulationForm;
 use Icinga\Web\Url;
 
 /*
@@ -45,16 +46,27 @@ class Businessprocess_NodeController extends Controller
     {
         $bp = $this->loadBpConfig();
         $nodename = $this->getParam('node');
-        $node = $this->view->node = $bp->getNode($nodename);
+        $node = $bp->getNode($nodename);
+        $details = Url::fromPath(
+            'businessprocess/node/simulate',
+            array(
+                'config' => $this->view->configName,
+                'node'   => $nodename
+            )
+        );
+        $url = sprintf(
+            'businessprocess/process/show?unlocked&config=%s#!%s',
+            $bp->getName(),
+            $details->getAbsoluteUrl()
+        );
 
-        $this->view->form = $this->loadForm('simulation')
-             ->setNode($node)
+        $this->view->form = SimulationForm::construct()
              ->setSimulation(new Simulation($bp, $this->session()))
+             ->setNode($node)
+              // TODO: find a better way to handle redirects
+             ->setRedirectUrl($url)
              ->handleRequest();
-
-        if ($this->view->form->succeeded()) {
-            $this->render('empty');
-        }
+        $this->view->node = $node;
     }
 
     public function addAction()
