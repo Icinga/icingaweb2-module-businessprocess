@@ -8,6 +8,7 @@ use Icinga\Exception\ProgrammingError;
 use Icinga\Web\Notification;
 use Icinga\Web\Request;
 use Icinga\Web\Url;
+use Exception;
 use Zend_Form;
 
 /**
@@ -46,8 +47,6 @@ abstract class QuickForm extends Zend_Form
 
     protected $successUrl;
 
-    protected $succeeded;
-
     protected $successMessage;
 
     protected $submitLabel;
@@ -76,6 +75,14 @@ abstract class QuickForm extends Zend_Form
         $this->setAction(Url::fromRequest());
         $this->createIdElement();
         $this->regenerateCsrfToken();
+        $this->setDecorators(
+            array(
+                'Description',
+                array('FormErrors', array('onlyCustomFormErrors' => true)),
+                'FormElements',
+                'Form'
+            )
+        );
     }
 
     protected function handleOptions($options = null)
@@ -96,20 +103,22 @@ abstract class QuickForm extends Zend_Form
     protected function addSubmitButtonIfSet()
     {
         if (false !== ($label = $this->getSubmitLabel())) {
-            $el = $this->createElement('submit', $label)->setLabel($label)->removeDecorator('Label');
+            $el = $this->createElement('submit', $label)->setLabel($label)->setDecorators(array('ViewHelper'));
             $this->submitButtonName = $el->getName();
             $this->addElement($el);
         }
-    }
 
-    // TODO: This is ugly, we need to defer button creation
-    protected function moveSubmitToBottom()
-    {
-        $name = $this->submitButtonName;
-        if ($name && ($submit = $this->getElement($name))) {
-            $this->removeElement($name);
-            $this->addElement($submit);
-        }
+        $grp = array(
+            $this->submitButtonName,
+            $this->deleteButtonName
+        );
+        $this->addDisplayGroup($grp, 'buttons', array(
+            'decorators' => array(
+                'FormElements',
+                'DtDdWrapper',
+            ),
+            'order' => 1000,
+        ));
     }
 
     protected function createIdElement()
@@ -119,11 +128,10 @@ abstract class QuickForm extends Zend_Form
         $this->getElement(self::ID)->setIgnore(true);
     }
 
-    protected function getSentValue($name, $default = null)
+    public function getSentValue($name, $default = null)
     {
         $request = $this->getRequest();
-
-        if ($request->isPost()) {
+        if ($request->isPost() && $this->hasBeenSent()) {
             return $request->getPost($name);
         } else {
             return $default;
@@ -208,15 +216,26 @@ abstract class QuickForm extends Zend_Form
         ) + $enum;
     }
 
-    public function succeeded()
+    public function setSuccessUrl($url, $params = null)
     {
-        return $this->succeeded;
-    }
-
-    public function setSuccessUrl($url)
-    {
+        if (! $url instanceof Url) {
+            $url = Url::fromPath($url);
+        }
+        if ($params !== null) {
+            $url->setParams($params);
+        }
         $this->successUrl = $url;
         return $this;
+    }
+
+    public function getSuccessUrl()
+    {
+        $url = $this->successUrl ?: $this->getAction();
+        if (! $url instanceof Url) {
+            $url = Url::fromPath($url);
+        }
+
+        return $url;
     }
 
     public function setup()
@@ -292,11 +311,14 @@ abstract class QuickForm extends Zend_Form
             if ($this->hasBeenSubmitted()) {
                 $this->beforeValidation($post);
                 if ($this->isValid($post)) {
-                    $this->onSuccess();
-                    $this->succeeded = true;
+                    try {
+                        $this->onSuccess();
+                    } catch (Exception $e) {
+                        $this->addError($e->getMessage());
+                        $this->onFailure();
+                    }
                 } else {
                     $this->onFailure();
-                    $this->succeeded = false;
                 }
             } else {
                 $this->setDefaults($post);
@@ -341,7 +363,7 @@ abstract class QuickForm extends Zend_Form
 
     public function redirectOnSuccess($message = null)
     {
-        $url = $this->successUrl ?: $this->getAction();
+        $url = $this->getSuccessUrl();
         $this->notifySuccess($this->getSuccessMessage($message));
         $this->redirectAndExit($url);
     }
