@@ -67,8 +67,8 @@ class ProcessForm extends Form
                 'Where to show this process'
             ),
             'multiOptions' => array(
-                '0' => $this->translate('Subprocess only'),
                 '1' => $this->translate('Toplevel Process'),
+                '0' => $this->translate('Subprocess only'),
             )
         ));
 
