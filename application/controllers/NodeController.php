@@ -4,8 +4,6 @@ namespace Icinga\Module\Businessprocess\Controllers;
 
 use Icinga\Module\Businessprocess\Controller;
 use Icinga\Module\Businessprocess\Simulation;
-use Icinga\Module\Businessprocess\Forms\ProcessForm;
-use Icinga\Module\Businessprocess\Forms\SimulationForm;
 use Icinga\Web\Url;
 
 /*
@@ -20,25 +18,16 @@ class NodeController extends Controller
     {
         $bp = $this->loadModifiedBpConfig();
         $node = $bp->getNode($this->getParam('node'));
-        $detail = Url::fromPath(
-            'businessprocess/node/edit',
-            array(
-                'config' => $this->view->configName,
-                'node'   => $node
-            )
+        $url = Url::fromPath(
+            'businessprocess/process/show?unlocked',
+            array('config' => $bp->getName())
         );
 
-        $this->view->form = ProcessForm::construct()
+        $this->view->form = $this->loadForm('process')
             ->setProcess($bp)
             ->setSession($this->session())
             ->setNode($node)
-            ->setRedirectUrl(
-                sprintf(
-                    'businessprocess/process/show?config=%s&unlocked#!%s',
-                    $bp->getName(),
-                    $detail->getAbsoluteUrl()
-                )
-            )
+            ->setSuccessUrl($url)
             ->handleRequest();
 
         $this->view->node = $node;
@@ -49,25 +38,17 @@ class NodeController extends Controller
         $bp = $this->loadBpConfig();
         $nodename = $this->getParam('node');
         $node = $bp->getNode($nodename);
-        $details = Url::fromPath(
-            'businessprocess/node/simulate',
-            array(
-                'config' => $this->view->configName,
-                'node'   => $nodename
-            )
-        );
-        $url = sprintf(
-            'businessprocess/process/show?unlocked&config=%s#!%s',
-            $bp->getName(),
-            $details->getAbsoluteUrl()
+        $url = Url::fromPath(
+            'businessprocess/process/show?unlocked',
+            array('config' => $bp->getName())
         );
 
-        $this->view->form = SimulationForm::construct()
+        $this->view->form = $this->loadForm('simulation')
              ->setSimulation(new Simulation($bp, $this->session()))
              ->setNode($node)
-              // TODO: find a better way to handle redirects
-             ->setRedirectUrl($url)
+             ->setSuccessUrl($url)
              ->handleRequest();
+
         $this->view->node = $node;
     }
 
@@ -75,15 +56,15 @@ class NodeController extends Controller
     {
         $bp = $this->loadBpConfig();
 
-        $redirectUrl = Url::fromPath(
+        $url = Url::fromPath(
             'businessprocess/process/show',
             array('config' => $bp->getName())
         );
 
-        $this->view->form = ProcessForm::construct()
+        $this->view->form = $this->loadForm('process')
             ->setProcess($bp)
             ->setSession($this->session())
-            ->setRedirectUrl($redirectUrl)
+            ->setRedirectUrl($url)
             ->handleRequest();
     }
 
