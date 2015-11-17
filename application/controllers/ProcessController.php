@@ -41,7 +41,7 @@ class Businessprocess_ProcessController extends Controller
      */
     public function showAction()
     {
-        $this->redirectIfConfigChosen();
+        $this->redirectOnConfigSwitch();
 
         if ($this->params->get('unlocked')) {
             $bp = $this->loadModifiedBpConfig();
@@ -109,7 +109,7 @@ class Businessprocess_ProcessController extends Controller
      */
     public function toplevelAction()
     {
-        $this->redirectIfConfigChosen();
+        $this->redirectOnConfigSwitch();
     }
 
     /**
@@ -196,7 +196,7 @@ class Businessprocess_ProcessController extends Controller
      * Redirect to our URL plus the chosen config if someone switched the
      * config in the appropriate dropdown list
      */
-    protected function redirectIfConfigChosen()
+    protected function redirectOnConfigSwitch()
     {
         $request = $this->getRequest();
         if ($request->isPost()) {
