@@ -1,5 +1,7 @@
 <?php
 
+namespace Icinga\Module\Businessprocess\Controllers;
+
 use Icinga\Module\Businessprocess\Controller;
 use Icinga\Module\Businessprocess\ConfigDiff;
 use Icinga\Module\Businessprocess\Simulation;
@@ -11,7 +13,7 @@ use Icinga\Web\Notification;
 use Icinga\Web\Widget\Tabextension\DashboardAction;
 
 
-class Businessprocess_ProcessController extends Controller
+class ProcessController extends Controller
 {
     /**
      * Create a new business process configuration

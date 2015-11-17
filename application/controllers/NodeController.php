@@ -1,5 +1,7 @@
 <?php
 
+namespace Icinga\Module\Businessprocess\Controllers;
+
 use Icinga\Module\Businessprocess\Controller;
 use Icinga\Module\Businessprocess\Simulation;
 use Icinga\Module\Businessprocess\Forms\ProcessForm;
@@ -11,7 +13,7 @@ config = <file>
 process = <node>
 
 */
-class Businessprocess_NodeController extends Controller
+class NodeController extends Controller
 {
     // rename to config
     public function editAction()

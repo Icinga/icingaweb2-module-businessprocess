@@ -1,8 +1,10 @@
 <?php
 
+namespace Icinga\Module\Businessprocess\Controllers;
+
 use Icinga\Module\Businessprocess\Controller;
 
-class Businessprocess_IndexController extends Controller
+class IndexController extends Controller
 {
     /**
      * Show a welcome page if no process is available
