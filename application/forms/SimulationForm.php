@@ -60,13 +60,6 @@ class SimulationForm extends QuickForm
     {
         $this->node = $node;
         return $this;
-
-        $this->setDefaults(array(
-            // TODO: extend descr 'state' => (string) $node->getState(),
-            'acknowledged' => $node->isAcknowledged(),
-            'in_downtime'  => $node->isInDowntime(),
-        ));
-        return $this->checkDefaults();
     }
 
     public function setSimulation($simulation)
