@@ -112,7 +112,7 @@ abstract class Node
         return $this;
     }
 
-    public function hasProblems()
+    public function isProblem()
     {
         return $this->getState() > 0;
     }
