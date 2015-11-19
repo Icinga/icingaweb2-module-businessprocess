@@ -71,6 +71,56 @@ class BpNode extends Node
         return $this->counters;
     }
 
+    public function hasProblems()
+    {
+        if ($this->isProblem()) {
+            return true;
+        }
+
+        $okStates = array('OK', 'UP', 'PENDING', 'MISSING');
+
+        foreach ($this->getStateSummary() as $state => $cnt) {
+            if ($cnt !== 0 && ! in_array($state, $okStates)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getProblematicChildren()
+    {
+        $problems = array();
+
+        foreach ($this->children as $child) {
+            if ($child->isProblem()
+                || ($child instanceof BpNode && $child->hasProblems())
+            ) {
+                $problems[] = $child;
+            }
+        }
+
+        return $problems;
+    }
+
+    public function getProblemTree()
+    {
+        $tree = array();
+
+        foreach ($this->getProblematicChildren() as $child) {
+            $name = (string) $child;
+            $tree[$name] = array(
+                'node'     => $child,
+                'children' => array()
+            );
+            if ($child instanceof BpNode) {
+                $tree[$name]['children'] = $child->getProblemTree();
+            }
+        }
+
+        return $tree;
+    }
+
     public function isMissing()
     {
         if ($this->missing === null) {
