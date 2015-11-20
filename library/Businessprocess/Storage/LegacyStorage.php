@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess\Storage;
 
 use Icinga\Application\Icinga;
+use Icinga\Authentication\Auth;
 use Icinga\Data\ConfigObject;
 use Icinga\Exception\ConfigurationError;
 use Icinga\Module\Businessprocess\BusinessProcess;
@@ -56,12 +57,17 @@ class LegacyStorage extends Storage
     public function listProcesses()
     {
         $files = array();
+
         foreach (new DirectoryIterator($this->getConfigDir()) as $file) {
             if($file->isDot()) continue;
             $filename = $file->getFilename();
             if (substr($filename, -5) === '.conf') {
                 $name = substr($filename, 0, -5);
                 $header = $this->readHeader($file->getPathname(), $name);
+                if (! $this->headerPermissionsAreSatisfied($header)) {
+                    continue;
+                }
+
                 if ($header['Title'] === null) {
                     $files[$name] = $name;
                 } else {
@@ -74,16 +80,76 @@ class LegacyStorage extends Storage
         return $files;
     }
 
+    protected function headerPermissionsAreSatisfied($header)
+    {
+        if (Icinga::app()->isCli()) {
+            return true;
+        }
+
+        if (
+            $header['Allowed users'] === null
+            && $header['Allowed groups'] === null
+            && $header['Allowed roles'] === null
+        ) {
+            return true;
+        }
+
+        $auth = Auth::getInstance();
+        if (! $auth->isAuthenticated()) {
+            return false;
+        }
+
+        $user = $auth->getUser();
+        $username = $user->getUsername();
+
+        if ($header['Owner'] === $username) {
+            return true;
+        }
+
+        if ($header['Allowed users'] !== null) {
+            $users = $this->splitCommaSeparated($header['Allowed users']);
+            foreach ($users as $allowedUser) {
+                if ($username === $allowedUser) {
+                    return true;
+                }
+            }
+        }
+
+        if ($header['Allowed groups'] !== null) {
+            $groups = $this->splitCommaSeparated($header['Allowed groups']);
+            foreach ($groups as $group) {
+                if ($user->isMemberOf($group)) {
+                    return true;
+                }
+            }
+        }
+
+        if ($header['Allowed roles'] !== null) {
+            // TODO: not implemented yet
+            return false;
+        }
+
+        return false;
+    }
+
+    protected function splitCommaSeparated($string)
+    {
+        return preg_split('/\s*,\s*/', $string, -1, PREG_SPLIT_NO_EMPTY);
+    }
+
     protected function readHeader($file, $name)
     {
         $fh = fopen($file, 'r');
         $cnt = 0;
         $header = array(
-            'Title'     => null,
-            'Owner'     => null,
-            'Backend'   => null,
-            'Statetype' => 'soft',
-            'SLA Hosts' => null
+            'Title'          => null,
+            'Owner'          => null,
+            'Allowed users'  => null,
+            'Allowed groups' => null,
+            'Allowed roles'  => null,
+            'Backend'        => null,
+            'Statetype'      => 'soft',
+            'SLA Hosts'      => null
         );
         while ($cnt < 15 && false !== ($line = fgets($fh))) {
             $cnt++;
