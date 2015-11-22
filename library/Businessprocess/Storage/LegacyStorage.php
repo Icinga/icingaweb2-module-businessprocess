@@ -332,8 +332,9 @@ class LegacyStorage extends Storage
             $value   = $m[2];
         }
         $cmps = preg_split('~\s*\\' . $op . '\s*~', $value, -1, PREG_SPLIT_NO_EMPTY);
+        $childNames = array();
 
-        foreach ($cmps as & $val) {
+        foreach ($cmps as $val) {
             if (strpos($val, ';') !== false) {
                 if ($bp->hasNode($val)) continue;
 
@@ -349,13 +350,16 @@ class LegacyStorage extends Storage
                 $bp->createImportedNode($config, $nodeName);
                 $val = $nodeName;
             }
+
+            $childNames[] = $val;
         }
 
         $node = new BpNode($bp, (object) array(
             'name'        => $name,
             'operator'    => $op_name,
-            'child_names' => $cmps
+            'child_names' => $childNames
         ));
+
         $bp->addNode($name, $node);
     }
 
