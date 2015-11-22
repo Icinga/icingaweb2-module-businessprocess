@@ -214,6 +214,18 @@ class LegacyStorage extends Storage
         return $bp;
     }
 
+    public function hasProcess($name)
+    {
+        $file = $this->getFilename($name);
+        if (! is_file($file)) {
+            return false;
+        }
+
+        $name = substr($file, 0, -5);
+        $header = $this->readHeader($file, $name);
+        return $this->headerPermissionsAreSatisfied($header);
+    }
+
     protected function loadHeader($name, $bp)
     {
         // TODO: do not open twice, this is quick and dirty based on existing code
