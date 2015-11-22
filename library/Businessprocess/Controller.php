@@ -110,6 +110,13 @@ class Controller extends ModuleController
             $this->redirectNow('businessprocess/process/create');
         }
 
+        if (! $storage->hasProcess($name)) {
+            $this->httpNotFound(
+                $this->translate('No such process config: "%s"'),
+                $name
+            );
+        }
+
         $modifications = $this->session()->get('modifications', array());
         if (array_key_exists($name, $modifications)) {
             $bp = $storage->loadFromString($name, $modifications[$name]);
