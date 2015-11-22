@@ -159,6 +159,8 @@ class LegacyStorage extends Storage
                 }
             }
         }
+
+        fclose($fh);
         return $header;
     }
 
