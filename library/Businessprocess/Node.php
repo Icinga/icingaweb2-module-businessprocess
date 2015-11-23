@@ -127,6 +127,16 @@ abstract class Node
         return $this->missing;
     }
 
+    public function hasMissingChildren()
+    {
+        return count($this->getMissingChildren() > 0);
+    }
+
+    public function getMissingChildren()
+    {
+        return array();
+    }
+
     public function hasInfoUrl()
     {
         return false;
@@ -334,7 +344,11 @@ abstract class Node
         if ($this->isMissing()) {
             return array('missing');
         } elseif ($state === 'ok') {
-            return array('ok');
+            if ($this->hasMissingChildren()) {
+                return array('ok', 'missing-children');
+            } else {
+                return array('ok');
+            }
         } else {
             return array('problem', $state);
         }

@@ -19,6 +19,7 @@ class BpNode extends Node
     protected $alias;
     protected $counters;
     protected $missing = null;
+    protected $missingChildren;
 
     protected static $emptyStateSummary = array(
         'OK'          => 0,
@@ -133,6 +134,25 @@ class BpNode extends Node
             $this->missing = ! $exists;
         }
         return $this->missing;
+    }
+
+    public function getMissingChildren()
+    {
+        if ($this->missingChildren === null) {
+            foreach ($this->getChildren() as $child) {
+                if ($child->isMissing()) {
+                    $missing[(string) $child] = $child;
+                }
+
+                foreach ($child->getMissingChildren() as $m) {
+                    $missing[(string) $m] = $m;
+                }
+            }
+
+            $this->missingChildren = $missing;
+        }
+
+        return $this->missingChildren;
     }
 
     public function getOperator()
