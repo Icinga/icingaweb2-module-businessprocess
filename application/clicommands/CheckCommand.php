@@ -103,6 +103,8 @@ class CheckCommand extends Command
             $output .= $this->renderProblemTree($subtree['children'], $useColors, $depth + 1);
         }
 
+        $output = str_replace("|", "¦", $output);
+
         return $output;
     }
 
