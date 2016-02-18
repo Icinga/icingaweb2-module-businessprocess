@@ -1,4 +1,4 @@
 <?php
 
-$this->registerHook('Director\\ShipConfigFiles', '\\Icinga\\Module\\Businessprocess\\Director\\ShipConfigFiles');
+//$this->provideHook('director/shipConfigFiles');
 
