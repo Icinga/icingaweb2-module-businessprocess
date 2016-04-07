@@ -139,6 +139,8 @@ class BpNode extends Node
     public function getMissingChildren()
     {
         if ($this->missingChildren === null) {
+            $missing = array();
+
             foreach ($this->getChildren() as $child) {
                 if ($child->isMissing()) {
                     $missing[(string) $child] = $child;
