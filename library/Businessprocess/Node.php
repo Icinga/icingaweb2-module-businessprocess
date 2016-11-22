@@ -129,7 +129,7 @@ abstract class Node
 
     public function hasMissingChildren()
     {
-        return count($this->getMissingChildren() > 0);
+        return count($this->getMissingChildren()) > 0;
     }
 
     public function getMissingChildren()
