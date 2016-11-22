@@ -292,7 +292,7 @@ class BusinessProcess
 
     public function usesHardStates()
     {
-        $this->state_type === self::HARD_STATE;
+        return $this->state_type === self::HARD_STATE;
     }
 
     public function addRootNode($name)
