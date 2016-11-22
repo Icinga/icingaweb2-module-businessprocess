@@ -4,7 +4,7 @@ namespace Icinga\Module\Businessprocess;
 
 use Icinga\Web\Url;
 
-class ServiceNode extends Node
+class ServiceNode extends MonitoredNode
 {
     protected $hostname;
 
@@ -42,7 +42,7 @@ class ServiceNode extends Node
 
         return $link;
     }
-    
+
     protected function getActionIcons($view)
     {
         $icons = array();

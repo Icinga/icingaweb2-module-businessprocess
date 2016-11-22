@@ -4,7 +4,7 @@ namespace Icinga\Module\Businessprocess;
 
 use Icinga\Web\Url;
 
-class HostNode extends Node
+class HostNode extends MonitoredNode
 {
     protected static $sortStateToStateMap = array(
         4 => self::ICINGA_DOWN,
