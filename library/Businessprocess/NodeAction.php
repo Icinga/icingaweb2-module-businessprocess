@@ -4,41 +4,82 @@ namespace Icinga\Module\Businessprocess;
 
 use Icinga\Exception\ProgrammingError;
 
+/**
+ * Abstract NodeAction class
+ *
+ * Every instance of a NodeAction represents a single applied change. Changes are pushed to
+ * a stack and consumed from there. When persisted, NodeActions are serialized with their name,
+ * node name and optionally additional properties according preserveProperties. For each property
+ * that should be preserved, getter and setter methods have to be defined.
+ *
+ * @package Icinga\Module\Businessprocess
+ */
 abstract class NodeAction
 {
-    const TYPE_CREATE = 'create';
-
-    const TYPE_REMOVE = 'remove';
-
-    const TYPE_MODIFY = 'modify';
-
-    const TYPE_CHILD_ADD = 'childRemove';
-
-    const TYPE_CHILD_REMOVE = 'childAdd';
-
-    protected $nodeName;
-
+    /** @var string Name of this action (currently create, modify, remove) */
     protected $actionName;
 
+    /** @var string Name of the node this action applies to */
+    protected $nodeName;
+
+    /** @var array Properties which should be preeserved when serializing this action */
     protected $preserveProperties = array();
 
+    /**
+     * NodeAction constructor.
+     *
+     * @param Node|string $node
+     */
     public function __construct($node)
     {
         $this->nodeName = (string) $node;
     }
 
+    /**
+     * Every NodeAction must be able to apply itself to a BusinessProcess
+     *
+     * @param BusinessProcess $bp
+     * @return mixed
+     */
     abstract public function applyTo(BusinessProcess $bp);
 
+    /**
+     * Every NodeAction must be able to tell whether it could be applied to a BusinessProcess
+     *
+     * @param BusinessProcess $bp
+     * @return bool
+     */
+    abstract public function appliesTo(BusinessProcess $bp);
+
+    /**
+     * The name of the node this modification applies to
+     *
+     * @return string
+     */
     public function getNodeName()
     {
         return $this->nodeName;
     }
 
+    /**
+     * Whether this is an instance of a given action name
+     *
+     * @param string $actionName
+     * @return bool
+     */
     public function is($actionName)
     {
         return $this->getActionName() === $actionName;
     }
 
+    /**
+     * Create an instance of a given actionName for a specific Node
+     *
+     * @param string $actionName
+     * @param string $nodeName
+     *
+     * @return static
+     */
     public static function create($actionName, $nodeName)
     {
         $classname = __NAMESPACE__ . '\\Node' . ucfirst($actionName) . 'Action';
@@ -46,6 +87,11 @@ abstract class NodeAction
         return $object;
     }
 
+    /**
+     * Returns a JSON-encoded serialized NodeAction
+     *
+     * @return string
+     */
     public function serialize()
     {
         $object = (object) array(
@@ -62,6 +108,12 @@ abstract class NodeAction
         return json_encode($object);
     }
 
+    /**
+     * Decodes a JSON-serialized NodeAction and returns an object instance
+     *
+     * @param $string
+     * @return NodeAction
+     */
     public static function unserialize($string)
     {
         $object = json_decode($string);
@@ -75,6 +127,13 @@ abstract class NodeAction
         return $action;
     }
 
+    /**
+     * Returns the defined action name or determines such from the class name
+     *
+     * @return string The action name
+     *
+     * @throws ProgrammingError when no such class exists
+     */
     public function getActionName()
     {
         if ($this->actionName === null) {
@@ -89,5 +148,4 @@ abstract class NodeAction
 
         return $this->actionName;
     }
-
 }

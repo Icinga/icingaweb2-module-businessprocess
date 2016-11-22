@@ -10,11 +10,18 @@ class NodeModifyAction extends NodeAction
 
     protected $preserveProperties = array('formerProperties', 'properties');
 
-// Can be called multiple times
-    public function setNodeProperties(Node $node, $properties)
+    /**
+     * Set properties for a specific node
+     *
+     * Can be called multiple times
+     *
+     * @param Node $node
+     * @param array $properties
+     *
+     * @return $this
+     */
+    public function setNodeProperties(Node $node, array $properties)
     {
-        $old = array();
-
         foreach (array_keys($properties) as $key) {
 
             $this->properties[$key] = $properties[$key];
@@ -30,6 +37,9 @@ class NodeModifyAction extends NodeAction
         return $this;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function appliesTo(BusinessProcess $bp)
     {
         $name = $this->getNodeName();
@@ -50,6 +60,9 @@ class NodeModifyAction extends NodeAction
         return true;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function applyTo(BusinessProcess $bp)
     {
         $node = $bp->getNode($this->getNodeName());
@@ -62,23 +75,37 @@ class NodeModifyAction extends NodeAction
         return $this;
     }
 
+    /**
+     * @param $properties
+     * @return $this
+     */
     public function setProperties($properties)
     {
         $this->properties = $properties;
         return $this;
     }
 
+    /**
+     * @param $properties
+     * @return $this
+     */
     public function setFormerProperties($properties)
     {
         $this->formerProperties = $properties;
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getProperties()
     {
         return $this->properties;
     }
 
+    /**
+     * @return array
+     */
     public function getFormerProperties()
     {
         return $this->formerProperties;

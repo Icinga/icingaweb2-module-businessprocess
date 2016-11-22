@@ -3,22 +3,36 @@
 namespace Icinga\Module\Businessprocess;
 
 use Icinga\Web\Session\SessionNamespace as Session;
-use Icinga\Module\Businessprocess\NodeAction;
 
 class ProcessChanges
 {
+    /** @var NodeAction[] */
     protected $changes = array();
 
+    /** @var Session */
     protected $session;
 
+    /** @var bool */
     protected $hasBeenModified = false;
 
+    /** @var string Session storage key for this processes changes */
     protected $sessionKey;
 
+    /**
+     * ProcessChanges constructor.
+     *
+     * Direct access is not allowed
+     */
     private function __construct()
     {
     }
 
+    /**
+     * @param BusinessProcess $bp
+     * @param Session $session
+     *
+     * @return ProcessChanges
+     */
     public static function construct(BusinessProcess $bp, Session $session)
     {
         $key = 'changes.' . $bp->getName();
@@ -35,6 +49,12 @@ class ProcessChanges
         return $changes;
     }
 
+    /**
+     * @param Node $node
+     * @param $properties
+     *
+     * @return $this
+     */
     public function modifyNode(Node $node, $properties)
     {
         $action = new NodeModifyAction($node);
@@ -42,6 +62,13 @@ class ProcessChanges
         return $this->push($action);
     }
 
+    /**
+     * @param Node|string $nodeName
+     * @param array $properties
+     * @param Node $parent
+     *
+     * @return $this
+     */
     public function createNode($nodeName, $properties, Node $parent = null)
     {
         $action = new NodeCreateAction($nodeName);
@@ -52,11 +79,23 @@ class ProcessChanges
         return $this->push($action);
     }
 
+    /**
+     * @param Node $node
+     *
+     * @return $this
+     */
     public function deleteNode(Node $node)
     {
         return $this->push(new NodeDeleteAction($node));
     }
 
+    /**
+     * Add a new action to the stack
+     *
+     * @param NodeAction $change
+     *
+     * @return $this
+     */
     public function push(NodeAction $change)
     {
         $this->changes[] = $change;
@@ -64,11 +103,22 @@ class ProcessChanges
         return $this;
     }
 
+
+    /**
+     * Get all stacked actions
+     *
+     * @return NodeAction[]
+     */
     public function getChanges()
     {
         return $this->changes;
     }
 
+    /**
+     * Forget all changes and remove them from the Session
+     *
+     * @return $this
+     */
     public function clear()
     {
         $this->hasBeenModified = true;
@@ -77,16 +127,31 @@ class ProcessChanges
         return $this;
     }
 
+    /**
+     * Whether there are no stacked changes
+     *
+     * @return bool
+     */
     public function isEmpty()
     {
         return $this->count() === 0;
     }
 
+    /**
+     * Number of stacked changes
+     *
+     * @return bool
+     */
     public function count()
     {
         return count($this->changes);
     }
 
+    /**
+     * Get the first change on the stack, false if empty
+     *
+     * @return NodeAction|boolean
+     */
     public function shift()
     {
         if ($this->isEmpty()) {
@@ -97,6 +162,11 @@ class ProcessChanges
         return array_shift($this->changes);
     }
 
+    /**
+     * Get the last change on the stack, false if empty
+     *
+     * @return NodeAction|boolean
+     */
     public function pop()
     {
         if ($this->isEmpty()) {
@@ -107,6 +177,11 @@ class ProcessChanges
         return array_pop($this->changes);
     }
 
+    /**
+     * The identifier used for this processes changes in our Session storage
+     *
+     * @return string
+     */
     protected function getSessionKey()
     {
         return $this->sessionKey;
@@ -117,6 +192,9 @@ class ProcessChanges
         return $this->hasBeenModified;
     }
 
+    /**
+     * @return array
+     */
     public function serialize()
     {
         $serialized = array();
@@ -127,6 +205,9 @@ class ProcessChanges
         return $serialized;
     }
 
+    /**
+     * Persist to session on destruction
+     */
     public function __destruct()
     {
         if (! $this->hasBeenModified()) {
