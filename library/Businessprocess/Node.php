@@ -175,9 +175,18 @@ abstract class Node
         return $this;
     }
 
-    public function getStateName()
+    public function getStateName($state = null)
     {
-        return static::$state_names[ $this->getState() ];
+        if ($state === null) {
+            return static::$state_names[ $this->getState() ];
+        } else {
+            return static::$state_names[ $state ];
+        }
+    }
+
+    public function enumStateNames()
+    {
+        return static::$state_names;
     }
 
     public function getState()
@@ -310,7 +319,7 @@ abstract class Node
             return static::$sortStateToStateMap[$sortState];
         }
 
-        throw new ProgrammingError('Got invalid sorting state %s', $sort_state);
+        throw new ProgrammingError('Got invalid sorting state %s', $sortState);
     }
 
     protected function renderHtmlForChildren($view)
