@@ -2,17 +2,14 @@
 
 namespace Icinga\Module\Businessprocess;
 
-use Exception;
 use Icinga\Application\Icinga;
 use Icinga\Module\Businessprocess\BusinessProcess;
-use Icinga\Module\Businessprocess\Form\ProcessForm;
-use Icinga\Module\Businessprocess\Form\SimulationForm;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
+use Icinga\Module\Businessprocess\Web\Component\ActionBar;
 use Icinga\Module\Monitoring\Backend;
 use Icinga\Web\Controller as ModuleController;
 use Icinga\Web\Notification;
 use Icinga\Module\Businessprocess\Web\Form\FormLoader;
-use Icinga\Web\Url;
 use Icinga\Web\Widget;
 
 class Controller extends ModuleController
@@ -44,6 +41,15 @@ class Controller extends ModuleController
             $this->url = clone $this->getRequest()->getUrl();
         }
         return $this->url;
+    }
+
+    protected function actions()
+    {
+        if ($this->view->actions === null) {
+            $this->view->actions = ActionBar::create();
+        }
+
+        return $this->view->actions;
     }
 
     protected function tabs()
