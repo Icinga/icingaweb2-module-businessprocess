@@ -482,7 +482,11 @@ class BusinessProcess
         if ($pos !== false) {
             $host = substr($name, 0, $pos);
             $service = substr($name, $pos + 1);
-            return $this->createService($host, $service);
+            if ($service === 'Hoststatus') {
+                return $this->create($host);
+            } else {
+                return $this->createService($host, $service);
+            }
         }
 
         throw new Exception(
