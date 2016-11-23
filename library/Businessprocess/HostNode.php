@@ -2,7 +2,8 @@
 
 namespace Icinga\Module\Businessprocess;
 
-use Icinga\Web\Url;
+use Icinga\Module\Businessprocess\Web\Component\Link;
+use Icinga\Module\Businessprocess\Web\Url;
 
 class HostNode extends MonitoredNode
 {
@@ -56,7 +57,7 @@ class HostNode extends MonitoredNode
         if ($this->bp->hasBackendName()) {
             $params['backend'] = $this->bp->getBackendName();
         }
-        return $view->qlink($this->hostname, 'monitoring/host/show', $params);
+        return Link::create($this->hostname, 'monitoring/host/show', $params)->render();
     }
 
     protected function getActionIcons($view)

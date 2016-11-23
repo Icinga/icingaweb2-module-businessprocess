@@ -2,7 +2,8 @@
 
 namespace Icinga\Module\Businessprocess;
 
-use Icinga\Web\Url;
+use Icinga\Module\Businessprocess\Web\Component\Link;
+use Icinga\Module\Businessprocess\Web\Url;
 
 class ServiceNode extends MonitoredNode
 {
@@ -38,9 +39,12 @@ class ServiceNode extends MonitoredNode
         if ($this->bp->hasBackendName()) {
             $params['backend'] = $this->bp->getBackendName();
         }
-        $link = $view->qlink($this->getAlias(), 'monitoring/service/show', $params);
 
-        return $link;
+        return Link::create(
+            $this->getAlias(),
+            'monitoring/service/show',
+            $params
+        )->render();
     }
 
     protected function getActionIcons($view)

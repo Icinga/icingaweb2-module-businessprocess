@@ -20,7 +20,7 @@ class HostNodeTest extends BaseTestCase
     public function testReturnsCorrectAlias()
     {
         $this->assertEquals(
-            'localhost',
+            'localhost;Hoststatus',
             $this->localhost()->getAlias()
         );
     }
@@ -29,7 +29,7 @@ class HostNodeTest extends BaseTestCase
     {
         $this->assertEquals(
             '<a href="/icingaweb2/monitoring/host/show?host=localhost">'
-            . 'localhost: ping &lt;&gt; pong</a>',
+            . 'localhost</a>',
             $this->localhost()->renderLink(new View())
         );
     }
