@@ -2,23 +2,21 @@
 
 namespace Tests\Icinga\Module\Businessprocess\Storage;
 
-use Icinga\Application\Config;
 use Icinga\Module\Businessprocess\Test\BaseTestCase;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
-use Icinga\Module\Businessprocess\Storage\Storage;
 
 class LegacyStorageTest extends BaseTestCase
 {
-    public function testWhetherItCanBeInstantiatedWithAnEmptyConfigSection()
+    public function testCanBeInstantiatedWithAnEmptyConfigSection()
     {
         $baseClass = 'Icinga\\Module\\Businessprocess\\Storage\\LegacyStorage';
         $this->assertInstanceOf(
             $baseClass,
-            new LegacyStorage(Config::module('businessprocess')->getSection('global'))
+            new LegacyStorage($this->emptyConfigSection())
         );
     }
 
-    public function testWhetherDefaultConfigDirIsDetermined()
+    public function testDefaultConfigDirIsDiscoveredCorrectly()
     {
         $this->assertEquals(
             $this->getTestsBaseDir('config/modules/businessprocess/processes'),
@@ -26,7 +24,7 @@ class LegacyStorageTest extends BaseTestCase
         );
     }
 
-    public function testWhetherAllProcessesAreListed()
+    public function testAllAvailableProcessesAreListed()
     {
         $keys = array_keys($this->makeInstance()->listProcesses());
         sort($keys);
@@ -40,7 +38,7 @@ class LegacyStorageTest extends BaseTestCase
         );
     }
 
-    public function testWhetherHeadersAreRespectedInProcessList()
+    public function testHeaderTitlesAreRespectedInProcessList()
     {
         $keys = array_values($this->makeInstance()->listProcesses());
         sort($keys);
@@ -54,7 +52,7 @@ class LegacyStorageTest extends BaseTestCase
         );
     }
 
-    public function testWhetherProcessFilenameIsReturned()
+    public function testProcessFilenameIsReturned()
     {
         $this->assertEquals(
             $this->getTestsBaseDir('config/modules/businessprocess/processes/simple_with-header.conf'),
@@ -62,21 +60,21 @@ class LegacyStorageTest extends BaseTestCase
         );
     }
 
-    public function testWhetherExistingProcessExists()
+    public function testAnExistingProcessExists()
     {
         $this->assertTrue(
             $this->makeInstance()->hasProcess('simple_with-header')
         );
     }
 
-    public function testWhetherMissingProcessIsMissing()
+    public function testAMissingProcessIsMissing()
     {
         $this->assertFalse(
             $this->makeInstance()->hasProcess('simple_with-headerx')
         );
     }
 
-    public function testWhetherValidProcessCanBeLoaded()
+    public function testAValidProcessCanBeLoaded()
     {
         $processClass = 'Icinga\\Module\\Businessprocess\\BusinessProcess';
         $this->assertInstanceOf(
@@ -85,7 +83,7 @@ class LegacyStorageTest extends BaseTestCase
         );
     }
 
-    public function testWhetherConfigCanBeLoadedFromAString()
+    public function testProcessConfigCanBeLoadedFromAString()
     {
         $processClass = 'Icinga\\Module\\Businessprocess\\BusinessProcess';
         $this->assertInstanceOf(
@@ -94,10 +92,14 @@ class LegacyStorageTest extends BaseTestCase
         );
     }
 
-    public function testWhetherProcessSourceCanBeFetched()
+    public function testFullProcessSourceCanBeFetched()
     {
         $this->assertEquals(
-            file_get_contents($this->getTestsBaseDir('config/modules/businessprocess/processes/simple_with-header.conf')),
+            file_get_contents(
+                $this->getTestsBaseDir(
+                    'config/modules/businessprocess/processes/simple_with-header.conf'
+                )
+            ),
             $this->makeInstance()->getSource('simple_with-header')
         );
     }
@@ -107,6 +109,6 @@ class LegacyStorageTest extends BaseTestCase
      */
     protected function makeInstance()
     {
-        return new LegacyStorage(Config::module('businessprocess')->getSection('global'));
+        return new LegacyStorage($this->emptyConfigSection());
     }
 }

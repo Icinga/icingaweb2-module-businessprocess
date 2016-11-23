@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Test;
 
+use Icinga\Application\Config;
 use Icinga\Application\ApplicationBootstrap;
 use Icinga\Application\Icinga;
 use PHPUnit_Framework_TestCase;
@@ -17,6 +18,11 @@ abstract class BaseTestCase extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->app();
+    }
+
+    protected function emptyConfigSection()
+    {
+        return Config::module('businessprocess')->getSection('global');
     }
 
     /**
