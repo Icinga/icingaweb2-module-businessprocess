@@ -2,53 +2,61 @@
 
 namespace Icinga\Module\Businessprocess\Storage;
 
+use DirectoryIterator;
+use Icinga\Application\Benchmark;
 use Icinga\Application\Icinga;
 use Icinga\Authentication\Auth;
-use Icinga\Data\ConfigObject;
 use Icinga\Exception\ConfigurationError;
-use Icinga\Module\Businessprocess\BusinessProcess;
 use Icinga\Module\Businessprocess\BpNode;
-use Icinga\Module\Businessprocess\Storage\Storage;
-use DirectoryIterator;
+use Icinga\Module\Businessprocess\BusinessProcess;
 use Icinga\Exception\SystemPermissionException;
-use Icinga\Application\Benchmark;
 
 class LegacyStorage extends Storage
 {
+    /** @var string */
     protected $configDir;
 
+    /** @var int */
     protected $parsing_line_number;
 
+    /** @var string */
     protected $currentFilename;
 
     public function getConfigDir()
     {
         if ($this->configDir === null) {
-            $dir = Icinga::app()
-                ->getModuleManager()
-                ->getModule('businessprocess')
-                ->getConfigDir();
-
-            // TODO: This is silly. We need Config::requireDirectory().
-            if (! is_dir($dir)) {
-                if (! is_dir(dirname($dir))) {
-                    if (! @mkdir(dirname($dir))) {
-                        throw new SystemPermissionException('Could not create config directory "%s"', dirname($dir));
-                    }
-                }
-                if (! mkdir($dir)) {
-                    throw new SystemPermissionException('Could not create config directory "%s"', $dir);
-                }
-            }
-            $dir = $dir . '/processes';
-            if (! is_dir($dir)) {
-                if (! mkdir($dir)) {
-                    throw new SystemPermissionException('Could not create config directory "%s"', $dir);
-                }
-            }
-            $this->configDir = $dir;
+            $this->prepareDefaultConfigDir();
         }
+
         return $this->configDir;
+    }
+
+    protected function prepareDefaultConfigDir()
+    {
+        $dir = Icinga::app()
+            ->getModuleManager()
+            ->getModule('businessprocess')
+            ->getConfigDir();
+
+        // TODO: This is silly. We need Config::requireDirectory().
+        if (! is_dir($dir)) {
+            if (! is_dir(dirname($dir))) {
+                if (! @mkdir(dirname($dir))) {
+                    throw new SystemPermissionException('Could not create config directory "%s"', dirname($dir));
+                }
+            }
+            if (! mkdir($dir)) {
+                throw new SystemPermissionException('Could not create config directory "%s"', $dir);
+            }
+        }
+        $dir = $dir . '/processes';
+        if (! is_dir($dir)) {
+            if (! mkdir($dir)) {
+                throw new SystemPermissionException('Could not create config directory "%s"', $dir);
+            }
+        }
+
+        $this->configDir = $dir;
     }
 
     /**
@@ -191,13 +199,16 @@ class LegacyStorage extends Storage
         $bp = new BusinessProcess();
         $bp->setName($name);
         $this->parseString($string, $bp);
-        $this->loadHeader($name, $bp);
+        // $this->loadHeader($name, $bp);
         return $bp;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function deleteProcess($name)
     {
-        unlink($this->getFilename($name));
+        return @unlink($this->getFilename($name));
     }
 
     /**
