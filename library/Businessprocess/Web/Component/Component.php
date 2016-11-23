@@ -56,7 +56,7 @@ abstract class Component
     /**
      * @return string
      */
-    abstract function render();
+    abstract public function render();
 
     public function wantHtml($any, $separator = '')
     {

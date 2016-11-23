@@ -110,7 +110,7 @@ class Attributes extends Component
             }
 
             return $this;
-        } else if ($attribute instanceof Attribute) {
+        } elseif ($attribute instanceof Attribute) {
             return $this->setAttribute($attribute);
         } else {
             return $this->setAttribute(new Attribute($attribute, $value));

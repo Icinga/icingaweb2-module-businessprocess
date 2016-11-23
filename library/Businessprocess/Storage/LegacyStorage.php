@@ -67,7 +67,10 @@ class LegacyStorage extends Storage
         $files = array();
 
         foreach (new DirectoryIterator($this->getConfigDir()) as $file) {
-            if($file->isDot()) continue;
+            if ($file->isDot()) {
+                continue;
+            }
+
             $filename = $file->getFilename();
             if (substr($filename, -5) === '.conf') {
                 $name = substr($filename, 0, -5);
@@ -94,8 +97,7 @@ class LegacyStorage extends Storage
             return true;
         }
 
-        if (
-            $header['Allowed users'] === null
+        if ($header['Allowed users'] === null
             && $header['Allowed groups'] === null
             && $header['Allowed roles'] === null
         ) {
@@ -336,18 +338,21 @@ class LegacyStorage extends Storage
         $op_name = $op;
 
         if ($op === '+') {
-            if (! preg_match('~^(\d+)\s*of:\s*(.+?)$~', $value, $m)) {
+            if (! preg_match('~^(\d+)(?::(\d+))?\s*of:\s*(.+?)$~', $value, $m)) {
                 $this->parseError('syntax: <var> = <num> of: <var1> + <var2> [+ <varn>]*');
             }
             $op_name = $m[1];
-            $value   = $m[2];
+            // New feature: $minWarn = $m[2];
+            $value   = $m[3];
         }
         $cmps = preg_split('~\s*\\' . $op . '\s*~', $value, -1, PREG_SPLIT_NO_EMPTY);
         $childNames = array();
 
         foreach ($cmps as $val) {
             if (strpos($val, ';') !== false) {
-                if ($bp->hasNode($val)) continue;
+                if ($bp->hasNode($val)) {
+                    continue;
+                }
 
                 list($host, $service) = preg_split('~;~', $val, 2);
                 if ($service === 'Hoststatus') {
