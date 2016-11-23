@@ -35,6 +35,29 @@ class ProcessCommand extends Command
     }
 
     /**
+     * List all available process
+     *
+     * USAGE
+     *
+     * icingacli businessprocess list processes [options]
+     *
+     * OPTIONS
+     *
+     * --no-title  Show only the process names and no related title
+     */
+    public function listAction()
+    {
+        $noTitle = $this->params->shift('no-title');
+        foreach ($this->storage->listProcesses() as $key => $title) {
+            if ($noTitle) {
+                echo $key . "\n";
+            } else {
+                echo $title . "\n";
+            }
+        }
+    }
+
+    /**
      * Check a specific process
      *
      * USAGE
