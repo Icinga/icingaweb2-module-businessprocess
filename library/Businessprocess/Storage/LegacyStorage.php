@@ -74,7 +74,7 @@ class LegacyStorage extends Storage
             $filename = $file->getFilename();
             if (substr($filename, -5) === '.conf') {
                 $name = substr($filename, 0, -5);
-                $header = $this->readHeader($file->getPathname(), $name);
+                $header = $this->readHeader($file->getPathname());
                 if (! $this->headerPermissionsAreSatisfied($header)) {
                     continue;
                 }
@@ -147,11 +147,33 @@ class LegacyStorage extends Storage
         return preg_split('/\s*,\s*/', $string, -1, PREG_SPLIT_NO_EMPTY);
     }
 
-    protected function readHeader($file, $name)
+    protected function readHeader($file)
     {
         $fh = fopen($file, 'r');
         $cnt = 0;
-        $header = array(
+        $header = $this->emptyHeader();
+        while ($cnt < 15 && false !== ($line = fgets($fh))) {
+            $cnt++;
+            $this->parseHeaderLine($line, $header);
+        }
+
+        fclose($fh);
+        return $header;
+    }
+
+    protected function readHeaderString($string)
+    {
+        $header = $this->emptyHeader();
+        foreach (preg_split('/\n/', $string) as $line) {
+            $this->parseHeaderLine($line, $header);
+        }
+
+        return $header;
+    }
+
+    protected function emptyHeader()
+    {
+        return array(
             'Title'          => null,
             'Owner'          => null,
             'Allowed users'  => null,
@@ -161,20 +183,19 @@ class LegacyStorage extends Storage
             'Statetype'      => 'soft',
             'SLA Hosts'      => null
         );
-        while ($cnt < 15 && false !== ($line = fgets($fh))) {
-            $cnt++;
-            if (preg_match('/^\s*#\s+(.+?)\s*:\s*(.+)$/', $line, $m)) {
-                if (array_key_exists($m[1], $header)) {
-                    $header[$m[1]] = $m[2];
-                }
+    }
+
+    protected function parseHeaderLine($line, & $header)
+    {
+        if (preg_match('/^\s*#\s+(.+?)\s*:\s*(.+)$/', $line, $m)) {
+            if (array_key_exists($m[1], $header)) {
+                $header[$m[1]] = $m[2];
             }
         }
-
-        fclose($fh);
-        return $header;
     }
 
     /**
+     * @param BusinessProcess $process
      */
     public function storeProcess(BusinessProcess $process)
     {
@@ -201,7 +222,7 @@ class LegacyStorage extends Storage
         $bp = new BusinessProcess();
         $bp->setName($name);
         $this->parseString($string, $bp);
-        // $this->loadHeader($name, $bp);
+        $this->readHeaderString($string);
         return $bp;
     }
 
@@ -227,6 +248,10 @@ class LegacyStorage extends Storage
         return $bp;
     }
 
+    /**
+     * @param $name
+     * @return bool
+     */
     public function hasProcess($name)
     {
         $file = $this->getFilename($name);
@@ -234,16 +259,30 @@ class LegacyStorage extends Storage
             return false;
         }
 
-        $name = substr($file, 0, -5);
-        $header = $this->readHeader($file, $name);
+        $header = $this->readHeader($file);
+        $bp = new BusinessProcess();
+        $this->loadHeader($name, $bp);
         return $this->headerPermissionsAreSatisfied($header);
     }
 
+    /**
+     * @param string $name
+     * @param BusinessProcess $bp
+     */
     protected function loadHeader($name, $bp)
     {
         // TODO: do not open twice, this is quick and dirty based on existing code
         $file = $this->currentFilename = $this->getFilename($name);
-        $header = $this->readHeader($file, $name);
+        $header = $this->readHeader($file);
+        $this->applyHeader($header, $bp);
+    }
+
+    /**
+     * @param array $header
+     * @param BusinessProcess $bp
+     */
+    protected function applyHeader($header, $bp)
+    {
         $bp->setTitle($header['Title']);
         if ($header['Backend']) {
             $bp->setBackendName($header['Backend']);
