@@ -468,6 +468,26 @@ class BusinessProcess
         return $node;
     }
 
+    /**
+     * Create and attach a new process (BpNode)
+     *
+     * @param string $name     Process name
+     * @param string $operator Operator (defaults to &)
+     *
+     * @return BpNode
+     */
+    public function createBp($name, $operator = '&')
+    {
+        $node = new BpNode($this, (object) array(
+            'name'        => $name,
+            'operator'    => $operator,
+            'child_names' => array(),
+        ));
+
+        $this->addNode($name, $node);
+        return $node;
+    }
+
     public function createImportedNode($config, $name)
     {
         $node = new ImportedNode($this, (object) array('name' => $name, 'configName' => $config));
@@ -475,6 +495,11 @@ class BusinessProcess
         return $node;
     }
 
+    /**
+     * @param $name
+     * @return Node
+     * @throws Exception
+     */
     public function getNode($name)
     {
         if (array_key_exists($name, $this->nodes)) {

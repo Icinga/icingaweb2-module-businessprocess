@@ -163,6 +163,17 @@ abstract class Node
         return $this;
     }
 
+    /**
+     * Forget my state
+     *
+     * @return $this
+     */
+    public function clearState()
+    {
+        $this->state = null;
+        return $this;
+    }
+
     public function setAck($ack = true)
     {
         $this->ack = $ack;
