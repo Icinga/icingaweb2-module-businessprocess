@@ -3,9 +3,10 @@
 namespace Icinga\Module\Businessprocess\Clicommands;
 
 use Icinga\Cli\Command;
-use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\HostNode;
+use Icinga\Module\Businessprocess\Node;
+use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 
 class ProcessCommand extends Command
 {
@@ -43,7 +44,7 @@ class ProcessCommand extends Command
      *
      * OPTIONS
      *
-     * --no-title  Show only the process names and no related title
+     *   --no-title  Show only the process names and no related title
      */
     public function listAction()
     {
@@ -62,7 +63,16 @@ class ProcessCommand extends Command
      *
      * USAGE
      *
-     * icingacli businessprocess process check [--config <name>] <process>
+     * icingacli businessprocess process check <process> [options]
+     *
+     * OPTIONS
+     *
+     *   --config <configname>   Name of the config that contains <process>
+     *   --details               Show problem details as a tree
+     *   --colors                Show colored output
+     *   --state-type <type>     Define which state type to look at. Could be
+     *                           either soft or hard, overrides an eventually
+     *                           configured default
      */
     public function checkAction()
     {
@@ -107,6 +117,7 @@ class ProcessCommand extends Command
         $output = '';
 
         foreach ($tree as $name => $subtree) {
+            /** @var Node $node */
             $node = $subtree['node'];
 
             if ($node instanceof HostNode) {
