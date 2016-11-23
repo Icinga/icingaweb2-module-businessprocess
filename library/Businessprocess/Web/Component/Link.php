@@ -2,7 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Web\Component;
 
-use Icinga\Web\Url;
+use Icinga\Module\Businessprocess\Web\Url;
 
 class Link extends Component
 {

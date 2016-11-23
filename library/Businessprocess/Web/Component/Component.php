@@ -42,12 +42,17 @@ abstract class Component
     protected function discoveredView()
     {
         if (self::$discoveredView === null) {
-            $viewRenderer = Icinga::app()->getViewRenderer();
-            if ($viewRenderer->view === null) {
-                $viewRenderer->initView();
-            }
+            $icinga = Icinga::app();
+            if ($icinga->isCli()) {
+                self::$discoveredView = new View();
+            } else {
+                $viewRenderer = $icinga->getViewRenderer();
+                if ($viewRenderer->view === null) {
+                    $viewRenderer->initView();
+                }
 
-            self::$discoveredView = $viewRenderer->view;
+                self::$discoveredView = $viewRenderer->view;
+            }
         }
 
         return self::$discoveredView;

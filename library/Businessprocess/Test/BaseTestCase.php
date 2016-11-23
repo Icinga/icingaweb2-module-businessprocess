@@ -5,6 +5,7 @@ namespace Icinga\Module\Businessprocess\Test;
 use Icinga\Application\Config;
 use Icinga\Application\ApplicationBootstrap;
 use Icinga\Application\Icinga;
+use Icinga\Module\Businessprocess\Web\FakeRequest;
 use PHPUnit_Framework_TestCase;
 
 abstract class BaseTestCase extends PHPUnit_Framework_TestCase
@@ -18,6 +19,7 @@ abstract class BaseTestCase extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->app();
+        FakeRequest::setConfiguredBaseUrl('/icingaweb2/');
     }
 
     protected function emptyConfigSection()
