@@ -49,7 +49,7 @@ class ServiceNode extends MonitoredNode
 
         if (! $this->bp->isLocked()) {
 
-            $url = Url::fromPath( 'businessprocess/node/simulate', array(
+            $url = Url::fromPath('businessprocess/node/simulate', array(
                 'config' => $this->bp->getName(),
                 'node' => $this->name
             ));

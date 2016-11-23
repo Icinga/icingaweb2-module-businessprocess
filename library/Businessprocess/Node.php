@@ -465,8 +465,12 @@ abstract class Node
         return '&nbsp;';
     }
 
-    public function toLegacyConfigString(& $rendered = array()) { return '';}
-    //abstract public function toLegacyConfigString();
+    // TODO: Why isn't this abstract?
+    // abstract public function toLegacyConfigString();
+    public function toLegacyConfigString(& $rendered = array())
+    {
+        return '';
+    }
 
     public function __toString()
     {

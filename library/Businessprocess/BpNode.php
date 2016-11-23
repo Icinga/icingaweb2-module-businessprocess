@@ -362,7 +362,10 @@ class BpNode extends Node
         
         foreach ($this->getChildren() as $name => $child) {
             $children[] = (string) $child;
-            if (array_key_exists($name, $rendered)) { continue; }
+            if (array_key_exists($name, $rendered)) {
+                continue;
+            }
+
             if ($child instanceof BpNode) {
                 $cfg .= $child->toLegacyConfigString($rendered) . "\n";
             }

@@ -40,7 +40,7 @@ class BpConfigForm extends QuickForm
             'label'       => $this->translate('Title'),
             'description' => $this->translate(
                 'Usually this title will be shown for this process. Equals name'
-              . ' if not given'
+                . ' if not given'
             ),
         ));
 
@@ -48,7 +48,7 @@ class BpConfigForm extends QuickForm
             'label'       => $this->translate('Backend'),
             'description' => $this->translate(
                 'Icinga Web Monitoring Backend where current object states for'
-              . ' this process should be retrieved from'
+                . ' this process should be retrieved from'
             ),
             'multiOptions' => array(
                 null => $this->translate('Use the configured default backend'),
@@ -193,7 +193,9 @@ class BpConfigForm extends QuickForm
 
     public function shouldBeDeleted()
     {
-        if (! $this->hasDeleteButton()) return false;
+        if (! $this->hasDeleteButton()) {
+            return false;
+        }
 
         $name = $this->deleteButtonName;
         return $this->getSentValue($name) === $this->getElement($name)->getLabel();
