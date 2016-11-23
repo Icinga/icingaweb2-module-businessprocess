@@ -524,6 +524,20 @@ class BusinessProcess
         );
     }
 
+    /**
+     * Set the state for a specific node
+     *
+     * @param string $name  Node name
+     * @param int    $state Desired state
+     *
+     * @return $this
+     */
+    public function setNodeState($name, $state)
+    {
+        $this->getNode($name)->setState($state);
+        return $this;
+    }
+
     public function addObjectName($name)
     {
         $this->all_checks[$name] = 1;
