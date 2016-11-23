@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess\Web\Component;
 
 use Icinga\Module\Businessprocess\Web\Url;
+use Icinga\Web\Url as WebUrl;
 
 class Link extends Component
 {
@@ -31,14 +32,18 @@ class Link extends Component
     {
         $link = new static();
         $link->text = $text;
-        if ($url instanceof Url) {
+        if ($url instanceof WebUrl) { // Hint: Url is also a WebUrl
             if ($urlParams !== null) {
                 $url->addParams($urlParams);
             }
 
             $link->url = $url;
         } else {
-            $link->url = Url::fromPath($url, $urlParams);
+            if ($urlParams === null) {
+                $link->url = Url::fromPath($url);
+            } else {
+                $link->url = Url::fromPath($url, $urlParams);
+            }
         }
         $link->attributes = new Attributes($attributes);
 
