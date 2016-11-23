@@ -3,6 +3,8 @@
 namespace Icinga\Module\Businessprocess;
 
 use Icinga\Application\Benchmark;
+use Icinga\Exception\ProgrammingError;
+use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 use Icinga\Data\Filter\Filter;
 use Exception;
@@ -360,7 +362,7 @@ class BusinessProcess
 
         $hostStatus = $backend->select()->from('hostStatus', array(
             'hostname'          => 'host_name',
-            'last_state_change' => $hostStateChangeColumn, 
+            'last_state_change' => $hostStateChangeColumn,
             'in_downtime'       => 'host_in_downtime',
             'ack'               => 'host_acknowledged',
             'state'             => $hostStateColumn
@@ -369,7 +371,7 @@ class BusinessProcess
         $serviceStatus = $backend->select()->from('serviceStatus', array(
             'hostname'          => 'host_name',
             'service'           => 'service_description',
-            'last_state_change' => $serviceStateChangeColumn, 
+            'last_state_change' => $serviceStateChangeColumn,
             'in_downtime'       => 'service_in_downtime',
             'ack'               => 'service_acknowledged',
             'state'             => $serviceStateColumn
@@ -381,7 +383,7 @@ class BusinessProcess
 
         foreach ($hostStatus as $row) {
             $this->handleDbRow($row);
-         }
+        }
 
         ksort($this->root_nodes);
         Benchmark::measure('Got states for business process ' . $this->getName());
@@ -398,7 +400,10 @@ class BusinessProcess
             $key .= ';Hoststatus';
         }
         // We fetch more states than we need, so skip unknown ones
-        if (! $this->hasNode($key)) return;
+        if (! $this->hasNode($key)) {
+            return;
+        }
+
         $node = $this->getNode($key);
 
         if ($row->state !== null) {
@@ -525,6 +530,11 @@ class BusinessProcess
 
 
         return $this;
+    }
+
+    public function removeNode($name)
+    {
+        throw new ProgrammingError('Not implemented yet');
     }
 
     public function listBpNodes()

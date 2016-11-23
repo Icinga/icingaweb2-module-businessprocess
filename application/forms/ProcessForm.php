@@ -2,25 +2,30 @@
 
 namespace Icinga\Module\Businessprocess\Forms;
 
-use Icinga\Web\Notification;
-use Icinga\Web\Request;
-use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\BpNode;
-use Icinga\Module\Businessprocess\Form;
-use Icinga\Module\Businessprocess\ProcessChanges;
+use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\Modification\ProcessChanges;
+use Icinga\Module\Businessprocess\Web\Form\QuickForm;
+use Icinga\Module\Monitoring\Backend\MonitoringBackend;
+use Icinga\Web\Notification;
+use Icinga\Web\Session\SessionNamespace;
 
-class ProcessForm extends Form
+class ProcessForm extends QuickForm
 {
+    /** @var MonitoringBackend */
     protected $backend;
 
-    protected $process;
+    /** @var BusinessProcess */
+    protected $bp;
 
+    /** @var BpNode */
     protected $node;
 
     protected $objectList = array();
 
     protected $processList = array();
 
+    /** @var SessionNamespace */
     protected $session;
 
     public function setup()
@@ -37,7 +42,7 @@ class ProcessForm extends Form
             'label'        => $this->translate('Title'),
             'description' => $this->translate(
                 'Usually this title will be shown for this node. Equals name'
-              . ' if not given'
+                . ' if not given'
             ),
         ));
 

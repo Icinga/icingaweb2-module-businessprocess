@@ -1,6 +1,8 @@
 <?php
 
-namespace Icinga\Module\Businessprocess;
+namespace Icinga\Module\Businessprocess\Modification;
+
+use Icinga\Module\Businessprocess\BusinessProcess;
 
 /**
  * NodeRemoveAction

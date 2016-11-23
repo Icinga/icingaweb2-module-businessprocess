@@ -1,7 +1,9 @@
 <?php
 
-namespace Icinga\Module\Businessprocess;
+namespace Icinga\Module\Businessprocess\Modification;
 
+use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\Node;
 use Icinga\Exception\ProgrammingError;
 
 /**
@@ -22,7 +24,7 @@ abstract class NodeAction
     /** @var string Name of the node this action applies to */
     protected $nodeName;
 
-    /** @var array Properties which should be preeserved when serializing this action */
+    /** @var array Properties which should be preserved when serializing this action */
     protected $preserveProperties = array();
 
     /**
@@ -82,8 +84,8 @@ abstract class NodeAction
      */
     public static function create($actionName, $nodeName)
     {
-        $classname = __NAMESPACE__ . '\\Node' . ucfirst($actionName) . 'Action';
-        $object = new $classname($nodeName);
+        $className = __NAMESPACE__ . '\\Node' . ucfirst($actionName) . 'Action';
+        $object = new $className($nodeName);
         return $object;
     }
 
@@ -114,7 +116,7 @@ abstract class NodeAction
      * @param $string
      * @return NodeAction
      */
-    public static function unserialize($string)
+    public static function unSerialize($string)
     {
         $object = json_decode($string);
         $action = self::create($object->actionName, $object->nodeName);

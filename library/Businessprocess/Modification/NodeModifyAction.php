@@ -1,6 +1,9 @@
 <?php
 
-namespace Icinga\Module\Businessprocess;
+namespace Icinga\Module\Businessprocess\Modification;
+
+use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\Node;
 
 class NodeModifyAction extends NodeAction
 {

@@ -1,7 +1,9 @@
 <?php
 
-namespace Icinga\Module\Businessprocess;
+namespace Icinga\Module\Businessprocess\Modification;
 
+use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\Node;
 use Icinga\Web\Session\SessionNamespace as Session;
 
 class ProcessChanges
@@ -41,7 +43,7 @@ class ProcessChanges
 
         if ($actions = $session->get($key)) {
             foreach ($actions as $string) {
-                $changes->push(NodeAction::unserialize($string));
+                $changes->push(NodeAction::unSerialize($string));
             }
         }
         $changes->session = $session;
@@ -64,7 +66,7 @@ class ProcessChanges
 
     /**
      * @param Node|string $nodeName
-     * @param array $properties
+     * @param object $properties
      * @param Node $parent
      *
      * @return $this
@@ -86,7 +88,7 @@ class ProcessChanges
      */
     public function deleteNode(Node $node)
     {
-        return $this->push(new NodeDeleteAction($node));
+        return $this->push(new NodeRemoveAction($node));
     }
 
     /**
