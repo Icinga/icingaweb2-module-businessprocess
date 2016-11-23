@@ -46,42 +46,6 @@ class NotOperatorTest extends BaseTestCase
         );
     }
 
-    public function testAnExpressionGivesTheCorrectResultForVariousStateCombinations()
-    {
-        $storage = new LegacyStorage($this->emptyConfigSection());
-        $expression = 'a = ! b ! c ! d';
-        $bp = $storage->loadFromString('dummy', $expression);
-        $a = $bp->getNode('a');
-        $b = $bp->createBp('b')->setState(3);
-        $c = $bp->createBp('c')->setState(3);
-        $d = $bp->createBp('d')->setState(3);
-        $this->assertEquals(
-            'OK',
-            $a->getStateName()
-        );
-
-        $a->clearState();
-        $b->setState(0);
-        $this->assertEquals(
-            'OK',
-            $a->getStateName()
-        );
-
-        $a->clearState();
-        $c->setState(0);
-        $this->assertEquals(
-            'OK',
-            $a->getStateName()
-        );
-
-        $a->clearState();
-        $d->setState(0);
-        $this->assertEquals(
-            'CRITICAL',
-            $a->getStateName()
-        );
-    }
-
     public function testThreeTimesCriticalIsOk()
     {
         $bp = $this->getBp();
