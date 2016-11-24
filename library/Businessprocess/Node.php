@@ -142,21 +142,6 @@ abstract class Node
         return false;
     }
 
-    public function addChild(Node $node)
-    {
-        if (array_key_exists((string) $node, $this->children)) {
-            throw new Exception(
-                sprintf(
-                    'Node "%s" has been defined more than once',
-                    $node
-                )
-            );
-        }
-        $this->childs[(string) $node] = $node;
-        $node->addParent($this);
-        return $this;
-    }
-
     public function setState($state)
     {
         $this->state = (int) $state;

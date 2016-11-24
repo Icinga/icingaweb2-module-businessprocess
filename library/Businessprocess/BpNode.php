@@ -3,7 +3,6 @@
 namespace Icinga\Module\Businessprocess;
 
 use Icinga\Exception\ConfigurationError;
-use Icinga\Exception\ProgrammingError;
 
 class BpNode extends Node
 {
@@ -14,8 +13,12 @@ class BpNode extends Node
     protected $url;
     protected $info_command;
     protected $display = 0;
+
+    /** @var  Node[] */
     protected $children;
-    protected $child_names = array();
+
+    /** @var array */
+    protected $childNames = array();
     protected $alias;
     protected $counters;
     protected $missing = null;
@@ -87,6 +90,30 @@ class BpNode extends Node
         }
 
         return false;
+    }
+
+    /**
+     * @param Node $node
+     * @return $this
+     * @throws ConfigurationError
+     */
+    public function addChild(Node $node)
+    {
+        if ($this->children === null) {
+            $this->getChildren();
+        }
+
+        $name = (string) $node;
+        if (array_key_exists($name, $this->children)) {
+            throw new ConfigurationError(
+                'Node "%s" has been defined more than once',
+                $name
+            );
+        }
+        $this->children[$name] = $node;
+        $this->children[] = $name;
+        $node->addParent($this);
+        return $this;
     }
 
     public function getProblematicChildren()
@@ -304,26 +331,32 @@ class BpNode extends Node
     public function setChildNames($names)
     {
         sort($names);
-        $this->child_names = $names;
+        $this->childNames = $names;
         $this->children = null;
         return $this;
     }
 
+    public function hasChildren($filter = null)
+    {
+        return !empty($this->childNames);
+    }
+
     public function getChildNames()
     {
-        return $this->child_names;
+        return $this->childNames;
     }
 
     public function getChildren($filter = null)
     {
         if ($this->children === null) {
             $this->children = array();
-            natsort($this->child_names);
-            foreach ($this->child_names as $name) {
+            natsort($this->childNames);
+            foreach ($this->childNames as $name) {
                 $this->children[$name] = $this->bp->getNode($name);
                 $this->children[$name]->addParent($this);
             }
         }
+
         return $this->children;
     }
 
