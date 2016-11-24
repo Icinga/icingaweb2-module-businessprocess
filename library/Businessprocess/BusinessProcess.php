@@ -171,6 +171,11 @@ class BusinessProcess
         return $this->name;
     }
 
+    public function getHtmlId()
+    {
+        return 'businessprocess-' . preg_replace('/[\r\n\t\s]/', '_', $this->getName());
+    }
+
     public function setTitle($title)
     {
         $this->title = $title;

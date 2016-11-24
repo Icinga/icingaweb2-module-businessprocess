@@ -134,20 +134,20 @@
         },
 
         fixOpenedBps: function(event) {
-            var $container = $(event.currentTarget);
-            var container_id = $container.attr('id');
+            var $bpDiv = $(event.currentTarget).find('div.bp');
+            var bpName = $bpDiv.attr('id');
 
-            if (typeof this.idCache[container_id] === 'undefined') {
+            if  (typeof this.idCache[bpName] === 'undefined') {
                 return;
             }
-            var $procs = $('table.process', $container);
-            $.each(this.idCache[$container.attr('id')], function(idx, id) {
+            var $procs = $bpDiv.find('table.process');
+
+            $.each(this.idCache[bpName], function(idx, id) {
                 var $el = $('#' + id);
                 $procs = $procs.not($el);
 
                 $el.parents('table.process').each(function (idx, el) {
                     $procs = $procs.not($(el));
-
                 });
             });
 
@@ -160,9 +160,11 @@
          * Only get the deepest nodes to keep requests as small as possible
          */
         rememberOpenedBps: function (event) {
-            var $container = $(event.currentTarget);
             var ids = [];
-            $('table.process', $container)
+            var $bpDiv = $(event.currentTarget).find('div.bp');
+            var $bpName = $bpDiv.attr('id');
+
+            $bpDiv.find('table.process')
                 .not('table.process.collapsed')
                 .not('table.process.collapsed table.process')
                 .each(function (key, el) {
@@ -172,7 +174,7 @@
                 return;
             }
 
-            this.idCache[$container.attr('id')] = ids;
+            this.idCache[$bpName] = ids;
         }
     };
 
