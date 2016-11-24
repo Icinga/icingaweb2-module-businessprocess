@@ -5,6 +5,8 @@ namespace Icinga\Module\Businessprocess\Test;
 use Icinga\Application\Config;
 use Icinga\Application\ApplicationBootstrap;
 use Icinga\Application\Icinga;
+use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Businessprocess\Web\FakeRequest;
 use PHPUnit_Framework_TestCase;
 
@@ -25,6 +27,25 @@ abstract class BaseTestCase extends PHPUnit_Framework_TestCase
     protected function emptyConfigSection()
     {
         return Config::module('businessprocess')->getSection('global');
+    }
+
+    /***
+     * @return BusinessProcess
+     */
+    protected function makeLoop()
+    {
+        return $this->makeInstance()->loadFromString(
+            'loop',
+            "a = b\nb = c\nc = a\nd = a"
+        );
+    }
+
+    /**
+     * @return LegacyStorage
+     */
+    protected function makeInstance()
+    {
+        return new LegacyStorage($this->emptyConfigSection());
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess;
 
 use Icinga\Exception\ConfigurationError;
+use Icinga\Module\Businessprocess\Exception\NestingError;
 
 class BpNode extends Node
 {
@@ -43,6 +44,8 @@ class BpNode extends Node
         1 => 1,
         0 => 4
     );
+
+    protected static $loopDetection = array();
 
     protected $className = 'process';
 
@@ -262,11 +265,24 @@ class BpNode extends Node
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getState()
     {
         if ($this->state === null) {
-            $this->calculateState();
+            try {
+                $this->reCalculateState();
+            } catch (NestingError $e) {
+                $this->bp->addError(
+                    $this->bp->translate('Nesting error detected: %s'),
+                    $e->getMessage()
+                );
+
+                $this->state = 3;
+            }
         }
+
         return $this->state;
     }
 
@@ -275,13 +291,23 @@ class BpNode extends Node
         return self::$sortStateInversionMap[$state >> self::SHIFT_FLAGS] << self::SHIFT_FLAGS;
     }
 
-    protected function calculateState()
+    /**
+     * @return $this
+     */
+    public function reCalculateState()
     {
         $sort_states = array();
         $lastStateChange = 0;
+        if (!$this->hasChildren()) {
+            $this->state = 0;
+            return $this;
+        }
+
         foreach ($this->getChildren() as $child) {
+            $this->beginLoopDetection();
             $sort_states[] = $child->getSortingState();
             $lastStateChange = max($lastStateChange, $child->getLastStateChange());
+            $this->endLoopDetection();
         }
 
         $this->setLastStateChange($lastStateChange);
@@ -315,6 +341,38 @@ class BpNode extends Node
         }
 
         $this->state = $this->sortStateTostate($sort_state);
+        return $this;
+    }
+
+    protected function beginLoopDetection()
+    {
+        $name = $this->name;
+        if (array_key_exists($name, self::$loopDetection)) {
+            $loop = array_keys(self::$loopDetection);
+            $loop[] = $name;
+            self::$loopDetection = array();
+            throw new NestingError('Loop detected: %s', implode(' -> ', $loop));
+        }
+
+        self::$loopDetection[$name] = true;
+    }
+
+    protected function endLoopDetection()
+    {
+        unset(self::$loopDetection[$this->name]);
+    }
+
+    public function checkForLoops()
+    {
+        foreach ($this->getChildren() as $child) {
+            $this->beginLoopDetection();
+            if ($child instanceof BpNode) {
+                $child->checkForLoops();
+            }
+            $this->endLoopDetection();
+        }
+
+        return $this;
     }
 
     public function setDisplay($display)

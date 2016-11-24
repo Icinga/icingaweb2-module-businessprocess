@@ -649,7 +649,7 @@ class BusinessProcess
         return $errors;
     }
 
-    protected function translate($msg)
+    public function translate($msg)
     {
         return mt('businessprocess', $msg);
     }
@@ -670,6 +670,22 @@ class BusinessProcess
         }
     }
 
+    /**
+     * @param string $msg,...
+     *
+     * @return $this
+     */
+    public function addError($msg)
+    {
+        $args = func_get_args();
+        array_shift($args);
+        $this->errors[] = vsprintf($msg, $args);
+        return $this;
+    }
+
+    /**
+     * @deprecated
+     */
     protected function error($msg)
     {
         $args = func_get_args();

@@ -7,6 +7,8 @@ use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 
 class LegacyStorageTest extends BaseTestCase
 {
+    private $processClass = 'Icinga\\Module\\Businessprocess\\BusinessProcess';
+
     public function testCanBeInstantiatedWithAnEmptyConfigSection()
     {
         $baseClass = 'Icinga\\Module\\Businessprocess\\Storage\\LegacyStorage';
@@ -76,18 +78,16 @@ class LegacyStorageTest extends BaseTestCase
 
     public function testAValidProcessCanBeLoaded()
     {
-        $processClass = 'Icinga\\Module\\Businessprocess\\BusinessProcess';
         $this->assertInstanceOf(
-            $processClass,
+            $this->processClass,
             $this->makeInstance()->loadProcess('simple_with-header')
         );
     }
 
     public function testProcessConfigCanBeLoadedFromAString()
     {
-        $processClass = 'Icinga\\Module\\Businessprocess\\BusinessProcess';
         $this->assertInstanceOf(
-            $processClass,
+            $this->processClass,
             $this->makeInstance()->loadFromString('dummy', 'a = Host1;ping & Host2;ping')
         );
     }
@@ -104,11 +104,11 @@ class LegacyStorageTest extends BaseTestCase
         );
     }
 
-    /**
-     * @return LegacyStorage
-     */
-    protected function makeInstance()
+    public function testAConfiguredLoopCanBeParsed()
     {
-        return new LegacyStorage($this->emptyConfigSection());
+        $this->assertInstanceOf(
+            $this->processClass,
+            $this->makeLoop()
+        );
     }
 }
