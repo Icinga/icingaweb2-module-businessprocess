@@ -2,12 +2,13 @@
 
 namespace Icinga\Module\Businessprocess;
 
+use Icinga\Exception\ProgrammingError;
 use Icinga\Web\Session\SessionNamespace;
 
 class Simulation
 {
     /**
-     * @var Session
+     * @var SessionNamespace
      */
     protected $session;
 
@@ -21,6 +22,9 @@ class Simulation
      */
     protected $key;
 
+    /**
+     * @var
+     */
     protected $simulations;
 
     public function __construct(BusinessProcess $bp, SessionNamespace $session)

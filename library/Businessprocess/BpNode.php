@@ -63,7 +63,7 @@ class BpNode extends Node
             $this->getState();
             $this->counters = self::$emptyStateSummary;
 
-            foreach ($this->children as $child) {
+            foreach ($this->getChildren() as $child) {
                 if ($child instanceof BpNode) {
                     $counters = $child->getStateSummary();
                     foreach ($counters as $k => $v) {

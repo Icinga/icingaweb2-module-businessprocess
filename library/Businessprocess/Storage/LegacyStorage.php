@@ -196,6 +196,8 @@ class LegacyStorage extends Storage
 
     /**
      * @param BusinessProcess $process
+     *
+     * @return void
      */
     public function storeProcess(BusinessProcess $process)
     {

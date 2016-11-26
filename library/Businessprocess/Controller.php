@@ -5,22 +5,33 @@ namespace Icinga\Module\Businessprocess;
 use Icinga\Application\Icinga;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
+use Icinga\Module\Businessprocess\Storage\Storage;
 use Icinga\Module\Businessprocess\Web\Component\ActionBar;
 use Icinga\Module\Businessprocess\Web\Form\FormLoader;
+use Icinga\Module\Businessprocess\Web\Url;
 use Icinga\Web\Controller as ModuleController;
 use Icinga\Web\Notification;
+use Icinga\Web\View;
 use Icinga\Web\Widget;
 
 class Controller extends ModuleController
 {
-    protected $config;
-
+    /** @deprecated, obsolete */
     protected $backend;
 
+    /** @var BusinessProcess */
     protected $bp;
 
+    /** @var View */
+    public $view;
+
+    /** @var Storage */
     private $storage;
 
+    /** @var bool */
+    private $showFullscreen;
+
+    /** @var Url */
     private $url;
 
     public function init()
@@ -31,17 +42,31 @@ class Controller extends ModuleController
         }
         $this->view->errors = array();
 
+        $this->url();
+        $this->view->showFullscreen
+            = $this->showFullscreen
+            = (bool) $this->_helper->layout()->showFullscreen;
+
         $this->view->compact = $this->params->get('view') === 'compact';
     }
 
+    /**
+     * @return Url
+     */
     protected function url()
     {
         if ($this->url === null) {
-            $this->url = clone $this->getRequest()->getUrl();
+            $this->url = Url::fromPath(
+                $this->getRequest()->getUrl()->getPath()
+            )->setParams($this->params);
         }
+
         return $this->url;
     }
 
+    /**
+     * @return ActionBar
+     */
     protected function actions()
     {
         if ($this->view->actions === null) {
@@ -62,6 +87,12 @@ class Controller extends ModuleController
     protected function session()
     {
         return $this->Window()->getSessionNamespace('businessprocess');
+    }
+
+    protected function setViewScript($name)
+    {
+        $this->_helper->viewRenderer->setNoController(true);
+        $this->_helper->viewRenderer->setScriptAction($name);
     }
 
     protected function setTitle($title)

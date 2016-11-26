@@ -298,6 +298,11 @@ abstract class Node
         return count($this->parents) > 0;
     }
 
+    public function getParents()
+    {
+        return $this->parents;
+    }
+
     protected function stateToSortState($state)
     {
         if (array_key_exists($state, static::$stateToSortStateMap)) {

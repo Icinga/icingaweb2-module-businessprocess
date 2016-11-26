@@ -425,6 +425,9 @@ class BusinessProcess
         }
     }
 
+    /**
+     * @return BpNode[]
+     */
     public function getChildren()
     {
         return $this->getRootNodes();
