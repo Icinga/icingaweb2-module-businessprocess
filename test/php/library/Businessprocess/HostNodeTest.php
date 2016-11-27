@@ -17,10 +17,18 @@ class HostNodeTest extends BaseTestCase
         );
     }
 
-    public function testReturnsCorrectAlias()
+    public function testReturnsCorrectIdentifierWhenCastedToString()
     {
         $this->assertEquals(
             'localhost;Hoststatus',
+            (string) $this->localhost()
+        );
+    }
+
+    public function testReturnsCorrectAlias()
+    {
+        $this->assertEquals(
+            'localhost',
             $this->localhost()->getAlias()
         );
     }
