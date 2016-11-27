@@ -318,7 +318,7 @@ class ProcessController extends Controller
     protected function redirectOnConfigSwitch()
     {
         $request = $this->getRequest();
-        if ($request->isPost()) {
+        if ($request->isPost() && $request->getPost('action') === 'switchConfig') {
             // We switched the process in the config dropdown list
             $params = array(
                 'config' => $request->getPost('config')
