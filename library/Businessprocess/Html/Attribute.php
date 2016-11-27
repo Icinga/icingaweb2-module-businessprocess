@@ -1,8 +1,8 @@
 <?php
 
-namespace Icinga\Module\Businessprocess\Web\Component;
+namespace Icinga\Module\Businessprocess\Web\Html;
 
-class Attribute extends Component
+class Attribute
 {
     /** @var string */
     protected $name;
@@ -49,6 +49,34 @@ class Attribute extends Component
     }
 
     /**
+     * @param string|array $value
+     * @return $this
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+        return $this;
+    }
+
+    /**
+     * @param string $value
+     * @return $this
+     */
+    public function addValue($value)
+    {
+        if (! is_array($this->value)) {
+            $this->value = array($this->value);
+        }
+
+        if (is_array($value)) {
+            $this->value = array_merge($this->value, $value);
+        } else {
+            $this->value[] = $value;
+        }
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function render()
@@ -92,7 +120,11 @@ class Attribute extends Component
      */
     public static function escapeValue($value)
     {
-        // TODO: escape
-        return (string) $value;
+        // TODO: escape differently
+        if (is_array($value)) {
+            return Util::escapeForHtml(implode(' ', $value));
+        } else {
+            return Util::escapeForHtml((string) $value);
+        }
     }
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace Icinga\Module\Businessprocess\Web\Component;
+namespace Icinga\Module\Businessprocess\Html;
 
 class ActionBar extends Container
 {
-    protected $separator = ' ';
+    protected $contentSeparator = ' ';
 
-    protected $attributes = array('class' => 'action-bar');
+    protected $defaultAttributes = array('class' => 'action-bar');
 }

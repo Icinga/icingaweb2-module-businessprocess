@@ -1,15 +1,17 @@
 <?php
 
-namespace Icinga\Module\Businessprocess\Web\Component;
+namespace Icinga\Module\Businessprocess\Web\Html;
 
 use Icinga\Exception\IcingaException;
+use Icinga\Exception\ProgrammingError;
 
-class Attributes extends Component
+class Attributes
 {
-    /**
-     * @var Attribute[]
-     */
-    protected $attributes;
+    /** @var Attribute */
+    protected $attributes = array();
+
+    /** @var callable */
+    protected $callbacks = array();
 
     /**
      * Attributes constructor.
@@ -17,7 +19,6 @@ class Attributes extends Component
      */
     public function __construct(array $attributes = null)
     {
-        $this->attributes = array();
         if (empty($attributes)) {
             return;
         }
@@ -44,7 +45,8 @@ class Attributes extends Component
 
     /**
      * @param Attributes|array|null $attributes
-     * @return static
+     * @return Attributes
+     * @throws IcingaException
      */
     public static function wantAttributes($attributes)
     {
@@ -145,14 +147,41 @@ class Attributes extends Component
     }
 
     /**
+     * Callback must return an instance of Attribute
+     *
+     * @param $name
+     * @param $callback
+     */
+    public function registerCallbackFor($name, callable $callback)
+    {
+        $this->callbacks[$name] = $callback;
+        return $this;
+    }
+
+    /**
      * @inheritdoc
      */
     public function render()
     {
-        if (empty($this->attributes)) {
+        if (empty($this->attributes) && empty($this->callbacks)) {
             return '';
         }
 
-        return ' ' . implode(' ', $this->attributes);
+        $parts = array();
+        foreach ($this->callbacks as $callback) {
+            $attribute = call_user_func($callback);
+            if (! $attribute instanceof Attribute) {
+                throw new ProgrammingError(
+                    'A registered attribute callback must return an Attribute'
+                );
+            }
+
+            $parts[] = $attribute->render();
+        }
+
+        foreach ($this->attributes as $attribute) {
+            $parts[] = $attribute->render();
+        }
+        return ' ' . implode(' ', $parts);
     }
 }
