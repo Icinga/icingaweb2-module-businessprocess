@@ -50,15 +50,13 @@ class TileRenderer extends Renderer
 
     public function renderBreadCrumb()
     {
-        $breadcrumb = Element::create('ul', array('class' => 'breadcrumb'));
         $breadcrumb = Element::create( 'ul', array(
             'class'            => 'breadcrumb',
             'data-base-target' => '_main'
         ));
 
-
         $breadcrumb->add(Element::create('li')->add(
-            Link::create('Process', $this->getBaseUrl()))
+            Link::create($this->bp->getTitle(), $this->getBaseUrl()))
         );
         $bp = $this->bp;
         $path = $this->getMyPath();
@@ -88,7 +86,6 @@ class TileRenderer extends Renderer
         $p->attributes()->add('class', $this->getNodeClasses($parent));
         $p->setTag('li');
         return $p;
-        // $p->attributes()->add('class', 'parent');
     }
 
     /**
