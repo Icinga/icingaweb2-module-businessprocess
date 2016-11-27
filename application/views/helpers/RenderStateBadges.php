@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @deprecated
  * @codingStandardsIgnoreStart
  */
 class Zend_View_Helper_RenderStateBadges extends Zend_View_Helper_Abstract
