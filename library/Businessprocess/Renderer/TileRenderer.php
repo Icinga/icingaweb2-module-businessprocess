@@ -50,14 +50,14 @@ class TileRenderer extends Renderer
 
     public function renderBreadCrumb()
     {
-        $breadcrumb = Element::create( 'ul', array(
+        $breadcrumb = Element::create('ul', array(
             'class'            => 'breadcrumb',
             'data-base-target' => '_main'
         ));
 
         $breadcrumb->add(Element::create('li')->add(
-            Link::create($this->bp->getTitle(), $this->getBaseUrl()))
-        );
+            Link::create($this->bp->getTitle(), $this->getBaseUrl())
+        ));
         $bp = $this->bp;
         $path = $this->getMyPath();
         $max = 20;
