@@ -2,7 +2,7 @@
 
 namespace Icinga\Module\Businessprocess;
 
-use Icinga\Module\Businessprocess\Web\Component\Link;
+use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Web\Url;
 
 class HostNode extends MonitoredNode
@@ -44,20 +44,9 @@ class HostNode extends MonitoredNode
         }
     }
 
-    public function renderLink($view)
+    public function getAlias()
     {
-        if ($this->isMissing()) {
-            return '<span class="missing">' . $view->escape($this->hostname) . '</span>';
-        }
-
-        $params = array(
-            'host'    => $this->getHostname(),
-        );
-
-        if ($this->bp->hasBackendName()) {
-            $params['backend'] = $this->bp->getBackendName();
-        }
-        return Link::create($this->hostname, 'monitoring/host/show', $params)->render();
+        return $this->getHostname();
     }
 
     protected function getActionIcons($view)
@@ -85,5 +74,32 @@ class HostNode extends MonitoredNode
     public function getHostname()
     {
         return $this->hostname;
+    }
+
+    public function getUrl()
+    {
+        $params = array(
+            'host' => $this->getHostname(),
+        );
+
+        if ($this->bp->hasBackendName()) {
+            $params['backend'] = $this->bp->getBackendName();
+        }
+
+        return Url::fromPath('monitoring/host/show', $params);
+    }
+
+    public function getLink()
+    {
+        return Link::create($this->hostname, $this->getUrl());
+    }
+
+    public function renderLink($view)
+    {
+        if ($this->isMissing()) {
+            return '<span class="missing">' . $view->escape($this->hostname) . '</span>';
+        }
+
+        return $this->getLink()->render();
     }
 }

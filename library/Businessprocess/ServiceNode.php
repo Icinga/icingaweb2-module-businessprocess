@@ -2,7 +2,7 @@
 
 namespace Icinga\Module\Businessprocess;
 
-use Icinga\Module\Businessprocess\Web\Component\Link;
+use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Web\Url;
 
 class ServiceNode extends MonitoredNode
@@ -24,27 +24,6 @@ class ServiceNode extends MonitoredNode
         } else {
             $this->setState(0)->setMissing();
         }
-    }
-
-    public function renderLink($view)
-    {
-        if ($this->isMissing()) {
-            return '<span class="missing">' . $view->escape($this->getAlias()) . '</span>';
-        }
-
-        $params = array(
-            'host'    => $this->getHostname(),
-            'service' => $this->getServiceDescription()
-        );
-        if ($this->bp->hasBackendName()) {
-            $params['backend'] = $this->bp->getBackendName();
-        }
-
-        return Link::create(
-            $this->getAlias(),
-            'monitoring/service/show',
-            $params
-        )->render();
     }
 
     protected function getActionIcons($view)
@@ -82,5 +61,28 @@ class ServiceNode extends MonitoredNode
     public function getAlias()
     {
         return $this->hostname . ': ' . $this->service;
+    }
+
+    public function getUrl()
+    {
+        $params = array(
+            'host'    => $this->getHostname(),
+            'service' => $this->getServiceDescription()
+        );
+
+        if ($this->bp->hasBackendName()) {
+            $params['backend'] = $this->bp->getBackendName();
+        }
+
+        return Url::fromPath('monitoring/service/show', $params);
+    }
+
+    public function renderLink($view)
+    {
+        if ($this->isMissing()) {
+            return '<span class="missing">' . $view->escape($this->getAlias()) . '</span>';
+        }
+
+        return $this->getLink()->render();
     }
 }
