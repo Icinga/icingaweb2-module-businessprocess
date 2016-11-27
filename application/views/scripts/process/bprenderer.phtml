@@ -1,0 +1,12 @@
+<?php if (! $this->compact && ! $this->showFullscreen): ?>
+<div class="controls">
+<?= $this->tabs ?>
+  <h1><?= $this->title ?></h1>
+  <?= $this->actions->render() ?>
+</div>
+<?php endif ?>
+
+<div class="content<?= $this->compact ? ' compact' : '' ?>">
+  <?= $this->bpRenderer->render() ?>
+  <?= $this->render('warnings.phtml') ?>
+</div>
