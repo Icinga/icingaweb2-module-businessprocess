@@ -1,6 +1,6 @@
 <?php
 
-namespace Icinga\Module\Businessprocess\Web\Html;
+namespace Icinga\Module\Businessprocess\Html;
 
 use Icinga\Module\Businessprocess\Web\Url;
 use Icinga\Web\Url as WebUrl;
@@ -15,6 +15,10 @@ class Link extends BaseElement
     /** @var Url */
     protected $url;
 
+    protected function __construct()
+    {
+    }
+
     /**
      * @param Renderable|array|string $content
      * @param Url|string $url
@@ -26,9 +30,10 @@ class Link extends BaseElement
     public static function create($content, $url, $urlParams = null, array $attributes = null)
     {
         $link = new static();
-        $link->content = Util::wantHtml($content);
-        $link->attributes()->registerCallbackFor('href', array($link, 'getHrefAttribute'));
+        $link->setContent($content);
         $link->setAttributes($attributes);
+        $link->attributes()->registerCallbackFor('href', array($link, 'getHrefAttribute'));
+        $link->setUrl($url, $urlParams);
         return $link;
     }
 
@@ -39,15 +44,16 @@ class Link extends BaseElement
                 $url->addParams($urlParams);
             }
 
-            $link->url = $url;
+            $this->url = $url;
         } else {
             if ($urlParams === null) {
-                $link->url = Url::fromPath($url);
+                $this->url = Url::fromPath($url);
             } else {
-                $link->url = Url::fromPath($url, $urlParams);
+                $this->url = Url::fromPath($url, $urlParams);
             }
         }
-        $link->url->getParams();
+
+        $this->url->getParams();
     }
 
     /**

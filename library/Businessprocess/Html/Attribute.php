@@ -1,6 +1,6 @@
 <?php
 
-namespace Icinga\Module\Businessprocess\Web\Html;
+namespace Icinga\Module\Businessprocess\Html;
 
 class Attribute
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace Icinga\Module\Businessprocess\Web\Html;
+namespace Icinga\Module\Businessprocess\Html;
 
 use Icinga\Exception\IcingaException;
 use Icinga\Exception\ProgrammingError;
 
 class Attributes
 {
-    /** @var Attribute */
+    /** @var Attribute[] */
     protected $attributes = array();
 
     /** @var callable */
@@ -64,7 +64,7 @@ class Attributes
             } elseif ($attributes !== null) {
                 throw new IcingaException(
                     'Attributes, Array or Null expected, got %s',
-                    $self->getPhpTypeName($attributes)
+                    Util::getPhpTypeName($attributes)
                 );
             }
             return $self;
@@ -74,7 +74,7 @@ class Attributes
     /**
      * @return Attribute[]
      */
-    public function attributes()
+    public function getAttributes()
     {
         return $this->attributes;
     }
@@ -87,16 +87,20 @@ class Attributes
     public function add($attribute, $value = null)
     {
         if ($attribute instanceof static) {
-            foreach ($attribute as $a) {
+            foreach ($attribute->getAttributes() as $a) {
                 $this->add($a);
             }
-
-            return $this;
         } elseif ($attribute instanceof Attribute) {
-            return $this->addAttribute($attribute);
+            $this->addAttribute($attribute);
+        } elseif (is_array($attribute)) {
+            foreach ($attribute as $name => $value) {
+                $this->add($name, $value);
+            }
         } else {
-            return $this->addAttribute(Attribute::create($attribute, $value));
+            $this->addAttribute(Attribute::create($attribute, $value));
         }
+
+        return $this;
     }
 
     /**
@@ -151,6 +155,7 @@ class Attributes
      *
      * @param $name
      * @param $callback
+     * @return $this
      */
     public function registerCallbackFor($name, callable $callback)
     {

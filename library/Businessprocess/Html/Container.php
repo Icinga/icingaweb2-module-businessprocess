@@ -1,6 +1,6 @@
 <?php
 
-namespace Icinga\Module\Businessprocess\Web\Html;
+namespace Icinga\Module\Businessprocess\Html;
 
 class Container extends BaseElement
 {
@@ -10,6 +10,10 @@ class Container extends BaseElement
     /** @var string */
     protected $tag = 'div';
 
+    protected function __construct()
+    {
+    }
+
     /**
      * @param Renderable|array|string $content
      * @param Attributes|array $attributes
@@ -17,10 +21,26 @@ class Container extends BaseElement
      *
      * @return static
      */
-    public static function create($content = array(), $attributes = null)
+    public static function create($attributes = null, $content = null, $tag = null)
     {
-        return new static($content, $attributes, $tag);
+        $container = new static();
+        if ($content !== null) {
+            $container->setContent($content);
+        }
+
+        if ($attributes !== null) {
+            $container->setAttributes($attributes);
+        }
+        if ($tag !== null) {
+            $container->setTag($tag);
+        }
+
+        return $container;
     }
+}
+
+class Old {
+
     /**
      * @inheritdoc
      */
@@ -64,4 +84,5 @@ class Container extends BaseElement
             $this->tag
         );
     }
+
 }
