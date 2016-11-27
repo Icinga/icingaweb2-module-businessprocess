@@ -1,6 +1,8 @@
 <?php
 
-namespace Icinga\Module\Businessprocess\Html;
+namespace Icinga\Module\Businessprocess\Web\Component;
+
+use Icinga\Module\Businessprocess\Html\Container;
 
 class ActionBar extends Container
 {
