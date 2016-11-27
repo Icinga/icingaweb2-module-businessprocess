@@ -348,42 +348,26 @@ table.bp {
     }
 }
 
-.toplevel:after {
+/** BEGIN Tiles **/
+.tiles:after {
     content:'';
     display:block;
     clear: both;
 }
 
-.toplevel.few {
-    font-size: 3em;
-}
-
-.toplevel.normal {
-    font-size: 2em;
-}
-
-.toplevel.many {
-    font-size: 1.5em;
-}
-
+.tiles.few { font-size: 3em; }
+.tiles.normal { font-size: 2em; }
+.tiles.many { font-size: 1.5em; }
 
 #layout.twocols, #layout.layout-minimal, .compact {
-    .toplevel.few {
-        font-size: 1.8em;
-    }
-
-    .toplevel.normal {
-        font-size: 1.4em;
-    }
-
-    .toplevel.many {
-        font-size: 0.9em;
-    }
+    .tiles.few { font-size: 1.8em; }
+    .tiles.normal { font-size: 1.4em; }
+    .tiles.many { font-size: 0.9em; }
 }
 
-.toplevel > div {
-    width: 5em;
-    height: 5em;
+.tiles > div {
+    width: 12em;
+    height: 6em;
     float: left;
     margin-right: 0.2em;
     margin-bottom: 0.2em;
@@ -391,9 +375,19 @@ table.bp {
     background: #ccc;
 }
 
-.toplevel > div > a {
+.tiles > div.parent::before {
+    content: '&';
+    position: absolute;
+    font-size: 1.2em;
+}
+
+.tiles > div.parent {
+    width: 100%;
+    height: 2em;
+}
+
+.tiles > div > a {
     text-decoration: none;
-    font-size: 0.5em;
     color: inherit;
     vertical-align: middle;
     text-align: center;
@@ -401,72 +395,196 @@ table.bp {
     padding: 1em;
     font-weight: bold;
     word-wrap: break-word;
-    height: 10em;
-    width: 10em;
+    width: 100%;
+    height: 6em;
     box-sizing: border-box;
 }
 
-.toplevel > div > a:hover {
-    color: black;
+.tiles > div > a:hover {
+    color: @text-color;
 }
 
-.toplevel > div.critical, .toplevel .badge-critical {
-    background: @colorCritical;
+.badges {
+    display: block;
+    padding: 0.5em;
+
+    .badge {
+        border: 1px solid white;
+        margin: 0;
+        margin-right: 1px;
+    }
 }
 
-.toplevel > div.critical.handled {
-    background: @colorCriticalHandled;
+.badge-critical, .badge-down { background: @colorCritical; }
+.badge-unknown, .badge-unreachable { background: @colorUnknown; }
+.badge-warning { background: @colorWarning; }
+.badge-pending { background: @colorPending; }
+.badge-missing { background: #ccc; }
+
+.tiles {
+    > .critical            { background: @colorCritical; }
+    > .critical.handled    { background: @colorCriticalHandled; }
+    > .down                { background: @colorCritical; }
+    > .down.handled        { background: @colorCriticalHandled; }
+    > .unknown             { background: @colorUnknown; }
+    > .unknown.handled     { background: @colorUnknownHandled; }
+    > .unreachable         { background: @colorUnknown; }
+    > .unreachable.handled { background: @colorUnknownHandled; }
+    > .warning             { background: @colorWarning; }
+    > .warning.handled     { background: @colorWarningHandled; }
+    > .ok                  { background: @colorOk; }
+    > .pending             { background: @colorPending; }
+    > .missing             { background: #ccc; }
 }
 
-.toplevel > div.down, .toplevel .badge-down {
-    background: @colorCritical;
+.tiles > .addnew {
+    background: white;
+    a {
+        color: @icinga-blue;
+        border: 0.2em solid @icinga-blue;
+        &:hover {
+            color: white;
+            background: @icinga-blue;
+        }
+    }
+
+    &.with-form {
+        width: auto;
+        height: auto;
+        min-width: 30em;
+        min-height: 10em;
+        a {
+            display: none;
+        }
+    }
 }
 
-.toplevel > div.down.handled {
-    background: @colorCriticalHandled;
+.tiles > .monitored-node a {
+    font-size: 0.8em;
 }
 
-.toplevel > div.unknown, .toplevel .badge-unknown {
-    background: @colorUnknown;
+.tiles .missing a {
+    pointer-events: none;
+    cursor: default;
 }
 
-.toplevel > div.unknown.handled {
-    background: @colorUnknownHandled;
+
+/** END of tiles **/
+
+/** BEGIN breadcrumb **/
+
+.breadcrumb {
+    list-style: none;
+    overflow: hidden;
+    padding: 0;
+
+    .badges {
+        display: inline-block;
+        padding: 0.02em 0 0.02em 0.5em;
+        margin-top: -0.2em;
+
+        .badge {
+            font-size: 0.8em;
+            border: 1px solid white;
+            margin: 0;
+            margin-right: 1px;
+        }
+    }
 }
 
-.toplevel > div.unreachable, .toplevel .badge-unreachable {
-    background: @colorUnknown;
+.breadcrumb {
+    > .critical            a { background: @colorCritical; }
+    > .critical.handled    a { background: @colorCriticalHandled; }
+    > .unknown             a { background: @colorUnknown; }
+    > .unknown.handled     a { background: @colorUnknownHandled; }
+    > .warning             a { background: @colorWarning; }
+    > .warning.handled     a { background: @colorWarningHandled; }
+    > .ok                  a { background: @colorOk; }
 }
 
-.toplevel > div.unreachable.handled {
-    background: @colorUnknownHandled;
+.breadcrumb {
+    > .critical            a:after { border-left-color: @colorCritical; }
+    > .critical.handled    a:after { border-left-color: @colorCriticalHandled; }
+    > .unknown             a:after { border-left-color: @colorUnknown; }
+    > .unknown.handled     a:after { border-left-color: @colorUnknownHandled; }
+    > .warning             a:after { border-left-color: @colorWarning; }
+    > .warning.handled     a:after { border-left-color: @colorWarningHandled; }
+    > .ok                  a:after { border-left-color: @colorOk; }
 }
 
-.toplevel > div.warning, .toplevel .badge-warning {
-    background: @colorWarning;
+.breadcrumb:after {
+    content:'';
+    display:block;
+    clear: both;
+}
+.breadcrumb li {
+    float: left;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+
+}
+.breadcrumb li a {
+    color: white;
+    margin: 0;
+    font-size: 1.2em;
+    text-decoration: none;
+    padding-left: 2em;
+    line-height: 3em;
+    background: @icinga-blue;
+    position: relative;
+    display: block;
+    float: left;
+    &:focus {
+        outline: none;
+    }
 }
 
-.toplevel > div.warning.handled {
-    background: @colorWarningHandled;
+.breadcrumb li a:before, .breadcrumb li a:after {
+    content: " ";
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 1.5em solid transparent;
+    border-bottom: 1.5em solid transparent;
+    position: absolute;
+    margin-top: -1.5em;
+    top: 50%;
+    left: 100%;
 }
 
-.toplevel > div.ok {
-    background: @colorOk;
+.breadcrumb li a:before {
+    border-left: 1.4em solid white;
+    margin-left: 1px;
+    z-index: 1;
 }
 
-.toplevel > div.pending, .toplevel .badge-pending {
-    background: @colorPending;
+.breadcrumb li a:after {
+    border-left: 1.4em solid @icinga-blue;
+    z-index: 2;
 }
 
-.toplevel > div.missing, .toplevel .badge-missing {
-    background: #ccc;
+.breadcrumb li:first-child a {
+    padding-left: 1em;
 }
+.breadcrumb li:last-child a {
+    padding-right: 1em;
+    pointer-events: none;
+    cursor: default;
+}
+
+.breadcrumb li a:hover, .breadcrumb li a:focus { background: @text-color; color: white; }
+.breadcrumb li a:hover:after, .breadcrumb li a:focus:after { border-left-color: @text-color; }
+
+/** END of breadcrumg **/
+
 
 ul.error {
     padding: 0;
     list-style-type: none;
     background-color: @colorCritical;
-    font-size: 0.8em;
 
     li {
         font-weight: bold;
