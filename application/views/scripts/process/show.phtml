@@ -8,21 +8,13 @@ use Icinga\Module\Businessprocess\BusinessProcess;
 <?= $this->tabs ?>
   <h1><form method="post" action="<?= $this->url()->without('node')->without('unlocked') ?>">
   <?= $this->formSelect('config', $this->configName, array('class' => 'autosubmit'), $this->processList) ?>
-  </form>
-
-<a href="<?= $this->url()->with('mode', 'toplevel')->without('unlocked') ?>" title="<?= $this->escape('Switch to toplevel view') ?>"><?= $this->icon('dashboard') ?></a>
-<?php if ($this->bpconfig->isLocked()): ?>
-<a href="<?= $this->url()->with('unlocked', true) ?>" title="<?= $this->escape($this->translate('Unlock this process')) ?>"><?= $this->icon('lock') ?></a>
-<?php else: ?>
-<?php if (! $this->bpconfig->isEmpty()): ?>
-<a href="<?= $this->url()->without('unlocked') ?>" style="color: red" title="<?= $this->escape($this->translate('Lock this process')) ?>"><?= $this->icon('lock-open') ?></a>
-<?php endif ?>
-<a href="<?= $this->url('businessprocess/process/config', array('config' => $this->configName)) ?>" title="<?= $this->escape('Modify this process') ?>" data-base-target="_next"><?= $this->icon('wrench') ?></a>
-<?php endif ?>
+  </form></h1>
+<?= $this->actions ?>
 </div>
 <?php endif ?>
 
 <div class="content<?= $this->compact ? ' compact' : '' ?>" data-base-target="_next">
+<div data-base-target="_self"><?= $this->form ?></div>
 <?php if (! $this->bpconfig->isLocked()): ?>
 <?= $this->qlink('Add new node', 'businessprocess/node/add', array('config' => $this->configName)) ?>
 <?php endif ?>
