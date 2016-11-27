@@ -51,7 +51,20 @@ use Icinga\Module\Businessprocess\BusinessProcess;
 </ul>
 <?php endif ?>
 <div id="<?= $this->bp->getHtmlId() ?>" class="bp">
-<?= $this->bp->renderHtml($this) ?>
+<?php
+
+try {
+    echo $this->bp->renderHtml($this);
+} catch (Exception $e) {
+    printf(
+        '<ul class="error"><li>%s: %s</li></ul>',
+        $this->translate('Error'),
+        $this->escape($e->getMessage())
+    );
+}
+
+
+?>
 <?php if (! $this->bpconfig->isLocked()): ?>
 <?php if ($this->bp instanceof BusinessProcess): /* do not render when showing subtree */ ?>
 <?= $this->bp->renderUnbound($this) ?>
