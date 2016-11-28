@@ -32,7 +32,7 @@ class Controller extends ModuleController
     private $storage;
 
     /** @var bool */
-    private $showFullscreen;
+    protected $showFullscreen;
 
     /** @var Url */
     private $url;

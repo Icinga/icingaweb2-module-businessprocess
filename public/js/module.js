@@ -22,7 +22,7 @@
              * Tell Icinga about our event handlers
              */
             this.module.on('beforerender', this.rememberOpenedBps);
-            this.module.on('rendered',     this.fixOpenedBps);
+            this.module.on('rendered',     this.onRendered);
 
             this.module.on('click', 'table.bp.process > tbody > tr:first-child > td > a:last-child', this.processTitleClick);
             this.module.on('click', 'table.bp > tbody > tr:first-child > th', this.processOperatorClick);
@@ -33,6 +33,12 @@
             this.module.on('mouseleave', 'div.bp', this.procMouseOut);
 
             this.module.icinga.logger.debug('BP module loaded');
+        },
+
+        onRendered: function (event) {
+            var $container = $(event.currentTarget);
+            this.fixFullscreen($container);
+            this.fixOpenedBps($container);
         },
 
         processTitleClick: function (event) {
@@ -133,8 +139,29 @@
             });*/
         },
 
-        fixOpenedBps: function(event) {
-            var $bpDiv = $(event.currentTarget).find('div.bp');
+        fixFullscreen: function($container) {
+            var $controls = $container.find('div.controls');
+            var $layout = $('#layout');
+            var icinga = this.module.icinga;
+            if ($controls.hasClass('want-fullscreen')) {
+                if (!$layout.hasClass('fullscreen-layout')) {
+
+                    $layout.addClass('fullscreen-layout');
+                    $controls.removeAttr('style');
+                    $container.find('.fake-controls').remove();
+                    icinga.ui.currentLayout = 'fullscreen';
+                }
+            } else {
+                if ($layout.hasClass('fullscreen-layout')) {
+                    $layout.removeClass('fullscreen-layout');
+                    icinga.ui.layoutHasBeenChanged();
+                    icinga.ui.initializeControls($container);
+                }
+            }
+        },
+
+        fixOpenedBps: function($container) {
+            var $bpDiv = $container.find('div.bp');
             var bpName = $bpDiv.attr('id');
 
             if  (typeof this.idCache[bpName] === 'undefined') {

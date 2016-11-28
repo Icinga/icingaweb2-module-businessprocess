@@ -242,6 +242,19 @@ class ProcessController extends Controller
                 )
             )
         );
+
+        $this->actions()->add(
+            Link::create(
+                $this->translate('Fullscreen'),
+                $this->url()->with('showFullscreen', true),
+                null,
+                array(
+                    'class'            => 'icon-resize-full-alt',
+                    'title'            => $this->translate('Switch to fullscreen mode'),
+                    'data-base-target' => '_main',
+                )
+            )
+        );
     }
 
     protected function simulationForm()
