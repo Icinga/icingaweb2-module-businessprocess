@@ -9,9 +9,6 @@ class Link extends BaseElement
 {
     protected $tag = 'a';
 
-    /** @var Renderable */
-    protected $content;
-
     /** @var Url */
     protected $url;
 
