@@ -2,10 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Renderer;
 
-use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\Html\Container;
-use Icinga\Module\Businessprocess\Html\Element;
-use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Renderer\TileRenderer\AddNewTile;
 use Icinga\Module\Businessprocess\Renderer\TileRenderer\NodeTile;
 

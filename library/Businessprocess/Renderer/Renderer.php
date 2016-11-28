@@ -9,7 +9,6 @@ use Icinga\Module\Businessprocess\Html\Container;
 use Icinga\Module\Businessprocess\Html\Element;
 use Icinga\Module\Businessprocess\Html\Html;
 use Icinga\Module\Businessprocess\Node;
-use Icinga\Module\Businessprocess\Renderer\TileRenderer\NodeTile;
 use Icinga\Module\Businessprocess\Web\Url;
 use Icinga\Web\View;
 
