@@ -19,14 +19,14 @@ class AddNewTile extends BaseElement
     public function __construct(Renderer $renderer)
     {
         $bp = $renderer->getBusinessProcess();
-        $path = $renderer->getMyPath();
+        $path = $renderer->getCurrentPath();
 
         $params = array(
             'config' => $bp->getName()
         );
 
         // Workaround for array issues
-        $url = Url::fromPath('businessprocess/process/create');
+        $url = Url::fromPath('businessprocess/node/add');
         $p = $url->getParams();
         $p->mergeValues($params);
         if (! empty($path)) {
