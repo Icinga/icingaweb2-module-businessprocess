@@ -68,6 +68,21 @@ abstract class BaseElement extends Html
         return $this->tag;
     }
 
+    /**
+     * Container constructor.
+     *
+     * @param string $tag
+     * @param Attributes|array $attributes
+     *
+     * @return Element
+     */
+    public function createElement($tag, $attributes = null)
+    {
+        $element = Element::create($tag, $attributes);
+        $this->add($element);
+        return $element;
+    }
+
     public function renderContent()
     {
         return parent::render();
