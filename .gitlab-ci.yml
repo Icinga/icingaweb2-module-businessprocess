@@ -7,5 +7,28 @@ Xenial:
   - xenial
   - businessprocess
   script:
-  - phpunit --testdox-text || phpunit --verbose
+  - phpunit --testdox || phpunit --verbose
 
+Debian Jessie:
+  stage: Unit-Tests
+  tags:
+  - jessie
+  - businessprocess
+  script:
+  - phpunit --testdox || phpunit --verbose
+
+CentOS 6:
+  stage: Unit-Tests
+  tags:
+  - centos6
+  - businessprocess
+  script:
+  - phpunit --testdox || phpunit --verbose
+
+CentOS 7:
+  stage: Unit-Tests
+  tags:
+  - centos7
+  - businessprocess
+  script:
+  - phpunit --testdox || phpunit --verbose
