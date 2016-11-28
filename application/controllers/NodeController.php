@@ -54,6 +54,7 @@ class NodeController extends Controller
 
     public function addAction()
     {
+        $this->defaultTab();
         $bp = $this->loadBpConfig();
 
         $url = Url::fromPath(
@@ -64,7 +65,7 @@ class NodeController extends Controller
         $this->view->form = $this->loadForm('process')
             ->setProcess($bp)
             ->setSession($this->session())
-            ->setRedirectUrl($url)
+            ->setSuccessUrl($url)
             ->handleRequest();
     }
 

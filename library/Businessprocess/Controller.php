@@ -3,10 +3,13 @@
 namespace Icinga\Module\Businessprocess;
 
 use Icinga\Application\Icinga;
+use Icinga\Module\Businessprocess\Html\HtmlString;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Businessprocess\Storage\Storage;
 use Icinga\Module\Businessprocess\Web\Component\ActionBar;
+use Icinga\Module\Businessprocess\Web\Component\Controls;
+use Icinga\Module\Businessprocess\Web\Component\Content;
 use Icinga\Module\Businessprocess\Web\Form\FormLoader;
 use Icinga\Module\Businessprocess\Web\Url;
 use Icinga\Web\Controller as ModuleController;
@@ -64,6 +67,18 @@ class Controller extends ModuleController
         return $this->url;
     }
 
+    protected function currentProcessParams()
+    {
+        $params = array();
+        foreach (array('config', 'node') as $name) {
+            if ($value = $this->params->get($name)) {
+                $params[$name] = $value;
+            }
+        }
+
+        return $params;
+    }
+
     /**
      * @return ActionBar
      */
@@ -74,6 +89,43 @@ class Controller extends ModuleController
         }
 
         return $this->view->actions;
+    }
+
+    protected function controls()
+    {
+        if ($this->view->controls === null) {
+            $this->view->controls = Controls::create();
+        }
+
+        return $this->view->controls;
+    }
+
+    protected function content()
+    {
+        if ($this->view->content === null) {
+            $this->view->content = Content::create();
+        }
+
+        return $this->view->content;
+    }
+
+    protected function singleTab($label)
+    {
+        $tabs = Widget::create('tabs')->add(
+            'tab',
+            array(
+                'label' => $label,
+                'url'   => $this->getRequest()->getUrl()
+            )
+        )->activate('tab');
+        $this->controls()->add(HtmlString::create($tabs));
+
+        return $tabs;
+    }
+
+    protected function defaultTab()
+    {
+        return $this->singleTab($this->translate('Business Process'));
     }
 
     protected function tabs()
@@ -93,6 +145,7 @@ class Controller extends ModuleController
     {
         $this->_helper->viewRenderer->setNoController(true);
         $this->_helper->viewRenderer->setScriptAction($name);
+        return $this;
     }
 
     protected function setTitle($title)
@@ -100,6 +153,7 @@ class Controller extends ModuleController
         $args = func_get_args();
         array_shift($args);
         $this->view->title = vsprintf($title, $args);
+        return $this;
     }
 
     protected function loadModifiedBpConfig()

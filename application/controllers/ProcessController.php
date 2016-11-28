@@ -4,8 +4,12 @@ namespace Icinga\Module\Businessprocess\Controllers;
 
 use Icinga\Module\Businessprocess\Controller;
 use Icinga\Module\Businessprocess\ConfigDiff;
+use Icinga\Module\Businessprocess\Html\Element;
+use Icinga\Module\Businessprocess\Html\HtmlString;
+use Icinga\Module\Businessprocess\Html\Icon;
 use Icinga\Module\Businessprocess\Renderer\Breadcrumb;
 use Icinga\Module\Businessprocess\Renderer\TileRenderer;
+use Icinga\Module\Businessprocess\Renderer\TreeRenderer;
 use Icinga\Module\Businessprocess\Simulation;
 use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Web\Url;
@@ -14,18 +18,6 @@ use Icinga\Web\Widget\Tabextension\DashboardAction;
 
 class ProcessController extends Controller
 {
-    protected function currentProcessParams()
-    {
-        $params = array();
-        foreach (array('config', 'node') as $name) {
-            if ($value = $this->params->get($name)) {
-                $params[$name] = $value;
-            }
-        }
-
-        return $params;
-    }
-
     /**
      * Create a new business process configuration
      */
@@ -56,7 +48,7 @@ class ProcessController extends Controller
     }
 
     /**
-     * Show a business process tree
+     * Show a business process
      */
     public function showAction()
     {
@@ -72,7 +64,6 @@ class ProcessController extends Controller
         } else {
             $bp = $this->loadBpConfig();
         }
-
 
         // Do not lock empty configs
         if ($bp->isEmpty() && ! $this->view->compact && $bp->isLocked()) {
@@ -98,8 +89,8 @@ class ProcessController extends Controller
             $this->simulationForm();
         }
 
-
-        $this->setTitle('Business Process "%s"', $bp->getTitle());
+        $title = sprintf('Business Process "%s"', $bp->getTitle());
+        $this->setTitle($title);
         $this->tabsForShow()->activate('show');
 
         if ($bp->isLocked()) {
@@ -121,12 +112,34 @@ class ProcessController extends Controller
             $bp->applySimulation($simulation);
         }
 
-        // TODO: ...
-        $renderer = new TileRenderer($this->view, $bp, $bpNode);
+        if ($mode === 'tile') {
+            $renderer = new TileRenderer($bp, $bpNode);
+        } else {
+            $renderer = new TreeRenderer($bp, $bpNode);
+        }
         $renderer->setBaseUrl($this->url())
             ->setPath($this->params->getValues('path'));
-        $this->view->bpRenderer = $renderer;
-        $this->view->breadcrumb = Breadcrumb::create($renderer);
+        $this->content()->add($renderer);
+        $controls = $this->controls();
+
+        if ($this->showFullscreen) {
+            $controls->attributes()->add('class', 'want-fullscreen');
+            $controls->add(
+                Link::create(
+                    Icon::create('resize-small'),
+                    $this->url()->without('showFullscreen')->without('view'),
+                    null,
+                    array('style' => 'float: right')
+                )
+            );
+        } else {
+            $controls->add(HtmlString::create($this->getTabs()));
+        }
+        $controls->add(Element::create('h1')->setContent($title));
+        $controls->add(Breadcrumb::create($renderer));
+        if (! $this->showFullscreen) {
+            $controls->add($this->actions());
+        }
 
         if (! $bp->isLocked()) {
             $renderer->unlock();
