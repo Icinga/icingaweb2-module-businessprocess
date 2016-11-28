@@ -286,6 +286,11 @@ class BpNode extends Node
         return $this->state;
     }
 
+    public function getHtmlId()
+    {
+        return 'businessprocess-' . preg_replace('/[\r\n\t\s]/', '_', (string) $this);
+    }
+
     protected function invertSortingState($state)
     {
         return self::$sortStateInversionMap[$state >> self::SHIFT_FLAGS] << self::SHIFT_FLAGS;

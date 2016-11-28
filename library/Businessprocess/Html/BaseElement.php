@@ -27,7 +27,6 @@ abstract class BaseElement extends Html
             } else {
                 $this->attributes = Attributes::wantAttributes($default);
             }
-
         }
 
         return $this->attributes;
