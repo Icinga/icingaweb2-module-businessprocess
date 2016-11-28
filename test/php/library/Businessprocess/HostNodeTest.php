@@ -38,7 +38,7 @@ class HostNodeTest extends BaseTestCase
         $this->assertEquals(
             '<a href="/icingaweb2/monitoring/host/show?host=localhost">'
             . 'localhost</a>',
-            $this->localhost()->renderLink(new View())
+            $this->localhost()->getLink()->render()
         );
     }
 

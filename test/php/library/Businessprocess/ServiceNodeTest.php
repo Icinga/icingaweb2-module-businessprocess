@@ -38,7 +38,7 @@ class ServiceNodeTest extends BaseTestCase
         $this->assertEquals(
             '<a href="/icingaweb2/monitoring/service/show?host=localhost&amp;service=ping%20%3C%3E%20pong">'
             . 'localhost: ping &lt;&gt; pong</a>',
-            $this->pingOnLocalhost()->renderLink(new View())
+            $this->pingOnLocalhost()->getLink()->render()
         );
     }
 
