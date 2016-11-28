@@ -388,6 +388,7 @@ table.bp {
 
 .tiles > div > a {
     text-decoration: none;
+    font-size: 0.5em;
     color: inherit;
     vertical-align: middle;
     text-align: center;
@@ -396,8 +397,17 @@ table.bp {
     font-weight: bold;
     word-wrap: break-word;
     width: 100%;
-    height: 6em;
+    height: 12em;
     box-sizing: border-box;
+    &:focus {
+        outline: none;
+        text-decoration: underline;
+    }
+    i {
+        float: left;
+        font-size: 2.5em;
+        margin-top: -0.1em;
+    }
 }
 
 .tiles > div > a:hover {
@@ -457,10 +467,6 @@ table.bp {
             display: none;
         }
     }
-}
-
-.tiles > .monitored-node a {
-    font-size: 0.8em;
 }
 
 .tiles .missing a {
@@ -571,14 +577,20 @@ table.bp {
 }
 .breadcrumb li:last-child a {
     padding-right: 1em;
-    pointer-events: none;
     cursor: default;
 }
+.breadcrumb li:last-child a:hover {
 
-.breadcrumb li a:hover, .breadcrumb li a:focus { background: @text-color; color: white; }
-.breadcrumb li a:hover:after, .breadcrumb li a:focus:after { border-left-color: @text-color; }
+}
 
-/** END of breadcrumg **/
+.breadcrumb li:not(:last-child) a:hover { background: @text-color; color: white; }
+.breadcrumb li:not(:last-child) a:hover:after { border-left-color: @text-color; }
+
+.breadcrumb li a:focus {
+    text-decoration: underline;
+}
+
+/** END of breadcrumb **/
 
 
 ul.error {
