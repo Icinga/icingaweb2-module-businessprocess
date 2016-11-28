@@ -355,24 +355,19 @@ table.bp {
     clear: both;
 }
 
-.tiles.few { font-size: 3em; }
-.tiles.normal { font-size: 2em; }
-.tiles.many { font-size: 1.5em; }
-
-#layout.twocols, #layout.layout-minimal, .compact {
-    .tiles.few { font-size: 1.8em; }
-    .tiles.normal { font-size: 1.4em; }
-    .tiles.many { font-size: 0.9em; }
-}
-
 .tiles > div {
     width: 12em;
     height: 6em;
     float: left;
     margin-right: 0.2em;
     margin-bottom: 0.2em;
-    color: white;
-    background: #ccc;
+    color: @text-color;
+    border: 1px solid @text-color;
+    border-left: 0.5em solid @text-color;
+    a:hover {
+        background-color: @text-color;
+        color: white;
+    }
 }
 
 .tiles > div.parent::before {
@@ -411,7 +406,7 @@ table.bp {
 }
 
 .tiles > div > a:hover {
-    color: @text-color;
+    color: white;
 }
 
 .badges {
@@ -432,28 +427,42 @@ table.bp {
 .badge-missing { background: #ccc; }
 
 .tiles {
-    > .critical            { background: @colorCritical; }
-    > .critical.handled    { background: @colorCriticalHandled; }
-    > .down                { background: @colorCritical; }
-    > .down.handled        { background: @colorCriticalHandled; }
-    > .unknown             { background: @colorUnknown; }
-    > .unknown.handled     { background: @colorUnknownHandled; }
-    > .unreachable         { background: @colorUnknown; }
-    > .unreachable.handled { background: @colorUnknownHandled; }
-    > .warning             { background: @colorWarning; }
-    > .warning.handled     { background: @colorWarningHandled; }
-    > .ok                  { background: @colorOk; }
-    > .pending             { background: @colorPending; }
-    > .missing             { background: #ccc; }
+    > .critical            { border-color: @colorCritical; }
+    > .critical.handled    { border-color: @colorCriticalHandled; }
+    > .down                { border-color: @colorCritical; }
+    > .down.handled        { border-color: @colorCriticalHandled; }
+    > .unknown             { border-color: @colorUnknown; }
+    > .unknown.handled     { border-color: @colorUnknownHandled; }
+    > .unreachable         { border-color: @colorUnknown; }
+    > .unreachable.handled { border-color: @colorUnknownHandled; }
+    > .warning             { border-color: @colorWarning; }
+    > .warning.handled     { border-color: @colorWarningHandled; }
+    > .ok                  { border-color: @colorOk; }
+    > .pending             { border-color: @colorPending; }
+    > .missing             { border-color: #ccc; }
+}
+
+.tiles {
+    > .critical            a:hover { background: @colorCritical; }
+    > .critical.handled    a:hover { background: @colorCriticalHandled; }
+    > .down                a:hover { background: @colorCritical; }
+    > .down.handled        a:hover { background: @colorCriticalHandled; }
+    > .unknown             a:hover { background: @colorUnknown; }
+    > .unknown.handled     a:hover { background: @colorUnknownHandled; }
+    > .unreachable         a:hover { background: @colorUnknown; }
+    > .unreachable.handled a:hover { background: @colorUnknownHandled; }
+    > .warning             a:hover { background: @colorWarning; }
+    > .warning.handled     a:hover { background: @colorWarningHandled; }
+    > .ok                  a:hover { background: @colorOk; }
+    > .pending             a:hover { background: @colorPending; }
+    > .missing             a:hover { background: #ccc; }
 }
 
 .tiles > .addnew {
-    background: white;
+    border-color: @icinga-blue;
     a {
         color: @icinga-blue;
-        border: 0.2em solid @icinga-blue;
         &:hover {
-            color: white;
             background: @icinga-blue;
         }
     }
@@ -474,6 +483,15 @@ table.bp {
     cursor: default;
 }
 
+.tiles.few { font-size: 3em; }
+.tiles.normal { font-size: 2em; }
+.tiles.many { font-size: 1.5em; }
+
+#layout.twocols, #layout.layout-minimal, .compact {
+    .tiles.few { font-size: 1.8em; }
+    .tiles.normal { font-size: 1.4em; }
+    .tiles.many { font-size: 0.9em; }
+}
 
 /** END of tiles **/
 
@@ -486,10 +504,9 @@ table.bp {
 
     .badges {
         display: inline-block;
-        padding: 0.02em 0 0.02em 0.5em;
-        margin-top: -0.2em;
-
+        padding: 0 0 0 0.5em;
         .badge {
+            line-height: 1.25em;
             font-size: 0.8em;
             border: 1px solid white;
             margin: 0;
@@ -538,7 +555,7 @@ table.bp {
     font-size: 1.2em;
     text-decoration: none;
     padding-left: 2em;
-    line-height: 3em;
+    line-height: 2.5em;
     background: @icinga-blue;
     position: relative;
     display: block;
@@ -553,22 +570,22 @@ table.bp {
     display: block;
     width: 0;
     height: 0;
-    border-top: 1.5em solid transparent;
-    border-bottom: 1.5em solid transparent;
+    border-top: 1.3em solid transparent;
+    border-bottom: 1.2em solid transparent;
     position: absolute;
-    margin-top: -1.5em;
+    margin-top: -1.2em;
     top: 50%;
     left: 100%;
 }
 
 .breadcrumb li a:before {
-    border-left: 1.4em solid white;
+    border-left: 1.2em solid white;
     margin-left: 1px;
     z-index: 1;
 }
 
 .breadcrumb li a:after {
-    border-left: 1.4em solid @icinga-blue;
+    border-left: 1.2em solid @icinga-blue;
     z-index: 2;
 }
 
@@ -576,7 +593,6 @@ table.bp {
     padding-left: 1em;
 }
 .breadcrumb li:last-child a {
-    padding-right: 1em;
     cursor: default;
 }
 .breadcrumb li:last-child a:hover {
@@ -588,6 +604,12 @@ table.bp {
 
 .breadcrumb li a:focus {
     text-decoration: underline;
+}
+
+#layout.twocols, #layout.layout-minimal, .compact {
+    .breadcrumb {
+        font-size: 0.9em;
+    }
 }
 
 /** END of breadcrumb **/
