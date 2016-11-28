@@ -101,6 +101,12 @@ class Html implements Renderable
         return implode($this->contentSeparator, $html);
     }
 
+    protected function translate($msg)
+    {
+        // TODO: Not so nice
+        return mt('businessprocess', $msg);
+    }
+
     public static function element($name, $attributes = null)
     {
         // TODO: This might be anything here, add a better check

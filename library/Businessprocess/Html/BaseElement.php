@@ -89,12 +89,6 @@ abstract class BaseElement extends Html
         );
     }
 
-    protected function translate($msg)
-    {
-        // TODO: Not so nice
-        return mt('businessprocess', $msg);
-    }
-
     /**
      * Whether the given something can be rendered
      *
