@@ -4,6 +4,7 @@ namespace Icinga\Module\Businessprocess\Renderer\TileRenderer;
 
 use Icinga\Module\Businessprocess\BusinessProcess;
 use Icinga\Module\Businessprocess\Html\BaseElement;
+use Icinga\Module\Businessprocess\Html\Icon;
 use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Renderer\Renderer;
 use Icinga\Module\Businessprocess\Web\Url;
@@ -35,13 +36,13 @@ class AddNewTile extends BaseElement
 
         $this->add(
             Link::create(
-                $this->translate('Add'),
+                Icon::create('plus'),
                 $url,
                 null,
                 array(
                     'title' => $this->translate('Add a new business process node')
                 )
-            )
+            )->addContent($this->translate('Add'))
         );
     }
 }

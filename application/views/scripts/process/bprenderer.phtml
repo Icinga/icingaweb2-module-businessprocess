@@ -2,6 +2,7 @@
 <div class="controls">
 <?= $this->tabs ?>
   <h1><?= $this->title ?></h1>
+  <?= $this->breadcrumb->render() ?>
   <?= $this->actions->render() ?>
 </div>
 <?php endif ?>

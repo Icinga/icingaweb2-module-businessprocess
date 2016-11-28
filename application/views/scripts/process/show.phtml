@@ -6,10 +6,13 @@ use Icinga\Module\Businessprocess\BusinessProcess;
 <?php if (! $this->compact): ?>
 <div class="controls">
 <?= $this->tabs ?>
-  <h1><form method="post" action="<?= $this->url()->without('node')->without('unlocked') ?>">
+  <h1><?= $this->escape($this->title) ?></h1>
+    <!--
+    <form method="post" action="<?= $this->url()->without('node')->without('unlocked') ?>">
   <input type="hidden" name="action" value="switchConfig" />
   <?= $this->formSelect('config', $this->configName, array('class' => 'autosubmit'), $this->processList) ?>
-  </form></h1>
+  </form>-->
+  <?= $this->breadcrumb->render() ?>
 <?= $this->actions ?>
 </div>
 <?php endif ?>
