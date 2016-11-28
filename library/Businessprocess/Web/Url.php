@@ -59,8 +59,11 @@ class Url extends WebUrl
 
     public function setBasePath($basePath)
     {
-        $this->basePath = rtrim($basePath, '/ ');
-        return $this;
+        if (property_exists($this, 'basePath')) {
+            parent::setBasePath($basePath);
+        } else {
+            return $this->setBaseUrl($basePath);
+        }
     }
 
     protected static function getRequest()
