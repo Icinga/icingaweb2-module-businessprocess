@@ -157,10 +157,6 @@ class ProcessController extends Controller
             // decide to use autorefreshInterval for HTML meta-refreshes also.
             $this->setAutorefreshInterval(1);
         }
-
-        if ($mode === 'tile') {
-            $this->setViewScript('process/bprenderer');
-        }
     }
 
     protected function prepareProcess()
