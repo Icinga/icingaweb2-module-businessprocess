@@ -153,12 +153,15 @@ class Attributes
     /**
      * Callback must return an instance of Attribute
      *
-     * @param $name
-     * @param $callback
+     * @param string $name
+     * @param callable $callback
      * @return $this
      */
-    public function registerCallbackFor($name, callable $callback)
+    public function registerCallbackFor($name, $callback)
     {
+        if (! is_callable($callback)) {
+            throw new ProgrammingError('registerCallBack expects a callable callback');
+        }
         $this->callbacks[$name] = $callback;
         return $this;
     }
