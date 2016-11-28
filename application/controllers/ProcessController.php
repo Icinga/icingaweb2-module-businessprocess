@@ -166,6 +166,71 @@ class ProcessController extends Controller
         }
     }
 
+    protected function prepareProcessActions()
+    {
+        $mode = $this->params->get('mode');
+        $unlocked = (bool) $this->params->get('unlocked');
+
+        if ($mode === 'tile') {
+            $this->actions()->add(
+                Link::create(
+                    $this->translate('Tree'),
+                    'businessprocess/process/show',
+                    $this->currentProcessParams(),
+                    array('class' => 'icon-sitemap')
+                )
+            );
+        } else {
+            $this->actions()->add(
+                Link::create(
+                    $this->translate('Tiles'),
+                    $this->url()->with('mode', 'tile'),
+                    null,
+                    array('class' => 'icon-dashboard')
+                )
+            );
+        }
+
+        if ($unlocked) {
+            $this->actions()->add(
+                Link::create(
+                    $this->translate('Lock'),
+                    $this->url()->without('unlocked'),
+                    null,
+                    array(
+                        'class' => 'icon-lock',
+                        'title' => $this->translate('Lock this process'),
+                    )
+                )
+            );
+        } else {
+            $this->actions()->add(
+                Link::create(
+                    $this->translate('Unlock'),
+                    $this->url()->with('unlocked', true),
+                    null,
+                    array(
+                        'class' => 'icon-lock-open',
+                        'title' => $this->translate('Unlock this process'),
+                    )
+                )
+            );
+        }
+
+        $this->actions()->add(
+            Link::create(
+                $this->translate('Store'),
+                'businessprocess/process/config',
+                $this->currentProcessParams(),
+                array(
+                    'class'            => 'icon-wrench',
+                    'title'            => $this->translate('Modify this process'),
+                    'data-base-target' => '_next',
+                )
+            )
+        );
+    }
+
     protected function simulationForm()
     {
         $this->prepareProcess();
