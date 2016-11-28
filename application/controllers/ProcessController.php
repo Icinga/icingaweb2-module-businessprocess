@@ -52,6 +52,10 @@ class ProcessController extends Controller
     {
         $this->setTitle($this->translate('Upload a business process config file'));
         $this->tabsForCreate()->activate('upload');
+        $this->view->form = $this->loadForm('BpUpload')
+            ->setStorage($this->storage())
+            ->setSuccessUrl('businessprocess/process/show')
+            ->handleRequest();
     }
 
     /**
