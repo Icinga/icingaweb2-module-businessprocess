@@ -40,8 +40,7 @@ class TileRenderer extends Renderer
         }
 
         $nodesDiv->addContent($this->getContent());
-            $this->setContent(Breadcrumb::create($this))
-                ->addContent($nodesDiv);
+        $this->setContent($nodesDiv);
 
         return parent::render();
     }

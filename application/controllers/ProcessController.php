@@ -4,12 +4,9 @@ namespace Icinga\Module\Businessprocess\Controllers;
 
 use Icinga\Module\Businessprocess\Controller;
 use Icinga\Module\Businessprocess\ConfigDiff;
+use Icinga\Module\Businessprocess\Renderer\Breadcrumb;
 use Icinga\Module\Businessprocess\Renderer\TileRenderer;
 use Icinga\Module\Businessprocess\Simulation;
-use Icinga\Module\Businessprocess\ProcessChanges;
-use Icinga\Module\Businessprocess\Storage\LegacyStorage;
-use Icinga\Module\Businessprocess\Forms\BpConfigForm;
-use Icinga\Module\Businessprocess\Forms\DeleteConfigForm;
 use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Web\Url;
 use Icinga\Web\Notification;
@@ -65,66 +62,7 @@ class ProcessController extends Controller
     {
         $mode = $this->params->get('mode');
         $unlocked = (bool) $this->params->get('unlocked');
-
-        if ($mode === 'tile') {
-            $this->actions()->add(
-                Link::create(
-                    $this->translate('Tree'),
-                    'businessprocess/process/show',
-                    $this->currentProcessParams(),
-                    array('class' => 'icon-sitemap')
-                )
-            );
-        } else {
-            $this->actions()->add(
-                Link::create(
-                    $this->translate('Tiles'),
-                    $this->url()->with('mode', 'tile'),
-                    null,
-                    array('class' => 'icon-dashboard')
-                )
-            );
-        }
-
-        if ($unlocked) {
-            $this->actions()->add(
-                Link::create(
-                    $this->translate('Lock'),
-                    $this->url()->without('unlocked'),
-                    null,
-                    array(
-                        'class' => 'icon-lock',
-                        'title' => $this->translate('Lock this process'),
-                    )
-                )
-            );
-        } else {
-            $this->actions()->add(
-                Link::create(
-                    $this->translate('Unlock'),
-                    $this->url()->with('unlocked', true),
-                    null,
-                    array(
-                        'class' => 'icon-lock-open',
-                        'title' => $this->translate('Unlock this process'),
-                    )
-                )
-            );
-        }
-
-        $this->actions()->add(
-            Link::create(
-                $this->translate('Store'),
-                'businessprocess/process/config',
-                $this->currentProcessParams(),
-                array(
-                    'class'            => 'icon-wrench',
-                    'title'            => $this->translate('Modify this process'),
-                    'data-base-target' => '_next',
-                )
-            )
-        );
-
+        $this->prepareProcessActions();
         $this->prepareProcess();
         $this->redirectOnConfigSwitch();
 
@@ -135,8 +73,6 @@ class ProcessController extends Controller
             $bp = $this->loadBpConfig();
         }
 
-        $this->setTitle('Business Process "%s"', $bp->getTitle());
-        $this->tabsForShow()->activate('show');
 
         // Do not lock empty configs
         if ($bp->isEmpty() && ! $this->view->compact && $bp->isLocked()) {
@@ -162,16 +98,14 @@ class ProcessController extends Controller
             $this->simulationForm();
         }
 
-        // TODO: ...
-        $renderer = new TileRenderer($this->view, $bp, $bpNode);
-        $renderer->setBaseUrl($this->url())
-            ->setPath($this->params->getValues('path'));
-        $this->view->bpRenderer = $renderer;
+
+        $this->setTitle('Business Process "%s"', $bp->getTitle());
+        $this->tabsForShow()->activate('show');
 
         if ($bp->isLocked()) {
             $this->tabs()->extend(new DashboardAction());
         } else {
-            $renderer->unlock();
+
             $simulation = new Simulation($bp, $this->session());
             if ($this->params->get('dismissSimulations')) {
                 Notification::success(
@@ -185,6 +119,17 @@ class ProcessController extends Controller
             }
 
             $bp->applySimulation($simulation);
+        }
+
+        // TODO: ...
+        $renderer = new TileRenderer($this->view, $bp, $bpNode);
+        $renderer->setBaseUrl($this->url())
+            ->setPath($this->params->getValues('path'));
+        $this->view->bpRenderer = $renderer;
+        $this->view->breadcrumb = Breadcrumb::create($renderer);
+
+        if (! $bp->isLocked()) {
+            $renderer->unlock();
         }
 
         if ($this->isXhr()) {
