@@ -2,56 +2,65 @@
 
 namespace Icinga\Module\Businessprocess\Forms;
 
-use Icinga\Module\Businessprocess\BpNode;
-use Icinga\Module\Businessprocess\Web\Form\QuickForm;
+use Icinga\Module\Businessprocess\MonitoredNode;
 use Icinga\Module\Businessprocess\Simulation;
-use Icinga\Web\Request;
+use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 
 class SimulationForm extends QuickForm
 {
+    /** @var MonitoredNode */
     protected $node;
 
+    /** @var MonitoredNode */
     protected $simulatedNode;
 
+    /** @var Simulation */
     protected $simulation;
 
     public function setup()
     {
-        $states = array(
-            null  => sprintf(
-                $this->translate('Use current state (%s)'),
-                $this->translate($this->node->getStateName())
+        $states = array_merge(
+            array(
+                null => sprintf(
+                    $this->translate('Use current state (%s)'),
+                    $this->translate($this->node->getStateName())
+                )
             ),
-            '0'  => $this->translate('OK'),
-            '1'  => $this->translate('WARNING'),
-            '2'  => $this->translate('CRITICAL'),
-            '3'  => $this->translate('UNKNOWN'),
-            '99' => $this->translate('PENDING'),
+            $this->node->enumStateNames()
         );
 
         // TODO: Fetch state from object
         if ($this->simulatedNode) {
-            $states[$this->simulatedNode->getState()] . sprintf(' (%s)', $this->translate('Current simulation'));
+            $simulatedState = $this->simulatedNode->getState();
+            $states[$simulatedState] = sprintf(
+                '%s (%s)',
+                $simulatedState,
+                $this->translate('Current simulation')
+            );
             $node = $this->simulatedNode;
         } else {
             $node = $this->node;
         }
 
+        $this->addHtml('<h2>Configure this simulation</h2>');
+
         $this->addElement('select', 'state', array(
             'label'        => $this->translate('State'),
             'multiOptions' => $states,
+            'class'        => 'autosubmit',
             'value'        => $this->simulatedNode ? $node->getState() : null,
         ));
+        if (ctype_digit($this->getSentValue('state'))) {
+            $this->addElement('checkbox', 'acknowledged', array(
+                'label' => $this->translate('Acknowledged'),
+                'value' => $node->isAcknowledged(),
+            ));
 
-        $this->addElement('checkbox', 'acknowledged', array(
-            'label' => $this->translate('Acknowledged'),
-            'value' => $node->isAcknowledged(),
-        ));
-
-        $this->addElement('checkbox', 'in_downtime', array(
-            'label' => $this->translate('In downtime'),
-            'value' => $node->isInDowntime(),
-        ));
+            $this->addElement('checkbox', 'in_downtime', array(
+                'label' => $this->translate('In downtime'),
+                'value' => $node->isInDowntime(),
+            ));
+        }
 
         $this->setSubmitLabel($this->translate('Apply'));
     }
@@ -62,7 +71,7 @@ class SimulationForm extends QuickForm
         return $this;
     }
 
-    public function setSimulation($simulation)
+    public function setSimulation(Simulation $simulation)
     {
         $this->simulation = $simulation;
 
@@ -95,5 +104,6 @@ class SimulationForm extends QuickForm
                 $this->notifySuccess($this->translate('Simulation has been removed'));
             }
         }
+        $this->redirectOnSuccess();
     }
 }
