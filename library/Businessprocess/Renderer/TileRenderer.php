@@ -37,65 +37,16 @@ class TileRenderer extends Renderer
             $this->add(new AddNewTile($this));
         }
 
+        $path = $this->getCurrentPath();
         foreach ($nodes as $name => $node) {
-            $this->add(new NodeTile($this, $name, $node));
+            $this->add(new NodeTile($this, $name, $node, $path));
         }
 
         $nodesDiv->addContent($this->getContent());
-            $this->setContent($this->renderBreadCrumb())
+            $this->setContent(Breadcrumb::create($this))
                 ->addContent($nodesDiv);
 
         return parent::render();
-    }
-
-    public function renderBreadCrumb()
-    {
-        $breadcrumb = Element::create('ul', array(
-            'class'            => 'breadcrumb',
-            'data-base-target' => '_main'
-        ));
-
-        $breadcrumb->add(Element::create('li')->add(
-            Link::create($this->bp->getTitle(), $this->getBaseUrl())
-        ));
-        $bp = $this->bp;
-        $path = $this->getMyPath();
-        $max = 20;
-        $chosen = array();
-        for ($i = 1; $i <= $max; $i++) {
-            if (! empty($path)) {
-                $chosen[] = array_pop($path);
-            }
-        }
-        $chosen = array_reverse($chosen);
-        $consumed = array();
-        while ($parent = array_shift($chosen)) {
-            $breadcrumb->add($this->renderParent($bp->getNode($parent), $consumed));
-            $consumed[] = $parent;
-        }
-
-        return $breadcrumb;
-    }
-
-    /**
-     * @param BpNode $parent
-     */
-    public function renderParent(BpNode $parent, $path)
-    {
-        $p = new NodeTile($this, (string) $parent, $parent, $path);
-        $p->attributes()->add('class', $this->getNodeClasses($parent));
-        $p->setTag('li');
-        return $p;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDefaultAttributes()
-    {
-        return array(
-            'class' => 'tiles aaaa' . $this->howMany()
-        );
     }
 
     /**

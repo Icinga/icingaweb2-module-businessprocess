@@ -157,7 +157,7 @@ abstract class Renderer extends Html
         return $this->path;
     }
 
-    public function getMyPath()
+    public function getCurrentPath()
     {
         $path = $this->getPath();
         if ($this->rendersSubNode()) {
