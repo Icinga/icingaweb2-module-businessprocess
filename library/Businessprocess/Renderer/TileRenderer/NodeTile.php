@@ -11,7 +11,7 @@ use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\MonitoredNode;
 use Icinga\Module\Businessprocess\Node;
-use Icinga\Module\Businessprocess\Renderer\TileRenderer;
+use Icinga\Module\Businessprocess\Renderer\Renderer;
 use Icinga\Module\Businessprocess\ServiceNode;
 
 class NodeTile extends BaseElement
@@ -20,12 +20,12 @@ class NodeTile extends BaseElement
 
     /**
      * NodeTile constructor.
-     * @param TileRenderer $renderer
+     * @param Renderer $renderer
      * @param $name
      * @param Node $node
      * @param null $path
      */
-    public function __construct(TileRenderer $renderer, $name, Node $node, $path = null)
+    public function __construct(Renderer $renderer, $name, Node $node, $path = null)
     {
         $attributes = $this->attributes();
         $attributes->add('class', $renderer->getNodeClasses($node));
