@@ -57,6 +57,12 @@ class Url extends WebUrl
         return $self;
     }
 
+    public function setBasePath($basePath)
+    {
+        $this->basePath = rtrim($basePath, '/ ');
+        return $this;
+    }
+
     protected static function getRequest()
     {
         $app = Icinga::app();
