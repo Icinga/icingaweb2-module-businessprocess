@@ -2,21 +2,21 @@
 
 namespace Icinga\Module\Businessprocess\Renderer;
 
+use Icinga\Date\DateFormatter;
 use Icinga\Exception\ProgrammingError;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BusinessProcess;
 use Icinga\Module\Businessprocess\Html\Container;
 use Icinga\Module\Businessprocess\Html\Element;
 use Icinga\Module\Businessprocess\Html\Html;
+use Icinga\Module\Businessprocess\Html\HtmlString;
+use Icinga\Module\Businessprocess\Html\Text;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Web\Url;
-use Icinga\Web\View;
+use Icinga\Web\Request;
 
 abstract class Renderer extends Html
 {
-    /** @var View */
-    protected $view;
-
     /** @var BusinessProcess */
     protected $bp;
 
@@ -35,15 +35,13 @@ abstract class Renderer extends Html
     /**
      * Renderer constructor.
      *
-     * @param View $view
      * @param BusinessProcess $bp
      * @param BpNode|null $parent
      */
-    public function __construct(View $view, BusinessProcess $bp, BpNode $parent = null)
+    public function __construct(BusinessProcess $bp, BpNode $parent = null)
     {
         $this->bp = $bp;
         $this->parent = $parent;
-        $this->view = $view;
     }
 
     /**
@@ -117,7 +115,6 @@ abstract class Renderer extends Html
                     )
                 )->setContent($cnt)
             );
-
         }
 
         return $container;
@@ -213,6 +210,40 @@ abstract class Renderer extends Html
         $this->locked = false;
         return $this;
     }
+
+    public function timeSince($time, $timeOnly = false)
+    {
+        if (! $time) {
+            return HtmlString::create('');
+        }
+
+        return Element::create(
+            'span',
+            array(
+                'class' => array('relative-time', 'time-since'),
+                'title' => DateFormatter::formatDateTime($time),
+            )
+        )->setContent(DateFormatter::timeSince($time, $timeOnly));
+    }
+
+    protected function createUnboundParent(BusinessProcess $bp)
+    {
+        $unbound = $bp->getUnboundNodes();
+
+        $parent = new BpNode($bp, (object) array(
+            'name'        => '__unbound__',
+            'operator'    => '|',
+            'child_names' => array_keys($unbound)
+        ));
+        $parent->getState();
+        $parent->setMissing()
+            ->setDowntime(false)
+            ->setAck(false)
+            ->setAlias('Unbound nodes');
+
+        return $parent;
+    }
+
     /**
      * Just to be on the safe side
      */
@@ -220,6 +251,5 @@ abstract class Renderer extends Html
     {
         unset($this->parent);
         unset($this->bp);
-        unset($this->view);
     }
 }

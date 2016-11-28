@@ -49,28 +49,6 @@ class HostNode extends MonitoredNode
         return $this->getHostname();
     }
 
-    protected function getActionIcons($view)
-    {
-        $icons = array();
-
-        if (! $this->bp->isLocked()) {
-
-            $url = Url::fromPath( 'businessprocess/node/simulate', array(
-                'config' => $this->bp->getName(),
-                'node' => $this->name
-            ));
-
-            $icons[] = $this->actionIcon(
-                $view,
-                'magic',
-                $url,
-                'Simulation'
-            );
-        }
-
-        return $icons;
-    }
-
     public function getHostname()
     {
         return $this->hostname;
@@ -92,14 +70,5 @@ class HostNode extends MonitoredNode
     public function getLink()
     {
         return Link::create($this->hostname, $this->getUrl());
-    }
-
-    public function renderLink($view)
-    {
-        if ($this->isMissing()) {
-            return '<span class="missing">' . $view->escape($this->hostname) . '</span>';
-        }
-
-        return $this->getLink()->render();
     }
 }

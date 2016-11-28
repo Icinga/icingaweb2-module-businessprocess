@@ -3,20 +3,23 @@
 namespace Icinga\Module\Businessprocess;
 
 use Icinga\Application\Config;
-use Icinga\Web\Url;
+use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Exception;
 
 class ImportedNode extends Node
 {
+    /** @var string */
     protected $configName;
 
-    protected $importedBp;
-
-    protected $importedNode;
+    /** @var BpNode */
+    private $node;
 
     protected $className = 'subtree';
 
+    /**
+     * @inheritdoc
+     */
     public function __construct(BusinessProcess $bp, $object)
     {
         $this->name       = $object->name;
@@ -29,11 +32,17 @@ class ImportedNode extends Node
         }
     }
 
+    /**
+     * @return string
+     */
     public function getConfigName()
     {
         return $this->configName;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getState()
     {
         if ($this->state === null) {
@@ -42,17 +51,26 @@ class ImportedNode extends Node
         return $this->state;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getAlias()
     {
         return $this->importedNode()->getAlias();
     }
 
+    /**
+     * @inheritdoc
+     */
     public function isMissing()
     {
-        return $this->importedNode()->isMissing();
         // TODO: WHY? return $this->getState() === null;
+        return $this->importedNode()->isMissing();
     }
 
+    /**
+     * @inheritdoc
+     */
     public function isInDowntime()
     {
         if ($this->downtime === null) {
@@ -61,6 +79,9 @@ class ImportedNode extends Node
         return $this->downtime;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function isAcknowledged()
     {
         if ($this->ack === null) {
@@ -69,68 +90,83 @@ class ImportedNode extends Node
         return $this->ack;
     }
 
+    /**
+     * @return BpNode
+     */
     protected function importedNode()
     {
-        if ($this->importedNode === null) {
-            $storage = new LegacyStorage(
-                Config::module('businessprocess')->getSection('global')
-            );
-            try {
-                $this->importedBp = $storage->loadProcess($this->configName);
-                if ($this->bp->usesSoftStates()) {
-                    $this->importedBp->useSoftStates();
-                } else {
-                    $this->importedBp->useHardStates();
-                }
-                $this->importedBp->retrieveStatesFromBackend();
-                $this->importedNode = $this->importedBp->getNode($this->name);
-            } catch (Exception $e) {
+        if ($this->node === null) {
+            $this->node = $this->loadImportedNode();
+        }
 
+        return $this->node;
+    }
 
-                $node = new BpNode($this->bp, (object) array(
-                    'name'        => $this->name,
-                    'operator'    => '&',
-                    'child_names' => array()
-                ));
-                $node->setState(2);
-                $node->setMissing(false)
-                    ->setDowntime(false)
-                    ->setAck(false)
-                    ->setAlias($e->getMessage());
-
-                $this->importedNode = $node;
+    /**
+     * @return BpNode
+     */
+    protected function loadImportedNode()
+    {
+        try {
+            $import = $this->storage()->loadProcess($this->configName);
+            if ($this->bp->usesSoftStates()) {
+                $import->useSoftStates();
+            } else {
+                $import->useHardStates();
             }
+
+            $import->retrieveStatesFromBackend();
+
+            return $import->getNode($this->name);
+        } catch (Exception $e) {
+
+            return $this->createFailedNode($e);
         }
-        return $this->importedNode;
-    }
-    
-    protected function getActionIcons($view)
-    {
-        $icons = array();
-
-        if (! $this->bp->isLocked()) {
-
-            $url = Url::fromPath( 'businessprocess/node/simulate', array(
-                'config' => $this->bp->getName(),
-                'node' => $this->name
-            ));
-
-            $icons[] = $this->actionIcon(
-                $view,
-                'magic',
-                $url,
-                'Simulation'
-            );
-        }
-
-        return $icons;
     }
 
-    public function renderLink($view)
+    /**
+     * @return LegacyStorage
+     */
+    protected function storage()
     {
-        return $view->qlink($this->getAlias(), 'businessprocess/process/show', array(
-            'config'  => $this->configName,
-            'process' => $this->name
+        return new LegacyStorage(
+            Config::module('businessprocess')->getSection('global')
+        );
+    }
+
+    /**
+     * @param Exception $e
+     *
+     * @return BpNode
+     */
+    protected function createFailedNode(Exception $e)
+    {
+        $node = new BpNode($this->bp, (object) array(
+            'name'        => $this->name,
+            'operator'    => '&',
+            'child_names' => array()
         ));
+        $node->setState(2);
+        $node->setMissing(false)
+            ->setDowntime(false)
+            ->setAck(false)
+            ->setAlias($e->getMessage());
+
+        return $node;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getLink()
+    {
+        return Link::create(
+            $this->getAlias(),
+            'businessprocess/process/show',
+            array(
+                'config'  => $this->configName,
+                'process' => $this->name
+            )
+        );
     }
 }

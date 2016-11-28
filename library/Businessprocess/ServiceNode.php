@@ -2,7 +2,6 @@
 
 namespace Icinga\Module\Businessprocess;
 
-use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Web\Url;
 
 class ServiceNode extends MonitoredNode
@@ -24,28 +23,6 @@ class ServiceNode extends MonitoredNode
         } else {
             $this->setState(0)->setMissing();
         }
-    }
-
-    protected function getActionIcons($view)
-    {
-        $icons = array();
-
-        if (! $this->bp->isLocked()) {
-
-            $url = Url::fromPath('businessprocess/node/simulate', array(
-                'config' => $this->bp->getName(),
-                'node' => $this->name
-            ));
-
-            $icons[] = $this->actionIcon(
-                $view,
-                'magic',
-                $url,
-                'Simulation'
-            );
-        }
-
-        return $icons;
     }
 
     public function getHostname()
@@ -75,14 +52,5 @@ class ServiceNode extends MonitoredNode
         }
 
         return Url::fromPath('monitoring/service/show', $params);
-    }
-
-    public function renderLink($view)
-    {
-        if ($this->isMissing()) {
-            return '<span class="missing">' . $view->escape($this->getAlias()) . '</span>';
-        }
-
-        return $this->getLink()->render();
     }
 }

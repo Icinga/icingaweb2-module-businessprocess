@@ -430,23 +430,6 @@ class BpNode extends Node
         }
     }
 
-    protected function getActionIcons($view)
-    {
-        $icons = array();
-        if (! $this->bp->isLocked() && $this->name !== '__unbound__') {
-            $icons[] = $this->actionIcon(
-                $view,
-                'wrench',
-                $view->url('businessprocess/node/edit', array(
-                    'config' => $this->bp->getName(),
-                    'node'   => $this->name
-                )),
-                mt('businessprocess', 'Modify this node')
-            );
-        }
-        return $icons;
-    }
-
     public function toLegacyConfigString(& $rendered = array())
     {
         $cfg = '';

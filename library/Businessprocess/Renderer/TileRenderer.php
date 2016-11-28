@@ -39,6 +39,12 @@ class TileRenderer extends Renderer
             $this->add(new NodeTile($this, $name, $node, $path));
         }
 
+        $unbound = $this->createUnboundParent($bp);
+        if ($unbound->hasChildren()) {
+            $name = $unbound->getAlias();
+            $this->add($this->add(new NodeTile($this, $name, $unbound)));
+        }
+
         $nodesDiv->addContent($this->getContent());
         $this->setContent($nodesDiv);
 

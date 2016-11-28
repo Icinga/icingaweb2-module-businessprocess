@@ -2,10 +2,8 @@
 
 namespace Icinga\Module\Businessprocess;
 
-use Icinga\Web\Url;
 use Icinga\Exception\ProgrammingError;
-use Icinga\Data\Filter\Filter;
-use Exception;
+use Icinga\Module\Businessprocess\Html\Link;
 
 abstract class Node
 {
@@ -253,16 +251,6 @@ abstract class Node
         return $this->ack;
     }
 
-    public function isSimulationMode()
-    {
-        return $this->bp->isSimulationMode();
-    }
-
-    public function isEditMode()
-    {
-        return $this->bp->isEditMode();
-    }
-
     public function getChildren($filter = null)
     {
         return array();
@@ -323,142 +311,17 @@ abstract class Node
         throw new ProgrammingError('Got invalid sorting state %s', $sortState);
     }
 
-    protected function renderHtmlForChildren($view)
-    {
-        $html = '';
-        if ($this->hasChildren()) {
-            foreach ($this->getChildren() as $name => $child) {
-                $html .= '<tr><td>'
-                       . $child->renderHtml($view)
-                       . '</td></tr>';
-            }
-        }
-
-        return $html;
-    }
-
-    protected function getId($prefix = '')
-    {
-        return md5($prefix . (string) $this);
-    }
-
-    protected function getObjectClassName()
+    public function getObjectClassName()
     {
         return $this->className;
     }
 
-    protected function getStateClassNames()
+    /**
+     * @return Link
+     */
+    public function getLink()
     {
-        $state = strtolower($this->getStateName());
-
-        if ($this->isMissing()) {
-            return array('missing');
-        } elseif ($state === 'ok') {
-            if ($this->hasMissingChildren()) {
-                return array('ok', 'missing-children');
-            } else {
-                return array('ok');
-            }
-        } else {
-            return array('problem', $state);
-        }
-    }
-
-    public function renderHtml($view, $prefix = '')
-    {
-        $id = $this->getId($prefix);
-        $handled = $this->isAcknowledged() || $this->isInDowntime();
-
-        $html = sprintf(
-            '<table class="bp %s%s%s%s" id="%s"><tbody><tr>',
-            implode(' ', $this->getStateClassNames()),
-            $handled ? ' handled' : '',
-            ($this->hasChildren() ? ' operator ' : ' node '),
-            $this->getObjectClassName(),
-            $id
-        );
-
-        if ($this->hasChildren()) {
-            $html .= sprintf(
-                '<th%s><span class="op">%s</span></th>',
-                sprintf(' rowspan="%d"', $this->countChildren() + 1),
-                $this->operatorHtml()
-            );
-        }
-
-
-        $title = preg_replace(
-            '~(</a>)~',
-            implode('', $this->getIcons($view)) . '$1',
-            $this->renderLink($view)
-        );
-
-        $title = preg_replace('#</a>#', ' ' . $view->timeSince($this->getLastStateChange()) . '</a>', $title);
-        $icons = array();
-
-        foreach ($this->getActionIcons($view) as $icon) {
-            $icons[] = $icon;
-        }
-        
-        if ($this->hasInfoUrl()) {
-            $url = $this->getInfoUrl();
-            $icons[] = $this->actionIcon(
-                $view,
-                'help',
-                $url,
-                sprintf('%s: %s', mt('businessprocess', 'More information'), $url)
-            );
-        }
-        $title = implode("\n", $icons) . $title;
-
-        $html .= sprintf(
-            '<td>%s</td></tr>',
-            $title
-        );
-        foreach ($this->getChildren() as $name => $child) {
-            $html .= '<tr><td>' . $child->renderHtml($view, $id . '-') . '</td></tr>';
-        }
-        $html .= "</tbody></table>\n";
-        return $html;
-    }
-
-    protected function getActionIcons($view)
-    {
-        return array();
-    }
-
-    protected function actionIcon($view, $icon, $url, $title)
-    {
-        if ($url instanceof Url || ! preg_match('~^https?://~', $url)) {
-            $target = '';
-        } else {
-            $target = ' target="_blank"';
-        }
-
-        return sprintf(
-            ' <a href="%s" %stitle="%s" style="float: right" data-base-target="bp-overlay">%s</a>',
-            $url,
-            $target,
-            $view->escape($title),
-            $view->icon($icon)
-        );
-    }
-
-    public function renderLink($view)
-    {
-        return '<a href="#">' . ($this->hasAlias() ? $this->getAlias() : $this->name) . '</a>';
-    }
-
-    public function getIcons($view)
-    {
-        $icons = array();
-        if ($this->isInDowntime()) {
-            $icons[] = $view->icon('moon');
-        }
-        if ($this->isAcknowledged()) {
-            $icons[] = $view->icon('ok');
-        }
-        return $icons;
+        return Link::create($this->getAlias(), '#');
     }
 
     public function operatorHtml()
@@ -473,13 +336,18 @@ abstract class Node
         return '';
     }
 
-    public function __toString()
+    public function getName()
     {
         return $this->name;
     }
 
+    public function __toString()
+    {
+        return $this->getName();
+    }
+
     public function __destruct()
     {
-        $this->parents = array();
+        unset($this->parents);
     }
 }

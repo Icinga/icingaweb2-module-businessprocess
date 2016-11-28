@@ -99,13 +99,6 @@ class BusinessProcess
      */
     protected $simulation;
 
-    /**
-     * Whether we are in edit mode
-     *
-     * @var boolean
-     */
-    protected $editMode = false;
-
     protected $locked = true;
 
     protected $changeCount = 0;
@@ -259,17 +252,6 @@ class BusinessProcess
     public function countSimulations()
     {
         return $this->simulationCount;
-    }
-
-    public function setEditMode($mode = true)
-    {
-        $this->editMode = (bool) $mode;
-        return $this;
-    }
-
-    public function isEditMode()
-    {
-        return $this->editMode;
     }
 
     public function clearAppliedChanges()
@@ -734,38 +716,5 @@ class BusinessProcess
     public function isEmpty()
     {
         return $this->countChildren() === 0;
-    }
-
-    public function renderHtml($view)
-    {
-        $html = '';
-        foreach ($this->getRootNodes() as $name => $node) {
-            $html .= $node->renderHtml($view);
-        }
-        return $html;
-    }
-
-    public function renderUnbound($view)
-    {
-        $html = '';
-
-        $unbound = $this->getUnboundNodes();
-        if (empty($unbound)) {
-            return $html;
-        }
-
-        $parent = new BpNode($this, (object) array(
-            'name'        => '__unbound__',
-            'operator'    => '|',
-            'child_names' => array_keys($unbound)
-        ));
-        $parent->getState();
-        $parent->setMissing()
-            ->setDowntime(false)
-            ->setAck(false)
-            ->setAlias('Unbound nodes');
-
-        $html .= $parent->renderHtml($view);
-        return $html;
     }
 }
