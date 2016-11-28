@@ -1,0 +1,11 @@
+stages:
+- Unit-Tests
+
+Xenial:
+  stage: Unit-Tests
+  tags:
+  - xenial
+  - businessprocess
+  script:
+  - phpunit --testdox-text || phpunit --verbose
+
