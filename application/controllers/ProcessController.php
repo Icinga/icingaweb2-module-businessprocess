@@ -132,12 +132,14 @@ class ProcessController extends Controller
                     array('style' => 'float: right')
                 )
             );
-        } else {
+        } elseif (! $this->view->compact) {
             $controls->add(HtmlString::create($this->getTabs()));
         }
-        $controls->add(Element::create('h1')->setContent($title));
+        if (! $this->view->compact) {
+            $controls->add(Element::create('h1')->setContent($title));
+        }
         $controls->add(Breadcrumb::create($renderer));
-        if (! $this->showFullscreen) {
+        if (! $this->showFullscreen && ! $this->view->compact) {
             $controls->add($this->actions());
         }
 
