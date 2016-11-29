@@ -5,7 +5,6 @@ namespace Tests\Icinga\Module\Businessprocess\Operator;
 use Icinga\Module\Businessprocess\BusinessProcess;
 use Icinga\Module\Businessprocess\ServiceNode;
 use Icinga\Module\Businessprocess\Test\BaseTestCase;
-use Icinga\Web\View;
 
 class ServiceNodeTest extends BaseTestCase
 {

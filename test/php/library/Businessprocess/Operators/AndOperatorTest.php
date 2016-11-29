@@ -143,6 +143,60 @@ class AndOperatorTest extends BaseTestCase
         $this->assertEquals('WARNING', $p->getStateName());
     }
 
+    public function testWhetherPendingIsAccepted()
+    {
+        $bp = new BusinessProcess();
+        $host = $bp->createHost('localhost')->setState(99);
+        $service = $bp->createService('localhost', 'ping')->setState(99);
+        $p = $bp->createBp('p')
+            ->addChild($host)
+            ->addChild($service);
+
+        $this->assertEquals(
+            'PENDING',
+            $p->getStateName()
+        );
+    }
+
+    public function testWhetherWarningIsWorseThanPending()
+    {
+        $bp = new BusinessProcess();
+        $host = $bp->createHost('localhost')->setState(99);
+        $service = $bp->createService('localhost', 'ping')->setState(1);
+        $p = $bp->createBp('p')
+            ->addChild($host)
+            ->addChild($service);
+
+        $this->assertEquals(
+            'WARNING',
+            $p->getStateName()
+        );
+    }
+
+    public function testWhetherPendingIsWorseThanUpOrOk()
+    {
+        $bp = new BusinessProcess();
+        $host = $bp->createHost('localhost')->setState(99);
+        $service = $bp->createService('localhost', 'ping')->setState(0);
+        $p = $bp->createBp('p')
+            ->addChild($host)
+            ->addChild($service);
+
+        $this->assertEquals(
+            'PENDING',
+            $p->getStateName()
+        );
+
+        $p->clearState();
+        $host->setState(0);
+        $service->setState(99);
+
+        $this->assertEquals(
+            'PENDING',
+            $p->getStateName()
+        );
+    }
+
     /**
      * @return BusinessProcess
      */

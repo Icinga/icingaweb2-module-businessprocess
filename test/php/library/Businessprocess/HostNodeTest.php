@@ -42,7 +42,7 @@ class HostNodeTest extends BaseTestCase
     }
 
     /**
-     * @expectedException \Icinga\Exception\ConfigurationError
+     * @expectedException \Icinga\Exception\ProgrammingError
      */
     public function testWhetherSettingAnInvalidStateFails()
     {
