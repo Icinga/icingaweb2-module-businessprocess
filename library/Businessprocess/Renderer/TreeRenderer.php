@@ -139,7 +139,6 @@ class TreeRenderer extends Renderer
             )->setContent($node->operatorHtml());
         }
         $td = $tr->createElement('td');
-        $td->addContent($this->getActionIcons($bp, $node));
 
         if ($node instanceof BpNode && $node->hasInfoUrl()) {
             $td->add($this->createInfoAction($node));
