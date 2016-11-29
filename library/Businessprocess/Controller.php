@@ -100,6 +100,9 @@ class Controller extends ModuleController
         return $this->view->controls;
     }
 
+    /**
+     * @return Content
+     */
     protected function content()
     {
         if ($this->view->content === null) {

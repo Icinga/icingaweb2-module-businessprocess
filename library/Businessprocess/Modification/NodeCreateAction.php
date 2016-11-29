@@ -5,7 +5,6 @@ namespace Icinga\Module\Businessprocess\Modification;
 use Icinga\Module\Businessprocess\BusinessProcess;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\Node;
-use stdClass;
 
 class NodeCreateAction extends NodeAction
 {

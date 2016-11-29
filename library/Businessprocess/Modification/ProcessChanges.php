@@ -65,6 +65,19 @@ class ProcessChanges
     }
 
     /**
+     * @param Node $node
+     * @param $properties
+     *
+     * @return $this
+     */
+    public function addChildrenToNode(Node $node, $children)
+    {
+        $action = new NodeAddChildrenAction($node);
+        $action->setChildren($node, $children);
+        return $this->push($action);
+    }
+
+    /**
      * @param Node|string $nodeName
      * @param object $properties
      * @param Node $parent

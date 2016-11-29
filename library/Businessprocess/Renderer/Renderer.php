@@ -10,7 +10,6 @@ use Icinga\Module\Businessprocess\Html\Container;
 use Icinga\Module\Businessprocess\Html\Element;
 use Icinga\Module\Businessprocess\Html\Html;
 use Icinga\Module\Businessprocess\Html\HtmlString;
-use Icinga\Module\Businessprocess\Html\Text;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Web\Url;
 use Icinga\Web\Request;
@@ -25,6 +24,9 @@ abstract class Renderer extends Html
 
     /** @var bool Administrative actions are hidden unless unlocked */
     protected $locked = true;
+
+    /** @var Url */
+    protected $url;
 
     /** @var Url */
     protected $baseUrl;
@@ -166,10 +168,26 @@ abstract class Renderer extends Html
      * @param Url $url
      * @return $this
      */
+    public function setUrl(Url $url)
+    {
+        $this->url = clone($url);
+        $this->setBaseUrl($url);
+        return $this;
+    }
+
+    /**
+     * @param Url $url
+     * @return $this
+     */
     public function setBaseUrl(Url $url)
     {
         $this->baseUrl = $url->without(array('config', 'node', 'path'));
         return $this;
+    }
+
+    public function getUrl()
+    {
+        return $this->url;
     }
 
     /**

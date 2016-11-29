@@ -53,6 +53,7 @@ class ProcessController extends Controller
     public function showAction()
     {
         $mode = $this->params->get('mode');
+        $action = $this->params->get('action');
         $unlocked = (bool) $this->params->get('unlocked');
         $this->prepareProcessActions();
         $this->prepareProcess();
@@ -117,7 +118,7 @@ class ProcessController extends Controller
         } else {
             $renderer = new TreeRenderer($bp, $bpNode);
         }
-        $renderer->setBaseUrl($this->url())
+        $renderer->setUrl($this->url())
             ->setPath($this->params->getValues('path'));
         $this->content()->add($renderer);
         $controls = $this->controls();
@@ -145,6 +146,28 @@ class ProcessController extends Controller
 
         if (! $bp->isLocked()) {
             $renderer->unlock();
+        }
+
+        if ($action === 'add') {
+            $this->content()->add(HtmlString::create(
+                (string) $this->loadForm('AddNode')
+                    ->setProcess($bp)
+                    ->setParentNode($bp->getNode($node))
+                    ->setSession($this->session())
+                    ->handleRequest()
+            ));
+        } elseif ($action === 'simulation') {
+            $this->content()->add(HtmlString::create(
+                $this->loadForm('simulation')
+                    ->setSimulation(new Simulation($bp, $this->session()))
+                    ->setNode($node)
+                    ->handleRequest()
+            ));
+        }
+
+        if ($action) {
+            // No autorefresh when showing forms
+            return;
         }
 
         if ($this->isXhr()) {
@@ -206,7 +229,7 @@ class ProcessController extends Controller
             $this->actions()->add(
                 Link::create(
                     $this->translate('Lock'),
-                    $this->url()->without('unlocked'),
+                    $this->url()->without('unlocked')->without('action'),
                     null,
                     array(
                         'class' => 'icon-lock',

@@ -138,7 +138,7 @@ class AndOperatorTest extends BaseTestCase
         $p->addChild($host);
         $p->addChild($service);
 
-        $this->assertEquals('DOWN',$host->getStateName());
+        $this->assertEquals('DOWN', $host->getStateName());
         $this->assertEquals('WARNING', $service->getStateName());
         $this->assertEquals('WARNING', $p->getStateName());
     }

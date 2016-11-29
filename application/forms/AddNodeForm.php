@@ -30,7 +30,7 @@ class AddNodeForm extends QuickForm
 
     public function setup()
     {
-       $type = $this->selectNodeType();
+        $type = $this->selectNodeType();
         switch ($type) {
             case 'host':
                 $this->selectHost();

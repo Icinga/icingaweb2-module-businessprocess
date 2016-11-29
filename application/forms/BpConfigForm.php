@@ -167,6 +167,7 @@ class BpConfigForm extends QuickForm
 
             $this->redirectOnSuccess(sprintf('Process %s has been created', $name));
         } else {
+            $config = $this->config;
             if ($title) {
                 $config->setTitle($title);
             }
