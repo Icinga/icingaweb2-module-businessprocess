@@ -58,4 +58,25 @@ class Text implements Renderable
             return Util::escapeForHtml($this->string);
         }
     }
+
+    /**
+     * @param Exception|string $error
+     * @return string
+     */
+    protected function renderError($error)
+    {
+        return Util::renderError($error);
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        try {
+            return $this->render();
+        } catch (Exception $e) {
+            return $this->renderError($e);
+        }
+    }
 }

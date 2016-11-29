@@ -114,25 +114,4 @@ abstract class BaseElement extends Html
     {
         return is_string($any) || is_int($any) || is_null($any);
     }
-
-    /**
-     * @param Exception|string $error
-     * @return string
-     */
-    protected function renderError($error)
-    {
-        return Util::renderError($error);
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        try {
-            return $this->render();
-        } catch (Exception $e) {
-            return $this->renderError($e);
-        }
-    }
 }

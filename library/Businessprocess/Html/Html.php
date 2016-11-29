@@ -52,6 +52,16 @@ class Html implements Renderable
     }
 
     /**
+     * @param Renderable|array|string $content
+     * @return $this
+     */
+    public function prependContent($content)
+    {
+        array_unshift($this->content, static::escape($content));
+        return $this;
+    }
+
+    /**
      * return Html
      */
     public function getContent()
@@ -122,5 +132,26 @@ class Html implements Renderable
         }
 
         return $element;
+    }
+
+    /**
+     * @param Exception|string $error
+     * @return string
+     */
+    protected function renderError($error)
+    {
+        return Util::renderError($error);
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        try {
+            return $this->render();
+        } catch (Exception $e) {
+            return $this->renderError($e);
+        }
     }
 }
