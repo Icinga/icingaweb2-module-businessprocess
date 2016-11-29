@@ -193,6 +193,7 @@ abstract class Node
                 )
             );
         }
+
         return $this->state;
     }
 
@@ -297,7 +298,7 @@ abstract class Node
             return static::$stateToSortStateMap[$state];
         }
 
-        throw new ProgrammingError('Got invalid state %s', $sort_state);
+        throw new ProgrammingError('Got invalid state: %s',  var_export($state, 1));
     }
 
     protected function sortStateTostate($sortState)

@@ -112,7 +112,7 @@ class BpNode extends Node
             );
         }
         $this->children[$name] = $node;
-        $this->children[] = $name;
+        $this->childNames[] = $name;
         $node->addParent($this);
         return $this;
     }

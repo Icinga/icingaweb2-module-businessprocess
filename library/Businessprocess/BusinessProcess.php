@@ -331,7 +331,6 @@ class BusinessProcess
         //       Separate "parse-logic" from "retrieve-state-logic"
         //       Allow DB-based backend
         //       Use IcingaWeb2 Multi-Backend-Support
-        $check_results = array();
         $hostFilter = array_keys($this->hosts);
 
         if ($this->state_type === self::HARD_STATE) {
@@ -509,8 +508,9 @@ class BusinessProcess
         if ($pos !== false) {
             $host = substr($name, 0, $pos);
             $service = substr($name, $pos + 1);
-            if ($service === 'Hoststatus') {
-                return $this->create($host);
+            // TODO: deactivated, this scares me, test it
+            if (false && $service === 'Hoststatus') {
+                return $this->createHost($host);
             } else {
                 return $this->createService($host, $service);
             }
