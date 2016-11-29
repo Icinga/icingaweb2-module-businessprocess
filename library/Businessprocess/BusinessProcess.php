@@ -112,6 +112,7 @@ class BusinessProcess
 
     protected $simulationCount = 0;
 
+    /** @var ProcessChanges */
     protected $appliedChanges;
 
     public function __construct()

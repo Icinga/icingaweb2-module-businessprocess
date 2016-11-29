@@ -299,18 +299,23 @@ class BpNode extends Node
      */
     public function reCalculateState()
     {
+        $bp = $this->bp;
+
         $sort_states = array();
         $lastStateChange = 0;
+
         if (!$this->hasChildren()) {
+            // TODO: delegate this to operators, should mostly fail
             $this->state = 0;
+            $this->setMissing();
             return $this;
         }
 
         foreach ($this->getChildren() as $child) {
-            $this->beginLoopDetection();
+            $bp->beginLoopDetection($this->name);
             $sort_states[] = $child->getSortingState();
             $lastStateChange = max($lastStateChange, $child->getLastStateChange());
-            $this->endLoopDetection();
+            $bp->endLoopDetection($this->name);
         }
 
         $this->setLastStateChange($lastStateChange);
