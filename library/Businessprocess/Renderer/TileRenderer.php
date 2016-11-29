@@ -3,7 +3,9 @@
 namespace Icinga\Module\Businessprocess\Renderer;
 
 use Icinga\Module\Businessprocess\Html\Container;
-use Icinga\Module\Businessprocess\Renderer\TileRenderer\AddNewTile;
+use Icinga\Module\Businessprocess\Html\Element;
+use Icinga\Module\Businessprocess\Html\Icon;
+use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Renderer\TileRenderer\NodeTile;
 
 class TileRenderer extends Renderer
@@ -31,7 +33,7 @@ class TileRenderer extends Renderer
         }
 
         if (! $this->isLocked()) {
-            $this->add(new AddNewTile($this));
+            $this->add($this->addNewNode());
         }
 
         $path = $this->getCurrentPath();
@@ -71,5 +73,22 @@ class TileRenderer extends Renderer
         }
 
         return $howMany;
+    }
+
+    protected function addNewNode()
+    {
+        return Element::create(
+            'div',
+            array('class' => 'addnew')
+        )->add(
+            Link::create(
+                Icon::create('plus'),
+                $this->getUrl()->with('action', 'add'),
+                null,
+                array(
+                    'title' => $this->translate('Add a new business process node')
+                )
+            )->addContent($this->translate('Add'))
+        );
     }
 }
