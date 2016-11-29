@@ -45,8 +45,6 @@ class BpNode extends Node
         0 => 4
     );
 
-    protected static $loopDetection = array();
-
     protected $className = 'process';
 
     public function __construct(BusinessProcess $bp, $object)
@@ -349,32 +347,15 @@ class BpNode extends Node
         return $this;
     }
 
-    protected function beginLoopDetection()
-    {
-        $name = $this->name;
-        if (array_key_exists($name, self::$loopDetection)) {
-            $loop = array_keys(self::$loopDetection);
-            $loop[] = $name;
-            self::$loopDetection = array();
-            throw new NestingError('Loop detected: %s', implode(' -> ', $loop));
-        }
-
-        self::$loopDetection[$name] = true;
-    }
-
-    protected function endLoopDetection()
-    {
-        unset(self::$loopDetection[$this->name]);
-    }
-
     public function checkForLoops()
     {
+        $bp = $this->bp;
         foreach ($this->getChildren() as $child) {
-            $this->beginLoopDetection();
+            $bp->beginLoopDetection($this->name);
             if ($child instanceof BpNode) {
                 $child->checkForLoops();
             }
-            $this->endLoopDetection();
+            $bp->endLoopDetection($this->name);
         }
 
         return $this;

@@ -3,7 +3,9 @@
 namespace Icinga\Module\Businessprocess;
 
 use Icinga\Application\Benchmark;
+use Icinga\Exception\IcingaException;
 use Icinga\Exception\ProgrammingError;
+use Icinga\Module\Businessprocess\Exception\NestingError;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 use Icinga\Data\Filter\Filter;
@@ -91,6 +93,11 @@ class BusinessProcess
      * @var array
      */
     protected $hosts = array();
+
+    /** @var bool Whether catchable errors should be thrown nonetheless */
+    protected $throwErrors = false;
+
+    protected $loopDetection = array();
 
     /**
      * Applied state simulation
@@ -309,7 +316,7 @@ class BusinessProcess
         try {
             $this->reallyRetrieveStatesFromBackend();
         } catch (Exception $e) {
-            $this->error(
+            $this->addError(
                 $this->translate('Could not retrieve process state: %s'),
                 $e->getMessage()
             );
@@ -664,18 +671,19 @@ class BusinessProcess
     {
         $args = func_get_args();
         array_shift($args);
-        $this->errors[] = vsprintf($msg, $args);
+        $msg = vsprintf($msg, $args);
+        if ($this->throwErrors) {
+            throw new IcingaException($msg);
+        }
+
+        $this->errors[] = $msg;
         return $this;
     }
 
-    /**
-     * @deprecated
-     */
-    protected function error($msg)
+    public function throwErrors($throw = true)
     {
-        $args = func_get_args();
-        array_shift($args);
-        $this->errors[] = vsprintf($msg, $args);
+        $this->throwErrors = $throw;
+        return $this;
     }
 
     public function toLegacyConfigString()
@@ -711,6 +719,25 @@ class BusinessProcess
             $rendered[(string) $node] = true;
         }
         return $conf . "\n";
+    }
+
+    public function beginLoopDetection($name)
+    {
+        // echo "Begin loop $name\n";
+        if (array_key_exists($name, $this->loopDetection)) {
+            $loop = array_keys($this->loopDetection);
+            $loop[] = $name;
+            $this->loopDetection = array();
+            throw new NestingError('Loop detected: %s', implode(' -> ', $loop));
+        }
+
+        $this->loopDetection[$name] = true;
+    }
+
+    public function endLoopDetection($name)
+    {
+        // echo "End loop $this->name\n";
+        unset($this->loopDetection[$name]);
     }
 
     public function isEmpty()
