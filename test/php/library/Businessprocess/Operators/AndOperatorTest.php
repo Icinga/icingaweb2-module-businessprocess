@@ -102,6 +102,47 @@ class AndOperatorTest extends BaseTestCase
         );
     }
 
+    public function testWhetherSimpleAndOperationWorks()
+    {
+        $bp = new BusinessProcess();
+        $bp->throwErrors();
+        $host = $bp->createHost('localhost')->setState(1);
+        $service = $bp->createService('localhost', 'ping')->setState(1);
+        $p = $bp->createBp('p');
+        $p->addChild($host);
+        $p->addChild($service);
+
+        $this->assertEquals(
+            'DOWN',
+            $host->getStateName()
+        );
+
+        $this->assertEquals(
+            'WARNING',
+            $service->getStateName()
+        );
+
+        $this->assertEquals(
+            'CRITICAL',
+            $p->getStateName()
+        );
+    }
+
+    public function testWhetherSimpleOrOperationWorks()
+    {
+        $bp = new BusinessProcess();
+        $bp->throwErrors();
+        $host = $bp->createHost('localhost')->setState(1);
+        $service = $bp->createService('localhost', 'ping')->setState(1);
+        $p = $bp->createBp('p', '|');
+        $p->addChild($host);
+        $p->addChild($service);
+
+        $this->assertEquals('DOWN',$host->getStateName());
+        $this->assertEquals('WARNING', $service->getStateName());
+        $this->assertEquals('WARNING', $p->getStateName());
+    }
+
     /**
      * @return BusinessProcess
      */

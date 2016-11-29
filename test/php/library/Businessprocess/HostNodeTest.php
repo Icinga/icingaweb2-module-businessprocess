@@ -5,7 +5,6 @@ namespace Tests\Icinga\Module\Businessprocess\Operator;
 use Icinga\Module\Businessprocess\BusinessProcess;
 use Icinga\Module\Businessprocess\HostNode;
 use Icinga\Module\Businessprocess\Test\BaseTestCase;
-use Icinga\Web\View;
 
 class HostNodeTest extends BaseTestCase
 {
@@ -40,6 +39,16 @@ class HostNodeTest extends BaseTestCase
             . 'localhost</a>',
             $this->localhost()->getLink()->render()
         );
+    }
+
+    /**
+     * @expectedException \Icinga\Exception\ConfigurationError
+     */
+    public function testWhetherSettingAnInvalidStateFails()
+    {
+        $bp = new BusinessProcess();
+        $host = $bp->createHost('localhost')->setState(98);
+        $bp->createBp('p')->addChild($host)->getState();
     }
 
     /**
