@@ -38,7 +38,13 @@ class TreeRenderer extends Renderer
     public function renderBp(BusinessProcess $bp)
     {
         $html = '';
-        foreach ($bp->getRootNodes() as $name => $node) {
+        if ($this->wantsRootNodes()) {
+            $nodes = $bp->getChildren();
+        } else {
+            $nodes = $this->parent->getChildren();
+        }
+
+        foreach ($nodes as $name => $node) {
             $html .= $this->renderNode($bp, $node);
         }
 
@@ -89,12 +95,15 @@ class TreeRenderer extends Renderer
     }
 
     /**
+     * @param BusinessProcess $bp
      * @param Node $node
+     * @param array $path
+     *
      * @return string
      */
     public function renderNode(BusinessProcess $bp, Node $node, $path = array())
     {
-         $table = Element::create(
+        $table = Element::create(
             'table',
             array(
                 'id' => $this->getId($node, $path),
@@ -132,7 +141,7 @@ class TreeRenderer extends Renderer
         $td = $tr->createElement('td');
         $td->addContent($this->getActionIcons($bp, $node));
 
-        if ($node->hasInfoUrl()) {
+        if ($node instanceof BpNode && $node->hasInfoUrl()) {
             $td->add($this->createInfoAction($node));
         }
 
@@ -142,7 +151,18 @@ class TreeRenderer extends Renderer
 
         $link = $node->getLink();
         $link->addContent($this->getNodeIcons($node));
-        $link->addContent($this->timeSince($node->getLastStateChange()));
+
+        if ($node->hasChildren()) {
+            $link->addContent($this->renderStateBadges($node->getStateSummary()));
+        }
+
+        if ($time = $node->getLastStateChange()) {
+            $since = $this->timeSince($time)->prependContent(
+                sprintf(' (%s ', $node->getStateName())
+            )->addContent(')');
+            $link->addContent($since);
+        }
+
         $td->addContent($link);
 
         foreach ($node->getChildren() as $name => $child) {
