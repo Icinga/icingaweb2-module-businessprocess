@@ -1,0 +1,326 @@
+<?php
+
+namespace Icinga\Module\Businessprocess\Forms;
+
+use Icinga\Module\Businessprocess\BpNode;
+use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\Modification\ProcessChanges;
+use Icinga\Module\Businessprocess\Web\Form\QuickForm;
+use Icinga\Module\Monitoring\Backend\MonitoringBackend;
+use Icinga\Web\Notification;
+use Icinga\Web\Session\SessionNamespace;
+
+class AddNodeForm extends QuickForm
+{
+    /** @var MonitoringBackend */
+    protected $backend;
+
+    /** @var BusinessProcess */
+    protected $bp;
+
+    /** @var BpNode */
+    protected $parent;
+
+    protected $objectList = array();
+
+    protected $processList = array();
+
+    /** @var SessionNamespace */
+    protected $session;
+
+    public function setup()
+    {
+       $type = $this->selectNodeType();
+        switch ($type) {
+            case 'host':
+                $this->selectHost();
+                break;
+            case 'service':
+                $this->selectService();
+                break;
+            case 'process':
+                $this->selectProcess();
+                break;
+            case null:
+                $this->setSubmitLabel($this->translate('Next'));
+                return;
+        }
+    }
+
+    protected function addNewProcess()
+    {
+        $this->addElement('text', 'name', array(
+            'label'        => $this->translate('Name'),
+            'required'     => true,
+            'description' => $this->translate(
+                'This is the unique identifier of this process'
+            ),
+        ));
+
+        $this->addElement('text', 'alias', array(
+            'label'        => $this->translate('Title'),
+            'description' => $this->translate(
+                'Usually this title will be shown for this node. Equals name'
+                . ' if not given'
+            ),
+        ));
+
+        $this->addElement('select', 'operator', array(
+            'label'        => $this->translate('Operator'),
+            'required'     => true,
+            'multiOptions' => array(
+                '&' => $this->translate('AND'),
+                '|' => $this->translate('OR'),
+                '!' => $this->translate('NOT'),
+                '<' => $this->translate('DEG'),
+                '1' => $this->translate('MIN 1'),
+                '2' => $this->translate('MIN 2'),
+                '3' => $this->translate('MIN 3'),
+                '4' => $this->translate('MIN 4'),
+                '5' => $this->translate('MIN 5'),
+                '6' => $this->translate('MIN 6'),
+                '7' => $this->translate('MIN 7'),
+                '8' => $this->translate('MIN 8'),
+                '9' => $this->translate('MIN 9'),
+            )
+        ));
+
+        $this->addElement('select', 'display', array(
+            'label'        => $this->translate('Visualization'),
+            'required'     => true,
+            'description'  => $this->translate(
+                'Where to show this process'
+            ),
+            'value' => $this->hasParentNode() ? '0' : '1',
+            'multiOptions' => array(
+                '1' => $this->translate('Toplevel Process'),
+                '0' => $this->translate('Subprocess only'),
+            )
+        ));
+
+        $this->addElement('text', 'url', array(
+            'label'        => $this->translate('Info URL'),
+            'description' => $this->translate(
+                'URL pointing to more information about this node'
+            )
+        ));
+    }
+
+    /**
+     * @return string|null
+     */
+    protected function selectNodeType()
+    {
+        $types = array();
+        if ($this->hasParentNode()) {
+            $types['host'] = $this->translate('Host');
+            $types['service'] = $this->translate('Service');
+        }
+        $types['process'] = $this->translate('Process');
+
+        $this->addElement('select', 'node_type', array(
+            'label'        => $this->translate('Node type'),
+            'required'     => true,
+            'description'  => $this->translate(
+                'The node type you want to add'
+            ),
+            'class'        => 'autosubmit',
+            'multiOptions' => $this->optionalEnum($types)
+        ));
+
+        return $this->getSentValue('node_type');
+    }
+
+    protected function selectHost()
+    {
+        $this->addElement('multiselect', 'children', array(
+            'label'        => $this->translate('Hosts'),
+            'required'     => true,
+            'size'         => 14,
+            'style'        => 'width: 25em',
+            'multiOptions' => $this->enumHostList(),
+            'description'  => $this->translate(
+                'Hosts that should be part of this business process node'
+            )
+        ));
+    }
+
+    protected function selectService()
+    {
+        $this->addHostElement();
+        if ($host = $this->getSentValue('host')) {
+            $this->addServicesElement($host);
+        }
+    }
+
+    protected function addHostElement()
+    {
+        $this->addElement('select', 'host', array(
+            'label'        => $this->translate('Host'),
+            'required'     => true,
+            'ignore'       => true,
+            'class'        => 'autosubmit',
+            'multiOptions' => $this->optionalEnum($this->enumHostList()),
+        ));
+    }
+
+    protected function addServicesElement($host)
+    {
+        $this->addElement('multiselect', 'children', array(
+            'label'        => $this->translate('Services'),
+            'required'     => true,
+            'size'         => 14,
+            'style'        => 'width: 25em',
+            'multiOptions' => $this->enumServiceList($host),
+            'description'  => $this->translate(
+                'Services that should be part of this business process node'
+            )
+        ));
+    }
+
+    protected function selectProcess()
+    {
+        $this->addElement('multiselect', 'children', array(
+            'label'        => $this->translate('Process nodes'),
+            'required'     => true,
+            'size'         => 14,
+            'style'        => 'width: 25em',
+            'multiOptions' => $this->enumProcesses(),
+            'description'  => $this->translate(
+                'Other processes that should be part of this business process node'
+            )
+        ));
+    }
+
+    /**
+     * @param MonitoringBackend $backend
+     * @return $this
+     */
+    public function setBackend(MonitoringBackend $backend)
+    {
+        $this->backend = $backend;
+        return $this;
+    }
+
+    /**
+     * @param BusinessProcess $process
+     * @return $this
+     */
+    public function setProcess(BusinessProcess $process)
+    {
+        $this->bp = $process;
+        $this->setBackend($process->getBackend());
+        return $this;
+    }
+
+    /**
+     * @param BpNode $node
+     * @return $this
+     */
+    public function setParentNode(BpNode $node)
+    {
+        $this->parent = $node;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasParentNode()
+    {
+        return $this->parent !== null;
+    }
+
+    /**
+     * @param SessionNamespace $session
+     * @return $this
+     */
+    public function setSession(SessionNamespace $session)
+    {
+        $this->session = $session;
+        return $this;
+    }
+
+    protected function enumHostList()
+    {
+        $names = $this->backend->select()->from('hostStatus', array(
+            'hostname'    => 'host_name',
+        ))->order('host_name')->getQuery()->fetchColumn();
+
+        // fetchPairs doesn't seem to work when using the same column with
+        // different aliases twice
+        return array_combine((array) $names, (array) $names);
+    }
+
+    protected function enumServiceList($host)
+    {
+        $query = $this->backend->select()->from(
+            'serviceStatus',
+            array('service' => 'service_description')
+        )->where('host_name', $host);
+        $query->order('service_description');
+        $names = $query->getQuery()->fetchColumn();
+
+        $services = array();
+        foreach ($names as $name) {
+            $services[$host . ';' . $name] = $name;
+        }
+
+        return $services;
+    }
+
+    protected function enumProcesses()
+    {
+        $list = array();
+
+        foreach ($this->bp->getNodes() as $node) {
+            if ($node instanceof BpNode) {
+                // TODO: Blacklist parents
+                $list[(string) $node] = (string) $node; // display name?
+            }
+        }
+
+        natsort($list);
+        return $list;
+    }
+
+    protected function fetchObjectList()
+    {
+        $this->objectList = array();
+        $hosts = $this->backend->select()->from('hostStatus', array(
+            'hostname'    => 'host_name',
+            'in_downtime' => 'host_in_downtime',
+            'ack'         => 'host_acknowledged',
+            'state'       => 'host_state'
+        ))->order('host_name')->getQuery()->fetchAll();
+
+        $services = $this->backend->select()->from('serviceStatus', array(
+            'hostname'    => 'host_name',
+            'service'     => 'service_description',
+            'in_downtime' => 'service_in_downtime',
+            'ack'         => 'service_acknowledged',
+            'state'       => 'service_state'
+        ))->order('host_name')->order('service_description')->getQuery()->fetchAll();
+
+        foreach ($hosts as $host) {
+            $this->objectList[$host->hostname] = array(
+                $host->hostname . ';Hoststatus' => 'Host Status'
+            );
+        }
+
+        foreach ($services as $service) {
+            $this->objectList[$service->hostname][
+                $service->hostname . ';' . $service->service
+            ] = $service->service;
+        }
+
+        return $this;
+    }
+
+    public function onSuccess()
+    {
+        $changes = ProcessChanges::construct($this->bp, $this->session);
+        $changes->addChildrenToNode($this->parent, $this->bp);
+        parent::onSuccess();
+    }
+}
