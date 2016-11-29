@@ -130,7 +130,7 @@ class TreeRenderer extends Renderer
             $tr->createElement(
                 'th',
                 array(
-                    'rowspan' => $node->countChildren() + 1
+                    'rowspan' => $node->countChildren() + 1 + ($this->isLocked() ? 0 : 1)
                 )
             )->createElement(
                 'span',
@@ -166,6 +166,12 @@ class TreeRenderer extends Renderer
         foreach ($node->getChildren() as $name => $child) {
             $tbody->createElement('tr')->createElement('td')->setContent(
                 $this->renderNode($bp, $child, $this->getCurrentPath())
+            );
+        }
+
+        if (! $this->isLocked() && $node instanceof BpNode) {
+            $tbody->createElement('tr')->createElement('td')->setContent(
+                $this->renderAddNewNode($node)
             );
         }
 
@@ -223,6 +229,19 @@ class TreeRenderer extends Renderer
             array(
                 'title' => $title,
                 'style' => 'float: right',
+            )
+        );
+    }
+
+    protected function renderAddNewNode($parent)
+    {
+        return Link::create(
+            $this->translate('Add'),
+            $this->getUrl()->with('action', 'add')->with('node', $parent->getName()),
+            null,
+            array(
+                'class' => 'addnew icon-plus',
+                'title' => $this->translate('Add a new business process node')
             )
         );
     }

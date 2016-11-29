@@ -2,12 +2,15 @@
 
 namespace Icinga\Module\Businessprocess\Controllers;
 
+use Icinga\Module\Businessprocess\BusinessProcess;
 use Icinga\Module\Businessprocess\Controller;
 use Icinga\Module\Businessprocess\ConfigDiff;
 use Icinga\Module\Businessprocess\Html\Element;
 use Icinga\Module\Businessprocess\Html\HtmlString;
 use Icinga\Module\Businessprocess\Html\Icon;
+use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Renderer\Breadcrumb;
+use Icinga\Module\Businessprocess\Renderer\Renderer;
 use Icinga\Module\Businessprocess\Renderer\TileRenderer;
 use Icinga\Module\Businessprocess\Renderer\TreeRenderer;
 use Icinga\Module\Businessprocess\Simulation;
@@ -18,6 +21,9 @@ use Icinga\Web\Widget\Tabextension\DashboardAction;
 
 class ProcessController extends Controller
 {
+    /** @var Renderer */
+    protected $renderer;
+
     /**
      * Create a new business process configuration
      */
@@ -52,75 +58,26 @@ class ProcessController extends Controller
      */
     public function showAction()
     {
-        $mode = $this->params->get('mode');
-        $action = $this->params->get('action');
-        $unlocked = (bool) $this->params->get('unlocked');
-        $this->prepareProcessActions();
-        $this->prepareProcess();
+        $bp = $this->prepareProcess();
+        $node = $this->getNode($bp);
+        $this->prepareActionBar();
         $this->redirectOnConfigSwitch();
-
-        if ($unlocked) {
-            $bp = $this->loadModifiedBpConfig();
-            $bp->unlock();
-        } else {
-            $bp = $this->loadBpConfig();
-        }
-
-        // Do not lock empty configs
-        if ($bp->isEmpty() && ! $this->view->compact && $bp->isLocked()) {
-            $this->redirectNow($this->url()->with('unlocked', true));
-        }
-
-        if ($node = $this->params->get('node')) {
-            // Render a specific node
-
-            $this->view->nodeName = $node;
-            $bpNode = $this->view->bp = $bp->getNode($node);
-        } else {
-            // Render a single process
-            $this->view->bp = $bp;
-            if ($bp->hasWarnings()) {
-                $this->view->warnings = $bp->getWarnings();
-            }
-            $bpNode = null;
-        }
-
         $bp->retrieveStatesFromBackend();
-        if ($this->params->get('addSimulation')) {
-            $this->simulationForm();
-        }
+        $this->handleSimulations($bp);
 
-        $title = sprintf('Business Process "%s"', $bp->getTitle());
-        $this->setTitle($title);
-        $this->tabsForShow()->activate('show');
+        $this->setTitle('Business Process "%s"', $bp->getTitle());
 
-        if ($bp->isLocked()) {
-            $this->tabs()->extend(new DashboardAction());
-        } else {
-
-            $simulation = new Simulation($bp, $this->session());
-            if ($this->params->get('dismissSimulations')) {
-                Notification::success(
-                    sprintf(
-                        $this->translate('%d applied simulation(s) have been dropped'),
-                        $simulation->count()
-                    )
-                );
-                $simulation->clear();
-                $this->redirectNow($this->url()->without('dismissSimulations')->without('unlocked'));
-            }
-
-            $bp->applySimulation($simulation);
-        }
-
-        if ($mode === 'tile') {
-            $renderer = new TileRenderer($bp, $bpNode);
-        } else {
-            $renderer = new TreeRenderer($bp, $bpNode);
-        }
-        $renderer->setUrl($this->url())
-            ->setPath($this->params->getValues('path'));
+        $renderer = $this->prepareRenderer($bp, $node);
+        $this->prepareControls($bp, $renderer);
+        // if (! $action) {
         $this->content()->add($renderer);
+        // }
+        $this->loadActionForm($bp, $node);
+        $this->setDynamicAutorefresh();
+    }
+
+    protected function prepareControls($bp, $renderer)
+    {
         $controls = $this->controls();
 
         if ($this->showFullscreen) {
@@ -133,40 +90,109 @@ class ProcessController extends Controller
                     array('style' => 'float: right')
                 )
             );
-        } elseif (! $this->view->compact) {
-            $controls->add(HtmlString::create($this->getTabs()));
         }
+
+        $this->addProcessTabs($bp);
         if (! $this->view->compact) {
-            $controls->add(Element::create('h1')->setContent($title));
+            $controls->add(Element::create('h1')->setContent($this->view->title));
         }
         $controls->add(Breadcrumb::create($renderer));
         if (! $this->showFullscreen && ! $this->view->compact) {
             $controls->add($this->actions());
         }
+    }
 
+    protected function getNode($bp)
+    {
+        if ($nodeName = $this->params->get('node')) {
+            return $bp->getNode($nodeName);
+        } else {
+            return null;
+        }
+    }
+
+    protected function prepareRenderer($bp, $node)
+    {
+        if ($this->renderer === null) {
+
+            if ($this->params->get('mode') === 'tile') {
+                $renderer = new TileRenderer($bp, $node);
+            } else {
+                $renderer = new TreeRenderer($bp, $node);
+            }
+            $renderer->setUrl($this->url())
+                ->setPath($this->params->getValues('path'));
+
+
+            if (!$bp->isLocked()) {
+                $renderer->unlock();
+            }
+
+            $this->renderer = $renderer;
+        }
+
+        return $this->renderer;
+    }
+
+    protected function addProcessTabs($bp)
+    {
+        if ($this->showFullscreen || $this->view->compact) {
+            return;
+        }
+
+        $tabs = $this->defaultTab();
         if (! $bp->isLocked()) {
-            $renderer->unlock();
+            $tabs->extend(new DashboardAction());
+        }
+    }
+
+    protected function handleSimulations(BusinessProcess $bp)
+    {
+        if (! $bp->isLocked()) {
+            return;
         }
 
+        $simulation = new Simulation($bp, $this->session());
+
+        if ($this->params->get('dismissSimulations')) {
+            Notification::success(
+                sprintf(
+                    $this->translate('%d applied simulation(s) have been dropped'),
+                    $simulation->count()
+                )
+            );
+            $simulation->clear();
+            $this->redirectNow($this->url()->without('dismissSimulations')->without('unlocked'));
+        }
+
+        $bp->applySimulation($simulation);
+    }
+
+    protected function loadActionForm(BusinessProcess $bp, Node $node = null)
+    {
+        $action = $this->params->get('action');
+        $form = null;
         if ($action === 'add') {
-            $this->content()->add(HtmlString::create(
-                (string) $this->loadForm('AddNode')
-                    ->setProcess($bp)
-                    ->setParentNode($bp->getNode($node))
-                    ->setSession($this->session())
-                    ->handleRequest()
-            ));
+            $form =$this->loadForm('AddNode')
+                ->setProcess($bp)
+                ->setParentNode($node)
+                ->setSession($this->session())
+                ->handleRequest();
         } elseif ($action === 'simulation') {
-            $this->content()->add(HtmlString::create(
-                $this->loadForm('simulation')
-                    ->setSimulation(new Simulation($bp, $this->session()))
-                    ->setNode($node)
-                    ->handleRequest()
-            ));
+            $form = $this->loadForm('simulation')
+                ->setSimulation(new Simulation($bp, $this->session()))
+                ->setNode($node)
+                ->handleRequest();
         }
 
-        if ($action) {
-            // No autorefresh when showing forms
+        if ($form) {
+            $this->content()->prependContent(HtmlString::create((string) $form));
+        }
+    }
+
+    protected function setDynamicAutorefresh()
+    {
+        if ($this->params->get('action')) {
             return;
         }
 
@@ -186,21 +212,19 @@ class ProcessController extends Controller
 
     protected function prepareProcess()
     {
+        $bp = $this->loadModifiedBpConfig();
         if ($this->params->get('unlocked')) {
-            $bp = $this->loadModifiedBpConfig();
             $bp->unlock();
-        } else {
-            $bp = $this->loadBpConfig();
         }
 
-        if ($node = $this->params->get('node')) {
-            // Render a specific node
-            $this->view->nodeName = $node;
-            $this->view->bp = $bp->getNode($node);
+        if ($bp->isEmpty() && $bp->isLocked()) {
+            $this->redirectNow($this->url()->with('unlocked', true));
         }
+
+        return $bp;
     }
 
-    protected function prepareProcessActions()
+    protected function prepareActionBar()
     {
         $mode = $this->params->get('mode');
         $unlocked = (bool) $this->params->get('unlocked');
@@ -276,23 +300,6 @@ class ProcessController extends Controller
                 )
             )
         );
-    }
-
-    protected function simulationForm()
-    {
-        $this->prepareProcess();
-        $bp = $this->loadBpConfig();
-        $nodename = $this->getParam('simulationNode');
-        $node = $bp->getNode($nodename);
-
-        $url = $this->getRequest()->getUrl()->without('addSimulation')->without('simulationNode');
-        $this->view->form = $this->loadForm('simulation')
-             ->setSimulation(new Simulation($bp, $this->session()))
-             ->setNode($node)
-             ->setSuccessUrl($url)
-             ->handleRequest();
-
-        $this->view->node = $node;
     }
 
     /**
