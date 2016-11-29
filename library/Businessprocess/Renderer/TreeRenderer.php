@@ -6,7 +6,6 @@ use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BusinessProcess;
 use Icinga\Module\Businessprocess\Html\Container;
 use Icinga\Module\Businessprocess\Html\Element;
-use Icinga\Module\Businessprocess\Html\HtmlString;
 use Icinga\Module\Businessprocess\Html\Icon;
 use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Node;
@@ -25,7 +24,7 @@ class TreeRenderer extends Renderer
                 'id'    => $bp->getHtmlId(),
                 'class' => 'bp'
             ),
-            HtmlString::create($this->renderBp($bp))
+            $this->renderBp($bp)
         ));
 
         return parent::render();
@@ -37,7 +36,7 @@ class TreeRenderer extends Renderer
      */
     public function renderBp(BusinessProcess $bp)
     {
-        $html = '';
+        $html = array();
         if ($this->wantsRootNodes()) {
             $nodes = $bp->getChildren();
         } else {
@@ -45,7 +44,7 @@ class TreeRenderer extends Renderer
         }
 
         foreach ($nodes as $name => $node) {
-            $html .= $this->renderNode($bp, $node);
+            $html[] = $this->renderNode($bp, $node);
         }
 
         return $html;
