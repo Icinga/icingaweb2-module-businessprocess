@@ -148,6 +148,7 @@ class TreeRenderer extends Renderer
         }
 
         $link = $node->getLink();
+        $link->attributes()->set('data-base-target', '_next');
         $link->addContent($this->getNodeIcons($node));
 
         if ($node->hasChildren()) {
