@@ -283,8 +283,8 @@ class ProcessController extends Controller
             $this->actions()->add(
                 Link::create(
                     $this->translate('Tree'),
-                    'businessprocess/process/show',
-                    $this->currentProcessParams(),
+                    $this->url()->with('mode', 'tree'),
+                    null,
                     array('class' => 'icon-sitemap')
                 )
             );
