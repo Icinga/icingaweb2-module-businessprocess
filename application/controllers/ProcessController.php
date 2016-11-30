@@ -69,9 +69,9 @@ class ProcessController extends Controller
 
         $renderer = $this->prepareRenderer($bp, $node);
         $this->prepareControls($bp, $renderer);
-        // if (! $action) {
+        $this->content()->addContent($this->showHints($bp));
+        $this->content()->addContent($this->showWarnings($bp));
         $this->content()->add($renderer);
-        // }
         $this->loadActionForm($bp, $node);
         $this->setDynamicAutorefresh();
     }
@@ -148,10 +148,6 @@ class ProcessController extends Controller
 
     protected function handleSimulations(BusinessProcess $bp)
     {
-        if (! $bp->isLocked()) {
-            return;
-        }
-
         $simulation = new Simulation($bp, $this->session());
 
         if ($this->params->get('dismissSimulations')) {
@@ -180,8 +176,8 @@ class ProcessController extends Controller
                 ->handleRequest();
         } elseif ($action === 'simulation') {
             $form = $this->loadForm('simulation')
+                ->setNode($bp->getNode($this->params->get('simulationnode')))
                 ->setSimulation(new Simulation($bp, $this->session()))
-                ->setNode($node)
                 ->handleRequest();
         }
 
@@ -192,21 +188,75 @@ class ProcessController extends Controller
 
     protected function setDynamicAutorefresh()
     {
-        if ($this->params->get('action')) {
-            return;
-        }
-
-        if ($this->isXhr()) {
-            if ($this->params->get('addSimulation')) {
-                $this->setAutorefreshInterval(30);
-            } else {
-                $this->setAutorefreshInterval(10);
-            }
-        } else {
+        if (! $this->isXhr()) {
             // This will trigger the very first XHR refresh immediately on page
             // load. Please not that this may hammer the server in case we would
             // decide to use autorefreshInterval for HTML meta-refreshes also.
             $this->setAutorefreshInterval(1);
+            return;
+        }
+
+        if ($this->params->get('action')) {
+            $this->setAutorefreshInterval(45);
+        } else {
+            $this->setAutorefreshInterval(10);
+        }
+    }
+
+    protected function showWarnings(BusinessProcess $bp)
+    {
+        if ($bp->hasWarnings()) {
+            $ul = Element::create('ul', array('class' => 'warning'));
+            foreach ($bp->getWarnings() as $warning) {
+                $ul->createElement('li')->addContent($warning);
+            }
+
+            return $ul;
+        } else {
+            return null;
+        }
+    }
+
+
+    public function showHints(BusinessProcess $bp)
+    {
+        $ul = Element::create('ul', array('class' => 'error'));
+        foreach ($bp->getErrors() as $error) {
+            $ul->createElement('li')->addContent($error);
+        }
+        if ($bp->hasChanges()) {
+            $ul->createElement('li')->setSeparator(' ')->addContent(sprintf(
+                $this->translate('This process has %d pending change(s).'),
+                $bp->countChanges()
+            ))->addContent(
+                Link::create(
+                    $this->translate('Store'),
+                    'businessprocess/process/config',
+                    array('config' => $bp->getName())
+                )
+            )->addContent(
+                Link::create(
+                    $this->translate('Dismiss'),
+                    $this->url()->with('dismissChanges', true),
+                    null
+                )
+            );
+        }
+
+        if ($bp->hasSimulations()) {
+            $ul->createElement('li')->setSeparator(' ')->addContent(sprintf(
+                $this->translate('This process shows %d simulated state(s).'),
+                $bp->countSimulations()
+            ))->addContent(Link::create(
+                $this->translate('Dismiss'),
+                $this->url()->with('dismissSimulations', true)
+            ));
+        }
+
+        if ($ul->hasContent()) {
+            return $ul;
+        } else {
+            return null;
         }
     }
 
@@ -277,7 +327,7 @@ class ProcessController extends Controller
 
         $this->actions()->add(
             Link::create(
-                $this->translate('Store'),
+                $this->translate('Config'),
                 'businessprocess/process/config',
                 $this->currentProcessParams(),
                 array(
