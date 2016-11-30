@@ -203,9 +203,10 @@ class TreeRenderer extends Renderer
     {
         return $this->actionIcon(
             'magic',
-            Url::fromPath('businessprocess/process/show?addSimulation&unlocked', array(
-                'config' => $bp->getName(),
-                'node' => $node->getName()
+            $this->getUrl()->with(array(
+                //'config' => $bp->getName(),
+                'action' => 'simulation',
+                'simulationnode' => $node->getName()
             )),
             $this->translate('Simulate a specific state')
         );
