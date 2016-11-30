@@ -19,30 +19,34 @@ class SimulationForm extends QuickForm
 
     public function setup()
     {
-        $states = array_merge(
-            array(
-                null => sprintf(
-                    $this->translate('Use current state (%s)'),
-                    $this->translate($this->node->getStateName())
-                )
-            ),
-            $this->node->enumStateNames()
-        );
+        $states = $this->enumStateNames();
 
         // TODO: Fetch state from object
         if ($this->simulatedNode) {
             $simulatedState = $this->simulatedNode->getState();
             $states[$simulatedState] = sprintf(
                 '%s (%s)',
-                $simulatedState,
+                $this->node->getStateName($simulatedState),
                 $this->translate('Current simulation')
             );
             $node = $this->simulatedNode;
+            $hasSimulation = true;
         } else {
+            $hasSimulation = false;
             $node = $this->node;
         }
 
-        $this->addHtml('<h2>Configure this simulation</h2>');
+        $view = $this->getView();
+        if ($hasSimulation) {
+            $title = $this->translate('Modify simulation for %s');
+        } else {
+            $title = $this->translate('Add simulation for %s');
+        }
+        $this->addHtml(
+            '<h2>'
+            . $view->escape(sprintf($title, $node->getAlias()))
+            . '</h2>'
+        );
 
         $this->addElement('select', 'state', array(
             'label'        => $this->translate('State'),
@@ -50,7 +54,10 @@ class SimulationForm extends QuickForm
             'class'        => 'autosubmit',
             'value'        => $this->simulatedNode ? $node->getState() : null,
         ));
-        if (ctype_digit($this->getSentValue('state'))) {
+        if (in_array($this->getSentValue('state'), array('0', '99'))) {
+            return;
+        }
+        if ($hasSimulation || ctype_digit($this->getSentValue('state'))) {
             $this->addElement('checkbox', 'acknowledged', array(
                 'label' => $this->translate('Acknowledged'),
                 'value' => $node->isAcknowledged(),
@@ -75,10 +82,10 @@ class SimulationForm extends QuickForm
     {
         $this->simulation = $simulation;
 
-        $nodeName = (string) $this->node;
-        if ($simulation->hasNode($nodeName)) {
+        $name = $this->node->getName();
+        if ($simulation->hasNode($name)) {
             $this->simulatedNode = clone($this->node);
-            $s = $simulation->getNode($nodeName);
+            $s = $simulation->getNode($name);
             $this->simulatedNode->setState($s->state)
                 ->setAck($s->acknowledged)
                 ->setDowntime($s->in_downtime)
@@ -90,7 +97,7 @@ class SimulationForm extends QuickForm
 
     public function onSuccess()
     {
-        $nodeName = (string) $this->node;
+        $nodeName = $this->node->getName();
 
         if (ctype_digit($this->getValue('state'))) {
             $this->notifySuccess($this->translate('Simulation has been set'));
@@ -105,5 +112,20 @@ class SimulationForm extends QuickForm
             }
         }
         $this->redirectOnSuccess();
+    }
+
+    /**
+     * @return array
+     */
+    protected function enumStateNames()
+    {
+        $states = array(
+            null => sprintf(
+                $this->translate('Use current state (%s)'),
+                $this->translate($this->node->getStateName())
+            )
+        ) + $this->node->enumStateNames();
+
+        return $states;
     }
 }
