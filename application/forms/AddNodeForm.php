@@ -41,6 +41,9 @@ class AddNodeForm extends QuickForm
             case 'process':
                 $this->selectProcess();
                 break;
+            case 'new-process':
+                $this->addNewProcess();
+                break;
             case null:
                 $this->setSubmitLabel($this->translate('Next'));
                 return;
@@ -98,7 +101,7 @@ class AddNodeForm extends QuickForm
             )
         ));
 
-        $this->addElement('text', 'url', array(
+        $this->addElement('text', 'infoUrl', array(
             'label'        => $this->translate('Info URL'),
             'description' => $this->translate(
                 'URL pointing to more information about this node'
@@ -116,7 +119,12 @@ class AddNodeForm extends QuickForm
             $types['host'] = $this->translate('Host');
             $types['service'] = $this->translate('Service');
         }
-        $types['process'] = $this->translate('Process');
+
+        if ($this->hasProcesses()) {
+            $types['process'] = $this->translate('Existing Process');
+        }
+
+        $types['new-process'] = $this->translate('New Process Node');
 
         $this->addElement('select', 'node_type', array(
             'label'        => $this->translate('Node type'),
@@ -124,6 +132,7 @@ class AddNodeForm extends QuickForm
             'description'  => $this->translate(
                 'The node type you want to add'
             ),
+            'ignore'       => true,
             'class'        => 'autosubmit',
             'multiOptions' => $this->optionalEnum($types)
         ));
@@ -269,6 +278,11 @@ class AddNodeForm extends QuickForm
         return $services;
     }
 
+    protected function hasProcesses()
+    {
+        return count($this->enumProcesses()) > 0;
+    }
+
     protected function enumProcesses()
     {
         $list = array();
@@ -320,7 +334,19 @@ class AddNodeForm extends QuickForm
     public function onSuccess()
     {
         $changes = ProcessChanges::construct($this->bp, $this->session);
-        $changes->addChildrenToNode($this->parent, $this->bp);
+        switch ($this->getValue('node_type')) {
+            case 'host':
+            case 'service':
+            case 'process':
+                $changes->addChildrenToNode($this->getValue('children'), $this->parent);
+                break;
+            case 'new-process':
+                $properties = $this->getValues();
+                unset($properties['name']);
+                $changes->createNode($this->getValue('name'), $properties);
+                break;
+        }
+
         parent::onSuccess();
     }
 }

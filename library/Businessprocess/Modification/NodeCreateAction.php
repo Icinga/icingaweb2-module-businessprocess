@@ -58,12 +58,12 @@ class NodeCreateAction extends NodeAction
     }
 
     /**
-     * @param stdClass $properties
+     * @param array $properties
      * @return $this
      */
-    public function setProperties(stdClass $properties)
+    public function setProperties($properties)
     {
-        $this->properties = $properties;
+        $this->properties = (array) $properties;
         return $this;
     }
 
@@ -82,11 +82,16 @@ class NodeCreateAction extends NodeAction
     {
         $name = $this->getNodeName();
 
-        $node = new BpNode($bp, (object) array(
+        $properties = array(
             'name'        => $name,
             'operator'    => $this->properties['operator'],
-            'child_names' => $this->properties['childNames']
-        ));
+        );
+        if (array_key_exists('childNames', $this->properties)) {
+            $properties['child_names'] = $this->properties['childNames'];
+        } else {
+            $properties['child_names'] = array();
+        }
+        $node = new BpNode($bp, (object) $properties);
 
         foreach ($this->getProperties() as $key => $val) {
             $func = 'set' . ucfirst($key);
