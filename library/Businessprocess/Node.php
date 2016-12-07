@@ -22,7 +22,7 @@ abstract class Node
     const ICINGA_UNREACHABLE = 2;
     const ICINGA_PENDING     = 99;
 
-    protected static $sortStateToStateMap = array(
+    protected $sortStateToStateMap = array(
         4 => self::ICINGA_CRITICAL,
         3 => self::ICINGA_UNKNOWN,
         2 => self::ICINGA_WARNING,
@@ -30,7 +30,7 @@ abstract class Node
         0 => self::ICINGA_OK
     );
 
-    protected static $stateToSortStateMap = array(
+    protected $stateToSortStateMap = array(
         self::ICINGA_PENDING  => 1,
         self::ICINGA_UNKNOWN  => 3,
         self::ICINGA_CRITICAL => 4,
@@ -94,7 +94,7 @@ abstract class Node
 
     protected $className = 'unknown';
 
-    protected static $state_names = array(
+    protected $stateNames = array(
         'OK',
         'WARNING',
         'CRITICAL',
@@ -171,16 +171,17 @@ abstract class Node
 
     public function getStateName($state = null)
     {
+        $states = $this->enumStateNames();
         if ($state === null) {
-            return static::$state_names[ $this->getState() ];
+            return $states[ $this->getState() ];
         } else {
-            return static::$state_names[ $state ];
+            return $states[ $state ];
         }
     }
 
     public function enumStateNames()
     {
-        return static::$state_names;
+        return $this->stateNames;
     }
 
     public function getState()
@@ -294,19 +295,22 @@ abstract class Node
 
     protected function stateToSortState($state)
     {
-        if (array_key_exists($state, static::$stateToSortStateMap)) {
-            return static::$stateToSortStateMap[$state];
+        if (array_key_exists($state, $this->stateToSortStateMap)) {
+            return $this->stateToSortStateMap[$state];
         }
 
-        throw new ProgrammingError('Got invalid state: %s', var_export($state, 1));
+        throw new ProgrammingError(
+            'Got invalid state for node %s: %s',
+            $this->getName(),
+            var_export($state, 1) . var_export($this->stateToSortStateMap, 1)
+        );
     }
 
     protected function sortStateTostate($sortState)
     {
         $sortState = $sortState >> self::SHIFT_FLAGS;
-
-        if (array_key_exists($sortState, static::$sortStateToStateMap)) {
-            return static::$sortStateToStateMap[$sortState];
+        if (array_key_exists($sortState, $this->sortStateToStateMap)) {
+            return $this->sortStateToStateMap[$sortState];
         }
 
         throw new ProgrammingError('Got invalid sorting state %s', $sortState);
