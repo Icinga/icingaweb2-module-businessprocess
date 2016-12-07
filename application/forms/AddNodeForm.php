@@ -169,7 +169,7 @@ class AddNodeForm extends QuickForm
             'required'     => true,
             'ignore'       => true,
             'class'        => 'autosubmit',
-            'multiOptions' => $this->optionalEnum($this->enumHostList()),
+            'multiOptions' => $this->optionalEnum($this->enumHostForServiceList()),
         ));
     }
 
@@ -223,10 +223,10 @@ class AddNodeForm extends QuickForm
     }
 
     /**
-     * @param BpNode $node
+     * @param BpNode|null $node
      * @return $this
      */
-    public function setParentNode(BpNode $node)
+    public function setParentNode(BpNode $node = null)
     {
         $this->parent = $node;
         return $this;
@@ -250,6 +250,18 @@ class AddNodeForm extends QuickForm
         return $this;
     }
 
+    protected function enumHostForServiceList()
+    {
+        $names = $this->backend->select()->from('hostStatus', array(
+            'hostname'    => 'host_name',
+        ))->order('host_name')->getQuery()->fetchColumn();
+
+        // fetchPairs doesn't seem to work when using the same column with
+        // different aliases twice
+
+        return array_combine((array) $names, (array) $names);
+    }
+
     protected function enumHostList()
     {
         $names = $this->backend->select()->from('hostStatus', array(
@@ -258,7 +270,13 @@ class AddNodeForm extends QuickForm
 
         // fetchPairs doesn't seem to work when using the same column with
         // different aliases twice
-        return array_combine((array) $names, (array) $names);
+        $res = array();
+        $suffix = ';Hoststatus';
+        foreach ($names as $name) {
+            $res[$name . $suffix] = $name;
+        }
+
+        return $res;
     }
 
     protected function enumServiceList($host)
