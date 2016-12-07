@@ -32,9 +32,11 @@ abstract class NodeAction
      *
      * @param Node|string $node
      */
-    public function __construct($node)
+    public function __construct($node = null)
     {
-        $this->nodeName = (string) $node;
+        if ($node !== null) {
+            $this->nodeName = (string) $node;
+        }
     }
 
     /**
@@ -61,6 +63,11 @@ abstract class NodeAction
     public function getNodeName()
     {
         return $this->nodeName;
+    }
+
+    public function hasNode()
+    {
+        return $this->nodeName !== null;
     }
 
     /**
