@@ -16,6 +16,7 @@ use Icinga\Web\Controller as ModuleController;
 use Icinga\Web\Notification;
 use Icinga\Web\View;
 use Icinga\Web\Widget;
+use Icinga\Web\Widget\Tabs;
 
 class Controller extends ModuleController
 {
@@ -91,6 +92,9 @@ class Controller extends ModuleController
         return $this->view->actions;
     }
 
+    /**
+     * @return Controls
+     */
     protected function controls()
     {
         if ($this->view->controls === null) {
@@ -112,6 +116,10 @@ class Controller extends ModuleController
         return $this->view->content;
     }
 
+    /**
+     * @param $label
+     * @return Tabs
+     */
     protected function singleTab($label)
     {
         $tabs = Widget::create('tabs')->add(
@@ -126,6 +134,9 @@ class Controller extends ModuleController
         return $tabs;
     }
 
+    /**
+     * @return Tabs
+     */
     protected function defaultTab()
     {
         return $this->singleTab($this->translate('Business Process'));
