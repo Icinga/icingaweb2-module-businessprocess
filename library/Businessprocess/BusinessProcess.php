@@ -218,7 +218,7 @@ class BusinessProcess
     public function getBackend()
     {
         if ($this->backend === null) {
-            $this->backend = MonitoringBackend::createBackend(
+            $this->backend = MonitoringBackend::instance(
                 $this->getBackendName()
             );
         }
@@ -393,6 +393,7 @@ class BusinessProcess
         } else {
             $key .= ';Hoststatus';
         }
+
         // We fetch more states than we need, so skip unknown ones
         if (! $this->hasNode($key)) {
             return;
@@ -542,7 +543,7 @@ class BusinessProcess
         return $this;
     }
 
-    public function addNode($name, Node $node)
+    public function addNode($name, BpNode $node)
     {
         if (array_key_exists($name, $this->nodes)) {
             $this->warn(
@@ -651,22 +652,15 @@ class BusinessProcess
     {
         $args = func_get_args();
         array_shift($args);
-        if (isset($this->parsing_line_number)) {
-            $this->warnings[] = sprintf(
-                $this->translate('Parser waring on %s:%s: %s'),
-                $this->filename,
-                $this->parsing_line_number,
-                vsprintf($msg, $args)
-            );
-        } else {
-            $this->warnings[] = vsprintf($msg, $args);
-        }
+        $this->warnings[] = vsprintf($msg, $args);
     }
 
     /**
      * @param string $msg,...
      *
      * @return $this
+     *
+     * @throws IcingaException
      */
     public function addError($msg)
     {
