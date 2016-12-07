@@ -70,10 +70,10 @@ class ProcessChanges
      *
      * @return $this
      */
-    public function addChildrenToNode(Node $node, $children)
+    public function addChildrenToNode($children, Node $node = null)
     {
         $action = new NodeAddChildrenAction($node);
-        $action->setChildren($node, $children);
+        $action->setChildren($children);
         return $this->push($action);
     }
 
