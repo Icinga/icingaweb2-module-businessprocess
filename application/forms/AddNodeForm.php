@@ -52,6 +52,8 @@ class AddNodeForm extends QuickForm
 
     protected function addNewProcess()
     {
+        $this->addHtml('<h2>Add a new node</h2>');
+
         $this->addElement('text', 'name', array(
             'label'        => $this->translate('Name'),
             'required'     => true,
@@ -159,6 +161,8 @@ class AddNodeForm extends QuickForm
         $this->addHostElement();
         if ($host = $this->getSentValue('host')) {
             $this->addServicesElement($host);
+        } else {
+            $this->setSubmitLabel($this->translate('Next'));
         }
     }
 
