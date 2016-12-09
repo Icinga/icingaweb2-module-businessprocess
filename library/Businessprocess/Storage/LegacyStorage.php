@@ -191,7 +191,7 @@ class LegacyStorage extends Storage
         $rendered = array();
         $conf = '';
 
-        foreach ($bp->getChildren() as $child) {
+        foreach ($bp->getRootNodes() as $child) {
             $conf .= $child->toLegacyConfigString($rendered);
             $rendered[$child->getName()] = true;
         }
