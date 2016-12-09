@@ -68,7 +68,7 @@ class LegacyStorage extends Storage
 
         foreach ($this->listAllProcessNames() as $name) {
             $meta = $this->loadMetadata($name);
-            if (! $meta->permissionsAreSatisfied()) {
+            if (! $meta->canRead()) {
                 continue;
             }
 
@@ -103,28 +103,26 @@ class LegacyStorage extends Storage
         return preg_split('/\s*,\s*/', $string, -1, PREG_SPLIT_NO_EMPTY);
     }
 
-    protected function readHeader($file)
+    protected function readHeader($file, Metadata $metadata)
     {
         $fh = fopen($file, 'r');
         $cnt = 0;
-        $meta = new Metadata();
         while ($cnt < 15 && false !== ($line = fgets($fh))) {
             $cnt++;
-            $this->parseHeaderLine($line, $meta);
+            $this->parseHeaderLine($line, $metadata);
         }
 
         fclose($fh);
-        return $meta;
+        return $metadata;
     }
 
-    protected function readHeaderString($string)
+    protected function readHeaderString($string, Metadata $metadata)
     {
-        $meta = new Metadata();
         foreach (preg_split('/\n/', $string) as $line) {
-            $this->parseHeaderLine($line, $meta);
+            $this->parseHeaderLine($line, $metadata);
         }
 
-        return $meta;
+        return $metadata;
     }
 
     protected function emptyHeader()
@@ -142,11 +140,11 @@ class LegacyStorage extends Storage
         );
     }
 
-    protected function parseHeaderLine($line, Metadata $meta)
+    protected function parseHeaderLine($line, Metadata $metadata)
     {
         if (preg_match('/^\s*#\s+(.+?)\s*:\s*(.+)$/', $line, $m)) {
-            if ($meta->hasKey($m[1])) {
-                $meta->set($m[1], $m[2]);
+            if ($metadata->hasKey($m[1])) {
+                $metadata->set($m[1], $m[2]);
             }
         }
     }
@@ -221,7 +219,7 @@ class LegacyStorage extends Storage
         $bp = new BusinessProcess();
         $bp->setName($name);
         $this->parseString($string, $bp);
-        $bp->setMetadata($this->readHeaderString($string));
+        $this->readHeaderString($string, $bp->getMetadata());
         return $bp;
     }
 
@@ -258,22 +256,13 @@ class LegacyStorage extends Storage
             return false;
         }
 
-        return $this->loadMetaFromFile($file)->permissionsAreSatisfied();
+        return $this->loadMetadata($name)->canRead();
     }
 
     public function loadMetadata($name)
     {
-        return $this->loadMetaFromFile($this->getFilename($name));
-    }
-
-    public function loadMetadataFromString($string)
-    {
-        return $this->readHeaderString($string);
-    }
-
-    public function loadMetaFromFile($filename)
-    {
-        return $this->readHeader($filename);
+        $metadata = new Metadata($name);
+        return $this->readHeader($this->getFilename($name), $metadata);
     }
 
     /**
@@ -284,7 +273,7 @@ class LegacyStorage extends Storage
     {
         // TODO: do not open twice, this is quick and dirty based on existing code
         $file = $this->currentFilename = $this->getFilename($name);
-        $bp->setMetadata($this->readHeader($file));
+        $this->readHeader($file, $bp->getMetadata());
     }
 
     protected function parseFile($name, $bp)

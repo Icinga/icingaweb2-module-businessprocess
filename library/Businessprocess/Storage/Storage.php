@@ -4,6 +4,7 @@ namespace Icinga\Module\Businessprocess\Storage;
 
 use Icinga\Data\ConfigObject;
 use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\Metadata;
 
 abstract class Storage
 {
@@ -48,4 +49,10 @@ abstract class Storage
      * @return bool Whether the process has been deleted
      */
     abstract public function deleteProcess($name);
+
+    /**
+     * @param  string $name
+     * @return Metadata
+     */
+    abstract public function loadMetadata($name);
 }

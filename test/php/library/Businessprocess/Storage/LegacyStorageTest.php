@@ -31,12 +31,12 @@ class LegacyStorageTest extends BaseTestCase
         $keys = array_keys($this->makeInstance()->listProcesses());
         sort($keys);
         $this->assertEquals(
-            $keys,
             array(
                 'broken_wrong-operator',
                 'simple_with-header',
                 'simple_without-header',
-            )
+            ),
+            $keys
         );
     }
 
@@ -45,12 +45,12 @@ class LegacyStorageTest extends BaseTestCase
         $keys = array_values($this->makeInstance()->listProcesses());
         sort($keys);
         $this->assertEquals(
-            $keys,
             array(
                 'Simple with header (simple_with-header)',
                 'broken_wrong-operator',
                 'simple_without-header',
-            )
+            ),
+            $keys
         );
     }
 
@@ -101,6 +101,14 @@ class LegacyStorageTest extends BaseTestCase
                 )
             ),
             $this->makeInstance()->getSource('simple_with-header')
+        );
+    }
+
+    public function testTitleCanBeReadFromConfig()
+    {
+        $this->assertEquals(
+            'Simple with header',
+            $this->makeInstance()->loadProcess('simple_with-header')->getMetadata()->get('Title')
         );
     }
 
