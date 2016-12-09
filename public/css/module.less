@@ -641,7 +641,7 @@ div.bp .badges {
 /** END of breadcrumb **/
 
 
-ul.error {
+ul.error, ul.warning {
     padding: 0;
     list-style-type: none;
     background-color: @colorCritical;
@@ -654,7 +654,17 @@ ul.error {
 
     li a {
         color: inherit;
+        text-decoration: underline;
+
+        &:hover {
+            text-decoration: none;
+        }
     }
+}
+
+
+ul.warning {
+    background-color: @colorWarning;
 }
 
 table.sourcecode {
