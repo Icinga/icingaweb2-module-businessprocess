@@ -124,10 +124,10 @@ class ProcessController extends Controller
     {
         if ($this->renderer === null) {
 
-            if ($this->params->get('mode') === 'tile') {
-                $renderer = new TileRenderer($bp, $node);
-            } else {
+            if ($this->params->get('mode') === 'tree') {
                 $renderer = new TreeRenderer($bp, $node);
+            } else {
+                $renderer = new TileRenderer($bp, $node);
             }
             $renderer->setUrl($this->url())
                 ->setPath($this->params->getValues('path'));
