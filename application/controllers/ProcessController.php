@@ -68,6 +68,15 @@ class ProcessController extends Controller
         $this->setTitle('Business Process "%s"', $bp->getTitle());
 
         $renderer = $this->prepareRenderer($bp, $node);
+
+        if ($this->params->get('unlocked')) {
+            $renderer->unlock();
+        }
+
+        if ($bp->isEmpty() && $renderer->isLocked()) {
+            $this->redirectNow($this->url()->with('unlocked', true));
+        }
+
         $this->prepareControls($bp, $renderer);
         $this->content()->addContent($this->showHints($bp));
         $this->content()->addContent($this->showWarnings($bp));
@@ -98,11 +107,11 @@ class ProcessController extends Controller
         }
         $controls->add(Breadcrumb::create($renderer));
         if (! $this->showFullscreen && ! $this->view->compact) {
-            $controls->add($this->actions());
+            $controls->add(new ActionBar($bp, $renderer, $this->Auth(), $this->url()));
         }
     }
 
-    protected function getNode($bp)
+    protected function getNode(BusinessProcess $bp)
     {
         if ($nodeName = $this->params->get('node')) {
             return $bp->getNode($nodeName);
@@ -122,11 +131,6 @@ class ProcessController extends Controller
             }
             $renderer->setUrl($this->url())
                 ->setPath($this->params->getValues('path'));
-
-
-            if (!$bp->isLocked()) {
-                $renderer->unlock();
-            }
 
             $this->renderer = $renderer;
         }
@@ -218,8 +222,7 @@ class ProcessController extends Controller
         }
     }
 
-
-    public function showHints(BusinessProcess $bp)
+    protected function showHints(BusinessProcess $bp)
     {
         $ul = Element::create('ul', array('class' => 'error'));
         foreach ($bp->getErrors() as $error) {
@@ -286,7 +289,7 @@ class ProcessController extends Controller
         $this->tabsForConfig()->activate('source');
         $bp = $this->loadModifiedBpConfig();
 
-        $this->view->source = $bp->toLegacyConfigString();
+        $this->view->source = $this->storage()->render($bp);
         $this->view->showDiff = (bool) $this->params->get('showDiff', false);
 
         if ($this->view->showDiff) {
@@ -322,7 +325,7 @@ class ProcessController extends Controller
         );
         header('Content-Type: text/plain');
 
-        echo $bp->toLegacyConfigString();
+        echo $this->storage()->render($bp);
         // Didn't have time to lookup how to correctly disable our renderers
         // TODO: no exit :)
         $this->doNotRender();
