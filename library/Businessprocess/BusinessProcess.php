@@ -109,8 +109,6 @@ class BusinessProcess
      */
     protected $simulation;
 
-    protected $locked = true;
-
     protected $changeCount = 0;
 
     protected $simulationCount = 0;
@@ -247,22 +245,6 @@ class BusinessProcess
     public function hasBeenChanged()
     {
         return false;
-    }
-
-    public function isLocked()
-    {
-        return $this->locked;
-    }
-
-    public function lock($lock = true)
-    {
-        $this->locked = (bool) $lock;
-        return $this;
-    }
-
-    public function unlock()
-    {
-        return $this->lock(false);
     }
 
     public function hasSimulations()
@@ -441,6 +423,9 @@ class BusinessProcess
         return count($this->root_nodes);
     }
 
+    /**
+     * @return BpNode[]
+     */
     public function getRootNodes()
     {
         ksort($this->root_nodes);
