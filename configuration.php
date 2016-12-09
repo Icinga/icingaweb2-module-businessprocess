@@ -2,8 +2,6 @@
 
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 
-$this->providePermission('businessprocess/create', 'Allow to create new configs');
-$this->providePermission('businessprocess/modify', 'Allow to modify processes');
 $section = $this->menuSection(N_('Business Processes'), array(
     'url'      => 'businessprocess',
     'icon'     => 'sitemap',
@@ -42,3 +40,16 @@ try {
 } catch (Exception $e) {
     // Well... there is not much we could do here
 }
+
+$this->providePermission(
+    'businessprocess/showall',
+    $this->translate('Allow to see all available processes, regardless of configured restrictions')
+);
+$this->providePermission(
+    'businessprocess/create',
+    $this->translate('Allow to create whole new process configuration (files)')
+);
+$this->providePermission(
+    'businessprocess/modify',
+    $this->translate('Allow to modify process definitions, to add and remove nodes')
+);
