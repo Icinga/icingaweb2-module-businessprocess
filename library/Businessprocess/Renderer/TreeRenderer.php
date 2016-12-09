@@ -143,7 +143,7 @@ class TreeRenderer extends Renderer
             $td->add($this->createInfoAction($node));
         }
 
-        if (! $this->bp->isLocked()) {
+        if (! $this->isLocked()) {
             $td->addContent($this->getActionIcons($bp, $node));
         }
 
