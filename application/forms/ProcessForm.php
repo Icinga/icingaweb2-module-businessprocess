@@ -77,17 +77,6 @@ class ProcessForm extends QuickForm
             )
         ));
 
-        $this->addElement('multiselect', 'children', array(
-            'label'       => $this->translate('Process components'),
-            'required'    => true,
-            'size'        => 14,
-            'style'       => 'width: 25em;',
-            'description' => $this->translate(
-                'Hosts, services or other processes that should be part of this'
-              . ' business process'
-            )
-        ));
-
         $this->addElement('text', 'url', array(
             'label'        => $this->translate('Info URL'),
             'description' => $this->translate(
@@ -95,60 +84,172 @@ class ProcessForm extends QuickForm
             )
         ));
 
-        $this->addElement('submit', $this->translate('Store'));
+        $this->addElement('select', 'object_type', array(
+            'label'        => $this->translate('Add children'),
+            'required'     => $this->node === null || ! $this->node->hasChildren(),
+            'ignore'       => true,
+            'class'        => 'autosubmit',
+            'multiOptions' => $this->optionalEnum(
+                array(
+                    'hosts'   => $this->translate('Host'),
+                    'service' => $this->translate('Service'),
+                    'process' => $this->translate('Another process'),
+                    'include' => $this->translate('External process'),
+                )
+            )
+        ));
+
+        switch ($this->getSentValue('object_type')) {
+            case 'hosts':
+                $this->addHostsElement();
+                break;
+            case 'service':
+                $this->addHostElement();
+                if ($host = $this->getSentValue('host')) {
+                    $this->addServicesElement($host);
+                }
+                break;
+            case 'process':
+                $this->addProcessesElement();
+                break;
+        }
     }
 
-    public function setBackend($backend)
+    protected function addHostsElement()
+    {
+        $this->addElement('multiselect', 'children', array(
+            'label'        => $this->translate('Hosts'),
+            'required'     => true,
+            'size'         => 14,
+            'style'        => 'width: 25em',
+            'multiOptions' => $this->enumHostList(),
+            'description'  => $this->translate(
+                'Hosts that should be part of this business process node'
+            )
+        ));
+    }
+
+    protected function addHostElement()
+    {
+        $this->addElement('select', 'host', array(
+            'label'        => $this->translate('Host'),
+            'required'     => true,
+            'ignore'       => true,
+            'class'        => 'autosubmit',
+            'multiOptions' => $this->optionalEnum($this->enumHostList()),
+        ));
+    }
+
+    protected function addServicesElement($host)
+    {
+        $this->addElement('multiselect', 'children', array(
+            'label'        => $this->translate('Services'),
+            'required'     => true,
+            'size'         => 14,
+            'style'        => 'width: 25em',
+            'multiOptions' => $this->enumServiceList($host),
+            'description'  => $this->translate(
+                'Services that should be part of this business process node'
+            )
+        ));
+    }
+
+    protected function addProcessesElement()
+    {
+        $this->addElement('multiselect', 'children', array(
+            'label'        => $this->translate('Process nodes'),
+            'required'     => true,
+            'size'         => 14,
+            'style'        => 'width: 25em',
+            'multiOptions' => $this->enumProcesses(),
+            'description'  => $this->translate(
+                'Other processes that should be part of this business process node'
+            )
+        ));
+    }
+
+    /**
+     * @param MonitoringBackend $backend
+     * @return $this
+     */
+    public function setBackend(MonitoringBackend $backend)
     {
         $this->backend = $backend;
-        $this->fetchObjectList();
-        $this->fillAvailableChildren();
         return $this;
     }
 
-    protected function fillAvailableChildren()
+    /**
+     * @param BusinessProcess $process
+     * @return $this
+     */
+    public function setProcess(BusinessProcess $process)
     {
-        if (empty($this->processList)) {
-            $children = $this->objectList;
-        } else {
-            $children = array(
-                $this->translate('Other Business Processes') => $this->processList
-            ) + $this->objectList;
-        }
-
-        $this->getElement('children')->setMultiOptions($children);
-    }
-
-    public function setProcess($process)
-    {
-        $this->process = $process;
+        $this->bp = $process;
         $this->setBackend($process->getBackend());
-        $this->processList = array();
-        foreach ($process->getNodes() as $node) {
-            if ($node instanceof BpNode) {
-                // TODO: Blacklist parents
-                $this->processList[(string) $node] = (string) $node; // display name?
-            }
-        }
-        natsort($this->processList);
-        $this->fillAvailableChildren();
         return $this;
     }
 
-    public function setNode(Node $node)
+    /**
+     * @param BpNode $node
+     * @return $this
+     */
+    public function setNode(BpNode $node)
     {
         $this->node = $node;
-
-        $this->setDefaults(array(
-            'name'     => (string) $node,
-            'alias'    => $node->hasAlias() ? $node->getAlias() : '',
-            'display'  => $node->getDisplay(),
-            'operator' => $node->getOperator(),
-            'url'      => $node->getInfoUrl(),
-            'children' => array_keys($node->getChildren())
-        ));
-        $this->getElement('name')->setAttrib('readonly', true);
         return $this;
+    }
+
+    /**
+     * @param SessionNamespace $session
+     * @return $this
+     */
+    public function setSession(SessionNamespace $session)
+    {
+        $this->session = $session;
+        return $this;
+    }
+
+    protected function enumHostList()
+    {
+        $names = $this->backend->select()->from('hostStatus', array(
+            'hostname'    => 'host_name',
+        ))->order('host_name')->getQuery()->fetchColumn();
+
+        // fetchPairs doesn't seem to work when using the same column with
+        // different aliases twice
+        return array_combine((array) $names, (array) $names);
+    }
+
+    protected function enumServiceList($host)
+    {
+        $query = $this->backend->select()->from(
+            'serviceStatus',
+            array('service' => 'service_description')
+        )->where('host_name', $host);
+        $query->order('service_description');
+        $names = $query->getQuery()->fetchColumn();
+
+        $services = array();
+        foreach ($names as $name) {
+            $services[$host . ';' . $name] = $name;
+        }
+
+        return $services;
+    }
+
+    protected function enumProcesses()
+    {
+        $list = array();
+
+        foreach ($this->bp->getNodes() as $node) {
+            if ($node instanceof BpNode) {
+                // TODO: Blacklist parents
+                $list[(string) $node] = (string) $node; // display name?
+            }
+        }
+
+        natsort($list);
+        return $list;
     }
 
     protected function fetchObjectList()
@@ -184,15 +285,9 @@ class ProcessForm extends QuickForm
         return $this;
     }
 
-    public function setSession($session)
-    {
-        $this->session = $session;
-        return $this;
-    }
-
     public function onSuccess()
     {
-        $changes = ProcessChanges::construct($this->process, $this->session);
+        $changes = ProcessChanges::construct($this->bp, $this->session);
 
         $modifications = array();
         $children = $this->getValue('children');
@@ -246,7 +341,7 @@ class ProcessForm extends QuickForm
             Notification::success(
                 sprintf(
                     'Process %s has been modified',
-                    $this->process->getName()
+                    $this->bp->getName()
                 )
             );
         }
