@@ -4,19 +4,17 @@ namespace Icinga\Module\Businessprocess\Web;
 
 use Icinga\Application\Icinga;
 use Icinga\Module\Businessprocess\BusinessProcess;
-use Icinga\Module\Businessprocess\Html\HtmlString;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Businessprocess\Storage\Storage;
 use Icinga\Module\Businessprocess\Web\Component\ActionBar;
 use Icinga\Module\Businessprocess\Web\Component\Controls;
 use Icinga\Module\Businessprocess\Web\Component\Content;
+use Icinga\Module\Businessprocess\Web\Component\Tabs;
 use Icinga\Module\Businessprocess\Web\Form\FormLoader;
 use Icinga\Web\Controller as ModuleController;
 use Icinga\Web\Notification;
 use Icinga\Web\View;
-use Icinga\Web\Widget;
-use Icinga\Web\Widget\Tabs;
 
 class Controller extends ModuleController
 {
@@ -30,7 +28,7 @@ class Controller extends ModuleController
     protected $bp;
 
     /** @var Tabs */
-    protected $tabs;
+    protected $mytabs;
 
     /** @var Storage */
     private $storage;
@@ -150,13 +148,13 @@ class Controller extends ModuleController
     protected function tabs()
     {
         // Todo: do not add to view once all of them render controls()
-        if ($this->view->tabs === null) {
-            $tabs = Widget::create('tabs');
-            $this->controls()->add(HtmlString::create($tabs));
-            $this->view->tabs = $tabs;
+        if ($this->mytabs === null) {
+            $tabs = new Tabs();
+            //$this->controls()->add($tabs);
+            $this->mytabs = $tabs;
         }
 
-        return $this->view->tabs;
+        return $this->mytabs;
     }
 
     protected function session()
@@ -258,6 +256,9 @@ class Controller extends ModuleController
         return FormLoader::load($name, $this->Module());
     }
 
+    /**
+     * @return LegacyStorage|Storage
+     */
     protected function storage()
     {
         if ($this->storage === null) {
@@ -269,6 +270,9 @@ class Controller extends ModuleController
         return $this->storage;
     }
 
+    /**
+     * @deprecated
+     */
     protected function loadSlas()
     {
         $bpconf = $this->bpconf;

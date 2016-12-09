@@ -201,8 +201,7 @@ class BusinessProcess
 
     public function getTitle()
     {
-        $meta = $this->getMetadata();
-        return $meta->has('Title') ? $meta->get('Title') : $this->getName();
+        return $this->getMetadata()->getTitle();
     }
 
     public function hasTitle()

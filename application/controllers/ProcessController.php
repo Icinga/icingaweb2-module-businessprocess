@@ -19,6 +19,7 @@ use Icinga\Module\Businessprocess\Web\Controller;
 use Icinga\Module\Businessprocess\Web\Url;
 use Icinga\Web\Notification;
 use Icinga\Web\Widget\Tabextension\DashboardAction;
+use Icinga\Web\Widget\Tabs;
 
 class ProcessController extends Controller
 {
@@ -101,7 +102,7 @@ class ProcessController extends Controller
             );
         }
 
-        $this->addProcessTabs($bp);
+        $controls->add($this->getProcessTabs($bp, $renderer));
         if (! $this->view->compact) {
             $controls->add(Element::create('h1')->setContent($this->view->title));
         }
@@ -138,16 +139,18 @@ class ProcessController extends Controller
         return $this->renderer;
     }
 
-    protected function addProcessTabs($bp)
+    protected function getProcessTabs(BusinessProcess $bp, Renderer $renderer)
     {
         if ($this->showFullscreen || $this->view->compact) {
             return;
         }
 
-        $tabs = $this->defaultTab();
-        if (! $bp->isLocked()) {
+        $tabs = $this->singleTab($bp->getTitle());
+        if (! $renderer->isLocked()) {
             $tabs->extend(new DashboardAction());
         }
+
+        return $tabs;
     }
 
     protected function handleSimulations(BusinessProcess $bp)
@@ -264,8 +267,6 @@ class ProcessController extends Controller
         }
     }
 
-
-
     /**
      * Show the source code for a process
      */
@@ -364,6 +365,9 @@ class ProcessController extends Controller
         ));
     }
 
+    /**
+     * @return Tabs
+     */
     protected function tabsForCreate()
     {
         return $this->tabs()->add('create', array(
