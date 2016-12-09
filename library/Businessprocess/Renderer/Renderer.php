@@ -181,7 +181,7 @@ abstract class Renderer extends Html
      */
     public function setBaseUrl(Url $url)
     {
-        $this->baseUrl = $url->without(array('config', 'node', 'path'));
+        $this->baseUrl = $url->without(array('node', 'path'));
         return $this;
     }
 
