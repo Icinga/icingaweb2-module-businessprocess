@@ -9,6 +9,8 @@ use Icinga\User;
 
 class Metadata
 {
+    protected $name;
+
     protected $properties = array(
         'Title'         => null,
         'Description'   => null,
@@ -16,10 +18,36 @@ class Metadata
         'AllowedUsers'  => null,
         'AllowedGroups' => null,
         'AllowedRoles'  => null,
+        'AddToMenu'     => null,
         'Backend'       => null,
         'Statetype'     => null,
         // 'SLAHosts'      => null
     );
+
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getTitle()
+    {
+        if ($this->has('Title')) {
+            return $this->get('Title');
+        } else {
+            return $this->name;
+        }
+    }
+
+    public function getExtendedTitle()
+    {
+        $title = $this->getTitle();
+
+        if ($title === $this->name) {
+            return $title;
+        } else {
+            return sprint('%s (%s)', $title, $this->name);
+        }
+    }
 
     public function getProperties()
     {
@@ -82,7 +110,7 @@ class Metadata
         return Auth::getInstance();
     }
 
-    public function permissionsAreSatisfied(Auth $auth = null)
+    public function canModify(Auth $auth = null)
     {
         if ($auth === null) {
             if (Icinga::app()->isCli()) {
@@ -90,6 +118,26 @@ class Metadata
             } else {
                 $auth = $this->getAuth();
             }
+        }
+
+        return $this->canRead($auth) && (
+            $auth->hasPermission('businessprocess/modify')
+            || $this->ownerIs($auth->getUser()->getUsername())
+        );
+    }
+
+    public function canRead(Auth $auth = null)
+    {
+        if ($auth === null) {
+            if (Icinga::app()->isCli()) {
+                return true;
+            } else {
+                $auth = $this->getAuth();
+            }
+        }
+
+        if ($auth->hasPermission('businessprocess/showall')) {
+            return true;
         }
 
         if (! $this->hasRestrictions()) {
@@ -100,10 +148,10 @@ class Metadata
             return false;
         }
 
-        return $this->userIsAllowed($auth->getUser());
+        return $this->userCanRead($auth->getUser());
     }
 
-    public function userIsAllowed(User $user)
+    protected function userCanRead(User $user)
     {
         $username = $user->getUsername();
 
