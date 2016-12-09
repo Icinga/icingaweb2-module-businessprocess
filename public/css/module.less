@@ -323,6 +323,51 @@ div.knightrider table.bp {
     }
 }
 
+/** BEGIN Dashboard **/
+.overview-dashboard {
+    > div.action {
+        width: 20em;
+        display: inline-block;
+
+        > a {
+            text-decoration: none;
+            color: inherit;
+            vertical-align: middle;
+            display: block;
+            padding: 1em;
+            word-wrap: break-word;
+            width: 100%;
+            height: 12em;
+            overflow: hidden;
+            box-sizing: border-box;
+
+            > span.header {
+                font-weight: bold;
+                display: block;
+                font-size: 1.25em;
+            }
+
+            &:hover {
+                background-color: @text-color;
+                color: white;
+            }
+
+            &.addnew:hover {
+                background-color: @icinga-blue;
+            }
+
+            i {
+                float: left;
+                font-size: 2.5em;
+                margin-top: -0.1em;
+                margin-bottom: 2em;
+                color: inherit;
+            }
+        }
+    }
+}
+/** END Dashboard **/
+
 /** BEGIN Tiles **/
 .tiles:after {
     content:'';

@@ -3,29 +3,17 @@
 namespace Icinga\Module\Businessprocess\Controllers;
 
 use Icinga\Module\Businessprocess\Web\Controller;
+use Icinga\Module\Businessprocess\Web\Component\Dashboard;
 
 class IndexController extends Controller
 {
     /**
-     * Show a welcome page if no process is available
+     * Show an overview page
      */
     public function indexAction()
     {
-        $configs = $this->storage()->listProcesses();
-
-        if (! empty($configs)) {
-            // Redirect to show the first process if there is any
-            $this->redirectNow(
-                'businessprocess/process/show?mode=tile',
-                array('config' => key($configs))
-            );
-        }
-        $this->tabs()->add('welcome', array(
-            'label' => $this->translate('Business Processes'),
-            'url'   => $this->getRequest()->getUrl()
-        ))->activate('welcome');
-
-        // Check back from time to time, maybe someone created a process
-        $this->setAutorefreshInterval(30);
+        $this->view->dashboard = Dashboard::create($this->Auth(), $this->storage());
+        $this->view->tabs = $this->overviewTab();
+        $this->setAutorefreshInterval(15);
     }
 }
