@@ -123,7 +123,7 @@ class BusinessProcess
     public function getMetadata()
     {
         if ($this->metadata === null) {
-            $this->metadata = new Metadata();
+            $this->metadata = new Metadata($this->name);
         }
 
         return $this->metadata;
@@ -373,7 +373,7 @@ class BusinessProcess
         foreach ($hostStatus as $row) {
             $this->handleDbRow($row);
         }
-
+        // TODO: Union, single query?
         ksort($this->root_nodes);
         Benchmark::measure('Got states for business process ' . $this->getName());
 
@@ -573,16 +573,32 @@ class BusinessProcess
         throw new ProgrammingError('Not implemented yet');
     }
 
-    public function listBpNodes()
+    /**
+     * @return BpNode[]
+     */
+    public function getBpNodes()
     {
         $nodes = array();
 
         foreach ($this->nodes as $node) {
-            if (! $node instanceof BpNode) {
-                continue;
+            if ($node instanceof BpNode) {
+                $nodes[$node->getName()] = $node;
             }
+        }
 
-            $name = (string) $node;
+        return $nodes;
+    }
+
+    /**
+     * List all business process node names
+     *
+     * @return array
+     */
+    public function listBpNodes()
+    {
+        $nodes = array();
+
+        foreach ($this->getBpNodes() as $name => $node) {
             $alias = $node->getAlias();
             $nodes[$name] = $name === $alias ? $name : sprintf('%s (%s)', $alias, $node);
         }
@@ -591,42 +607,57 @@ class BusinessProcess
         return $nodes;
     }
 
+    /**
+     * All business process nodes defined in this config but not
+     * assigned to any parent
+     *
+     * @return BpNode[]
+     */
     public function getUnboundNodes()
     {
         $nodes = array();
 
-        foreach ($this->nodes as $node) {
-            if (! $node instanceof BpNode) {
-                continue;
-            }
+        foreach ($this->getBpNodes() as $name => $node) {
 
             if ($node->hasParents()) {
                 continue;
             }
 
             if ($node->getDisplay() === 0) {
-                $nodes[(string) $node] = $node;
+                $nodes[$name] = $node;
             }
         }
 
         return $nodes;
     }
 
+    /**
+     * @return bool
+     */
     public function hasWarnings()
     {
         return ! empty($this->warnings);
     }
 
+    /**
+     * @return array
+     */
     public function getWarnings()
     {
         return $this->warnings;
     }
 
+    /**
+     * @return bool
+     */
     public function hasErrors()
     {
         return ! empty($this->errors) || $this->isEmpty();
     }
 
+    /**
+     * @return array
+     */
     public function getErrors()
     {
         $errors = $this->errors;
@@ -677,41 +708,6 @@ class BusinessProcess
     {
         $this->throwErrors = $throw;
         return $this;
-    }
-
-    public function toLegacyConfigString()
-    {
-        $settings = array();
-        if ($this->hasTitle()) {
-            $settings['Title'] = $this->getTitle();
-        }
-        // TODO: backendName?
-        if ($this->backend) {
-            $settings['Backend'] = $this->backend->getName();
-        }
-        $settings['Statetype'] = $this->usesSoftStates() ? 'soft' : 'hard';
-
-        if (false) {
-            $settings['SLA Hosts'] = implode(', ', array());
-        }
-
-        $conf = "### Business Process Config File ###\n#\n";
-        foreach ($settings as $key => $value) {
-            $conf .= sprintf("# %-9s : %s\n", $key, $value);
-        }
-
-        $conf .= "#\n###################################\n\n";
-
-        $rendered = array();
-        foreach ($this->getChildren() as $child) {
-            $conf .= $child->toLegacyConfigString($rendered);
-            $rendered[(string) $child] = true;
-        }
-        foreach ($this->getUnboundNodes() as $node) {
-            $conf .= $node->toLegacyConfigString($rendered);
-            $rendered[(string) $node] = true;
-        }
-        return $conf . "\n";
     }
 
     public function beginLoopDetection($name)
