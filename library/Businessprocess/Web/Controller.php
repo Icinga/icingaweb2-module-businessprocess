@@ -1,8 +1,9 @@
 <?php
 
-namespace Icinga\Module\Businessprocess;
+namespace Icinga\Module\Businessprocess\Web;
 
 use Icinga\Application\Icinga;
+use Icinga\Module\Businessprocess\BusinessProcess;
 use Icinga\Module\Businessprocess\Html\HtmlString;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
@@ -11,7 +12,6 @@ use Icinga\Module\Businessprocess\Web\Component\ActionBar;
 use Icinga\Module\Businessprocess\Web\Component\Controls;
 use Icinga\Module\Businessprocess\Web\Component\Content;
 use Icinga\Module\Businessprocess\Web\Form\FormLoader;
-use Icinga\Module\Businessprocess\Web\Url;
 use Icinga\Web\Controller as ModuleController;
 use Icinga\Web\Notification;
 use Icinga\Web\View;
@@ -69,18 +69,6 @@ class Controller extends ModuleController
         }
 
         return $this->url;
-    }
-
-    protected function currentProcessParams()
-    {
-        $params = array();
-        foreach (array('config', 'node') as $name) {
-            if ($value = $this->params->get($name)) {
-                $params[$name] = $value;
-            }
-        }
-
-        return $params;
     }
 
     /**
@@ -156,6 +144,9 @@ class Controller extends ModuleController
         )->activate('overview');
     }
 
+    /**
+     * @return Tabs
+     */
     protected function tabs()
     {
         // Todo: do not add to view once all of them render controls()

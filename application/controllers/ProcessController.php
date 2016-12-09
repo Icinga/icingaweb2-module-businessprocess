@@ -14,6 +14,7 @@ use Icinga\Module\Businessprocess\Renderer\TileRenderer;
 use Icinga\Module\Businessprocess\Renderer\TreeRenderer;
 use Icinga\Module\Businessprocess\Simulation;
 use Icinga\Module\Businessprocess\Html\Link;
+use Icinga\Module\Businessprocess\Web\Component\ActionBar;
 use Icinga\Module\Businessprocess\Web\Controller;
 use Icinga\Module\Businessprocess\Web\Url;
 use Icinga\Web\Notification;
@@ -60,7 +61,6 @@ class ProcessController extends Controller
     {
         $bp = $this->prepareProcess();
         $node = $this->getNode($bp);
-        $this->prepareActionBar();
         $this->redirectOnConfigSwitch();
         $bp->retrieveStatesFromBackend();
         $this->handleSimulations($bp);
@@ -275,83 +275,7 @@ class ProcessController extends Controller
         return $bp;
     }
 
-    protected function prepareActionBar()
-    {
-        $mode = $this->params->get('mode');
-        $unlocked = (bool) $this->params->get('unlocked');
 
-        if ($mode === 'tile') {
-            $this->actions()->add(
-                Link::create(
-                    $this->translate('Tree'),
-                    $this->url()->with('mode', 'tree'),
-                    null,
-                    array('class' => 'icon-sitemap')
-                )
-            );
-        } else {
-            $this->actions()->add(
-                Link::create(
-                    $this->translate('Tiles'),
-                    $this->url()->with('mode', 'tile'),
-                    null,
-                    array('class' => 'icon-dashboard')
-                )
-            );
-        }
-
-        if ($unlocked) {
-            $this->actions()->add(
-                Link::create(
-                    $this->translate('Lock'),
-                    $this->url()->without('unlocked')->without('action'),
-                    null,
-                    array(
-                        'class' => 'icon-lock',
-                        'title' => $this->translate('Lock this process'),
-                    )
-                )
-            );
-        } else {
-            $this->actions()->add(
-                Link::create(
-                    $this->translate('Unlock'),
-                    $this->url()->with('unlocked', true),
-                    null,
-                    array(
-                        'class' => 'icon-lock-open',
-                        'title' => $this->translate('Unlock this process'),
-                    )
-                )
-            );
-        }
-
-        $this->actions()->add(
-            Link::create(
-                $this->translate('Config'),
-                'businessprocess/process/config',
-                $this->currentProcessParams(),
-                array(
-                    'class'            => 'icon-wrench',
-                    'title'            => $this->translate('Modify this process'),
-                    'data-base-target' => '_next',
-                )
-            )
-        );
-
-        $this->actions()->add(
-            Link::create(
-                $this->translate('Fullscreen'),
-                $this->url()->with('showFullscreen', true),
-                null,
-                array(
-                    'class'            => 'icon-resize-full-alt',
-                    'title'            => $this->translate('Switch to fullscreen mode'),
-                    'data-base-target' => '_main',
-                )
-            )
-        );
-    }
 
     /**
      * Show the source code for a process
