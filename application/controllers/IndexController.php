@@ -2,7 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Controllers;
 
-use Icinga\Module\Businessprocess\Controller;
+use Icinga\Module\Businessprocess\Web\Controller;
 
 class IndexController extends Controller
 {

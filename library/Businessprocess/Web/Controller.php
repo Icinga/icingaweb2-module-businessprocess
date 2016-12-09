@@ -20,14 +20,17 @@ use Icinga\Web\Widget\Tabs;
 
 class Controller extends ModuleController
 {
+    /** @var View */
+    public $view;
+
     /** @deprecated, obsolete */
     protected $backend;
 
     /** @var BusinessProcess */
     protected $bp;
 
-    /** @var View */
-    public $view;
+    /** @var Tabs */
+    protected $tabs;
 
     /** @var Storage */
     private $storage;
@@ -122,16 +125,13 @@ class Controller extends ModuleController
      */
     protected function singleTab($label)
     {
-        $tabs = Widget::create('tabs')->add(
+        return $this->tabs()->add(
             'tab',
             array(
                 'label' => $label,
                 'url'   => $this->getRequest()->getUrl()
             )
         )->activate('tab');
-        $this->controls()->add(HtmlString::create($tabs));
-
-        return $tabs;
     }
 
     /**
@@ -142,11 +142,29 @@ class Controller extends ModuleController
         return $this->singleTab($this->translate('Business Process'));
     }
 
+    /**
+     * @return Tabs
+     */
+    protected function overviewTab()
+    {
+        return $this->tabs()->add(
+            'overview',
+            array(
+                'label' => $this->translate('Business Process'),
+                'url'   => 'businessprocess'
+            )
+        )->activate('overview');
+    }
+
     protected function tabs()
     {
+        // Todo: do not add to view once all of them render controls()
         if ($this->view->tabs === null) {
-            $this->view->tabs = Widget::create('tabs');
+            $tabs = Widget::create('tabs');
+            $this->controls()->add(HtmlString::create($tabs));
+            $this->view->tabs = $tabs;
         }
+
         return $this->view->tabs;
     }
 

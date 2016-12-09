@@ -3,7 +3,6 @@
 namespace Icinga\Module\Businessprocess\Controllers;
 
 use Icinga\Module\Businessprocess\BusinessProcess;
-use Icinga\Module\Businessprocess\Controller;
 use Icinga\Module\Businessprocess\ConfigDiff;
 use Icinga\Module\Businessprocess\Html\Element;
 use Icinga\Module\Businessprocess\Html\HtmlString;
@@ -15,6 +14,7 @@ use Icinga\Module\Businessprocess\Renderer\TileRenderer;
 use Icinga\Module\Businessprocess\Renderer\TreeRenderer;
 use Icinga\Module\Businessprocess\Simulation;
 use Icinga\Module\Businessprocess\Html\Link;
+use Icinga\Module\Businessprocess\Web\Controller;
 use Icinga\Module\Businessprocess\Web\Url;
 use Icinga\Web\Notification;
 use Icinga\Web\Widget\Tabextension\DashboardAction;
@@ -168,6 +168,7 @@ class ProcessController extends Controller
     {
         $action = $this->params->get('action');
         $form = null;
+
         if ($action === 'add') {
             $form =$this->loadForm('AddNode')
                 ->setProcess($bp)
