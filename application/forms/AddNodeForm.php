@@ -7,7 +7,6 @@ use Icinga\Module\Businessprocess\BusinessProcess;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
-use Icinga\Web\Notification;
 use Icinga\Web\Session\SessionNamespace;
 
 class AddNodeForm extends QuickForm
