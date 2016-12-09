@@ -102,7 +102,9 @@ class ProcessController extends Controller
             );
         }
 
-        $controls->add($this->getProcessTabs($bp, $renderer));
+        if (! ($this->showFullscreen || $this->view->compact)) {
+            $controls->add($this->getProcessTabs($bp, $renderer));
+        }
         if (! $this->view->compact) {
             $controls->add(Element::create('h1')->setContent($this->view->title));
         }
@@ -141,9 +143,6 @@ class ProcessController extends Controller
 
     protected function getProcessTabs(BusinessProcess $bp, Renderer $renderer)
     {
-        if ($this->showFullscreen || $this->view->compact) {
-            return;
-        }
 
         $tabs = $this->singleTab($bp->getTitle());
         if (! $renderer->isLocked()) {
@@ -175,6 +174,9 @@ class ProcessController extends Controller
     {
         $action = $this->params->get('action');
         $form = null;
+        if ($this->showFullscreen) {
+            return;
+        }
 
         if ($action === 'add') {
             $form =$this->loadForm('AddNode')

@@ -63,12 +63,12 @@ class TileRenderer extends Renderer
      */
     protected function howMany()
     {
-        $count = $this->bp->countChildren();
+        $count = $this->countChildNodes();
         $howMany = 'normal';
 
-        if ($count < 20) {
+        if ($count <= 6) {
             $howMany = 'few';
-        } elseif ($count > 50) {
+        } elseif ($count > 12) {
             $howMany = 'many';
         }
 

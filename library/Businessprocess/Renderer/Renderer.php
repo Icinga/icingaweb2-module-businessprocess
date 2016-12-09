@@ -87,6 +87,30 @@ abstract class Renderer extends Html
     }
 
     /**
+     * @return BpNode[]
+     */
+    public function getChildNodes()
+    {
+        if ($this->wantsRootNodes()) {
+            return $this->bp->getRootNodes();
+        } else {
+            return $this->parent->getChildren();
+        }
+    }
+
+    /**
+     * @return int
+     */
+    public function countChildNodes()
+    {
+        if ($this->wantsRootNodes()) {
+            return $this->bp->countChildren();
+        } else {
+            return $this->parent->countChildren();
+        }
+    }
+
+    /**
      * @param $summary
      * @return Container
      */
