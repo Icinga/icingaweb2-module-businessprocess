@@ -31,6 +31,9 @@ class BusinessProcess
      */
     protected $backend;
 
+    /** @var  Metadata */
+    protected $metadata;
+
     /**
      * Business process name
      *
@@ -119,6 +122,21 @@ class BusinessProcess
     {
     }
 
+    public function getMetadata()
+    {
+        if ($this->metadata === null) {
+            $this->metadata = new Metadata();
+        }
+
+        return $this->metadata;
+    }
+
+    public function setMetadata(Metadata $metadata)
+    {
+        $this->metadata = $metadata;
+        return $this;
+    }
+
     public function applyChanges(ProcessChanges $changes)
     {
         $cnt = 0;
@@ -185,28 +203,23 @@ class BusinessProcess
 
     public function getTitle()
     {
-        return $this->title ?: $this->getName();
+        $meta = $this->getMetadata();
+        return $meta->has('Title') ? $meta->get('Title') : $this->getName();
     }
 
     public function hasTitle()
     {
-        return $this->title !== null;
-    }
-
-    public function setBackendName($name)
-    {
-        $this->backendName = $name;
-        return $this;
+        return $this->getMetadata()->has('Title');
     }
 
     public function getBackendName()
     {
-        return $this->backendName;
+        return $this->getMetadata()->get('Backend');
     }
 
     public function hasBackendName()
     {
-        return $this->backendName !== null;
+        return $this->getMetadata()->has('Backend');
     }
 
     public function setBackend(MonitoringBackend $backend)

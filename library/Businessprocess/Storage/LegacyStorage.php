@@ -5,11 +5,11 @@ namespace Icinga\Module\Businessprocess\Storage;
 use DirectoryIterator;
 use Icinga\Application\Benchmark;
 use Icinga\Application\Icinga;
-use Icinga\Authentication\Auth;
 use Icinga\Exception\ConfigurationError;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BusinessProcess;
 use Icinga\Exception\SystemPermissionException;
+use Icinga\Module\Businessprocess\Metadata;
 
 class LegacyStorage extends Storage
 {
@@ -66,6 +66,23 @@ class LegacyStorage extends Storage
     {
         $files = array();
 
+        foreach ($this->listAllProcessNames() as $name) {
+            $meta = $this->loadMetadata($name);
+            if (! $meta->permissionsAreSatisfied()) {
+                continue;
+            }
+
+            $files[$name] = $name;
+        }
+
+        natsort($files);
+        return $files;
+    }
+
+    public function listAllProcessNames()
+    {
+        $files = array();
+
         foreach (new DirectoryIterator($this->getConfigDir()) as $file) {
             if ($file->isDot()) {
                 continue;
@@ -73,73 +90,12 @@ class LegacyStorage extends Storage
 
             $filename = $file->getFilename();
             if (substr($filename, -5) === '.conf') {
-                $name = substr($filename, 0, -5);
-                $header = $this->readHeader($file->getPathname());
-                if (! $this->headerPermissionsAreSatisfied($header)) {
-                    continue;
-                }
-
-                if ($header['Title'] === null) {
-                    $files[$name] = $name;
-                } else {
-                    $files[$name] = sprintf('%s (%s)', $header['Title'], $name);
-                }
+                $files[] = substr($filename, 0, -5);
             }
         }
 
         natsort($files);
         return $files;
-    }
-
-    protected function headerPermissionsAreSatisfied($header)
-    {
-        if (Icinga::app()->isCli()) {
-            return true;
-        }
-
-        if ($header['Allowed users'] === null
-            && $header['Allowed groups'] === null
-            && $header['Allowed roles'] === null
-        ) {
-            return true;
-        }
-
-        $auth = Auth::getInstance();
-        if (! $auth->isAuthenticated()) {
-            return false;
-        }
-
-        $user = $auth->getUser();
-        $username = $user->getUsername();
-
-        if ($header['Owner'] === $username) {
-            return true;
-        }
-
-        if ($header['Allowed users'] !== null) {
-            $users = $this->splitCommaSeparated($header['Allowed users']);
-            foreach ($users as $allowedUser) {
-                if ($username === $allowedUser) {
-                    return true;
-                }
-            }
-        }
-
-        if ($header['Allowed groups'] !== null) {
-            $groups = $this->splitCommaSeparated($header['Allowed groups']);
-            foreach ($groups as $group) {
-                if ($user->isMemberOf($group)) {
-                    return true;
-                }
-            }
-        }
-
-        if ($header['Allowed roles'] !== null) {
-            // TODO: not implemented yet
-            return false;
-        }
-
-        return false;
     }
 
     protected function splitCommaSeparated($string)
@@ -151,45 +107,46 @@ class LegacyStorage extends Storage
     {
         $fh = fopen($file, 'r');
         $cnt = 0;
-        $header = $this->emptyHeader();
+        $meta = new Metadata();
         while ($cnt < 15 && false !== ($line = fgets($fh))) {
             $cnt++;
-            $this->parseHeaderLine($line, $header);
+            $this->parseHeaderLine($line, $meta);
         }
 
         fclose($fh);
-        return $header;
+        return $meta;
     }
 
     protected function readHeaderString($string)
     {
-        $header = $this->emptyHeader();
+        $meta = new Metadata();
         foreach (preg_split('/\n/', $string) as $line) {
-            $this->parseHeaderLine($line, $header);
+            $this->parseHeaderLine($line, $meta);
         }
 
-        return $header;
+        return $meta;
     }
 
     protected function emptyHeader()
     {
         return array(
-            'Title'          => null,
-            'Owner'          => null,
-            'Allowed users'  => null,
-            'Allowed groups' => null,
-            'Allowed roles'  => null,
-            'Backend'        => null,
-            'Statetype'      => 'soft',
-            'SLA Hosts'      => null
+            'Title'         => null,
+            'Description'   => null,
+            'Owner'         => null,
+            'AllowedUsers'  => null,
+            'AllowedGroups' => null,
+            'AllowedRoles'  => null,
+            'Backend'       => null,
+            'Statetype'     => 'soft',
+            'SLAHosts'      => null
         );
     }
 
-    protected function parseHeaderLine($line, & $header)
+    protected function parseHeaderLine($line, Metadata $meta)
     {
         if (preg_match('/^\s*#\s+(.+?)\s*:\s*(.+)$/', $line, $m)) {
-            if (array_key_exists($m[1], $header)) {
-                $header[$m[1]] = $m[2];
+            if ($meta->hasKey($m[1])) {
+                $meta->set($m[1], $m[2]);
             }
         }
     }
@@ -201,12 +158,52 @@ class LegacyStorage extends Storage
      */
     public function storeProcess(BusinessProcess $process)
     {
-        $filename = $this->getFilename($process->getName());
-        $content = $process->toLegacyConfigString();
         file_put_contents(
-            $filename,
-            $content
+            $this->getFilename($process->getName()),
+            $this->render($process)
         );
+    }
+
+    public function render(BusinessProcess $process)
+    {
+        return $this->renderHeader($process)
+            . $this->renderNodes($process);
+    }
+
+    public function renderHeader(BusinessProcess $process)
+    {
+        $conf = "### Business Process Config File ###\n#\n";
+
+        $meta = $process->getMetadata();
+        foreach ($meta->getProperties() as $key => $value) {
+            if ($value === null) {
+                continue;
+            }
+
+            $conf .= sprintf("# %-11s : %s\n", $key, $value);
+        }
+
+        $conf .= "#\n###################################\n\n";
+
+        return $conf;
+    }
+
+    public function renderNodes(BusinessProcess $bp)
+    {
+        $rendered = array();
+        $conf = '';
+
+        foreach ($bp->getChildren() as $child) {
+            $conf .= $child->toLegacyConfigString($rendered);
+            $rendered[$child->getName()] = true;
+        }
+
+        foreach ($bp->getUnboundNodes() as $name => $node) {
+            $conf .= $node->toLegacyConfigString($rendered);
+            $rendered[$name] = true;
+        }
+
+        return $conf . "\n";
     }
 
     public function getSource($name)
@@ -224,7 +221,7 @@ class LegacyStorage extends Storage
         $bp = new BusinessProcess();
         $bp->setName($name);
         $this->parseString($string, $bp);
-        $this->readHeaderString($string);
+        $bp->setMetadata($this->readHeaderString($string));
         return $bp;
     }
 
@@ -261,10 +258,22 @@ class LegacyStorage extends Storage
             return false;
         }
 
-        $header = $this->readHeader($file);
-        $bp = new BusinessProcess();
-        $this->loadHeader($name, $bp);
-        return $this->headerPermissionsAreSatisfied($header);
+        return $this->loadMetaFromFile($file)->permissionsAreSatisfied();
+    }
+
+    public function loadMetadata($name)
+    {
+        return $this->loadMetaFromFile($this->getFilename($name));
+    }
+
+    public function loadMetadataFromString($string)
+    {
+        return $this->readHeaderString($string);
+    }
+
+    public function loadMetaFromFile($filename)
+    {
+        return $this->readHeader($filename);
     }
 
     /**
@@ -275,23 +284,7 @@ class LegacyStorage extends Storage
     {
         // TODO: do not open twice, this is quick and dirty based on existing code
         $file = $this->currentFilename = $this->getFilename($name);
-        $header = $this->readHeader($file);
-        $this->applyHeader($header, $bp);
-    }
-
-    /**
-     * @param array $header
-     * @param BusinessProcess $bp
-     */
-    protected function applyHeader($header, $bp)
-    {
-        $bp->setTitle($header['Title']);
-        if ($header['Backend']) {
-            $bp->setBackendName($header['Backend']);
-        }
-        if ($header['Statetype'] === 'soft') {
-            $bp->useSoftStates();
-        }
+        $bp->setMetadata($this->readHeader($file));
     }
 
     protected function parseFile($name, $bp)
@@ -312,52 +305,96 @@ class LegacyStorage extends Storage
         unset($this->currentFilename);
     }
 
-    protected function parseString($string, $bp)
+    protected function parseString($string, BusinessProcess $bp)
     {
         foreach (preg_split('/\n/', $string) as $line) {
             $this->parseLine($line, $bp);
         }
     }
 
-    protected function parseLine(& $line, $bp)
+    /**
+     * @param $line
+     * @param BusinessProcess $bp
+     */
+    protected function parseDisplay(& $line, BusinessProcess $bp)
+    {
+        list($display, $name, $desc) = preg_split('~\s*;\s*~', substr($line, 8), 3);
+        $bp->getNode($name)->setAlias($desc)->setDisplay($display);
+        if ($display > 0) {
+            $bp->addRootNode($name);
+        }
+    }
+
+    protected function parseExternalInfo(& $line, BusinessProcess $bp)
+    {
+        list($name, $script) = preg_split('~\s*;\s*~', substr($line, 14), 2);
+        $bp->getNode($name)->setInfoCommand($script);
+    }
+
+    protected function parseExtraInfo(& $line, BusinessProcess $bp)
+    {
+        // TODO: Not yet
+        // list($name, $script) = preg_split('~\s*;\s*~', substr($line, 14), 2);
+        // $this->getNode($name)->setExtraInfo($script);
+    }
+
+    protected function parseInfoUrl(& $line, BusinessProcess $bp)
+    {
+        list($name, $url) = preg_split('~\s*;\s*~', substr($line, 9), 2);
+        $bp->getNode($name)->setInfoUrl($url);
+    }
+
+    protected function parseExtraLine(& $line, $typeLength, BusinessProcess $bp)
+    {
+        $type = substr($line, 0, $typeLength);
+        if (substr($type, 0, 7) === 'display') {
+            $this->parseDisplay($line, $bp);
+            return true;
+        }
+
+        switch ($type) {
+            case 'external_info':
+                $this->parseExternalInfo($line, $bp);
+                break;
+            case 'extra_info':
+                $this->parseExtraInfo($line, $bp);
+                break;
+            case 'info_url':
+                $this->parseInfoUrl($line, $bp);
+                break;
+            default:
+                return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Parses a single line
+     *
+     * Adds eventual new knowledge to the given Business Process config
+     *
+     * @param $line
+     * @param $bp
+
+     */
+    protected function parseLine(& $line, BusinessProcess $bp)
     {
         $line = trim($line);
 
         $this->parsing_line_number++;
 
-        if (empty($line)) {
-            return;
-        }
-        if ($line[0] === '#') {
+        // Skip empty or comment-only lines
+        if (empty($line) || $line[0] === '#') {
             return;
         }
 
-        // TODO: substr?
-        if (preg_match('~^display~', $line)) {
-            list($display, $name, $desc) = preg_split('~\s*;\s*~', substr($line, 8), 3);
-            $node = $bp->getNode($name)->setAlias($desc)->setDisplay($display);
-            if ($display > 0) {
-                $bp->addRootNode($name);
+        // Semicolon found in the first 14 cols? Might be a line with extra information
+        $pos = strpos($line, ';');
+        if ($pos !== false && $pos < 14) {
+            if ($this->parseExtraLine($line, $pos, $bp)) {
+                return;
             }
-            return;
-        }
-
-        if (preg_match('~^external_info~', $line)) {
-            list($name, $script) = preg_split('~\s*;\s*~', substr($line, 14), 2);
-            $node = $bp->getNode($name)->setInfoCommand($script);
-            return;
-        }
-
-        // New feature:
-        // if (preg_match('~^extra_info~', $line)) {
-        //     list($name, $script) = preg_split('~\s*;\s*~', substr($line, 14), 2);
-        //     $node = $this->getNode($name)->setExtraInfo($script);
-        // }
-
-        if (preg_match('~^info_url~', $line)) {
-            list($name, $url) = preg_split('~\s*;\s*~', substr($line, 9), 2);
-            $node = $bp->getNode($name)->setInfoUrl($url);
-            return;
         }
 
         list($name, $value) = preg_split('~\s*=\s*~', $line, 2);
