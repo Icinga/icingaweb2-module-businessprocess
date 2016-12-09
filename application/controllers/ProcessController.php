@@ -59,7 +59,7 @@ class ProcessController extends Controller
      */
     public function showAction()
     {
-        $bp = $this->prepareProcess();
+        $bp = $this->loadModifiedBpConfig();
         $node = $this->getNode($bp);
         $this->redirectOnConfigSwitch();
         $bp->retrieveStatesFromBackend();
@@ -264,20 +264,6 @@ class ProcessController extends Controller
         }
     }
 
-    protected function prepareProcess()
-    {
-        $bp = $this->loadModifiedBpConfig();
-        if ($this->params->get('unlocked')) {
-            $bp->unlock();
-        }
-
-        if ($bp->isEmpty() && $bp->isLocked()) {
-            $this->redirectNow($this->url()->with('unlocked', true));
-        }
-
-        return $bp;
-    }
-
 
 
     /**
@@ -285,7 +271,6 @@ class ProcessController extends Controller
      */
     public function sourceAction()
     {
-        $this->prepareProcess();
         $this->tabsForConfig()->activate('source');
         $bp = $this->loadModifiedBpConfig();
 
@@ -314,7 +299,6 @@ class ProcessController extends Controller
      */
     public function downloadAction()
     {
-        $this->prepareProcess();
         $bp = $this->loadModifiedBpConfig();
 
         header(
@@ -336,7 +320,6 @@ class ProcessController extends Controller
      */
     public function configAction()
     {
-        $this->prepareProcess();
         $this->tabsForConfig()->activate('config');
         $bp = $this->loadModifiedBpConfig();
 
