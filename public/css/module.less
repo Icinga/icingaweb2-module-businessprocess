@@ -368,63 +368,7 @@ div.knightrider table.bp {
 }
 /** END Dashboard **/
 
-/** BEGIN Tiles **/
-.tiles:after {
-    content:'';
-    display:block;
-    clear: both;
-}
-
-.tiles > div {
-    width: 12em;
-    float: left;
-    margin-right: 0.2em;
-    margin-bottom: 0.2em;
-    color: @text-color;
-    border: 1px solid @text-color;
-    border-left: 0.5em solid @text-color;
-    a:hover {
-        background-color: @text-color;
-        color: white;
-    }
-}
-
-.tiles > div.parent::before {
-    content: '&';
-    position: absolute;
-    font-size: 1.2em;
-}
-
-.tiles > div.parent {
-    width: 100%;
-    height: 2em;
-}
-
-.tiles > div > a {
-    text-decoration: none;
-    font-size: 0.5em;
-    color: inherit;
-    vertical-align: middle;
-    text-align: center;
-    display: block;
-    padding: 1em;
-    font-weight: bold;
-    word-wrap: break-word;
-    width: 100%;
-    height: 12em;
-    box-sizing: border-box;
-
-    i {
-        float: left;
-        font-size: 2.5em;
-        margin-top: -0.1em;
-    }
-}
-
-.tiles > div > a:hover {
-    color: white;
-}
-
+/** BEGIN Badges **/
 .badges {
     display: block;
     padding: 0.5em;
@@ -446,72 +390,143 @@ div.bp .badges {
 .badge-warning { background: @colorWarning; }
 .badge-pending { background: @colorPending; }
 .badge-missing { background: #ccc; }
+/** END Badges **/
 
-.tiles {
-    > .critical            { border-color: @colorCritical; }
-    > .critical.handled    { border-color: @colorCriticalHandled; }
-    > .down                { border-color: @colorCritical; }
-    > .down.handled        { border-color: @colorCriticalHandled; }
-    > .unknown             { border-color: @colorUnknown; }
-    > .unknown.handled     { border-color: @colorUnknownHandled; }
-    > .unreachable         { border-color: @colorUnknown; }
-    > .unreachable.handled { border-color: @colorUnknownHandled; }
-    > .warning             { border-color: @colorWarning; }
-    > .warning.handled     { border-color: @colorWarningHandled; }
-    > .ok                  { border-color: @colorOk; }
-    > .pending             { border-color: @colorPending; }
-    > .missing             { border-color: #ccc; }
+/** BEGIN Tiles **/
+.tiles:after {
+    content:'';
+    display:block;
+    clear: both;
 }
 
-.tiles {
-    > .critical            a:hover { background: @colorCritical; }
-    > .critical.handled    a:hover { background: @colorCriticalHandled; }
-    > .down                a:hover { background: @colorCritical; }
-    > .down.handled        a:hover { background: @colorCriticalHandled; }
-    > .unknown             a:hover { background: @colorUnknown; }
-    > .unknown.handled     a:hover { background: @colorUnknownHandled; }
-    > .unreachable         a:hover { background: @colorUnknown; }
-    > .unreachable.handled a:hover { background: @colorUnknownHandled; }
-    > .warning             a:hover { background: @colorWarning; }
-    > .warning.handled     a:hover { background: @colorWarningHandled; }
-    > .ok                  a:hover { background: @colorOk; }
-    > .pending             a:hover { background: @colorPending; }
-    > .missing             a:hover { background: #ccc; }
-}
+.tiles > div {
+    color: white;
+    width: 12em;
+    display: inline-block;
+    float: left;
+    margin-right: 0.2em;
+    margin-bottom: 0.2em;
+    height: 6em;
+    cursor: pointer;
 
-.tiles > .addnew {
-    border-color: @icinga-blue;
-    a {
-        color: @icinga-blue;
-        &:hover {
-            background: @icinga-blue;
-        }
+    .badges {
+        text-align: center;
+        font-size: 0.5em;
+        display: block;
     }
 
-    &.with-form {
-        width: auto;
-        height: auto;
-        min-width: 30em;
-        min-height: 10em;
+    > a {
+        display: block;
+    }
+
+    &:hover {
+        box-shadow: 0px 0px 5px #666;
+    }
+
+    .actions {
+        font-size: 0.75em;
+        margin-left: 0.5em;
+        padding-top: 0.2em;
+        height: 1.8em;
+
+        i {
+            float: none;
+            display: block;
+            width: 100%;
+            font-size: 1em;
+            line-height: normal;
+            margin: 0;
+            padding: 0 0 0 0.25em;
+        }
         a {
-            display: none;
+            margin: 0;
+            padding: 0;
+            display: inline-block;
+            width: 1.5em;
+            height: 1.5em;
+            border-radius: 0.3em;
+        }
+
+        a:hover {
+            background-color: white;
+            color: @text-color;
         }
     }
 }
 
+
+.tiles > div.parent::before {
+    content: '&';
+    position: absolute;
+    font-size: 1.2em;
+}
+
+.tiles > div.parent {
+    width: 100%;
+    height: 2em;
+}
+
+.tiles > div > a {
+    text-decoration: none;
+    font-size: 0.5em;
+    color: inherit;
+    vertical-align: middle;
+    text-align: center;
+    padding: 1em;
+    font-weight: bold;
+    word-wrap: break-word;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.tiles {
+    > .critical            { background-color: @colorCritical; background-color: @colorCritical; color: white; }
+    > .critical.handled    { background-color: @colorCriticalHandled; }
+    > .down                { background-color: @colorCritical; }
+    > .down.handled        { background-color: @colorCriticalHandled; }
+    > .unknown             { background-color: @colorUnknown; }
+    > .unknown.handled     { background-color: @colorUnknownHandled; }
+    > .unreachable         { background-color: @colorUnknown; }
+    > .unreachable.handled { background-color: @colorUnknownHandled; }
+    > .warning             { background-color: @colorWarning; }
+    > .warning.handled     { background-color: @colorWarningHandled; }
+    > .ok                  { background-color: @colorOk; }
+    > .up                  { background-color: @colorOk; }
+    > .pending             { background-color: @colorPending; }
+    > .missing             { background-color: #ccc; }
+    > .addnew              { background-color: @icinga-blue; }
+}
+
+/*
+.tiles > div:hover {
+    > .critical            { background: white; color: @text-color; }
+    > .critical.handled    { background: @colorCriticalHandled; }
+    > .down                { background: @colorCritical; }
+    > .down.handled        { background: @colorCriticalHandled; }
+    > .unknown             { background: @colorUnknown; }
+    > .unknown.handled     { background: @colorUnknownHandled; }
+    > .unreachable         { background: @colorUnknown; }
+    > .unreachable.handled { background: @colorUnknownHandled; }
+    > .warning             { background: @colorWarning; }
+    > .warning.handled     { background: @colorWarningHandled; }
+    > .ok                  { background: @colorOk; }
+    > .pending             { background: @colorPending; }
+    > .missing             { background: #ccc; }
+}
+*/
 .tiles .missing a {
     pointer-events: none;
     cursor: default;
 }
 
-.tiles.few { font-size: 3em; }
-.tiles.normal { font-size: 2.4em; }
+.tiles.few { font-size: 2.5em; }
+.tiles.normal { font-size: 2.1em; }
 .tiles.many { font-size: 1.8em; }
 
 #layout.twocols, #layout.layout-minimal, .compact {
     .tiles.few { font-size: 1.8em; }
-    .tiles.normal { font-size: 1.4em; }
-    .tiles.many { font-size: 1.2em; }
+    .tiles.normal { font-size: 1.8em; }
+    .tiles.many { font-size: 1.8em; }
 }
 
 #layout.fullscreen-layout .controls {
