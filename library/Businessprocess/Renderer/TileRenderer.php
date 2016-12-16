@@ -26,13 +26,9 @@ class TileRenderer extends Renderer
             )
         );
 
-        if ($this->wantsRootNodes()) {
-            $nodes = $bp->getChildren();
-        } else {
-            $nodes = $this->parent->getChildren();
-        }
+        $nodes = $this->getChildNodes();
 
-        if (! $this->isLocked()) {
+        if (! $this->isLocked() && count($nodes) > 8) {
             $this->add($this->addNewNode());
         }
 
@@ -77,10 +73,26 @@ class TileRenderer extends Renderer
 
     protected function addNewNode()
     {
-        return Element::create(
-            'div',
+        $div = Container::create(
             array('class' => 'addnew')
-        )->add(
+        );
+
+        $actions = Container::create(
+            array(
+                'class'            => 'actions',
+                'data-base-target' => '_self'
+            )
+        );
+
+        $link = Link::create(
+            $this->translate('Add'),
+            $this->getUrl()->with('action', 'add'),
+            null,
+            array(
+                'title' => $this->translate('Add a new business process node')
+            )
+        );
+        $actions->add(
             Link::create(
                 Icon::create('plus'),
                 $this->getUrl()->with('action', 'add'),
@@ -88,7 +100,9 @@ class TileRenderer extends Renderer
                 array(
                     'title' => $this->translate('Add a new business process node')
                 )
-            )->addContent($this->translate('Add'))
+            )
         );
+
+        return $div->add($actions)->add($link);
     }
 }
