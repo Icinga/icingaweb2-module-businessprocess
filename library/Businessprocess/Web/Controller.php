@@ -197,29 +197,8 @@ class Controller extends ModuleController
 
     protected function loadBpConfig()
     {
+        $name = $this->params->get('config');
         $storage = $this->storage();
-        if ($this->hasPermission('businessprocess/create')) {
-            $this->view->processList = array_merge(
-                $storage->listProcesses(),
-                array('.new' => $this->translate('Create new configuration'))
-            );
-        } else {
-            $this->view->processList = $storage->listProcesses();
-        }
-
-        // No process found? Go to welcome page
-        if (empty($this->view->processList)) {
-            $this->redirectNow('businessprocess');
-        }
-
-        $name = $this->params->get(
-            'config',
-            key($this->view->processList)
-        );
-
-        if ($name === '.new') {
-            $this->redirectNow('businessprocess/process/create');
-        }
 
         if (! $storage->hasProcess($name)) {
             $this->httpNotFound(
