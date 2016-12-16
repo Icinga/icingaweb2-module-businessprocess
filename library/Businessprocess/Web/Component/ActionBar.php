@@ -69,7 +69,7 @@ class ActionBar extends BaseElement
             );
         }
 
-        if ($meta->canModify()) {
+        if ($hasChanges || (! $renderer->isLocked()) && $meta->canModify()) {
             $this->add(
                 Link::create(
                     $this->translate('Config'),
