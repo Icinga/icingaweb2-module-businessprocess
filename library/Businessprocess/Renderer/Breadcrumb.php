@@ -25,8 +25,12 @@ class Breadcrumb extends BaseElement
     {
         $bp = $renderer->getBusinessProcess();
         $breadcrumb = new static;
+        $bpUrl = $renderer->getBaseUrl();
+        if ($bpUrl->getParam('action') === 'delete') {
+            $bpUrl->remove('action');
+        }
         $breadcrumb->add(Element::create('li')->add(
-            Link::create($bp->getTitle(), $renderer->getBaseUrl())
+            Link::create($bp->getTitle(), $bpUrl)
         ));
         $path = $renderer->getCurrentPath();
 
