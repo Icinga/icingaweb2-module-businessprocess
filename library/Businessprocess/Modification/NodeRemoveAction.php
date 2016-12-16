@@ -13,12 +13,39 @@ use Icinga\Module\Businessprocess\BusinessProcess;
  */
 class NodeRemoveAction extends NodeAction
 {
+    protected $preserveProperties = array('path');
+
+    protected $path;
+
+    /**
+     * @param array $path
+     * @return $this
+     */
+    public function setPath(array $path)
+    {
+        $this->path = $path;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
     /**
      * @inheritdoc
      */
     public function appliesTo(BusinessProcess $bp)
     {
-        return $bp->hasNode($this->getNodeName());
+        $path = $this->getPath();
+        if ($path === null) {
+            return $bp->hasNodeByPath($this->getNodeName(), $this->getPath());
+        } else {
+            return $bp->hasNode($this->getNodeName());
+        }
     }
 
     /**
@@ -26,6 +53,11 @@ class NodeRemoveAction extends NodeAction
      */
     public function applyTo(BusinessProcess $bp)
     {
-        $bp->removeNode($this->getNodeName());
+        $path = $this->getPath();
+        if ($path === null) {
+            $bp->removeNode($this->getNodeName());
+        } else {
+            $bp->removeNodeByPath($this->getNodeName(), $this->getPath());
+        }
     }
 }

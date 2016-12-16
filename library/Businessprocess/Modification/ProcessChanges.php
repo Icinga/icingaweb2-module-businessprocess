@@ -99,9 +99,11 @@ class ProcessChanges
      *
      * @return $this
      */
-    public function deleteNode(Node $node)
+    public function deleteNode(Node $node, array $path)
     {
-        return $this->push(new NodeRemoveAction($node));
+        $action = new NodeRemoveAction($node);
+        $action->setProperties('path', $path);
+        return $this->push($action);
     }
 
     /**
