@@ -53,6 +53,8 @@ class Breadcrumb extends BaseElement
     protected static function renderNode(BpNode $node, $path, Renderer $renderer)
     {
         // TODO: something more generic than NodeTile?
+        $renderer = clone($renderer);
+        $renderer->lock()->setIsBreadcrumb();
         $p = new NodeTile($renderer, (string) $node, $node, $path);
         $p->attributes()->add('class', $renderer->getNodeClasses($node));
         $p->setTag('li');

@@ -12,7 +12,6 @@ use Icinga\Module\Businessprocess\Html\Html;
 use Icinga\Module\Businessprocess\Html\HtmlString;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Web\Url;
-use Icinga\Web\Request;
 
 abstract class Renderer extends Html
 {
@@ -33,6 +32,9 @@ abstract class Renderer extends Html
 
     /** @var array */
     protected $path = array();
+
+    /** @var bool */
+    protected $isBreadcrumb = false;
 
     /**
      * Renderer constructor.
@@ -251,6 +253,22 @@ abstract class Renderer extends Html
     {
         $this->locked = false;
         return $this;
+    }
+
+    /**
+     * TODO: Get rid of this
+     *
+     * @return $this
+     */
+    public function setIsBreadcrumb()
+    {
+        $this->isBreadcrumb = true;
+        return $this;
+    }
+
+    public function isBreadcrumb()
+    {
+        return $this->isBreadcrumb;
     }
 
     public function timeSince($time, $timeOnly = false)
