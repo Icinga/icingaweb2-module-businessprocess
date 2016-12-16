@@ -47,7 +47,7 @@ class BpConfigForm extends QuickForm
         $this->addElement('textarea', 'Description', array(
             'label'       => $this->translate('Description'),
             'description' => $this->translate(
-                'A slightly more detailed description for this process, about 100-150 characters long   '
+                'A slightly more detailed description for this process, about 100-150 characters long'
             ),
             'rows' => 4,
         ));

@@ -54,7 +54,7 @@ msgstr "- bitte wählen -"
 #: /usr/local/icingaweb-modules/businessprocess/application/forms/BpConfigForm.php:50
 msgid ""
 "A slightly more detailed description for this process, about 100-150 "
-"characters long   "
+"characters long"
 msgstr ""
 "Eine etwas detailliertere Beschreibung dieses Prozesses, etwa 100-150 "
 "Zeichen lang"
