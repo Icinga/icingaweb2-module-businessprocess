@@ -43,6 +43,10 @@ class TileRenderer extends Renderer
             $this->add($this->add(new NodeTile($this, $name, $unbound)));
         }
 
+        if (! $this->isLocked()) {
+            $this->add($this->addNewNode());
+        }
+
         $nodesDiv->addContent($this->getContent());
         $this->setContent($nodesDiv);
 
