@@ -12,8 +12,9 @@ class IndexController extends Controller
      */
     public function indexAction()
     {
-        $this->view->dashboard = Dashboard::create($this->Auth(), $this->storage());
-        $this->view->tabs = $this->overviewTab();
+        $this->setTitle($this->translate('Business Process Overview'));
+        $this->controls()->add($this->overviewTab());
+        $this->content()->add(Dashboard::create($this->Auth(), $this->storage()));
         $this->setAutorefreshInterval(15);
     }
 }
