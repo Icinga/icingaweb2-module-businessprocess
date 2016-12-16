@@ -6,6 +6,7 @@ use Icinga\Module\Businessprocess\BusinessProcess;
 use Icinga\Module\Businessprocess\ConfigDiff;
 use Icinga\Module\Businessprocess\Html\Element;
 use Icinga\Module\Businessprocess\Html\HtmlString;
+use Icinga\Module\Businessprocess\Html\HtmlTag;
 use Icinga\Module\Businessprocess\Html\Icon;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Renderer\Breadcrumb;
@@ -15,11 +16,11 @@ use Icinga\Module\Businessprocess\Renderer\TreeRenderer;
 use Icinga\Module\Businessprocess\Simulation;
 use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Web\Component\ActionBar;
+use Icinga\Module\Businessprocess\Web\Component\Tabs;
 use Icinga\Module\Businessprocess\Web\Controller;
 use Icinga\Module\Businessprocess\Web\Url;
 use Icinga\Web\Notification;
 use Icinga\Web\Widget\Tabextension\DashboardAction;
-use Icinga\Web\Widget\Tabs;
 
 class ProcessController extends Controller
 {
@@ -33,13 +34,18 @@ class ProcessController extends Controller
     {
         $this->assertPermission('businessprocess/create');
 
-        $this->setTitle($this->translate('Create a new business process'));
-        $this->tabsForCreate()->activate('create');
+        $title = $this->translate('Create a new business process');
+        $this->setTitle($title);
+        $this->controls()
+            ->add($this->tabsForCreate()->activate('create'))
+            ->add(HtmlTag::h1($title));
 
-        $this->view->form = $this->loadForm('bpConfig')
+        $this->content()->add(
+            $this->loadForm('bpConfig')
             ->setStorage($this->storage())
             ->setSuccessUrl('businessprocess/process/show')
-            ->handleRequest();
+            ->handleRequest()
+        );
     }
 
     /**
@@ -47,12 +53,18 @@ class ProcessController extends Controller
      */
     public function uploadAction()
     {
-        $this->setTitle($this->translate('Upload a business process config file'));
-        $this->tabsForCreate()->activate('upload');
-        $this->view->form = $this->loadForm('BpUpload')
-            ->setStorage($this->storage())
-            ->setSuccessUrl('businessprocess/process/show')
-            ->handleRequest();
+        $title = $this->translate('Upload a business process config file');
+        $this->setTitle($title);
+        $this->controls()
+            ->add($this->tabsForCreate()->activate('upload'))
+            ->add(HtmlTag::h1($title));
+
+        $this->content()->add(
+            $this->loadForm('BpUpload')
+                ->setStorage($this->storage())
+                ->setSuccessUrl('businessprocess/process/show')
+                ->handleRequest()
+        );
     }
 
     /**
