@@ -277,6 +277,7 @@ class BpNode extends Node
                     $e->getMessage()
                 );
 
+                // Failing nodes are unknown
                 $this->state = 3;
             }
         }
