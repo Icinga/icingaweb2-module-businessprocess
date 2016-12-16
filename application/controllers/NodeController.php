@@ -32,44 +32,4 @@ class NodeController extends Controller
 
         $this->view->node = $node;
     }
-
-    public function simulateAction()
-    {
-        $bp = $this->loadBpConfig();
-        $nodename = $this->getParam('node');
-        $node = $bp->getNode($nodename);
-        $url = Url::fromPath(
-            'businessprocess/process/show?unlocked',
-            array('config' => $bp->getName())
-        );
-
-        $this->view->form = $this->loadForm('simulation')
-             ->setSimulation(new Simulation($bp, $this->session()))
-             ->setNode($node)
-             ->setSuccessUrl($url)
-             ->handleRequest();
-
-        $this->view->node = $node;
-    }
-
-    public function addAction()
-    {
-        $this->defaultTab();
-        $bp = $this->loadBpConfig();
-
-        $url = Url::fromPath(
-            'businessprocess/process/show',
-            array('config' => $bp->getName())
-        );
-
-        $this->view->form = $this->loadForm('process')
-            ->setProcess($bp)
-            ->setSession($this->session())
-            ->setSuccessUrl($url)
-            ->handleRequest();
-    }
-
-    public function deleteAction()
-    {
-    }
 }
