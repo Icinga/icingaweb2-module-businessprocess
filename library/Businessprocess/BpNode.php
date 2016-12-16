@@ -306,7 +306,7 @@ class BpNode extends Node
 
         if (!$this->hasChildren()) {
             // TODO: delegate this to operators, should mostly fail
-            $this->state = 0;
+            $this->state = 3;
             $this->setMissing();
             return $this;
         }
