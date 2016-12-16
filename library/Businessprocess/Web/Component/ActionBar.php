@@ -41,6 +41,20 @@ class ActionBar extends BaseElement
                 )
             );
         }
+
+        $this->add(
+            Link::create(
+                $this->translate('Fullscreen'),
+                $url->with('showFullscreen', true),
+                null,
+                array(
+                    'class'            => 'icon-resize-full-alt',
+                    'title'            => $this->translate('Switch to fullscreen mode'),
+                    'data-base-target' => '_main',
+                )
+            )
+        );
+
         $hasChanges = $config->hasSimulations() || $config->hasBeenChanged();
 
         if ($renderer->isLocked()) {
@@ -83,19 +97,6 @@ class ActionBar extends BaseElement
                 )
             );
         }
-
-        $this->add(
-            Link::create(
-                $this->translate('Fullscreen'),
-                $url->with('showFullscreen', true),
-                null,
-                array(
-                    'class'            => 'icon-resize-full-alt',
-                    'title'            => $this->translate('Switch to fullscreen mode'),
-                    'data-base-target' => '_main',
-                )
-            )
-        );
     }
 
     protected function currentProcessParams($url)
