@@ -157,7 +157,7 @@ class ProcessController extends Controller
     {
 
         $tabs = $this->singleTab($bp->getTitle());
-        if (! $renderer->isLocked()) {
+        if ($renderer->isLocked()) {
             $tabs->extend(new DashboardAction());
         }
 
