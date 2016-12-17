@@ -29,6 +29,19 @@ class AddNodeForm extends QuickForm
 
     public function setup()
     {
+        $view = $this->getView();
+        if ($this->hasParentNode()) {
+            $this->addHtml(
+                '<h2>' . $view->escape(
+                    sprintf($this->translate('Add a node to %s'), $this->parent->getAlias())
+                ) . '</h2>'
+            );
+        } else {
+            $this->addHtml(
+                '<h2>' . $this->translate('Add a new root node') . '</h2>'
+            );
+        }
+
         $type = $this->selectNodeType();
         switch ($type) {
             case 'host':
@@ -51,8 +64,6 @@ class AddNodeForm extends QuickForm
 
     protected function addNewProcess()
     {
-        $this->addHtml('<h2>Add a new node</h2>');
-
         $this->addElement('text', 'name', array(
             'label'        => $this->translate('Name'),
             'required'     => true,
@@ -119,6 +130,14 @@ class AddNodeForm extends QuickForm
         if ($this->hasParentNode()) {
             $types['host'] = $this->translate('Host');
             $types['service'] = $this->translate('Service');
+        } elseif (! $this->hasProcesses()) {
+            $this->addElement('hidden', 'node_type', array(
+                'ignore'     => true,
+                'decorators' => array('ViewHelper'),
+                'value'      => 'new-process'
+            ));
+
+            return 'new-process';
         }
 
         if ($this->hasProcesses()) {
