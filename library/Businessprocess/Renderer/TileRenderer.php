@@ -3,7 +3,6 @@
 namespace Icinga\Module\Businessprocess\Renderer;
 
 use Icinga\Module\Businessprocess\Html\Container;
-use Icinga\Module\Businessprocess\Html\Element;
 use Icinga\Module\Businessprocess\Html\Icon;
 use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Renderer\TileRenderer\NodeTile;
@@ -22,7 +21,7 @@ class TileRenderer extends Renderer
                     'tiles',
                     $this->howMany()
                 ),
-                'data-base-target' => '_main',
+                'data-base-target' => '_self',
             )
         );
 

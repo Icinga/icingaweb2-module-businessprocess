@@ -172,12 +172,16 @@ class NodeTile extends BaseElement
         if ($node instanceof ServiceNode) {
             $link = Link::create(
                 $node->getAlias(),
-                $url
+                $url,
+                null,
+                array('data-base-target' => '_next')
             );
         } elseif ($node instanceof HostNode) {
             $link = Link::create(
                 $node->getHostname(),
-                $url
+                $url,
+                null,
+                array('data-base-target' => '_next')
             );
         } else {
             $link = Link::create($node->getAlias(), $url);
@@ -196,21 +200,25 @@ class NodeTile extends BaseElement
                 Icon::create('dashboard'),
                 $url->with('mode', 'tile'),
                 null,
-                array('title' => $this->translate('Show tiles for this subtree'))
+                array(
+                    'title' => $this->translate('Show tiles for this subtree'),
+                    'data-base-target' => '_next'
+                )
             ))->add(Link::create(
                 Icon::create('sitemap'),
                 $url->with('mode', 'tree'),
                 null,
                 array(
                     'title' => $this->translate('Show this subtree as a tree'),
+                    'data-base-target' => '_next'
                 )
             ));
         } else {
-            $url = $this->makeMonitoredNodeUrl($node);
+            // $url = $this->makeMonitoredNodeUrl($node);
             if ($node instanceof ServiceNode) {
                 $this->actions()->add(Link::create(
                     Icon::create('service'),
-                    $url,
+                    $node->getUrl(),
                     null,
                     array('data-base-target' => '_next')
                 ));
@@ -218,7 +226,7 @@ class NodeTile extends BaseElement
             } elseif ($node instanceof HostNode) {
                 $this->actions()->add(Link::create(
                     Icon::create('host'),
-                    $url,
+                    $node->getUrl(),
                     null,
                     array('data-base-target' => '_next')
                 ));
@@ -242,7 +250,7 @@ class NodeTile extends BaseElement
         } else {
             $this->actions()->add(Link::create(
                 Icon::create('magic'),
-                $renderer->getUrl()->with('action', 'simulate')->with('simulationnode', $this->name),
+                $renderer->getUrl()->with('action', 'simulation')->with('simulationnode', $this->name),
                 null,
                 array('title' => $this->translate('Show the business impact of this node by simulating a specific state'))
             ));
