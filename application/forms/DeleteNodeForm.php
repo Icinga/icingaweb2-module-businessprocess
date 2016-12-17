@@ -28,11 +28,16 @@ class DeleteNodeForm extends QuickForm
 
     public function setup()
     {
+        $this->addHtml(
+            '<h2>' . $this->getView()->escape(
+                sprintf($this->translate('Delete %s'), $this->node->getAlias())
+            ) . '</h2>'
+        );
         $this->addElement('select', 'confirm', array(
             'label'        => $this->translate('Are you sure?'),
             'required'     => true,
             'description'  => $this->translate(
-                'Do you really want to delete this node'
+                'Do you really want to delete this node?'
             ),
             'multiOptions' => $this->optionalEnum(
                 array(
