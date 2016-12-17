@@ -78,7 +78,7 @@ class ProcessController extends Controller
         $bp->retrieveStatesFromBackend();
         $this->handleSimulations($bp);
 
-        $this->setTitle('Business Process "%s"', $bp->getTitle());
+        $this->setTitle($this->translate('Business Process "%s"'), $bp->getTitle());
 
         $renderer = $this->prepareRenderer($bp, $node);
 
@@ -191,7 +191,7 @@ class ProcessController extends Controller
         }
 
         if ($action === 'add') {
-            $form =$this->loadForm('AddNode')
+            $form = $this->loadForm('AddNode')
                 ->setProcess($bp)
                 ->setParentNode($node)
                 ->setSession($this->session())
