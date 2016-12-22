@@ -59,6 +59,16 @@ class ImportedNode extends Node
         return $this->importedNode()->getAlias();
     }
 
+    public function getUrl()
+    {
+        $params = array(
+            'config'    => $this->getConfigName(),
+            'node' => $this->importedNode->getName()
+        );
+
+        return Url::fromPath('businessprocess/process/show', $params);
+    }
+
     /**
      * @inheritdoc
      */
