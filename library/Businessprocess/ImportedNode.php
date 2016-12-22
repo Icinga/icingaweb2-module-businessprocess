@@ -63,7 +63,7 @@ class ImportedNode extends Node
     {
         $params = array(
             'config'    => $this->getConfigName(),
-            'node' => $this->importedNode->getName()
+            'node' => $this->importedNode()->getName()
         );
 
         return Url::fromPath('businessprocess/process/show', $params);
