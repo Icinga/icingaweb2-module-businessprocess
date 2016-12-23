@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Icinga\Module\Businessprocess\Operator;
+namespace Tests\Icinga\Module\Businessprocess;
 
 use Icinga\Module\Businessprocess\BusinessProcess;
 use Icinga\Module\Businessprocess\ServiceNode;
