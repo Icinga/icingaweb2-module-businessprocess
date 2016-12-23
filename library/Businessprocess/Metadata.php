@@ -45,7 +45,7 @@ class Metadata
         if ($title === $this->name) {
             return $title;
         } else {
-            return sprint('%s (%s)', $title, $this->name);
+            return sprintf('%s (%s)', $title, $this->name);
         }
     }
 
