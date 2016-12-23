@@ -79,7 +79,7 @@ class ProcessChanges
 
     /**
      * @param Node|string $nodeName
-     * @param object $properties
+     * @param array $properties
      * @param Node $parent
      *
      * @return $this
@@ -102,7 +102,7 @@ class ProcessChanges
     public function deleteNode(Node $node, array $path)
     {
         $action = new NodeRemoveAction($node);
-        $action->setProperties('path', $path);
+        $action->setPath($path);
         return $this->push($action);
     }
 
@@ -119,7 +119,6 @@ class ProcessChanges
         $this->hasBeenModified = true;
         return $this;
     }
-
 
     /**
      * Get all stacked actions
