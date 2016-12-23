@@ -196,7 +196,7 @@ abstract class Renderer extends Html
      */
     public function setUrl(Url $url)
     {
-        $this->url = clone($url);
+        $this->url = $url->without(array('simulationnode', 'deletenode'));
         $this->setBaseUrl($url);
         return $this;
     }
