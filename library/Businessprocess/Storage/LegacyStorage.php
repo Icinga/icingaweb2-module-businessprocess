@@ -60,6 +60,11 @@ class LegacyStorage extends Storage
     }
 
     /**
+     * All processes readable by the current user
+     *
+     * The returned array has the form <process name> => <nice title>, sorted
+     * by title
+     *
      * @return array
      */
     public function listProcesses()
@@ -72,13 +77,43 @@ class LegacyStorage extends Storage
                 continue;
             }
 
-            $files[$name] = $name;
+            $files[$name] = $meta->getExtendedTitle();
         }
 
-        natsort($files);
+        natcasesort($files);
         return $files;
     }
 
+    /**
+     * All process names readable by the current user
+     *
+     * The returned array has the form <process name> => <process name> and is
+     * sorted
+     *
+     * @return array
+     */
+    public function listProcessNames()
+    {
+        $files = array();
+
+        foreach ($this->listAllProcessNames() as $name) {
+            $meta = $this->loadMetadata($name);
+            if (! $meta->canRead()) {
+                continue;
+            }
+
+            $files[$name] = $name;
+        }
+
+        natcasesort($files);
+        return $files;
+    }
+
+    /**
+     * All available process names, regardless of eventual restrictions
+     *
+     * @return array
+     */
     public function listAllProcessNames()
     {
         $files = array();
@@ -94,7 +129,7 @@ class LegacyStorage extends Storage
             }
         }
 
-        natsort($files);
+        natcasesort($files);
         return $files;
     }
 

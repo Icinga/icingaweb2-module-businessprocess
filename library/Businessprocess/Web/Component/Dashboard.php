@@ -37,7 +37,7 @@ class Dashboard extends BaseElement
         $this->auth = $auth;
         $this->storage = $storage;
         // TODO: Auth?
-        $processes = $storage->listProcesses();
+        $processes = $storage->listProcessNames();
         $this->add(
             HtmlTag::h1($this->translate('Welcome to your Business Process Overview'))
         );
