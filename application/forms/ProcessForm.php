@@ -30,13 +30,21 @@ class ProcessForm extends QuickForm
 
     public function setup()
     {
-        $this->addElement('text', 'name', array(
-            'label'        => $this->translate('Name'),
-            'required'     => true,
-            'description' => $this->translate(
-                'This is the unique identifier of this process'
-            ),
-        ));
+        if ($this->node === null) {
+            $this->addElement('text', 'name', array(
+                'label'        => $this->translate('Name'),
+                'required'     => true,
+                'description' => $this->translate(
+                    'This is the unique identifier of this process'
+                ),
+            ));
+        } else {
+            $this->addHtml(
+                '<h2>' . $this->getView()->escape(
+                    sprintf($this->translate('Modify "%s"'), $this->node->getAlias())
+                ) . '</h2>'
+            );
+        }
 
         $this->addElement('text', 'alias', array(
             'label'        => $this->translate('Title'),
@@ -84,88 +92,16 @@ class ProcessForm extends QuickForm
             )
         ));
 
-        $this->addElement('select', 'object_type', array(
-            'label'        => $this->translate('Add children'),
-            'required'     => $this->node === null || ! $this->node->hasChildren(),
-            'ignore'       => true,
-            'class'        => 'autosubmit',
-            'multiOptions' => $this->optionalEnum(
-                array(
-                    'hosts'   => $this->translate('Host'),
-                    'service' => $this->translate('Service'),
-                    'process' => $this->translate('Another process'),
-                    'include' => $this->translate('External process'),
-                )
-            )
-        ));
-
-        switch ($this->getSentValue('object_type')) {
-            case 'hosts':
-                $this->addHostsElement();
-                break;
-            case 'service':
-                $this->addHostElement();
-                if ($host = $this->getSentValue('host')) {
-                    $this->addServicesElement($host);
-                }
-                break;
-            case 'process':
-                $this->addProcessesElement();
-                break;
+        if ($node = $this->node) {
+            if ($node->hasAlias()) {
+                $this->getElement('alias')->setValue($node->getAlias());
+            }
+            $this->getElement('operator')->setValue($node->getOperator());
+            $this->getElement('display')->setValue($node->getDisplay());
+            if ($node->hasInfoUrl()) {
+                $this->getElement('url')->setValue($node->getInfoUrl());
+            }
         }
-    }
-
-    protected function addHostsElement()
-    {
-        $this->addElement('multiselect', 'children', array(
-            'label'        => $this->translate('Hosts'),
-            'required'     => true,
-            'size'         => 14,
-            'style'        => 'width: 25em',
-            'multiOptions' => $this->enumHostList(),
-            'description'  => $this->translate(
-                'Hosts that should be part of this business process node'
-            )
-        ));
-    }
-
-    protected function addHostElement()
-    {
-        $this->addElement('select', 'host', array(
-            'label'        => $this->translate('Host'),
-            'required'     => true,
-            'ignore'       => true,
-            'class'        => 'autosubmit',
-            'multiOptions' => $this->optionalEnum($this->enumHostList()),
-        ));
-    }
-
-    protected function addServicesElement($host)
-    {
-        $this->addElement('multiselect', 'children', array(
-            'label'        => $this->translate('Services'),
-            'required'     => true,
-            'size'         => 14,
-            'style'        => 'width: 25em',
-            'multiOptions' => $this->enumServiceList($host),
-            'description'  => $this->translate(
-                'Services that should be part of this business process node'
-            )
-        ));
-    }
-
-    protected function addProcessesElement()
-    {
-        $this->addElement('multiselect', 'children', array(
-            'label'        => $this->translate('Process nodes'),
-            'required'     => true,
-            'size'         => 14,
-            'style'        => 'width: 25em',
-            'multiOptions' => $this->enumProcesses(),
-            'description'  => $this->translate(
-                'Other processes that should be part of this business process node'
-            )
-        ));
     }
 
     /**
@@ -209,88 +145,11 @@ class ProcessForm extends QuickForm
         return $this;
     }
 
-    protected function enumHostList()
-    {
-        $names = $this->backend->select()->from('hostStatus', array(
-            'hostname'    => 'host_name',
-        ))->order('host_name')->getQuery()->fetchColumn();
-
-        // fetchPairs doesn't seem to work when using the same column with
-        // different aliases twice
-        return array_combine((array) $names, (array) $names);
-    }
-
-    protected function enumServiceList($host)
-    {
-        $query = $this->backend->select()->from(
-            'serviceStatus',
-            array('service' => 'service_description')
-        )->where('host_name', $host);
-        $query->order('service_description');
-        $names = $query->getQuery()->fetchColumn();
-
-        $services = array();
-        foreach ($names as $name) {
-            $services[$host . ';' . $name] = $name;
-        }
-
-        return $services;
-    }
-
-    protected function enumProcesses()
-    {
-        $list = array();
-
-        foreach ($this->bp->getNodes() as $node) {
-            if ($node instanceof BpNode) {
-                // TODO: Blacklist parents
-                $list[(string) $node] = (string) $node; // display name?
-            }
-        }
-
-        natsort($list);
-        return $list;
-    }
-
-    protected function fetchObjectList()
-    {
-        $this->objectList = array();
-        $hosts = $this->backend->select()->from('hostStatus', array(
-            'hostname'    => 'host_name',
-            'in_downtime' => 'host_in_downtime',
-            'ack'         => 'host_acknowledged',
-            'state'       => 'host_state'
-        ))->order('host_name')->getQuery()->fetchAll();
-
-        $services = $this->backend->select()->from('serviceStatus', array(
-            'hostname'    => 'host_name',
-            'service'     => 'service_description',
-            'in_downtime' => 'service_in_downtime',
-            'ack'         => 'service_acknowledged',
-            'state'       => 'service_state'
-        ))->order('host_name')->order('service_description')->getQuery()->fetchAll();
-
-        foreach ($hosts as $host) {
-            $this->objectList[$host->hostname] = array(
-                $host->hostname . ';Hoststatus' => 'Host Status'
-            );
-        }
-
-        foreach ($services as $service) {
-            $this->objectList[$service->hostname][
-                $service->hostname . ';' . $service->service
-            ] = $service->service;
-        }
-
-        return $this;
-    }
-
     public function onSuccess()
     {
         $changes = ProcessChanges::construct($this->bp, $this->session);
 
         $modifications = array();
-        $children = $this->getValue('children');
         $alias    = $this->getValue('alias');
         $operator = $this->getValue('operator');
         $display  = $this->getValue('display');
@@ -301,7 +160,6 @@ class ProcessForm extends QuickForm
         if (empty($alias)) {
             $alias = null;
         }
-        ksort($children);
         // TODO: rename
 
         if ($node = $this->node) {
@@ -311,9 +169,6 @@ class ProcessForm extends QuickForm
             }
             if ($operator !== $node->getOperator()) {
                 $modifications['operator'] = $operator;
-            }
-            if ($children !== $node->getChildNames()) {
-                $modifications['childNames'] = $children;
             }
             if ($url !== $node->getInfoUrl()) {
                 $modifications['infoUrl'] = $url;
@@ -325,7 +180,6 @@ class ProcessForm extends QuickForm
             $modifications = array(
                 'display'    => $display,
                 'operator'   => $operator,
-                'childNames' => $children,
                 'infoUrl'    => $url,
                 'alias'      => $alias,
             );
