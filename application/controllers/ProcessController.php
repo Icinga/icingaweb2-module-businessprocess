@@ -3,7 +3,7 @@
 namespace Icinga\Module\Businessprocess\Controllers;
 
 use Icinga\Module\Businessprocess\BusinessProcess;
-use Icinga\Module\Businessprocess\ConfigDiff;
+use Icinga\Module\Businessprocess\Storage\ConfigDiff;
 use Icinga\Module\Businessprocess\Html\Element;
 use Icinga\Module\Businessprocess\Html\HtmlString;
 use Icinga\Module\Businessprocess\Html\HtmlTag;
