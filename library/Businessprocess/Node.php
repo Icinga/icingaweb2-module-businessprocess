@@ -288,8 +288,35 @@ abstract class Node
         return count($this->parents) > 0;
     }
 
+    public function hasParentName($name)
+    {
+        foreach ($this->getParents() as $parent) {
+            if ($parent->getName() === $name) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function removeParent($name)
+    {
+        $this->parents = array_filter(
+            $this->parents,
+            function (BpNode $parent) use ($name) {
+                return $parent->getName() !== $name;
+            }
+        );
+    }
+
     public function getParents()
     {
+        return $this->parents;
+    }
+
+    public function getPaths()
+    {
+        // TODO! -> for delete etc
         return $this->parents;
     }
 
