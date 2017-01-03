@@ -2,6 +2,7 @@
 
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 
+/** @var \Icinga\Application\Modules\Module $this */
 $section = $this->menuSection(N_('Business Processes'), array(
     'url'      => 'businessprocess',
     'icon'     => 'sitemap',
@@ -14,7 +15,7 @@ try {
     );
 
     $prio = 0;
-    foreach ($storage->listProcesses() as $name) {
+    foreach ($storage->listProcessNames() as $name) {
         $prio++;
 
         $meta = $storage->loadMetadata($name);
