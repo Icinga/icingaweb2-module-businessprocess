@@ -375,18 +375,17 @@ class ProcessController extends Controller
     public function downloadAction()
     {
         $bp = $this->loadModifiedBpConfig();
-
-        header(
+        $response = $this->getResponse();
+        $response->setHeader(
+            'Content-Disposition',
             sprintf(
-                'Content-Disposition: attachment; filename="%s.conf";',
+                'attachment; filename="%s.conf";',
                 $bp->getName()
             )
         );
-        header('Content-Type: text/plain');
+        $response->setHeader('Content-Type', 'text/plain');
 
         echo $this->storage()->render($bp);
-        // Didn't have time to lookup how to correctly disable our renderers
-        // TODO: no exit :)
         $this->doNotRender();
     }
 
