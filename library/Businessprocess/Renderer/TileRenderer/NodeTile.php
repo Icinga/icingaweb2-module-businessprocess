@@ -110,7 +110,7 @@ class NodeTile extends BaseElement
         }
     }
 
-    protected function makeBpUrl(BpNode $node)
+    protected function buildBaseNodeUrl(Node $node)
     {
         $path = $this->path;
         $name = $this->name; // TODO: ??
@@ -135,6 +135,11 @@ class NodeTile extends BaseElement
         }
 
         return $url;
+    }
+
+    protected function makeBpUrl(BpNode $node)
+    {
+        return $this->buildBaseNodeUrl($node);
     }
 
     protected function makeMonitoredNodeUrl(MonitoredNode $node)
@@ -243,22 +248,30 @@ class NodeTile extends BaseElement
         if ($node instanceof BpNode) {
             $this->actions()->add(Link::create(
                 Icon::create('edit'),
-                $renderer->getUrl()->with('action', 'edit'),
+                $renderer->getUrl()->with('action', 'edit')->with('editnode', $node->getName()),
                 null,
                 array('title' => $this->translate('Modify this business process node'))
             ));
-        } else {
+        } elseif ($node instanceof MonitoredNode) {
             $this->actions()->add(Link::create(
                 Icon::create('magic'),
-                $renderer->getUrl()->with('action', 'simulation')->with('simulationnode', $this->name),
+                $renderer->getUrl()->with('action', 'simulation')
+                    ->with('simulationnode', $this->name),
                 null,
-                array('title' => $this->translate('Show the business impact of this node by simulating a specific state'))
+                array('title' => $this->translate(
+                    'Show the business impact of this node by simulating a specific state'
+                ))
             ));
         }
 
+        $params = array(
+            'action'     => 'delete',
+            'deletenode' => $node->getName(),
+        );
+
         $this->actions()->add(Link::create(
             Icon::create('cancel'),
-            $renderer->getUrl()->with('action', 'delete'),
+            $renderer->getUrl()->with($params),
             null,
             array('title' => $this->translate('Delete this node'))
         ));
