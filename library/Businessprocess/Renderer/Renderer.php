@@ -77,6 +77,14 @@ abstract class Renderer extends Html
     }
 
     /**
+     * @return BpNode
+     */
+    public function getParentNode()
+    {
+        return $this->parent;
+    }
+
+    /**
      * @return BpNode[]
      */
     public function getParentNodes()
@@ -196,7 +204,12 @@ abstract class Renderer extends Html
      */
     public function setUrl(Url $url)
     {
-        $this->url = $url->without(array('simulationnode', 'deletenode'));
+        $this->url = $url->without(array(
+            'deletenode',
+            'deleteparent',
+            'editnode',
+            'simulationnode'
+        ));
         $this->setBaseUrl($url);
         return $this;
     }
