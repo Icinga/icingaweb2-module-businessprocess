@@ -165,7 +165,7 @@ class AddNodeForm extends QuickForm
         $this->addElement('multiselect', 'children', array(
             'label'        => $this->translate('Hosts'),
             'required'     => true,
-            'size'         => 14,
+            'size'         => 8,
             'style'        => 'width: 25em',
             'multiOptions' => $this->enumHostList(),
             'description'  => $this->translate(
@@ -200,7 +200,7 @@ class AddNodeForm extends QuickForm
         $this->addElement('multiselect', 'children', array(
             'label'        => $this->translate('Services'),
             'required'     => true,
-            'size'         => 14,
+            'size'         => 8,
             'style'        => 'width: 25em',
             'multiOptions' => $this->enumServiceList($host),
             'description'  => $this->translate(
@@ -214,7 +214,7 @@ class AddNodeForm extends QuickForm
         $this->addElement('multiselect', 'children', array(
             'label'        => $this->translate('Process nodes'),
             'required'     => true,
-            'size'         => 14,
+            'size'         => 8,
             'style'        => 'width: 25em',
             'multiOptions' => $this->enumProcesses(),
             'description'  => $this->translate(
