@@ -202,10 +202,16 @@ class ProcessController extends Controller
         } elseif ($action === 'delete') {
                 $form =$this->loadForm('DeleteNode')
                     ->setProcess($bp)
-                    ->setNode($node)
-                    ->setPath($this->params->getValues('path'))
+                    ->setNode($bp->getNode($this->params->get('deletenode')))
+                    ->setParentNode($node)
                     ->setSession($this->session())
                     ->handleRequest();
+        } elseif ($action === 'edit') {
+            $form =$this->loadForm('Process')
+                ->setProcess($bp)
+                ->setNode($bp->getNode($this->params->get('editnode')))
+                ->setSession($this->session())
+                ->handleRequest();
         } elseif ($action === 'simulation') {
             $form = $this->loadForm('simulation')
                 ->setNode($bp->getNode($this->params->get('simulationnode')))
