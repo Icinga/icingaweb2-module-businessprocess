@@ -8,14 +8,15 @@ use Icinga\Module\Businessprocess\Html\Element;
 use Icinga\Module\Businessprocess\Html\HtmlString;
 use Icinga\Module\Businessprocess\Html\HtmlTag;
 use Icinga\Module\Businessprocess\Html\Icon;
+use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Renderer\Breadcrumb;
 use Icinga\Module\Businessprocess\Renderer\Renderer;
 use Icinga\Module\Businessprocess\Renderer\TileRenderer;
 use Icinga\Module\Businessprocess\Renderer\TreeRenderer;
 use Icinga\Module\Businessprocess\Simulation;
-use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Web\Component\ActionBar;
+use Icinga\Module\Businessprocess\Web\Component\RenderedProcessActionBar;
 use Icinga\Module\Businessprocess\Web\Component\Tabs;
 use Icinga\Module\Businessprocess\Web\Controller;
 use Icinga\Module\Businessprocess\Web\Url;
@@ -122,7 +123,9 @@ class ProcessController extends Controller
         }
         $controls->add(Breadcrumb::create($renderer));
         if (! $this->showFullscreen && ! $this->view->compact) {
-            $controls->add(new ActionBar($bp, $renderer, $this->Auth(), $this->url()));
+            $controls->add(
+                new RenderedProcessActionBar($bp, $renderer, $this->Auth(), $this->url())
+            );
         }
     }
 
