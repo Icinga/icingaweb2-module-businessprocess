@@ -5,6 +5,7 @@ namespace Icinga\Module\Businessprocess;
 use Icinga\Application\Config;
 use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
+use Icinga\Module\Businessprocess\Web\Url;
 use Exception;
 
 class ImportedNode extends Node
@@ -12,24 +13,42 @@ class ImportedNode extends Node
     /** @var string */
     protected $configName;
 
+    /** @var string */
+    protected $nodeName;
+
     /** @var BpNode */
     private $node;
 
     protected $className = 'subtree';
+
+    /** @var BusinessProcess */
+    protected $config;
 
     /**
      * @inheritdoc
      */
     public function __construct(BusinessProcess $bp, $object)
     {
-        $this->name       = $object->name;
+        $this->bp = $bp;
         $this->configName = $object->configName;
-        $this->bp         = $bp;
+        $this->name = '@' . $object->configName;
+        if (property_exists($object, 'node')) {
+            $this->nodeName = $object->node;
+            $this->name .= ':' . $object->node;
+        } else {
+            $this->useAllRootNodes();
+        }
+
         if (isset($object->state)) {
             $this->setState($object->state);
         } else {
             $this->setMissing();
         }
+    }
+
+    public function hasNode()
+    {
+        return $this->nodeName !== null;
     }
 
     /**
@@ -46,6 +65,11 @@ class ImportedNode extends Node
     public function getState()
     {
         if ($this->state === null) {
+            try {
+                $this->importedConfig()->retrieveStatesFromBackend();
+            } catch (Exception $e) {
+            }
+
             $this->state = $this->importedNode()->getState();
         }
         return $this->state;
@@ -84,8 +108,10 @@ class ImportedNode extends Node
     public function isInDowntime()
     {
         if ($this->downtime === null) {
+            $this->getState();
             $this->downtime = $this->importedNode()->isInDowntime();
         }
+
         return $this->downtime;
     }
 
@@ -95,8 +121,10 @@ class ImportedNode extends Node
     public function isAcknowledged()
     {
         if ($this->ack === null) {
+            $this->getState();
             $this->downtime = $this->importedNode()->isAcknowledged();
         }
+
         return $this->ack;
     }
 
@@ -118,6 +146,32 @@ class ImportedNode extends Node
     protected function loadImportedNode()
     {
         try {
+            $import = $this->importedConfig();
+
+            return $import->getNode($this->nodeName);
+        } catch (Exception $e) {
+            return $this->createFailedNode($e);
+        }
+    }
+
+    protected function useAllRootNodes()
+    {
+        try {
+            $bp = $this->importedConfig();
+            $this->node = new BpNode($bp, (object) array(
+                'name'        => $this->getName(),
+                'operator'    => '&',
+                'child_names' => $bp->listRootNodes(),
+            ));
+        } catch (Exception $e) {
+
+            $this->createFailedNode($e);
+        }
+    }
+
+    protected function importedConfig()
+    {
+        if ($this->config === null) {
             $import = $this->storage()->loadProcess($this->configName);
             if ($this->bp->usesSoftStates()) {
                 $import->useSoftStates();
@@ -125,13 +179,10 @@ class ImportedNode extends Node
                 $import->useHardStates();
             }
 
-            $import->retrieveStatesFromBackend();
-
-            return $import->getNode($this->name);
-        } catch (Exception $e) {
-
-            return $this->createFailedNode($e);
+            $this->config = $import;
         }
+
+        return $this->config;
     }
 
     /**
@@ -151,8 +202,9 @@ class ImportedNode extends Node
      */
     protected function createFailedNode(Exception $e)
     {
-        $node = new BpNode($this->bp, (object) array(
-            'name'        => $this->name,
+        $this->bp->addError($e->getMessage());
+        $node = new BpNode($this->importedConfig(), (object) array(
+            'name'        => $this->getName(),
             'operator'    => '&',
             'child_names' => array()
         ));
