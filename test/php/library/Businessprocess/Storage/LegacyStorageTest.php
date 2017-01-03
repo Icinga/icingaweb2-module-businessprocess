@@ -29,10 +29,10 @@ class LegacyStorageTest extends BaseTestCase
     public function testAllAvailableProcessesAreListed()
     {
         $keys = array_keys($this->makeInstance()->listProcesses());
-        sort($keys);
         $this->assertEquals(
             array(
                 'broken_wrong-operator',
+                'combined',
                 'simple_with-header',
                 'simple_without-header',
             ),
@@ -43,11 +43,11 @@ class LegacyStorageTest extends BaseTestCase
     public function testHeaderTitlesAreRespectedInProcessList()
     {
         $keys = array_values($this->makeInstance()->listProcesses());
-        sort($keys);
         $this->assertEquals(
             array(
-                'Simple with header (simple_with-header)',
                 'broken_wrong-operator',
+                'combined',
+                'Simple with header (simple_with-header)',
                 'simple_without-header',
             ),
             $keys
@@ -117,6 +117,14 @@ class LegacyStorageTest extends BaseTestCase
         $this->assertInstanceOf(
             $this->processClass,
             $this->makeLoop()
+        );
+    }
+
+    public function testImportedNodesCanBeParsed()
+    {
+        $this->assertInstanceOf(
+            $this->processClass,
+            $this->makeInstance()->loadProcess('combined')
         );
     }
 }
