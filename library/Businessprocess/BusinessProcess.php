@@ -491,10 +491,20 @@ class BusinessProcess
         return $node;
     }
 
-    public function createImportedNode($config, $name)
+    public function createMissingBp($name)
     {
-        $node = new ImportedNode($this, (object) array('name' => $name, 'configName' => $config));
-        $this->nodes[$name] = $node;
+        return $this->createBp($name)->setMissing();
+    }
+
+    public function createImportedNode($config, $name = null)
+    {
+        $params = (object) array('configName' => $config);
+        if ($name !== null) {
+            $params->node = $name;
+        }
+
+        $node = new ImportedNode($this, $params);
+        $this->nodes[$node->getName()] = $node;
         return $node;
     }
 
