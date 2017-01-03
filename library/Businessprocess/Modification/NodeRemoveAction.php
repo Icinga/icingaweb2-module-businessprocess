@@ -13,26 +13,26 @@ use Icinga\Module\Businessprocess\BusinessProcess;
  */
 class NodeRemoveAction extends NodeAction
 {
-    protected $preserveProperties = array('path');
+    protected $preserveProperties = array('parentName');
 
-    protected $path;
+    protected $parentName;
 
     /**
-     * @param array $path
+     * @param $parentName
      * @return $this
      */
-    public function setPath(array $path)
+    public function setParentName($parentName = null)
     {
-        $this->path = $path;
+        $this->parentName = $parentName;
         return $this;
     }
 
     /**
      * @return mixed
      */
-    public function getPath()
+    public function getParentName()
     {
-        return $this->path;
+        return $this->parentName;
     }
 
     /**
@@ -40,11 +40,11 @@ class NodeRemoveAction extends NodeAction
      */
     public function appliesTo(BusinessProcess $bp)
     {
-        $path = $this->getPath();
-        if ($path === null) {
-            return $bp->hasNodeByPath($this->getNodeName(), $this->getPath());
-        } else {
+        $parent = $this->getParentName();
+        if ($parent === null) {
             return $bp->hasNode($this->getNodeName());
+        } else {
+            return $bp->hasNode($this->getNodeName()) && $bp->hasNode($this->getParentName()) ;
         }
     }
 
@@ -53,11 +53,15 @@ class NodeRemoveAction extends NodeAction
      */
     public function applyTo(BusinessProcess $bp)
     {
-        $path = $this->getPath();
-        if ($path === null) {
+        $parent = $this->getParentName();
+        if ($parent === null) {
             $bp->removeNode($this->getNodeName());
         } else {
-            $bp->removeNodeByPath($this->getNodeName(), $this->getPath());
+            $node = $bp->getNode($this->getNodeName());
+            $node->removeParent($parent);
+            if (! $node->hasParents()) {
+                $bp->removeNode($this->getNodeName());
+            }
         }
     }
 }

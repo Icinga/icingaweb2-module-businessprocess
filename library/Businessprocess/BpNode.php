@@ -132,6 +132,24 @@ class BpNode extends Node
         return $problems;
     }
 
+    public function hasChild($name)
+    {
+        return in_array($name, $this->childNames);
+    }
+
+    public function removeChild($name)
+    {
+        if (($key = array_search($name, $this->childNames)) !== false) {
+            unset($this->childNames[$key]);
+
+            if (! empty($this->children)) {
+                unset($this->children[$name]);
+            }
+        }
+
+        return $this;
+    }
+
     public function getProblemTree()
     {
         $tree = array();

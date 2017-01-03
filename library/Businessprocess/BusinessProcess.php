@@ -498,6 +498,47 @@ class BusinessProcess
         return $node;
     }
 
+    public function hasNodeByPath($nodeName, $path = array())
+    {
+        if (! $this->hasNode($nodeName)) {
+            return false;
+        }
+
+        $node = $this->getNode($nodeName);
+        $parents = $node->getParents();
+        foreach ($parents as $parent) {
+
+        }
+        while (! empty($path)) {
+
+        }
+
+        return empty($path);
+    }
+
+    public function getNodeByPath($nodeName, $path = array())
+    {
+        if (! $this->hasNode($nodeName)) {
+            throw new NotFoundError(
+                'Node %s not found at %s',
+                $nodeName,
+                implode(' -> ', $path)
+            );
+        }
+    }
+
+    public function getPathsToNode($node)
+    {
+        $paths = array();
+        foreach ($node->getParents() as $parent) {
+            foreach ($parent->getPathsToNode() as $path) {
+                $paths[] = $path;
+            }
+        }
+
+        return $paths;
+    }
+
     /**
      * @param $name
      * @return Node
@@ -577,7 +618,15 @@ class BusinessProcess
 
     public function removeNode($name)
     {
-        throw new ProgrammingError('Not implemented yet');
+        unset($this->nodes[$name]);
+        if (array_key_exists($name, $this->root_nodes)) {
+            unset($this->root_nodes[$name]);
+        }
+        foreach ($this->getBpNodes() as $node) {
+            if ($node->hasChild($name)) {
+                $node->removeChild($name);
+            }
+        }
     }
 
     /**

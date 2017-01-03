@@ -5,6 +5,7 @@ namespace Icinga\Module\Businessprocess\Forms;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BusinessProcess;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
+use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 use Icinga\Web\Session\SessionNamespace;
@@ -17,32 +18,62 @@ class DeleteNodeForm extends QuickForm
     /** @var BusinessProcess */
     protected $bp;
 
-    /** @var BpNode */
+    /** @var Node */
     protected $node;
 
-    /** @var array */
-    protected $path;
+    /** @var BpNode */
+    protected $parentNode;
 
     /** @var SessionNamespace */
     protected $session;
 
     public function setup()
     {
+        $node = $this->node;
+        $view = $this->getView();
         $this->addHtml(
-            '<h2>' . $this->getView()->escape(
-                sprintf($this->translate('Delete %s'), $this->node->getAlias())
+            '<h2>' . $view->escape(
+                sprintf($this->translate('Delete "%s"'), $node->getAlias())
             ) . '</h2>'
         );
+
+        $biLink = $view->qlink(
+            $node->getAlias(),
+            'director/node/impact',
+            array('node' => $node->getName()),
+            array('data-base-target' => '_next')
+        );
+        $this->addHtml(
+            '<p>' . sprintf(
+                $view->escape(
+                    $this->translate('Unsure? Show business impact of "%s"')
+                ),
+                $biLink
+            ) . '</p>'
+        );
+
+        if ($this->parentNode) {
+            $yesMsg = sprintf(
+                $this->translate('Delete from %s'),
+                $this->parentNode->getAlias()
+            );
+        } else {
+            $yesMsg = sprintf(
+                $this->translate('Delete root node "%s"'),
+                $this->node->getAlias()
+            );
+        }
+
         $this->addElement('select', 'confirm', array(
             'label'        => $this->translate('Are you sure?'),
             'required'     => true,
             'description'  => $this->translate(
                 'Do you really want to delete this node?'
             ),
-            'multiOptions' => $this->optionalEnum(
-                array(
+            'multiOptions' => $this->optionalEnum(array(
                 'no'  => $this->translate('No'),
-                'yes' => $this->translate('Yes'),
+                'yes' => $yesMsg,
+                'all' => sprintf($this->translate('Delete all occurrences of %s'), $node->getAlias()),
             ))
         ));
     }
@@ -69,22 +100,22 @@ class DeleteNodeForm extends QuickForm
     }
 
     /**
-     * @param BpNode $node
+     * @param Node $node
      * @return $this
      */
-    public function setNode(BpNode $node)
+    public function setNode(Node $node)
     {
         $this->node = $node;
         return $this;
     }
 
     /**
-     * @param array $path
+     * @param BpNode|null $node
      * @return $this
      */
-    public function setPath(array $path)
+    public function setParentNode(BpNode $node = null)
     {
-        $this->path = $path;
+        $this->parentNode = $node;
         return $this;
     }
 
@@ -101,7 +132,17 @@ class DeleteNodeForm extends QuickForm
     public function onSuccess()
     {
         $changes = ProcessChanges::construct($this->bp, $this->session);
-        $changes->deleteNode($this->node, $this->path);
+
+        switch ($this->getValue('confirm')) {
+            case 'yes':
+                $changes->deleteNode($this->node, $this->path);
+                break;
+            case 'all':
+                $changes->deleteNode($this->node);
+                break;
+            case 'no':
+                $this->setSuccessMessage($this->translate('Well, maybe next time'));
+        }
         // Trigger session desctruction to make sure it get's stored.
         // TODO: figure out why this is necessary, might be an unclean shutdown on redirect
         unset($changes);
