@@ -31,6 +31,11 @@ class NodeAddChildrenAction extends NodeAction
     public function applyTo(BusinessProcess $bp)
     {
         /** @var BpNode $node */
+        if (! $this->hasNode()) {
+            // TODO: We end up here when defining "top nodes", but that would probably
+            //       be a different action
+            return $this;
+        }
         $node = $bp->getNode($this->getNodeName());
         $existing = $node->getChildNames();
         foreach ($this->children as $name) {
