@@ -242,7 +242,7 @@ class BpNode extends Node
 
     public function hasInfoUrl()
     {
-        return $this->url !== null;
+        return ! empty($this->url);
     }
 
     public function getInfoUrl()
