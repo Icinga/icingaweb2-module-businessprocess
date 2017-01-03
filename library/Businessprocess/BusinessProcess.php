@@ -4,6 +4,7 @@ namespace Icinga\Module\Businessprocess;
 
 use Icinga\Application\Benchmark;
 use Icinga\Exception\IcingaException;
+use Icinga\Exception\NotFoundError;
 use Icinga\Exception\ProgrammingError;
 use Icinga\Module\Businessprocess\Exception\NestingError;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
@@ -429,6 +430,13 @@ class BusinessProcess
     {
         ksort($this->root_nodes);
         return $this->root_nodes;
+    }
+
+    public function listRootNodes()
+    {
+        $names = array_keys($this->root_nodes);
+        sort($names);
+        return $names;
     }
 
     public function getNodes()
