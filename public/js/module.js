@@ -33,6 +33,8 @@
             this.module.on('mouseenter', 'table.node.missing > tbody > tr > td > span', this.procMouseOver);
             this.module.on('mouseleave', 'div.bp', this.procMouseOut);
 
+            this.module.on('click', 'div.tiles > div', this.tileClick);
+
             this.module.icinga.logger.debug('BP module initialized');
         },
 
@@ -75,6 +77,10 @@
 
         hideInactiveFormDescriptions: function($container) {
             $container.find('dd').not('.active').find('p.description').hide();
+        },
+
+        tileClick: function(event) {
+            $(event.currentTarget).find('> a').first().trigger('click');
         },
 
         /**
