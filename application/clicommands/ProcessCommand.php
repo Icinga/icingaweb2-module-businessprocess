@@ -49,7 +49,7 @@ class ProcessCommand extends Command
     public function listAction()
     {
         $noTitle = $this->params->shift('no-title');
-        foreach ($this->storage->listProcesses() as $key => $title) {
+        foreach ($this->storage->listProcessNames() as $key => $title) {
             if ($noTitle) {
                 echo $key . "\n";
             } else {
@@ -146,7 +146,7 @@ class ProcessCommand extends Command
 
     protected function getFirstProcessName()
     {
-        $list = $this->storage->listProcesses();
+        $list = $this->storage->listProcessNames();
         return key($list);
     }
 }
