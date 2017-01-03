@@ -75,7 +75,7 @@ class Controller extends ModuleController
     protected function actions()
     {
         if ($this->view->actions === null) {
-            $this->view->actions = ActionBar::create();
+            $this->view->actions = new ActionBar();
         }
 
         return $this->view->actions;
@@ -193,6 +193,13 @@ class Controller extends ModuleController
         }
         $bp->applyChanges($changes);
         return $bp;
+    }
+
+    protected function doNotRender()
+    {
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        return $this;
     }
 
     protected function loadBpConfig()
