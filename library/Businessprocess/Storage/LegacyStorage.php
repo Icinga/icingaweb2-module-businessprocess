@@ -463,10 +463,19 @@ class LegacyStorage extends Storage
                     $bp->createService($host, $service);
                 }
             }
-            if ($val[0] === '@' && strpos($val, ':') !== false) {
-                list($config, $nodeName) = preg_split('~:\s*~', substr($val, 1), 2);
-                $bp->createImportedNode($config, $nodeName);
-                $val = $nodeName;
+            if ($val[0] === '@') {
+                if (strpos($val, ':') === false) {
+                    throw new ConfigurationError(
+                        "I'm unable to import full external configs, a node needs to be provided for '%s'",
+                        $val
+                    );
+                    // TODO: this might work:
+                    // $node = $bp->createImportedNode(substr($val, 1));
+                } else {
+                    list($config, $nodeName) = preg_split('~:\s*~', substr($val, 1), 2);
+                    $node = $bp->createImportedNode($config, $nodeName);
+                }
+                $val = $node->getName();
             }
 
             $childNames[] = $val;
