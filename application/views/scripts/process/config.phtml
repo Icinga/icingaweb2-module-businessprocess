@@ -1,16 +1,2 @@
-<div class="controls">
-<?= $this->tabs ?>
-  <h1><?= $this->escape($this->title) ?>
-  <a href="<?= $this->url('businessprocess/process/source', array(
-'config' => $this->configName
-)) ?>" title="<?= $this->escape('Show configuration source') ?>"><?= $this->icon('doc-text') ?></a>
-</h1>
-</div>
-
-<div class="content">
-<?= $this->form ?>
-<div data-base-target="_main">
-<?= $this->deleteForm ?>
-</div>
-</div>
-
+<?= $this->controls->render() ?>
+<?= $this->content->render() ?>

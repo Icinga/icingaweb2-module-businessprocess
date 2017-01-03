@@ -296,27 +296,71 @@ class ProcessController extends Controller
      */
     public function sourceAction()
     {
-        $this->tabsForConfig()->activate('source');
         $bp = $this->loadModifiedBpConfig();
+        $this->view->showDiff = $showDiff = (bool) $this->params->get('showDiff', false);
 
         $this->view->source = $this->storage()->render($bp);
-        $this->view->showDiff = (bool) $this->params->get('showDiff', false);
-
         if ($this->view->showDiff) {
             $this->view->diff = ConfigDiff::create(
                 $this->storage()->getSource($this->view->configName),
                 $this->view->source
             );
-            $this->view->title = sprintf(
+            $title = sprintf(
                 $this->translate('%s: Source Code Differences'),
                 $bp->getTitle()
             );
         } else {
-            $this->view->title = sprintf(
+            $title = sprintf(
                 $this->translate('%s: Source Code'),
                 $bp->getTitle()
             );
         }
+
+        $actionBar = new ActionBar();
+        $this->setTitle($title);
+        $this->controls()
+            ->add($this->tabsForConfig()->activate('source'))
+            ->add(HtmlTag::h1($title))
+            ->add($actionBar);
+
+        if ($showDiff) {
+            $actionBar->add(
+                Link::create(
+                    $this->translate('Source'),
+                    $this->url()->without('showDiff'),
+                    null,
+                    array(
+                        'class' => 'icon-doc-text',
+                        'title' => $this->translate('Show source code'),
+                    )
+                )
+            );
+        } else {
+            $actionBar->add(
+                Link::create(
+                    $this->translate('Diff'),
+                    $this->url()->with('showDiff', true),
+                    null,
+                    array(
+                        'class' => 'icon-flapping',
+                        'title' => $this->translate('Highlight changes'),
+                    )
+                )
+            );
+        }
+
+        $actionBar->add(
+            Link::create(
+                $this->translate('Download'),
+                'businessprocess/process/download',
+                array('config' => $bp->getName()),
+                array(
+                    'target' => '_blank',
+                    'class'  => 'icon-download',
+                    'title'  => $this->translate('Download process configuration')
+                )
+            )
+        );
     }
 
     /**
@@ -345,24 +389,28 @@ class ProcessController extends Controller
      */
     public function configAction()
     {
-        $this->tabsForConfig()->activate('config');
         $bp = $this->loadModifiedBpConfig();
 
-        $this->setTitle(
+        $title = sprintf(
             $this->translate('%s: Configuration'),
             $bp->getTitle()
         );
+        $this->setTitle($title);
+        $this->controls()
+            ->add($this->tabsForConfig()->activate('config'))
+            ->add(HtmlTag::h1($title));
 
         $url = Url::fromPath(
             'businessprocess/process/show?unlocked',
             array('config' => $bp->getName())
         );
-
-        $this->view->form = $this->loadForm('bpConfig')
-            ->setProcessConfig($bp)
-            ->setStorage($this->storage())
-            ->setSuccessUrl($url)
-            ->handleRequest();
+        $this->content()->add(
+            $this->loadForm('bpConfig')
+                ->setProcessConfig($bp)
+                ->setStorage($this->storage())
+                ->setSuccessUrl($url)
+                ->handleRequest()
+        );
     }
 
     /**
