@@ -109,9 +109,9 @@ class BpConfigForm extends QuickForm
             );
 
             $label = $this->translate('Delete');
-            $el = $this->createElement('submit', $label)
-                ->setLabel($label)
-                ->setDecorators(array('ViewHelper'));
+            $el = $this->createElement('submit', $label, array(
+                'data-base-target' => '_main'
+            ))->setLabel($label)->setDecorators(array('ViewHelper'));
             $this->deleteButtonName = $el->getName();
             $this->addElement($el);
         }
