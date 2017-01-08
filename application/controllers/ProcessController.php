@@ -367,6 +367,8 @@ class ProcessController extends Controller
                 )
             )
         );
+
+        $this->setViewScript('process/source');
     }
 
     /**

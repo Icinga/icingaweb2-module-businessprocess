@@ -53,6 +53,7 @@ class Controller extends ModuleController
             = (bool) $this->_helper->layout()->showFullscreen;
 
         $this->view->compact = $this->params->get('view') === 'compact';
+        $this->setViewScript('default');
     }
 
     /**
