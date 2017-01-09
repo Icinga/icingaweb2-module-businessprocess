@@ -1,0 +1,18 @@
+Building Debian packages
+========================
+
+This is work in progress, please expect build instructions to change any time
+soon. Currently, to build custom Debian or Ubuntu packages, please proceed as
+follows:
+
+```sh
+apt-get install --no-install-recommends \
+    debhelper devscripts build-essential fakeroot libparse-debcontrol-perl
+# Eventually adjust debian/changelog
+cp -a packaging/debian debian
+dpkg-buildpackage -us -uc
+rm -rf debian
+```
+
+Please move to your parent directory (`cd ..`) to find your new Debian packages.
+

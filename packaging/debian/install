@@ -1,0 +1,10 @@
+application   usr/share/icingaweb2/modules/businessprocess
+doc       usr/share/icingaweb2/modules/businessprocess
+library   usr/share/icingaweb2/modules/businessprocess
+public    usr/share/icingaweb2/modules/businessprocess
+test      usr/share/icingaweb2/modules/businessprocess
+run.php   usr/share/icingaweb2/modules/businessprocess
+configuration.php   usr/share/icingaweb2/modules/businessprocess
+module.info         usr/share/icingaweb2/modules/businessprocess
+phpunit.xml         usr/share/icingaweb2/modules/businessprocess
+README.md           usr/share/icingaweb2/modules/businessprocess
