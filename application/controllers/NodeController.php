@@ -1,0 +1,50 @@
+<?php
+
+namespace Icinga\Module\Businessprocess\Controllers;
+
+use Icinga\Module\Businessprocess\Renderer\Breadcrumb;
+use Icinga\Module\Businessprocess\Renderer\TileRenderer;
+use Icinga\Module\Businessprocess\Web\Controller;
+use Icinga\Module\Businessprocess\Web\Url;
+
+class NodeController extends Controller
+{
+    public function impactAction()
+    {
+        $content = $this->content();
+        $this->controls()->add(
+            $this->singleTab($this->translate('Node Impact'))
+        );
+        $name = $this->params->get('name');
+        $this->addTitle($this->translate('Business Impact (%s)'), $name);
+
+        foreach ($this->storage()->listProcessNames() as $configName) {
+            $config = $this->storage()->loadProcess($configName);
+
+            // TODO: Fix issues with children, they do not exist unless resolved :-/
+            // This is a workaround:
+            foreach ($config->getRootNodes() as $node) {
+                $node->getState();
+            }
+
+            if (! $config->hasNode($name)) {
+                continue;
+            }
+
+            foreach ($config->getNode($name)->getPaths() as $path) {
+                $node = array_pop($path);
+                $renderer = new TileRenderer($config, $config->getNode($node));
+                $renderer->setUrl(
+                    Url::fromPath(
+                        'businessprocess/process/show',
+                        array('config' => $configName)
+                    )
+                )->setPath($path);
+
+                $bc = Breadcrumb::create($renderer);
+                $bc->attributes()->set('data-base-target', '_next');
+                $content->add($bc);
+            }
+        }
+    }
+}

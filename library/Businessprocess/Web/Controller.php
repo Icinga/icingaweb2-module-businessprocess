@@ -4,6 +4,7 @@ namespace Icinga\Module\Businessprocess\Web;
 
 use Icinga\Application\Icinga;
 use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\Html\HtmlTag;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Businessprocess\Storage\Storage;
@@ -42,8 +43,8 @@ class Controller extends ModuleController
         if (! $m->hasLoaded('monitoring') && $m->hasInstalled('monitoring')) {
             $m->loadModule('monitoring');
         }
-        $this->view->errors = array();
-
+        $this->controls();
+        $this->content();
         $this->url();
         $this->view->showFullscreen
             = $this->showFullscreen
@@ -172,6 +173,15 @@ class Controller extends ModuleController
         $args = func_get_args();
         array_shift($args);
         $this->view->title = vsprintf($title, $args);
+        return $this;
+    }
+
+    protected function addTitle($title)
+    {
+        $args = func_get_args();
+        array_shift($args);
+        $this->view->title = vsprintf($title, $args);
+        $this->controls()->add(HtmlTag::h1($this->view->title));
         return $this;
     }
 

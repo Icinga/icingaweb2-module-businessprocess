@@ -309,15 +309,33 @@ abstract class Node
         );
     }
 
+    /**
+     * @return Node[]
+     */
     public function getParents()
     {
         return $this->parents;
     }
 
+    /**
+     * @return array
+     */
     public function getPaths()
     {
+        if ($this->bp->hasRootNode($this->getName())) {
+            return array(array($this->getName()));
+        }
+
+        $paths = array();
+        foreach ($this->parents as $parent) {
+            foreach ($parent->getPaths() as $path) {
+                // $path[] = $this->getName();
+                $paths[] = $path;
+            }
+
+        }
         // TODO! -> for delete etc
-        return $this->parents;
+        return $paths;
     }
 
     protected function stateToSortState($state)
