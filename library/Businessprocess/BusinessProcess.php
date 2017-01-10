@@ -449,6 +449,11 @@ class BusinessProcess
         return array_key_exists($name, $this->nodes);
     }
 
+    public function hasRootNode($name)
+    {
+        return array_key_exists($name, $this->root_nodes);
+    }
+
     public function createService($host, $service)
     {
         $node = new ServiceNode(
