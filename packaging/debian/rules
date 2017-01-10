@@ -1,0 +1,26 @@
+#!/usr/bin/make -f
+#export DH_VERBOSE=1
+
+%:
+	dh $@
+
+clean:
+	dh_testdir
+	dh_clean
+
+build:
+	dh_testdir
+
+binary:
+	dh_testroot
+	dh_prep
+	dh_installdirs
+	dh_install
+	dh_installchangelogs
+	dh_installinfo
+	dh_installinit
+	dh_fixperms
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
