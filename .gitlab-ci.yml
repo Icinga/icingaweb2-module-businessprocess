@@ -12,7 +12,7 @@ PSR2 CS Test:
   tags:
   - xenial
   script:
-  - phpcs -p --standard=PSR2 --extensions=php --encoding=utf-8 -w -s library/Businessprocess/ application/ configuration.php run.php test
+  - phpcs --report-width=auto --report-full --report-gitblame --report-summary -p --standard=PSR2 --extensions=php --encoding=utf-8 -w -s library/Businessprocess/ application/ configuration.php run.php test
 
 Ubuntu Xenial:
   stage: Unit-Tests
@@ -20,7 +20,12 @@ Ubuntu Xenial:
   - xenial
   - businessprocess
   script:
-  - phpunit --testdox || phpunit --verbose
+  - phpunit --testdox --coverage-html=coverage || phpunit --verbose
+  artifacts:
+    expire_in: 1 week
+    name: code-coverage
+    paths:
+      - coverage/*
 
 Debian Jessie:
   stage: Unit-Tests

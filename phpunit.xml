@@ -15,4 +15,15 @@
             <directory suffix=".php">test/php</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">library/Businessprocess</directory>
+            <exclude>
+                <directory suffix=".php">library/Businessprocess/Director</directory>
+            </exclude>
+            <exclude>
+                <directory suffix=".php">library/Businessprocess/ProvidedHook</directory>
+            </exclude>
+        </whitelist>
+    </filter>
 </phpunit>
