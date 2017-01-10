@@ -21,9 +21,6 @@ class Controller extends ModuleController
     /** @var View */
     public $view;
 
-    /** @deprecated, obsolete */
-    protected $backend;
-
     /** @var BusinessProcess */
     protected $bp;
 
@@ -255,34 +252,5 @@ class Controller extends ModuleController
         }
 
         return $this->storage;
-    }
-
-    /**
-     * @deprecated
-     */
-    protected function loadSlas()
-    {
-        $bpconf = $this->bpconf;
-
-        if (! isset($bpconf->slahosts)) {
-            return array();
-        }
-
-        // TODO: This doesn't work right now
-        $sla_hosts = preg_split('~\s*,s*~', $bpconf->slahosts, -1, PREG_SPLIT_NO_EMPTY);
-
-        if (isset($bpconf->sla_year)) {
-            $start =  mktime(0, 0, 0, 1, 1, $bpconf->sla_year);
-            $end =  mktime(23, 59, 59, 1, 0, $bpconf->sla_year + 1);
-        } else {
-            $start =  mktime(0, 0, 0, 1, 1, (int) date('Y'));
-            $end = null;
-            // Bis zum Jahresende hochrechnen:
-            // $end =  mktime(23, 59, 59, 1, 0, (int) date('Y') + 1);
-        }
-
-        return $this->backend
-            ->module('BpAddon')
-            ->getBpSlaValues($sla_hosts, $start, $end);
     }
 }
