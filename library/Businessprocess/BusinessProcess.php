@@ -2,14 +2,10 @@
 
 namespace Icinga\Module\Businessprocess;
 
-use Icinga\Application\Benchmark;
 use Icinga\Exception\IcingaException;
-use Icinga\Exception\NotFoundError;
-use Icinga\Exception\ProgrammingError;
 use Icinga\Module\Businessprocess\Exception\NestingError;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
-use Icinga\Data\Filter\Filter;
 use Exception;
 
 class BusinessProcess
@@ -83,13 +79,6 @@ class BusinessProcess
      * @var array
      */
     protected $root_nodes = array();
-
-    /**
-     * All check names { 'hostA;ping' => true, ... }
-     *
-     * @var array
-     */
-    protected $all_checks = array();
 
     /**
      * All host names { 'hostA' => true, ... }
@@ -346,109 +335,6 @@ class BusinessProcess
         return array_key_exists($name, $this->root_nodes);
     }
 
-    public function retrieveStatesFromBackend()
-    {
-        try {
-            $this->reallyRetrieveStatesFromBackend();
-        } catch (Exception $e) {
-            $this->addError(
-                $this->translate('Could not retrieve process state: %s'),
-                $e->getMessage()
-            );
-        }
-    }
-
-    public function reallyRetrieveStatesFromBackend()
-    {
-        Benchmark::measure('Retrieving states for business process ' . $this->getName());
-        $backend = $this->getBackend();
-        // TODO: Split apart, create a dedicated function.
-        //       Separate "parse-logic" from "retrieve-state-logic"
-        //       Allow DB-based backend
-        //       Use IcingaWeb2 Multi-Backend-Support
-        $hostFilter = array_keys($this->hosts);
-
-        if ($this->state_type === self::HARD_STATE) {
-            $hostStateColumn          = 'host_hard_state';
-            $hostStateChangeColumn    = 'host_last_hard_state_change';
-            $serviceStateColumn       = 'service_hard_state';
-            $serviceStateChangeColumn = 'service_last_hard_state_change';
-        } else {
-            $hostStateColumn          = 'host_state';
-            $hostStateChangeColumn    = 'host_last_state_change';
-            $serviceStateColumn       = 'service_state';
-            $serviceStateChangeColumn = 'service_last_state_change';
-        }
-        $filter = Filter::matchAny();
-        foreach ($hostFilter as $host) {
-            $filter->addFilter(Filter::where('host_name', $host));
-        }
-
-        if ($filter->isEmpty()) {
-            return $this;
-        }
-
-        $hostStatus = $backend->select()->from('hostStatus', array(
-            'hostname'          => 'host_name',
-            'last_state_change' => $hostStateChangeColumn,
-            'in_downtime'       => 'host_in_downtime',
-            'ack'               => 'host_acknowledged',
-            'state'             => $hostStateColumn
-        ))->applyFilter($filter)->getQuery()->fetchAll();
-
-        $serviceStatus = $backend->select()->from('serviceStatus', array(
-            'hostname'          => 'host_name',
-            'service'           => 'service_description',
-            'last_state_change' => $serviceStateChangeColumn,
-            'in_downtime'       => 'service_in_downtime',
-            'ack'               => 'service_acknowledged',
-            'state'             => $serviceStateColumn
-        ))->applyFilter($filter)->getQuery()->fetchAll();
-
-        foreach ($serviceStatus as $row) {
-            $this->handleDbRow($row);
-        }
-
-        foreach ($hostStatus as $row) {
-            $this->handleDbRow($row);
-        }
-        // TODO: Union, single query?
-        ksort($this->root_nodes);
-        Benchmark::measure('Got states for business process ' . $this->getName());
-
-        return $this;
-    }
-
-    protected function handleDbRow($row)
-    {
-        $key = $row->hostname;
-        if (property_exists($row, 'service')) {
-            $key .= ';' . $row->service;
-        } else {
-            $key .= ';Hoststatus';
-        }
-
-        // We fetch more states than we need, so skip unknown ones
-        if (! $this->hasNode($key)) {
-            return;
-        }
-
-        $node = $this->getNode($key);
-
-        if ($row->state !== null) {
-            $node->setState($row->state)->setMissing(false);
-        }
-        if ($row->last_state_change !== null) {
-            $node->setLastStateChange($row->last_state_change);
-        }
-        if ((int) $row->in_downtime === 1) {
-            $node->setDowntime(true);
-        }
-        if ((int) $row->ack === 1) {
-            $node->setAck(true);
-        }
-    }
-
     /**
      * @return BpNode[]
      */
@@ -518,6 +404,11 @@ class BusinessProcess
         return $node;
     }
 
+    public function listInvolvedHostNames()
+    {
+        return array_keys($this->hosts);
+    }
+
     /**
      * Create and attach a new process (BpNode)
      *
@@ -553,47 +444,6 @@ class BusinessProcess
         $node = new ImportedNode($this, $params);
         $this->nodes[$node->getName()] = $node;
         return $node;
-    }
-
-    public function hasNodeByPath($nodeName, $path = array())
-    {
-        if (! $this->hasNode($nodeName)) {
-            return false;
-        }
-
-        $node = $this->getNode($nodeName);
-        $parents = $node->getParents();
-        foreach ($parents as $parent) {
-
-        }
-        while (! empty($path)) {
-
-        }
-
-        return empty($path);
-    }
-
-    public function getNodeByPath($nodeName, $path = array())
-    {
-        if (! $this->hasNode($nodeName)) {
-            throw new NotFoundError(
-                'Node %s not found at %s',
-                $nodeName,
-                implode(' -> ', $path)
-            );
-        }
-    }
-
-    public function getPathsToNode($node)
-    {
-        $paths = array();
-        foreach ($node->getParents() as $parent) {
-            foreach ($parent->getPathsToNode() as $path) {
-                $paths[] = $path;
-            }
-        }
-
-        return $paths;
     }
 
     /**
@@ -637,12 +487,6 @@ class BusinessProcess
     public function setNodeState($name, $state)
     {
         $this->getNode($name)->setState($state);
-        return $this;
-    }
-
-    public function addObjectName($name)
-    {
-        $this->all_checks[$name] = 1;
         return $this;
     }
 

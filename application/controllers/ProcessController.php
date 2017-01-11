@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess\Controllers;
 
 use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Storage\ConfigDiff;
 use Icinga\Module\Businessprocess\Html\Element;
 use Icinga\Module\Businessprocess\Html\HtmlString;
@@ -76,7 +77,7 @@ class ProcessController extends Controller
         $bp = $this->loadModifiedBpConfig();
         $node = $this->getNode($bp);
         $this->redirectOnConfigSwitch();
-        $bp->retrieveStatesFromBackend();
+        MonitoringState::apply($bp);
         $this->handleSimulations($bp);
 
         $this->setTitle($this->translate('Business Process "%s"'), $bp->getTitle());

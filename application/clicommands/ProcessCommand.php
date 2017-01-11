@@ -6,6 +6,7 @@ use Icinga\Cli\Command;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\HostNode;
 use Icinga\Module\Businessprocess\Node;
+use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 
 class ProcessCommand extends Command
@@ -94,7 +95,7 @@ class ProcessCommand extends Command
 
         /** @var BpNode $node */
         $node = $bp->getNode($this->params->shift());
-        $bp->retrieveStatesFromBackend();
+        MonitoringState::apply($bp);
         if ($bp->hasErrors()) {
             printf(
                 "Checking Business Process %s failed: %s\n",
