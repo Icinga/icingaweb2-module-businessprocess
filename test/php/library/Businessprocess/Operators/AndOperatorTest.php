@@ -102,7 +102,7 @@ class AndOperatorTest extends BaseTestCase
         );
     }
 
-    public function testWhetherSimpleAndOperationWorks()
+    public function testSimpleAndOperationWorksCorrectly()
     {
         $bp = new BpConfig();
         $bp->throwErrors();
@@ -128,7 +128,7 @@ class AndOperatorTest extends BaseTestCase
         );
     }
 
-    public function testWhetherSimpleOrOperationWorks()
+    public function testSimpleOrOperationWorksCorrectly()
     {
         $bp = new BpConfig();
         $bp->throwErrors();
@@ -143,7 +143,7 @@ class AndOperatorTest extends BaseTestCase
         $this->assertEquals('WARNING', $p->getStateName());
     }
 
-    public function testWhetherPendingIsAccepted()
+    public function testPendingIsAccepted()
     {
         $bp = new BpConfig();
         $host = $bp->createHost('localhost')->setState(99);
@@ -173,7 +173,7 @@ class AndOperatorTest extends BaseTestCase
         );
     }
 
-    public function testWhetherPendingIsWorseThanUpOrOk()
+    public function testPendingIsWorseThanUpOrOk()
     {
         $bp = new BpConfig();
         $host = $bp->createHost('localhost')->setState(99);

@@ -139,7 +139,7 @@ class AttributeTest extends BaseTestCase
         );
     }
 
-    public function testRendersCorrectls()
+    public function testRendersCorrectly()
     {
         $a = new Attribute('weird', array('"sü?ß', '/some/url?a=b&c=d'));
         $this->assertEquals(

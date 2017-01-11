@@ -7,7 +7,7 @@ use Icinga\Module\Businessprocess\Test\BaseTestCase;
 
 class HtmlTagTest extends BaseTestCase
 {
-    public function testH1isRendered()
+    public function testHeaderIsRendered()
     {
         $h1 = HtmlTag::h1('Hea & der');
         $this->assertEquals(
