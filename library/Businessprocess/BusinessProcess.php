@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess;
 
 use Icinga\Exception\IcingaException;
+use Icinga\Exception\NotFoundError;
 use Icinga\Module\Businessprocess\Exception\NestingError;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
@@ -206,17 +207,28 @@ class BusinessProcess
         return $this->countChanges() > 0;
     }
 
+    /**
+     * @param $name
+     *
+     * @return $this
+     */
     public function setName($name)
     {
         $this->name = $name;
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * @return string
+     */
     public function getHtmlId()
     {
         return 'businessprocess-' . preg_replace('/[\r\n\t\s]/', '_', $this->getName());
@@ -474,6 +486,32 @@ class BusinessProcess
         throw new Exception(
             sprintf('The node "%s" doesn\'t exist', $name)
         );
+    }
+
+    /**
+     * @param $name
+     * @return BpNode
+     *
+     * @throws NotFoundError
+     */
+    public function getBpNode($name)
+    {
+        if ($this->hasBpNode($name)) {
+            return $this->nodes[$name];
+        } else {
+            throw new NotFoundError('Trying to access a missing business process node "%s"', $name);
+        }
+    }
+
+    /**
+     * @param $name
+     *
+     * @return bool
+     */
+    public function hasBpNode($name)
+    {
+        return array_key_exists($name, $this->nodes)
+            && $this->nodes[$name] instanceof BpNode;
     }
 
     /**
