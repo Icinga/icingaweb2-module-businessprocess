@@ -60,12 +60,7 @@ class LegacyStorage extends Storage
     }
 
     /**
-     * All processes readable by the current user
-     *
-     * The returned array has the form <process name> => <nice title>, sorted
-     * by title
-     *
-     * @return array
+     * @inheritdoc
      */
     public function listProcesses()
     {
@@ -85,12 +80,7 @@ class LegacyStorage extends Storage
     }
 
     /**
-     * All process names readable by the current user
-     *
-     * The returned array has the form <process name> => <process name> and is
-     * sorted
-     *
-     * @return array
+     * @inheritdoc
      */
     public function listProcessNames()
     {
@@ -110,9 +100,7 @@ class LegacyStorage extends Storage
     }
 
     /**
-     * All available process names, regardless of eventual restrictions
-     *
-     * @return array
+     * @inheritdoc
      */
     public function listAllProcessNames()
     {

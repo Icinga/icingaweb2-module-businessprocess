@@ -28,9 +28,40 @@ abstract class Storage
     }
 
     /**
+     * All processes readable by the current user
+     *
+     * The returned array has the form <process name> => <nice title>, sorted
+     * by title
+     *
      * @return array
      */
     abstract public function listProcesses();
+
+    /**
+     * All process names readable by the current user
+     *
+     * The returned array has the form <process name> => <process name> and is
+     * sorted
+     *
+     * @return array
+     */
+    abstract public function listProcessesNames();
+
+    /**
+     * All available process names, regardless of eventual restrictions
+     *
+     * @return array
+     */
+    abstract public function listAllProcessNames();
+
+    /**
+     * Whether a configuration with the given name exists
+     *
+     * @param $name
+     *
+     * @return bool
+     */
+    abstract public function hasProcess($name);
 
     /**
      * @param $name
@@ -39,10 +70,13 @@ abstract class Storage
     abstract public function loadProcess($name);
 
     /**
-     * @param BusinessProcess $name
+     * Store eventual changes applied to the given configuration
+     *
+     * @param BusinessProcess $config
+     *
      * @return mixed
      */
-    abstract public function storeProcess(BusinessProcess $name);
+    abstract public function storeProcess(BusinessProcess $config);
 
     /**
      * @param $name
