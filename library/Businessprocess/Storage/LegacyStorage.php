@@ -3,10 +3,7 @@
 namespace Icinga\Module\Businessprocess\Storage;
 
 use DirectoryIterator;
-use Icinga\Application\Benchmark;
 use Icinga\Application\Icinga;
-use Icinga\Exception\ConfigurationError;
-use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BusinessProcess;
 use Icinga\Exception\SystemPermissionException;
 use Icinga\Module\Businessprocess\Metadata;
@@ -173,15 +170,13 @@ class LegacyStorage extends Storage
     }
 
     /**
-     * @param BusinessProcess $process
-     *
-     * @return void
+     * @inheritdoc
      */
     public function storeProcess(BusinessProcess $process)
     {
         file_put_contents(
             $this->getFilename($process->getName()),
-            $this->render($process)
+            LegacyConfigRenderer::renderConfig($process)
         );
     }
 
@@ -252,20 +247,6 @@ class LegacyStorage extends Storage
     public function deleteProcess($name)
     {
         return @unlink($this->getFilename($name));
-    }
-
-    /**
-     * @return BusinessProcess
-     */
-    public function loadProcess($name)
-    {
-        Benchmark::measure('Loading business process ' . $name);
-        $bp = new BusinessProcess();
-        $bp->setName($name);
-        $this->parseFile($name, $bp);
-        $this->loadHeader($name, $bp);
-        Benchmark::measure('Business process ' . $name . ' loaded');
-        return $bp;
     }
 
     /**
