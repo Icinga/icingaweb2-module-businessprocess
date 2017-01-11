@@ -36,14 +36,23 @@ class NodeAddChildrenAction extends NodeAction
             //       be a different action
             return $this;
         }
-        $node = $bp->getNode($this->getNodeName());
-        $existing = $node->getChildNames();
+
+        $node = $config->getBpNode($this->getNodeName());
+
         foreach ($this->children as $name) {
-            if (! in_array($name, $existing)) {
-                $existing[] = $name;
+            if (! $config->hasNode($name)) {
+                if (strpos($name, ';') !== false) {
+                    list($host, $service) = preg_split('/;/', $name, 2);
+
+                    if ($service === 'Hoststatus') {
+                        $config->createHost($host);
+                    } else {
+                        $config->createService($host, $service);
+                    }
+                }
             }
+            $node->addChild($config->getNode($name));
         }
-        $node->setChildNames($existing);
 
         return $this;
     }

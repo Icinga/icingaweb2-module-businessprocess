@@ -383,11 +383,12 @@ class AddNodeForm extends QuickForm
             case 'new-process':
                 $properties = $this->getValues();
                 unset($properties['name']);
+                $properties['parentName'] = $this->parent->getName();
                 $changes->createNode($this->getValue('name'), $properties);
                 break;
         }
 
-        // Trigger session desctruction to make sure it get's stored.
+        // Trigger session destruction to make sure it get's stored.
         // TODO: figure out why this is necessary, might be an unclean shutdown on redirect
         unset($changes);
 

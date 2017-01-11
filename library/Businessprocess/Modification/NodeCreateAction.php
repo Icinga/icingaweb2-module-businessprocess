@@ -91,17 +91,18 @@ class NodeCreateAction extends NodeAction
         } else {
             $properties['child_names'] = array();
         }
-        $node = new BpNode($bp, (object) $properties);
+        $node = new BpNode($config, (object) $properties);
 
         foreach ($this->getProperties() as $key => $val) {
+            if ($key === 'parentName') {
+                $config->getBpNode($val)->addChild($node);
+                continue;
+            }
             $func = 'set' . ucfirst($key);
             $node->$func($val);
         }
 
-        $bp->addNode($name, $node);
-        if ($this->hasParent()) {
-            $node->addParent($bp->getNode($this->getParentName()));
-        }
+        $config->addNode($name, $node);
 
         return $node;
     }

@@ -104,7 +104,7 @@ class BpNode extends Node
             $this->getChildren();
         }
 
-        $name = (string) $node;
+        $name = $node->getName();
         if (array_key_exists($name, $this->children)) {
             throw new ConfigurationError(
                 'Node "%s" has been defined more than once',
