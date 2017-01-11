@@ -197,7 +197,7 @@ class LegacyConfigRenderer
      * @param BpNode $node
      * @return string
      */
-    protected function renderDisplay(BpNode $node)
+    public static function renderDisplay(BpNode $node)
     {
         if ($node->hasAlias() || $node->getDisplay() > 0) {
             $prio = $node->getDisplay();
@@ -216,7 +216,7 @@ class LegacyConfigRenderer
      * @param BpNode $node
      * @return string
      */
-    protected function renderInfoUrl(BpNode $node)
+    public static function renderInfoUrl(BpNode $node)
     {
         if ($node->hasInfoUrl()) {
             return sprintf(
