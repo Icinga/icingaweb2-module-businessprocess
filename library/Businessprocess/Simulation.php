@@ -97,13 +97,11 @@ class Simulation
     {
         $simulations = $this->simulations();
         if (array_key_exists($node, $simulations)) {
-
             unset($simulations[$node]);
             $this->setSimulations($simulations);
 
             return true;
         } else {
-
             return false;
         }
     }

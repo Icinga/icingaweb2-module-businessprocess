@@ -227,7 +227,6 @@ class NodeTile extends BaseElement
                     null,
                     array('data-base-target' => '_next')
                 ));
-
             } elseif ($node instanceof HostNode) {
                 $this->actions()->add(Link::create(
                     Icon::create('host'),
@@ -237,7 +236,6 @@ class NodeTile extends BaseElement
                 ));
             }
         }
-
     }
 
     protected function addActionLinks()

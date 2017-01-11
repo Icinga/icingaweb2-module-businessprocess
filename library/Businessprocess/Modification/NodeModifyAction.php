@@ -26,7 +26,6 @@ class NodeModifyAction extends NodeAction
     public function setNodeProperties(Node $node, array $properties)
     {
         foreach (array_keys($properties) as $key) {
-
             $this->properties[$key] = $properties[$key];
 
             if (array_key_exists($key, $this->formerProperties)) {

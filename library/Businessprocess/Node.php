@@ -332,7 +332,6 @@ abstract class Node
                 // $path[] = $this->getName();
                 $paths[] = $path;
             }
-
         }
         // TODO! -> for delete etc
         return $paths;

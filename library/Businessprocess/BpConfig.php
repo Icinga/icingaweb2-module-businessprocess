@@ -629,7 +629,6 @@ class BpConfig
         $nodes = array();
 
         foreach ($this->getBpNodes() as $name => $node) {
-
             if ($node->hasParents()) {
                 continue;
             }

@@ -163,7 +163,6 @@ class ProcessForm extends QuickForm
         // TODO: rename
 
         if ($node = $this->node) {
-
             if ($display !== $node->getDisplay()) {
                 $modifications['display'] = $display;
             }
@@ -184,8 +183,8 @@ class ProcessForm extends QuickForm
                 'alias'      => $alias,
             );
         }
-        if (! empty($modifications)) {
 
+        if (! empty($modifications)) {
             if ($this->node === null) {
                 $changes->createNode($this->getValue('name'), $modifications);
             } else {

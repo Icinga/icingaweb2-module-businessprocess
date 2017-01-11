@@ -143,7 +143,6 @@ class ProcessController extends Controller
     protected function prepareRenderer($bp, $node)
     {
         if ($this->renderer === null) {
-
             if ($this->params->get('mode') === 'tree') {
                 $renderer = new TreeRenderer($bp, $node);
             } else {
