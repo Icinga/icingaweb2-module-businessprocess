@@ -31,6 +31,21 @@ class BpConfigForm extends QuickForm
         $this->addElement('text', 'name', array(
             'label' => $this->translate('Name'),
             'required'    => true,
+            'validators' => array(
+                array(
+                    'validator' => 'StringLength',
+                    'options' => array(
+                        'min' => 2,
+                        'max' => 40
+                    )
+                ),
+                array(
+                    'validator' => 'Regex',
+                    'options' => array(
+                        'pattern' => '/^[a-zA-Z0-9](?:[a-zA-Z0-9 ._-]*)?[a-zA-Z0-9_]$/'
+                    )
+                )
+            ),
             'description' => $this->translate(
                 'This is the unique identifier of this process'
             ),
