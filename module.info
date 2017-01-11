@@ -1,5 +1,14 @@
-Name: BPapp
-Version: 2.0.0-beta1
-Depends: monitoring
-Description: BPapp is a viewer for BPaddon business process config files
- That's it
+Name: Businessprocess
+Version: 2.0.0-rc1
+Depends: monitoring>=2.3.0
+Description: A Business Process viewer and modeler
+ Provides a web-based process modeler for. It integrates as a module into
+ Icinga Web 2 and provides a plugin check command for Icinga. Tile and tree
+ views can be shown inline, as dashlets or fullscreen. All of those for whole
+ processes or just parts of them.
+
+ Hooks into the monitoring module to show Business Impact for a specific host
+ or service and provides a Business Impact Simulation mode to visualize the
+ influence of a potential outage.
+
+ Supports legacy BPaddon config files.
