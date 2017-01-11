@@ -4,6 +4,8 @@ namespace Icinga\Module\Businessprocess\Controllers;
 
 use Icinga\Module\Businessprocess\Renderer\Breadcrumb;
 use Icinga\Module\Businessprocess\Renderer\TileRenderer;
+use Icinga\Module\Businessprocess\Simulation;
+use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Web\Controller;
 use Icinga\Module\Businessprocess\Web\Url;
 
@@ -11,6 +13,7 @@ class NodeController extends Controller
 {
     public function impactAction()
     {
+        $this->setAutorefreshInterval(10);
         $content = $this->content();
         $this->controls()->add(
             $this->singleTab($this->translate('Node Impact'))
@@ -26,10 +29,17 @@ class NodeController extends Controller
             foreach ($config->getRootNodes() as $node) {
                 $node->getState();
             }
+            foreach ($config->getRootNodes() as $node) {
+                $node->clearState();
+            }
 
             if (! $config->hasNode($name)) {
                 continue;
             }
+
+            MonitoringState::apply($config);
+            $simulation = new Simulation($config, $this->session());
+            $config->applySimulation($simulation);
 
             foreach ($config->getNode($name)->getPaths() as $path) {
                 $node = array_pop($path);
