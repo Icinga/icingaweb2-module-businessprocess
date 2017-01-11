@@ -39,7 +39,7 @@ class DeleteNodeForm extends QuickForm
 
         $biLink = $view->qlink(
             $node->getAlias(),
-            'director/node/impact',
+            'businessprocess/node/impact',
             array('name' => $node->getName()),
             array('data-base-target' => '_next')
         );
