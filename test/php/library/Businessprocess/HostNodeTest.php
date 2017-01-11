@@ -2,7 +2,7 @@
 
 namespace Tests\Icinga\Module\Businessprocess;
 
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\HostNode;
 use Icinga\Module\Businessprocess\Test\BaseTestCase;
 
@@ -46,7 +46,7 @@ class HostNodeTest extends BaseTestCase
      */
     public function testWhetherSettingAnInvalidStateFails()
     {
-        $bp = new BusinessProcess();
+        $bp = new BpConfig();
         $host = $bp->createHost('localhost')->setState(98);
         $bp->createBp('p')->addChild($host)->getState();
     }
@@ -56,7 +56,7 @@ class HostNodeTest extends BaseTestCase
      */
     protected function localhost()
     {
-        $bp = new BusinessProcess();
+        $bp = new BpConfig();
         return new HostNode($bp, (object) array(
             'hostname' => 'localhost',
             'state'    => 0,

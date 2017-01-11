@@ -2,7 +2,7 @@
 
 namespace Tests\Icinga\Module\Businessprocess\Operator;
 
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Test\BaseTestCase;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 
@@ -20,7 +20,7 @@ class NotOperatorTest extends BaseTestCase
 
         foreach ($expressions as $expression) {
             $this->assertInstanceOf(
-                'Icinga\\Module\\Businessprocess\\Businessprocess',
+                'Icinga\\Module\\Businessprocess\\BpConfig',
                 $storage->loadFromString('dummy', $expression)
             );
         }
@@ -138,7 +138,7 @@ class NotOperatorTest extends BaseTestCase
     }
 
     /**
-     * @return BusinessProcess
+     * @return BpConfig
      */
     protected function getBp()
     {

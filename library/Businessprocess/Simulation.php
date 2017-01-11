@@ -13,7 +13,7 @@ class Simulation
     protected $session;
 
     /**
-     * @var BusinessProcess
+     * @var BpConfig
      */
     protected $bp;
 
@@ -27,7 +27,7 @@ class Simulation
      */
     protected $simulations;
 
-    public function __construct(BusinessProcess $bp, SessionNamespace $session)
+    public function __construct(BpConfig $bp, SessionNamespace $session)
     {
         $this->bp = $bp;
         $this->session = $session;

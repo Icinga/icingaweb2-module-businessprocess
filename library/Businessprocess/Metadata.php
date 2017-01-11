@@ -9,6 +9,7 @@ use Icinga\User;
 
 class Metadata
 {
+    /** @var string Configuration name */
     protected $name;
 
     protected $properties = array(

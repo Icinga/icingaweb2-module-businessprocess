@@ -5,24 +5,24 @@ namespace Icinga\Module\Businessprocess\State;
 use Exception;
 use Icinga\Application\Benchmark;
 use Icinga\Data\Filter\Filter;
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 
 class MonitoringState
 {
-    /** @var BusinessProcess */
+    /** @var BpConfig */
     protected $config;
 
     /** @var MonitoringBackend */
     protected $backend;
 
-    private function __construct(BusinessProcess $config)
+    private function __construct(BpConfig $config)
     {
         $this->config = $config;
         $this->backend = $config->getBackend();
     }
 
-    public static function apply(BusinessProcess $config)
+    public static function apply(BpConfig $config)
     {
         $self = new static($config);
         $self->retrieveStatesFromBackend();
@@ -101,7 +101,7 @@ class MonitoringState
         return $this;
     }
 
-    protected function handleDbRow($row, BusinessProcess $config)
+    protected function handleDbRow($row, BpConfig $config)
     {
         $key = $row->hostname;
         if (property_exists($row, 'service')) {

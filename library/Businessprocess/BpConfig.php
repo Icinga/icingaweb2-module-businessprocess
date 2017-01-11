@@ -9,7 +9,7 @@ use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 use Exception;
 
-class BusinessProcess
+class BpConfig
 {
     const SOFT_STATE = 0;
 
@@ -476,7 +476,7 @@ class BusinessProcess
             $host = substr($name, 0, $pos);
             $service = substr($name, $pos + 1);
             // TODO: deactivated, this scares me, test it
-            if (false && $service === 'Hoststatus') {
+            if ($service === 'Hoststatus') {
                 return $this->createHost($host);
             } else {
                 return $this->createService($host, $service);

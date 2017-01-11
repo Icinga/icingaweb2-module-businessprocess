@@ -7,7 +7,7 @@ use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 
 class LegacyStorageTest extends BaseTestCase
 {
-    private $processClass = 'Icinga\\Module\\Businessprocess\\BusinessProcess';
+    private $processClass = 'Icinga\\Module\\Businessprocess\\BpConfig';
 
     public function testCanBeInstantiatedWithAnEmptyConfigSection()
     {

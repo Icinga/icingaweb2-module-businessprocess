@@ -3,7 +3,7 @@
 namespace Icinga\Module\Businessprocess\Storage;
 
 use Icinga\Data\ConfigObject;
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Metadata;
 
 abstract class Storage
@@ -65,18 +65,18 @@ abstract class Storage
 
     /**
      * @param $name
-     * @return BusinessProcess
+     * @return BpConfig
      */
     abstract public function loadProcess($name);
 
     /**
      * Store eventual changes applied to the given configuration
      *
-     * @param BusinessProcess $config
+     * @param BpConfig $config
      *
      * @return mixed
      */
-    abstract public function storeProcess(BusinessProcess $config);
+    abstract public function storeProcess(BpConfig $config);
 
     /**
      * @param $name

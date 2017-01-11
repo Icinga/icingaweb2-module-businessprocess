@@ -3,7 +3,7 @@
 namespace Icinga\Module\Businessprocess\Renderer;
 
 use Icinga\Module\Businessprocess\BpNode;
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Html\Container;
 use Icinga\Module\Businessprocess\Html\Element;
 use Icinga\Module\Businessprocess\Html\Icon;
@@ -31,10 +31,10 @@ class TreeRenderer extends Renderer
     }
 
     /**
-     * @param BusinessProcess $bp
+     * @param BpConfig $bp
      * @return string
      */
-    public function renderBp(BusinessProcess $bp)
+    public function renderBp(BpConfig $bp)
     {
         $html = array();
         if ($this->wantsRootNodes()) {
@@ -94,13 +94,13 @@ class TreeRenderer extends Renderer
     }
 
     /**
-     * @param BusinessProcess $bp
+     * @param BpConfig $bp
      * @param Node $node
      * @param array $path
      *
      * @return string
      */
-    public function renderNode(BusinessProcess $bp, Node $node, $path = array())
+    public function renderNode(BpConfig $bp, Node $node, $path = array())
     {
         $table = Element::create(
             'table',
@@ -179,7 +179,7 @@ class TreeRenderer extends Renderer
         return $table;
     }
 
-    protected function getActionIcons(BusinessProcess $bp, Node $node)
+    protected function getActionIcons(BpConfig $bp, Node $node)
     {
         if ($node instanceof BpNode) {
             return $this->createEditAction($bp, $node);
@@ -188,7 +188,7 @@ class TreeRenderer extends Renderer
         }
     }
 
-    protected function createEditAction(BusinessProcess $bp, BpNode $node)
+    protected function createEditAction(BpConfig $bp, BpNode $node)
     {
         return $this->actionIcon(
             'wrench',
@@ -200,7 +200,7 @@ class TreeRenderer extends Renderer
         );
     }
 
-    protected function createSimulationAction(BusinessProcess $bp, Node $node)
+    protected function createSimulationAction(BpConfig $bp, Node $node)
     {
         return $this->actionIcon(
             'magic',

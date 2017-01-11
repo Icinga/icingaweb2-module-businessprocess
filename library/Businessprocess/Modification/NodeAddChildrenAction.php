@@ -3,7 +3,7 @@
 namespace Icinga\Module\Businessprocess\Modification;
 
 use Icinga\Module\Businessprocess\BpNode;
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 
 class NodeAddChildrenAction extends NodeAction
 {
@@ -14,7 +14,7 @@ class NodeAddChildrenAction extends NodeAction
     /**
      * @inheritdoc
      */
-    public function appliesTo(BusinessProcess $bp)
+    public function appliesTo(BpConfig $bp)
     {
         $name = $this->getNodeName();
 
@@ -28,7 +28,7 @@ class NodeAddChildrenAction extends NodeAction
     /**
      * @inheritdoc
      */
-    public function applyTo(BusinessProcess $bp)
+    public function applyTo(BpConfig $bp)
     {
         /** @var BpNode $node */
         if (! $this->hasNode()) {

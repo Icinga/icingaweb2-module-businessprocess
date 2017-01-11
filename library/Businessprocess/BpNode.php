@@ -47,7 +47,7 @@ class BpNode extends Node
 
     protected $className = 'process';
 
-    public function __construct(BusinessProcess $bp, $object)
+    public function __construct(BpConfig $bp, $object)
     {
         $this->bp = $bp;
         $this->name = $object->name;

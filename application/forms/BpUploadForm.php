@@ -3,7 +3,7 @@
 namespace Icinga\Module\Businessprocess\Forms;
 
 use Icinga\Application\Config;
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 use Icinga\Web\Notification;
@@ -15,7 +15,7 @@ class BpUploadForm extends QuickForm
 
     protected $backend;
 
-    /** @var BusinessProcess */
+    /** @var BpConfig */
     protected $config;
 
     protected $node;
@@ -133,7 +133,7 @@ class BpUploadForm extends QuickForm
         return $this;
     }
 
-    public function setProcessConfig(BusinessProcess $config)
+    public function setProcessConfig(BpConfig $config)
     {
         $this->config = $config;
         return $this;
@@ -172,7 +172,7 @@ class BpUploadForm extends QuickForm
 
         if ($this->config === null) {
             // New config
-            $config = new BusinessProcess();
+            $config = new BpConfig();
             $config->setName($name);
             if ($title) {
                 $config->setTitle($title);

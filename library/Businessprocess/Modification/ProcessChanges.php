@@ -2,7 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Modification;
 
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Web\Session\SessionNamespace as Session;
 
@@ -30,12 +30,12 @@ class ProcessChanges
     }
 
     /**
-     * @param BusinessProcess $bp
+     * @param BpConfig $bp
      * @param Session $session
      *
      * @return ProcessChanges
      */
-    public static function construct(BusinessProcess $bp, Session $session)
+    public static function construct(BpConfig $bp, Session $session)
     {
         $key = 'changes.' . $bp->getName();
         $changes = new ProcessChanges();

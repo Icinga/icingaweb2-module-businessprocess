@@ -2,7 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Modification;
 
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 
 /**
  * NodeRemoveAction
@@ -38,7 +38,7 @@ class NodeRemoveAction extends NodeAction
     /**
      * @inheritdoc
      */
-    public function appliesTo(BusinessProcess $bp)
+    public function appliesTo(BpConfig $bp)
     {
         $parent = $this->getParentName();
         if ($parent === null) {
@@ -51,7 +51,7 @@ class NodeRemoveAction extends NodeAction
     /**
      * @inheritdoc
      */
-    public function applyTo(BusinessProcess $bp)
+    public function applyTo(BpConfig $bp)
     {
         $parent = $this->getParentName();
         if ($parent === null) {

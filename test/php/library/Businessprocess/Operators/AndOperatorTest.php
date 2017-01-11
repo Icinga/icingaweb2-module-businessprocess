@@ -2,7 +2,7 @@
 
 namespace Tests\Icinga\Module\Businessprocess\Operator;
 
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Test\BaseTestCase;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 
@@ -18,7 +18,7 @@ class AndOperatorTest extends BaseTestCase
 
         foreach ($expressions as $expression) {
             $this->assertInstanceOf(
-                'Icinga\\Module\\Businessprocess\\Businessprocess',
+                'Icinga\\Module\\Businessprocess\\BpConfig',
                 $storage->loadFromString('dummy', $expression)
             );
         }
@@ -104,7 +104,7 @@ class AndOperatorTest extends BaseTestCase
 
     public function testWhetherSimpleAndOperationWorks()
     {
-        $bp = new BusinessProcess();
+        $bp = new BpConfig();
         $bp->throwErrors();
         $host = $bp->createHost('localhost')->setState(1);
         $service = $bp->createService('localhost', 'ping')->setState(1);
@@ -130,7 +130,7 @@ class AndOperatorTest extends BaseTestCase
 
     public function testWhetherSimpleOrOperationWorks()
     {
-        $bp = new BusinessProcess();
+        $bp = new BpConfig();
         $bp->throwErrors();
         $host = $bp->createHost('localhost')->setState(1);
         $service = $bp->createService('localhost', 'ping')->setState(1);
@@ -145,7 +145,7 @@ class AndOperatorTest extends BaseTestCase
 
     public function testWhetherPendingIsAccepted()
     {
-        $bp = new BusinessProcess();
+        $bp = new BpConfig();
         $host = $bp->createHost('localhost')->setState(99);
         $service = $bp->createService('localhost', 'ping')->setState(99);
         $p = $bp->createBp('p')
@@ -160,7 +160,7 @@ class AndOperatorTest extends BaseTestCase
 
     public function testWhetherWarningIsWorseThanPending()
     {
-        $bp = new BusinessProcess();
+        $bp = new BpConfig();
         $host = $bp->createHost('localhost')->setState(99);
         $service = $bp->createService('localhost', 'ping')->setState(1);
         $p = $bp->createBp('p')
@@ -175,7 +175,7 @@ class AndOperatorTest extends BaseTestCase
 
     public function testWhetherPendingIsWorseThanUpOrOk()
     {
-        $bp = new BusinessProcess();
+        $bp = new BpConfig();
         $host = $bp->createHost('localhost')->setState(99);
         $service = $bp->createService('localhost', 'ping')->setState(0);
         $p = $bp->createBp('p')
@@ -198,7 +198,7 @@ class AndOperatorTest extends BaseTestCase
     }
 
     /**
-     * @return BusinessProcess
+     * @return BpConfig
      */
     protected function getBp()
     {

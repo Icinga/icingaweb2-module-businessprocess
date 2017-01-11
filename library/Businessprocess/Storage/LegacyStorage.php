@@ -4,7 +4,7 @@ namespace Icinga\Module\Businessprocess\Storage;
 
 use DirectoryIterator;
 use Icinga\Application\Icinga;
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Exception\SystemPermissionException;
 
 class LegacyStorage extends Storage
@@ -125,7 +125,7 @@ class LegacyStorage extends Storage
     /**
      * @inheritdoc
      */
-    public function storeProcess(BusinessProcess $process)
+    public function storeProcess(BpConfig $process)
     {
         file_put_contents(
             $this->getFilename($process->getName()),

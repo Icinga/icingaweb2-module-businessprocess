@@ -3,7 +3,7 @@
 namespace Icinga\Module\Businessprocess\Forms;
 
 use Icinga\Module\Businessprocess\BpNode;
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
@@ -15,7 +15,7 @@ class ProcessForm extends QuickForm
     /** @var MonitoringBackend */
     protected $backend;
 
-    /** @var BusinessProcess */
+    /** @var BpConfig */
     protected $bp;
 
     /** @var BpNode */
@@ -115,10 +115,10 @@ class ProcessForm extends QuickForm
     }
 
     /**
-     * @param BusinessProcess $process
+     * @param BpConfig $process
      * @return $this
      */
-    public function setProcess(BusinessProcess $process)
+    public function setProcess(BpConfig $process)
     {
         $this->bp = $process;
         $this->setBackend($process->getBackend());

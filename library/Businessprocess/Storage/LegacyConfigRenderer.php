@@ -3,7 +3,7 @@
 namespace Icinga\Module\Businessprocess\Storage;
 
 use Icinga\Module\Businessprocess\BpNode;
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 
 class LegacyConfigRenderer
 {
@@ -13,9 +13,9 @@ class LegacyConfigRenderer
     /**
      * LecagyConfigRenderer constructor
      *
-     * @param BusinessProcess $config
+     * @param BpConfig $config
      */
-    public function __construct(BusinessProcess $config)
+    public function __construct(BpConfig $config)
     {
         $this->config = $config;
     }
@@ -29,10 +29,10 @@ class LegacyConfigRenderer
     }
 
     /**
-     * @param BusinessProcess $config
+     * @param BpConfig $config
      * @return mixed
      */
-    public static function renderConfig(BusinessProcess $config)
+    public static function renderConfig(BpConfig $config)
     {
         $renderer = new static($config);
         return $renderer->render();

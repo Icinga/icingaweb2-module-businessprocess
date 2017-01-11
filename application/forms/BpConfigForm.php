@@ -4,7 +4,7 @@ namespace Icinga\Module\Businessprocess\Forms;
 
 use Icinga\Application\Config;
 use Icinga\Authentication\Auth;
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Storage\Storage;
 use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 
@@ -15,7 +15,7 @@ class BpConfigForm extends QuickForm
 
     protected $backend;
 
-    /** @var  BusinessProcess */
+    /** @var  BpConfig */
     protected $config;
 
     protected $node;
@@ -153,7 +153,7 @@ class BpConfigForm extends QuickForm
 
         if ($this->config === null) {
             // New config
-            $config = new BusinessProcess();
+            $config = new BpConfig();
             $config->setName($name);
             $config->getMetadata()->set('Owner', Auth::getInstance()->getUser()->getUsername());
             $this->setSuccessUrl(

@@ -3,7 +3,7 @@
 namespace Icinga\Module\Businessprocess\Web\Component;
 
 use Icinga\Authentication\Auth;
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Html\BaseElement;
 use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Renderer\Renderer;
@@ -12,7 +12,7 @@ use Icinga\Module\Businessprocess\Web\Url;
 
 class RenderedProcessActionBar extends ActionBar
 {
-    public function __construct(BusinessProcess $config, Renderer $renderer, Auth $auth, Url $url)
+    public function __construct(BpConfig $config, Renderer $renderer, Auth $auth, Url $url)
     {
         $meta = $config->getMetadata();
 

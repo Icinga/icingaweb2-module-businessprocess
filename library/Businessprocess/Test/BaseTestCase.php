@@ -5,7 +5,7 @@ namespace Icinga\Module\Businessprocess\Test;
 use Icinga\Application\Config;
 use Icinga\Application\ApplicationBootstrap;
 use Icinga\Application\Icinga;
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Businessprocess\Web\FakeRequest;
 use PHPUnit_Framework_TestCase;
@@ -30,7 +30,7 @@ abstract class BaseTestCase extends PHPUnit_Framework_TestCase
     }
 
     /***
-     * @return BusinessProcess
+     * @return BpConfig
      */
     protected function makeLoop()
     {

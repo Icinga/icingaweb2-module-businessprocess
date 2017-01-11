@@ -12,7 +12,7 @@ class ServiceNode extends MonitoredNode
 
     protected $className = 'service';
 
-    public function __construct(BusinessProcess $bp, $object)
+    public function __construct(BpConfig $bp, $object)
     {
         $this->name = $object->hostname . ';' . $object->service;
         $this->hostname = $object->hostname;

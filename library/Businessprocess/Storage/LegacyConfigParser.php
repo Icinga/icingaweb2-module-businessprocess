@@ -6,7 +6,7 @@ use Icinga\Application\Benchmark;
 use Icinga\Exception\ConfigurationError;
 use Icinga\Exception\SystemPermissionException;
 use Icinga\Module\Businessprocess\BpNode;
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Metadata;
 
 class LegacyConfigParser
@@ -19,7 +19,7 @@ class LegacyConfigParser
 
     protected $name;
 
-    /** @var BusinessProcess */
+    /** @var BpConfig */
     protected $config;
 
     /**
@@ -30,12 +30,12 @@ class LegacyConfigParser
     private function __construct($name)
     {
         $this->name = $name;
-        $this->config = new BusinessProcess();
+        $this->config = new BpConfig();
         $this->config->setName($name);
     }
 
     /**
-     * @return BusinessProcess
+     * @return BpConfig
      */
     public function getParsedConfig()
     {
@@ -147,9 +147,9 @@ class LegacyConfigParser
 
     /**
      * @param $line
-     * @param BusinessProcess $bp
+     * @param BpConfig $bp
      */
-    protected function parseDisplay(& $line, BusinessProcess $bp)
+    protected function parseDisplay(& $line, BpConfig $bp)
     {
         list($display, $name, $desc) = preg_split('~\s*;\s*~', substr($line, 8), 3);
         $bp->getBpNode($name)->setAlias($desc)->setDisplay($display);
@@ -160,28 +160,28 @@ class LegacyConfigParser
 
     /**
      * @param $line
-     * @param BusinessProcess $bp
+     * @param BpConfig $bp
      */
-    protected function parseExternalInfo(& $line, BusinessProcess $bp)
+    protected function parseExternalInfo(& $line, BpConfig $bp)
     {
         list($name, $script) = preg_split('~\s*;\s*~', substr($line, 14), 2);
         $bp->getBpNode($name)->setInfoCommand($script);
     }
 
-    protected function parseExtraInfo(& $line, BusinessProcess $bp)
+    protected function parseExtraInfo(& $line, BpConfig $bp)
     {
         // TODO: Not yet
         // list($name, $script) = preg_split('~\s*;\s*~', substr($line, 14), 2);
         // $this->getNode($name)->setExtraInfo($script);
     }
 
-    protected function parseInfoUrl(& $line, BusinessProcess $bp)
+    protected function parseInfoUrl(& $line, BpConfig $bp)
     {
         list($name, $url) = preg_split('~\s*;\s*~', substr($line, 9), 2);
         $bp->getBpNode($name)->setInfoUrl($url);
     }
 
-    protected function parseExtraLine(& $line, $typeLength, BusinessProcess $bp)
+    protected function parseExtraLine(& $line, $typeLength, BpConfig $bp)
     {
         $type = substr($line, 0, $typeLength);
         if (substr($type, 0, 7) === 'display') {

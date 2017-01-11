@@ -5,7 +5,7 @@ namespace Icinga\Module\Businessprocess\Renderer;
 use Icinga\Date\DateFormatter;
 use Icinga\Exception\ProgrammingError;
 use Icinga\Module\Businessprocess\BpNode;
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Html\Container;
 use Icinga\Module\Businessprocess\Html\Element;
 use Icinga\Module\Businessprocess\Html\Html;
@@ -15,7 +15,7 @@ use Icinga\Module\Businessprocess\Web\Url;
 
 abstract class Renderer extends Html
 {
-    /** @var BusinessProcess */
+    /** @var BpConfig */
     protected $bp;
 
     /** @var BpNode */
@@ -39,17 +39,17 @@ abstract class Renderer extends Html
     /**
      * Renderer constructor.
      *
-     * @param BusinessProcess $bp
+     * @param BpConfig $bp
      * @param BpNode|null $parent
      */
-    public function __construct(BusinessProcess $bp, BpNode $parent = null)
+    public function __construct(BpConfig $bp, BpNode $parent = null)
     {
         $this->bp = $bp;
         $this->parent = $parent;
     }
 
     /**
-     * @return BusinessProcess
+     * @return BpConfig
      */
     public function getBusinessProcess()
     {
@@ -299,7 +299,7 @@ abstract class Renderer extends Html
         )->setContent(DateFormatter::timeSince($time, $timeOnly));
     }
 
-    protected function createUnboundParent(BusinessProcess $bp)
+    protected function createUnboundParent(BpConfig $bp)
     {
         $unbound = $bp->getUnboundNodes();
 

@@ -32,7 +32,7 @@ class HostNode extends MonitoredNode
 
     protected $className = 'host';
 
-    public function __construct(BusinessProcess $bp, $object)
+    public function __construct(BpConfig $bp, $object)
     {
         $this->name     = $object->hostname . ';Hoststatus';
         $this->hostname = $object->hostname;

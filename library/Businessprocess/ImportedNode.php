@@ -21,13 +21,13 @@ class ImportedNode extends Node
 
     protected $className = 'subtree';
 
-    /** @var BusinessProcess */
+    /** @var BpConfig */
     protected $config;
 
     /**
      * @inheritdoc
      */
-    public function __construct(BusinessProcess $bp, $object)
+    public function __construct(BpConfig $bp, $object)
     {
         $this->bp = $bp;
         $this->configName = $object->configName;

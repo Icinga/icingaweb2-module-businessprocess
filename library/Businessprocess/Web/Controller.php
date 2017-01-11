@@ -3,7 +3,7 @@
 namespace Icinga\Module\Businessprocess\Web;
 
 use Icinga\Application\Icinga;
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Html\HtmlTag;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
@@ -22,7 +22,7 @@ class Controller extends ModuleController
     /** @var View */
     public $view;
 
-    /** @var BusinessProcess */
+    /** @var BpConfig */
     protected $bp;
 
     /** @var Tabs */

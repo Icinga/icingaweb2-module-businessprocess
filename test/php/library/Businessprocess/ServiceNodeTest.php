@@ -2,7 +2,7 @@
 
 namespace Tests\Icinga\Module\Businessprocess;
 
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\ServiceNode;
 use Icinga\Module\Businessprocess\Test\BaseTestCase;
 
@@ -46,7 +46,7 @@ class ServiceNodeTest extends BaseTestCase
      */
     protected function pingOnLocalhost()
     {
-        $bp = new BusinessProcess();
+        $bp = new BpConfig();
         return new ServiceNode($bp, (object) array(
             'hostname' => 'localhost',
             'service'  => 'ping <> pong',

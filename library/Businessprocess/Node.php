@@ -41,7 +41,7 @@ abstract class Node
     /**
      * Main business process object
      *
-     * @var BusinessProcess
+     * @var BpConfig
      */
     protected $bp;
 
@@ -102,7 +102,7 @@ abstract class Node
         99 => 'PENDING'
     );
 
-    abstract public function __construct(BusinessProcess $bp, $object);
+    abstract public function __construct(BpConfig $bp, $object);
 
     public function setMissing($missing = true)
     {

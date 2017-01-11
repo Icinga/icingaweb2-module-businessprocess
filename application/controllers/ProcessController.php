@@ -2,7 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Controllers;
 
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Storage\ConfigDiff;
 use Icinga\Module\Businessprocess\Html\Element;
@@ -131,7 +131,7 @@ class ProcessController extends Controller
         }
     }
 
-    protected function getNode(BusinessProcess $bp)
+    protected function getNode(BpConfig $bp)
     {
         if ($nodeName = $this->params->get('node')) {
             return $bp->getNode($nodeName);
@@ -158,7 +158,7 @@ class ProcessController extends Controller
         return $this->renderer;
     }
 
-    protected function getProcessTabs(BusinessProcess $bp, Renderer $renderer)
+    protected function getProcessTabs(BpConfig $bp, Renderer $renderer)
     {
 
         $tabs = $this->singleTab($bp->getTitle());
@@ -169,7 +169,7 @@ class ProcessController extends Controller
         return $tabs;
     }
 
-    protected function handleSimulations(BusinessProcess $bp)
+    protected function handleSimulations(BpConfig $bp)
     {
         $simulation = new Simulation($bp, $this->session());
 
@@ -187,7 +187,7 @@ class ProcessController extends Controller
         $bp->applySimulation($simulation);
     }
 
-    protected function loadActionForm(BusinessProcess $bp, Node $node = null)
+    protected function loadActionForm(BpConfig $bp, Node $node = null)
     {
         $action = $this->params->get('action');
         $form = null;
@@ -243,7 +243,7 @@ class ProcessController extends Controller
         }
     }
 
-    protected function showWarnings(BusinessProcess $bp)
+    protected function showWarnings(BpConfig $bp)
     {
         if ($bp->hasWarnings()) {
             $ul = Element::create('ul', array('class' => 'warning'));
@@ -257,7 +257,7 @@ class ProcessController extends Controller
         }
     }
 
-    protected function showHints(BusinessProcess $bp)
+    protected function showHints(BpConfig $bp)
     {
         $ul = Element::create('ul', array('class' => 'error'));
         foreach ($bp->getErrors() as $error) {

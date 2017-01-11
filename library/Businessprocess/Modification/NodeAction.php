@@ -2,7 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Modification;
 
-use Icinga\Module\Businessprocess\BusinessProcess;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Exception\ProgrammingError;
 
@@ -42,18 +42,18 @@ abstract class NodeAction
     /**
      * Every NodeAction must be able to apply itself to a BusinessProcess
      *
-     * @param BusinessProcess $bp
+     * @param BpConfig $bp
      * @return mixed
      */
-    abstract public function applyTo(BusinessProcess $bp);
+    abstract public function applyTo(BpConfig $bp);
 
     /**
      * Every NodeAction must be able to tell whether it could be applied to a BusinessProcess
      *
-     * @param BusinessProcess $bp
+     * @param BpConfig $bp
      * @return bool
      */
-    abstract public function appliesTo(BusinessProcess $bp);
+    abstract public function appliesTo(BpConfig $bp);
 
     /**
      * The name of the node this modification applies to
