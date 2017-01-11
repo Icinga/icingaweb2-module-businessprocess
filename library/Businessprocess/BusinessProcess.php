@@ -121,6 +121,11 @@ class BusinessProcess
     {
     }
 
+    /**
+     * Retrieve metadata for this configuration
+     *
+     * @return Metadata
+     */
     public function getMetadata()
     {
         if ($this->metadata === null) {
@@ -130,12 +135,26 @@ class BusinessProcess
         return $this->metadata;
     }
 
+    /**
+     * Set metadata
+     *
+     * @param Metadata $metadata
+     *
+     * @return $this
+     */
     public function setMetadata(Metadata $metadata)
     {
         $this->metadata = $metadata;
         return $this;
     }
 
+    /**
+     * Apply pending process changes
+     *
+     * @param ProcessChanges $changes
+     *
+     * @return $this
+     */
     public function applyChanges(ProcessChanges $changes)
     {
         $cnt = 0;
@@ -150,6 +169,13 @@ class BusinessProcess
         return $this;
     }
 
+    /**
+     * Apply a state simulation
+     *
+     * @param Simulation $simulation
+     *
+     * @return $this
+     */
     public function applySimulation(Simulation $simulation)
     {
         $cnt = 0;
@@ -167,12 +193,25 @@ class BusinessProcess
         }
 
         $this->simulationCount = $cnt;
+
+        return $this;
     }
+
+    /**
+     * Number of applied changes
+     *
+     * @return int
+     */
     public function countChanges()
     {
         return $this->changeCount;
     }
 
+    /**
+     * Whether changes have been applied to this configuration
+     *
+     * @return int
+     */
     public function hasChanges()
     {
         return $this->countChanges() > 0;
@@ -418,6 +457,9 @@ class BusinessProcess
         return $this->getRootNodes();
     }
 
+    /**
+     * @return int
+     */
     public function countChildren()
     {
         return count($this->root_nodes);
@@ -604,6 +646,14 @@ class BusinessProcess
         return $this;
     }
 
+    /**
+     * Add the given node to the given BpNode
+     *
+     * @param $name
+     * @param BpNode $node
+     *
+     * @return $this
+     */
     public function addNode($name, BpNode $node)
     {
         if (array_key_exists($name, $this->nodes)) {
@@ -631,12 +681,18 @@ class BusinessProcess
         return $this;
     }
 
+    /**
+     * Remove all occurrences of a specific node by name
+     *
+     * @param $name
+     */
     public function removeNode($name)
     {
         unset($this->nodes[$name]);
         if (array_key_exists($name, $this->root_nodes)) {
             unset($this->root_nodes[$name]);
         }
+
         foreach ($this->getBpNodes() as $node) {
             if ($node->hasChild($name)) {
                 $node->removeChild($name);
@@ -645,6 +701,8 @@ class BusinessProcess
     }
 
     /**
+     * Get all business process nodes
+     *
      * @return BpNode[]
      */
     public function getBpNodes()
@@ -743,11 +801,23 @@ class BusinessProcess
         return $errors;
     }
 
+    /**
+     * Translation helper
+     *
+     * @param $msg
+     *
+     * @return mixed|string
+     */
     public function translate($msg)
     {
         return mt('businessprocess', $msg);
     }
 
+    /**
+     * Add a message to our warning stack
+     *
+     * @param $msg
+     */
     protected function warn($msg)
     {
         $args = func_get_args();
@@ -775,12 +845,28 @@ class BusinessProcess
         return $this;
     }
 
+    /**
+     * Decide whether errors should be thrown or collected
+     *
+     * @param bool $throw
+     *
+     * @return $this
+     */
     public function throwErrors($throw = true)
     {
         $this->throwErrors = $throw;
         return $this;
     }
 
+    /**
+     * Begin loop detection for the given name
+     *
+     * Will throw a NestingError in case this node will be met again below itself
+     *
+     * @param $name
+     *
+     * @throws NestingError
+     */
     public function beginLoopDetection($name)
     {
         // echo "Begin loop $name\n";
@@ -794,12 +880,22 @@ class BusinessProcess
         $this->loopDetection[$name] = true;
     }
 
+    /**
+     * Remove the given name from the loop detection stack
+     *
+     * @param $name
+     */
     public function endLoopDetection($name)
     {
         // echo "End loop $this->name\n";
         unset($this->loopDetection[$name]);
     }
 
+    /**
+     * Whether this configuration has any Nodes
+     *
+     * @return bool
+     */
     public function isEmpty()
     {
         return $this->countChildren() === 0;

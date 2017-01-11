@@ -47,7 +47,10 @@ class Breadcrumb extends BaseElement
     }
 
     /**
-     * @param BpNode $parent
+     * @param BpNode $node
+     * @param array $path
+     * @param Renderer $renderer
+     *
      * @return NodeTile
      */
     protected static function renderNode(BpNode $node, $path, Renderer $renderer)
