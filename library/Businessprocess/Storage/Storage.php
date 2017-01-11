@@ -45,7 +45,7 @@ abstract class Storage
      *
      * @return array
      */
-    abstract public function listProcessesNames();
+    abstract public function listProcessNames();
 
     /**
      * All available process names, regardless of eventual restrictions
