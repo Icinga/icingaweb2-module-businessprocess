@@ -162,6 +162,12 @@ class LegacyStorage extends Storage
         return $this->getConfigDir() . '/' . $name . '.conf';
     }
 
+    /**
+     * @param $name
+     * @param $string
+     *
+     * @return BpConfig
+     */
     public function loadFromString($name, $string)
     {
         return LegacyConfigParser::parseString($name, $string);

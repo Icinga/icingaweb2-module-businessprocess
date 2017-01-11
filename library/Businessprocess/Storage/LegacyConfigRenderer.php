@@ -51,7 +51,7 @@ class LegacyConfigRenderer
                 continue;
             }
 
-            $str .= sprintf("# %-11s : %s\n", $key, $value);
+            $str .= sprintf("# %-15s : %s\n", $key, $value);
         }
 
         $str .= "#\n###################################\n\n";

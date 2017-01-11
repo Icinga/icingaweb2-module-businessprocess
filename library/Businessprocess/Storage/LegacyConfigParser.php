@@ -5,8 +5,8 @@ namespace Icinga\Module\Businessprocess\Storage;
 use Icinga\Application\Benchmark;
 use Icinga\Exception\ConfigurationError;
 use Icinga\Exception\SystemPermissionException;
-use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
+use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\Metadata;
 
 class LegacyConfigParser
@@ -42,6 +42,12 @@ class LegacyConfigParser
         return $this->config;
     }
 
+    /**
+     * @param $name
+     * @param $filename
+     *
+     * @return BpConfig
+     */
     public static function parseFile($name, $filename)
     {
         Benchmark::measure('Loading business process ' . $name);
@@ -51,6 +57,12 @@ class LegacyConfigParser
         return $parser->getParsedConfig();
     }
 
+    /**
+     * @param $name
+     * @param $string
+     *
+     * @return BpConfig
+     */
     public static function parseString($name, $string)
     {
         Benchmark::measure('Loading BP config from file: ' . $name);
