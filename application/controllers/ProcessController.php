@@ -16,6 +16,7 @@ use Icinga\Module\Businessprocess\Renderer\Renderer;
 use Icinga\Module\Businessprocess\Renderer\TileRenderer;
 use Icinga\Module\Businessprocess\Renderer\TreeRenderer;
 use Icinga\Module\Businessprocess\Simulation;
+use Icinga\Module\Businessprocess\Storage\LegacyConfigRenderer;
 use Icinga\Module\Businessprocess\Web\Component\ActionBar;
 use Icinga\Module\Businessprocess\Web\Component\RenderedProcessActionBar;
 use Icinga\Module\Businessprocess\Web\Component\Tabs;
@@ -306,7 +307,7 @@ class ProcessController extends Controller
         $bp = $this->loadModifiedBpConfig();
         $this->view->showDiff = $showDiff = (bool) $this->params->get('showDiff', false);
 
-        $this->view->source = $this->storage()->render($bp);
+        $this->view->source = LegacyConfigRenderer::renderConfig($bp);
         if ($this->view->showDiff) {
             $this->view->diff = ConfigDiff::create(
                 $this->storage()->getSource($this->view->configName),
