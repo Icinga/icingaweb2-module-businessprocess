@@ -428,67 +428,27 @@ class BpNode extends Node
         return $this->children;
     }
 
+    /**
+     * return BpNode[]
+     */
+    public function getChildBpNodes()
+    {
+        $children = array();
+
+        foreach ($this->getChildren() as $name => $child) {
+            if ($child instanceof BpNode) {
+                $children[$name] = $child;
+            }
+        }
+
+        return $children;
+    }
+
     protected function assertNumericOperator()
     {
         if (! is_numeric($this->operator)) {
             throw new ConfigurationError('Got invalid operator: %s', $this->operator);
         }
-    }
-
-    public function toLegacyConfigString(& $rendered = array())
-    {
-        $cfg = '';
-        if (array_key_exists($this->name, $rendered)) {
-            return $cfg;
-        }
-        $rendered[$this->name] = true;
-        $children = array();
-        
-        foreach ($this->getChildren() as $name => $child) {
-            $children[] = (string) $child;
-            if (array_key_exists($name, $rendered)) {
-                continue;
-            }
-
-            if ($child instanceof BpNode) {
-                $cfg .= $child->toLegacyConfigString($rendered) . "\n";
-            }
-        }
-        $eq = '=';
-        $op = $this->operator;
-        if (is_numeric($op)) {
-            $eq = '= ' . $op . ' of:';
-            $op = '+';
-        }
-
-        $strChildren = implode(' ' . $op . ' ', $children);
-        if ((count($children) < 2) && $op !== '&') {
-            $strChildren = $op . ' ' . $strChildren;
-        }
-        $cfg .= sprintf(
-            "%s %s %s\n",
-            $this->name,
-            $eq,
-            $strChildren
-        );
-        if ($this->hasAlias() || $this->getDisplay() > 0) {
-            $prio = $this->getDisplay();
-            $cfg .= sprintf(
-                "display %s;%s;%s\n",
-                $prio,
-                $this->name,
-                $this->getAlias()
-            );
-        }
-        if ($this->hasInfoUrl()) {
-            $cfg .= sprintf(
-                "info_url;%s;%s\n",
-                $this->name,
-                $this->getInfoUrl()
-            );
-        }
-
-        return $cfg;
     }
 
     public function operatorHtml()
