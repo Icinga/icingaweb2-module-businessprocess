@@ -92,7 +92,6 @@ class LegacyConfigRenderer
         $name = $node->getName();
 
         if (array_key_exists($name, $this->renderedNodes)) {
-
             return '';
         } else {
             $this->renderedNodes[$name] = true;
@@ -183,10 +182,8 @@ class LegacyConfigRenderer
         $str = implode(' ' . $op . ' ', $children);
 
         if ((count($children) < 2) && $op !== '&') {
-
             return $op . ' ' . $str;
         } else {
-
             return $str;
         }
     }

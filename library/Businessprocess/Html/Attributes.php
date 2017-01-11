@@ -60,7 +60,6 @@ class Attributes
                 }
 
                 return $self;
-
             } elseif ($attributes !== null) {
                 throw new IcingaException(
                     'Attributes, Array or Null expected, got %s',

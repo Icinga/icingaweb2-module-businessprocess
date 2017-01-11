@@ -69,7 +69,6 @@ class Dashboard extends BaseElement
                     array('class' => 'addnew')
                 )
             );
-
         } elseif (empty($processes)) {
             $this->addContent(
                 Container::create()

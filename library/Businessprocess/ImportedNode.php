@@ -164,7 +164,6 @@ class ImportedNode extends Node
                 'child_names' => $bp->listRootNodes(),
             ));
         } catch (Exception $e) {
-
             $this->createFailedNode($e);
         }
     }

@@ -177,7 +177,6 @@ class BpConfigForm extends QuickForm
                 )
             );
             $this->setSuccessMessage(sprintf('Process %s has been created', $name));
-
         } else {
             $config = $this->config;
             $this->setSuccessMessage(sprintf('Process %s has been stored', $name));
