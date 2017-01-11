@@ -14,7 +14,7 @@ class TileRenderer extends Renderer
      */
     public function render()
     {
-        $bp = $this->bp;
+        $bp = $this->config;
         $nodesDiv = Container::create(
             array(
                 'class' => array(

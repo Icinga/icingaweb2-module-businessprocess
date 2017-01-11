@@ -18,7 +18,7 @@ class TreeRenderer extends Renderer
      */
     public function render()
     {
-        $bp = $this->bp;
+        $bp = $this->config;
         $this->add(Container::create(
             array(
                 'id'    => $bp->getHtmlId(),

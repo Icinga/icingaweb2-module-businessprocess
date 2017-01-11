@@ -16,7 +16,7 @@ use Icinga\Module\Businessprocess\Web\Url;
 abstract class Renderer extends Html
 {
     /** @var BpConfig */
-    protected $bp;
+    protected $config;
 
     /** @var BpNode */
     protected $parent;
@@ -39,12 +39,12 @@ abstract class Renderer extends Html
     /**
      * Renderer constructor.
      *
-     * @param BpConfig $bp
+     * @param BpConfig $config
      * @param BpNode|null $parent
      */
-    public function __construct(BpConfig $bp, BpNode $parent = null)
+    public function __construct(BpConfig $config, BpNode $parent = null)
     {
-        $this->bp = $bp;
+        $this->config = $config;
         $this->parent = $parent;
     }
 
@@ -53,7 +53,7 @@ abstract class Renderer extends Html
      */
     public function getBusinessProcess()
     {
-        return $this->bp;
+        return $this->config;
     }
 
     /**
@@ -102,7 +102,7 @@ abstract class Renderer extends Html
     public function getChildNodes()
     {
         if ($this->wantsRootNodes()) {
-            return $this->bp->getRootNodes();
+            return $this->config->getRootNodes();
         } else {
             return $this->parent->getChildren();
         }
@@ -114,7 +114,7 @@ abstract class Renderer extends Html
     public function countChildNodes()
     {
         if ($this->wantsRootNodes()) {
-            return $this->bp->countChildren();
+            return $this->config->countChildren();
         } else {
             return $this->parent->countChildren();
         }
@@ -323,6 +323,6 @@ abstract class Renderer extends Html
     public function __destruct()
     {
         unset($this->parent);
-        unset($this->bp);
+        unset($this->config);
     }
 }
