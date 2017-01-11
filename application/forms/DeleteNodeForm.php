@@ -40,7 +40,7 @@ class DeleteNodeForm extends QuickForm
         $biLink = $view->qlink(
             $node->getAlias(),
             'director/node/impact',
-            array('node' => $node->getName()),
+            array('name' => $node->getName()),
             array('data-base-target' => '_next')
         );
         $this->addHtml(
