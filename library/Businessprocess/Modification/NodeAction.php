@@ -42,18 +42,18 @@ abstract class NodeAction
     /**
      * Every NodeAction must be able to apply itself to a BusinessProcess
      *
-     * @param BpConfig $bp
+     * @param BpConfig $config
      * @return mixed
      */
-    abstract public function applyTo(BpConfig $bp);
+    abstract public function applyTo(BpConfig $config);
 
     /**
      * Every NodeAction must be able to tell whether it could be applied to a BusinessProcess
      *
-     * @param BpConfig $bp
+     * @param BpConfig $config
      * @return bool
      */
-    abstract public function appliesTo(BpConfig $bp);
+    abstract public function appliesTo(BpConfig $config);
 
     /**
      * The name of the node this modification applies to

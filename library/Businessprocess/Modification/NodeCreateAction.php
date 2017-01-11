@@ -70,15 +70,15 @@ class NodeCreateAction extends NodeAction
     /**
      * @inheritdoc
      */
-    public function appliesTo(BpConfig $bp)
+    public function appliesTo(BpConfig $config)
     {
-        return ! $bp->hasNode($this->getNodeName());
+        return ! $config->hasNode($this->getNodeName());
     }
 
     /**
      * @inheritdoc
      */
-    public function applyTo(BpConfig $bp)
+    public function applyTo(BpConfig $config)
     {
         $name = $this->getNodeName();
 

@@ -38,29 +38,29 @@ class NodeRemoveAction extends NodeAction
     /**
      * @inheritdoc
      */
-    public function appliesTo(BpConfig $bp)
+    public function appliesTo(BpConfig $config)
     {
         $parent = $this->getParentName();
         if ($parent === null) {
-            return $bp->hasNode($this->getNodeName());
+            return $config->hasNode($this->getNodeName());
         } else {
-            return $bp->hasNode($this->getNodeName()) && $bp->hasNode($this->getParentName()) ;
+            return $config->hasNode($this->getNodeName()) && $config->hasNode($this->getParentName()) ;
         }
     }
 
     /**
      * @inheritdoc
      */
-    public function applyTo(BpConfig $bp)
+    public function applyTo(BpConfig $config)
     {
         $parent = $this->getParentName();
         if ($parent === null) {
-            $bp->removeNode($this->getNodeName());
+            $config->removeNode($this->getNodeName());
         } else {
-            $node = $bp->getNode($this->getNodeName());
+            $node = $config->getNode($this->getNodeName());
             $node->removeParent($parent);
             if (! $node->hasParents()) {
-                $bp->removeNode($this->getNodeName());
+                $config->removeNode($this->getNodeName());
             }
         }
     }

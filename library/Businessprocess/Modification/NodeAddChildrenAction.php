@@ -2,8 +2,8 @@
 
 namespace Icinga\Module\Businessprocess\Modification;
 
-use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
+use Icinga\Module\Businessprocess\BpNode;
 
 class NodeAddChildrenAction extends NodeAction
 {
@@ -14,21 +14,21 @@ class NodeAddChildrenAction extends NodeAction
     /**
      * @inheritdoc
      */
-    public function appliesTo(BpConfig $bp)
+    public function appliesTo(BpConfig $config)
     {
         $name = $this->getNodeName();
 
-        if (! $bp->hasNode($name)) {
+        if (! $config->hasNode($name)) {
             return false;
         }
 
-        return $bp->getNode($name) instanceof BpNode;
+        return $config->getNode($name) instanceof BpNode;
     }
 
     /**
      * @inheritdoc
      */
-    public function applyTo(BpConfig $bp)
+    public function applyTo(BpConfig $config)
     {
         /** @var BpNode $node */
         if (! $this->hasNode()) {

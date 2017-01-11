@@ -43,15 +43,15 @@ class NodeModifyAction extends NodeAction
     /**
      * @inheritdoc
      */
-    public function appliesTo(BpConfig $bp)
+    public function appliesTo(BpConfig $config)
     {
         $name = $this->getNodeName();
 
-        if (! $bp->hasNode($name)) {
+        if (! $config->hasNode($name)) {
             return false;
         }
 
-        $node = $bp->getNode($name);
+        $node = $config->getNode($name);
 
         foreach ($this->properties as $key => $val) {
             $func = 'get' . ucfirst($key);
@@ -66,9 +66,9 @@ class NodeModifyAction extends NodeAction
     /**
      * @inheritdoc
      */
-    public function applyTo(BpConfig $bp)
+    public function applyTo(BpConfig $config)
     {
-        $node = $bp->getNode($this->getNodeName());
+        $node = $config->getNode($this->getNodeName());
 
         foreach ($this->properties as $key => $val) {
             $func = 'set' . ucfirst($key);
