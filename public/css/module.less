@@ -1,43 +1,24 @@
-/* Default font settings */
-h1 {
-    font-size: 1em;
-}
-
-/* Normalize CSS */
-
-.content {
-  a {
-    font-weight: normal;
-    color: inherit;
-  }
-
-  .text-small {
-    color: inherit;
-    font-size: inherit;
-  }
-
-  p a {
-    color: @icinga-blue;
-    text-decoration: underline;
-  }
-
-}
-.controls h1 a {
-    color: inherit;
-    float: right;
-    font-weight: normal;
-}
-
-.controls h1 form {
-    display: inline;
-}
-
-h1 a:focus {
+a:focus {
     outline: none;
+    text-decoration: underline;
+    &::before {
+        text-decoration: none;
+    }
+}
+
+.action-bar a {
+    color: @icinga-blue;
+    &:hover::before {
+        text-decoration: none;
+    }
+    margin-right: 1em;
+}
+
+form a {
+    color: @icinga-blue;
 }
 
 div.bp {
-  font-size: 0.82em;
   margin-bottom: 4px;
 }
 
@@ -52,7 +33,7 @@ table.bp {
     width: 100%;
     margin: 0;
     padding: 0;
-    color: #0a0a0a;
+    color: @text-color;
     border-collapse: collapse;
     border-spacing: 0;
     box-sizing: border-box;
@@ -173,7 +154,7 @@ table.bp .icon {
 table.bp.node {
     td:before {
         font-family: ifont;
-        z-index: 10;
+        z-index: 1;
         font-size: 1.25em;
         position: absolute;
         margin-left: 1.25em;
@@ -207,7 +188,8 @@ table.bp tr, table.bp tbody, table.bp th, table.bp td, table.bp.node td > a, tab
 }
 
 table.bp td > a, table.node.missing td > span {
-    line-height: 2em;
+    height: 2.5em;
+    line-height: 2.5em;
     padding-left: 0.5em;
     display: block;
 }
@@ -240,7 +222,7 @@ table.bp.handled > tbody > tr > th, table.bp.ok > tbody > tr > th {
 /* Operator: upper line */
 table.bp.operator > tbody > tr:first-child > * {
     border-top-width: 1px;
-    border-top-style: dotted;
+    border-top-style: solid;
 }
 
 table.bp.operator.hovered > tbody > tr:first-child > * {
@@ -311,7 +293,7 @@ table.bp {
 
 /* Reduce font size after the 3rd level... */
 table.bp table.bp table.bp table.bp {
-    font-size: 0.9em;
+    font-size: 0.95em;
 }
 
 /* ...and keep it constant afterwards */
@@ -319,7 +301,7 @@ table.bp table.bp table.bp table.bp table.bp {
     font-size: 1em;
 }
 /* Transitions */
-table.bp {
+div.knightrider table.bp {
 
     // That's ugly, I know
     .transition(@val1, @val2) {
@@ -345,125 +327,343 @@ table.bp {
     }
 }
 
-.toplevel:after {
+/** BEGIN Dashboard **/
+.overview-dashboard {
+    > div.action {
+        width: 20em;
+        display: inline-block;
+
+        > a {
+            text-decoration: none;
+            color: inherit;
+            vertical-align: middle;
+            display: block;
+            padding: 1em;
+            word-wrap: break-word;
+            width: 100%;
+            height: 12em;
+            overflow: hidden;
+            box-sizing: border-box;
+
+            > span.header {
+                font-weight: bold;
+                display: block;
+                font-size: 1.25em;
+            }
+
+            &:hover {
+                background-color: @text-color;
+                color: white;
+            }
+
+            &.addnew:hover {
+                background-color: @icinga-blue;
+            }
+
+            i {
+                float: left;
+                font-size: 2.5em;
+                margin-top: -0.1em;
+                margin-bottom: 2em;
+                color: inherit;
+            }
+        }
+    }
+}
+/** END Dashboard **/
+
+/** BEGIN Badges **/
+.badges {
+    display: block;
+    padding: 0.5em;
+
+    .badge {
+        border: 1px solid white;
+        margin: 0;
+        margin-right: 1px;
+    }
+}
+
+div.bp .badges {
+    display: inline-block;
+    padding-top: 0;
+}
+
+.badge-critical, .badge-down { background: @colorCritical; }
+.badge-unknown, .badge-unreachable { background: @colorUnknown; }
+.badge-warning { background: @colorWarning; }
+.badge-pending { background: @colorPending; }
+.badge-missing { background: #ccc; }
+/** END Badges **/
+
+/** BEGIN Tiles **/
+.tiles:after {
     content:'';
     display:block;
     clear: both;
 }
 
-.toplevel.few {
-    font-size: 3em;
-}
-
-.toplevel.normal {
-    font-size: 2em;
-}
-
-.toplevel.many {
-    font-size: 1.5em;
-}
-
-
-#layout.twocols, #layout.layout-minimal, .compact {
-    .toplevel.few {
-        font-size: 1.8em;
-    }
-
-    .toplevel.normal {
-        font-size: 1.4em;
-    }
-
-    .toplevel.many {
-        font-size: 0.9em;
-    }
-}
-
-.toplevel > div {
-    width: 5em;
-    height: 5em;
+.tiles > div {
+    color: white;
+    width: 12em;
+    display: inline-block;
     float: left;
     margin-right: 0.2em;
     margin-bottom: 0.2em;
-    color: white;
-    background: #ccc;
+    height: 6em;
+    cursor: pointer;
+
+    .badges {
+        text-align: center;
+        font-size: 0.5em;
+        display: block;
+    }
+
+    > a {
+        display: block;
+    }
+
+    &:hover {
+        box-shadow: 0px 0px 5px #666;
+    }
+
+    .actions {
+        font-size: 0.75em;
+        margin-left: 0.5em;
+        padding-top: 0.2em;
+        height: 1.8em;
+
+        i {
+            float: none;
+            display: block;
+            width: 100%;
+            font-size: 1em;
+            line-height: normal;
+            margin: 0;
+            padding: 0 0 0 0.25em;
+        }
+        a {
+            margin: 0;
+            padding: 0;
+            display: inline-block;
+            width: 1.5em;
+            height: 1.5em;
+            border-radius: 0.3em;
+        }
+
+        a:hover {
+            background-color: white;
+            color: @text-color;
+        }
+    }
 }
 
-.toplevel > div > a {
+
+.tiles > div.parent::before {
+    content: '&';
+    position: absolute;
+    font-size: 1.2em;
+}
+
+.tiles > div.parent {
+    width: 100%;
+    height: 2em;
+}
+
+.tiles > div > a {
     text-decoration: none;
     font-size: 0.5em;
     color: inherit;
     vertical-align: middle;
     text-align: center;
-    display: block;
     padding: 1em;
     font-weight: bold;
     word-wrap: break-word;
-    height: 10em;
-    width: 10em;
+    width: 100%;
     box-sizing: border-box;
 }
 
-.toplevel > div > a:hover {
-    color: black;
+.tiles {
+    > .critical            { background-color: @colorCritical; background-color: @colorCritical; color: white; }
+    > .critical.handled    { background-color: @colorCriticalHandled; }
+    > .down                { background-color: @colorCritical; }
+    > .down.handled        { background-color: @colorCriticalHandled; }
+    > .unknown             { background-color: @colorUnknown; }
+    > .unknown.handled     { background-color: @colorUnknownHandled; }
+    > .unreachable         { background-color: @colorUnknown; }
+    > .unreachable.handled { background-color: @colorUnknownHandled; }
+    > .warning             { background-color: @colorWarning; }
+    > .warning.handled     { background-color: @colorWarningHandled; }
+    > .ok                  { background-color: @colorOk; }
+    > .up                  { background-color: @colorOk; }
+    > .pending             { background-color: @colorPending; }
+    > .missing             { background-color: #ccc; }
+    > .addnew              { background-color: @icinga-blue; }
 }
 
-.toplevel > div.critical, .toplevel .badge-critical {
-    background: @colorCritical;
+/*
+.tiles > div:hover {
+    > .critical            { background: white; color: @text-color; }
+    > .critical.handled    { background: @colorCriticalHandled; }
+    > .down                { background: @colorCritical; }
+    > .down.handled        { background: @colorCriticalHandled; }
+    > .unknown             { background: @colorUnknown; }
+    > .unknown.handled     { background: @colorUnknownHandled; }
+    > .unreachable         { background: @colorUnknown; }
+    > .unreachable.handled { background: @colorUnknownHandled; }
+    > .warning             { background: @colorWarning; }
+    > .warning.handled     { background: @colorWarningHandled; }
+    > .ok                  { background: @colorOk; }
+    > .pending             { background: @colorPending; }
+    > .missing             { background: #ccc; }
+}
+*/
+.tiles .missing a {
+    pointer-events: none;
+    cursor: default;
 }
 
-.toplevel > div.critical.handled {
-    background: @colorCriticalHandled;
+.tiles.few { font-size: 2.5em; }
+.tiles.normal { font-size: 2.1em; }
+.tiles.many { font-size: 1.8em; }
+
+#layout.twocols, #layout.layout-minimal, .compact {
+    .tiles.few { font-size: 1.8em; }
+    .tiles.normal { font-size: 1.8em; }
+    .tiles.many { font-size: 1.8em; }
 }
 
-.toplevel > div.down, .toplevel .badge-down {
-    background: @colorCritical;
+#layout.fullscreen-layout .controls {
+    padding: 0 1em;
 }
 
-.toplevel > div.down.handled {
-    background: @colorCriticalHandled;
+/** END of tiles **/
+
+/** BEGIN breadcrumb **/
+
+.breadcrumb {
+    list-style: none;
+    overflow: hidden;
+    padding: 0;
+
+    .badges {
+        display: inline-block;
+        padding: 0 0 0 0.5em;
+        .badge {
+            line-height: 1.25em;
+            font-size: 0.8em;
+            border: 1px solid white;
+            margin: 0;
+            margin-right: 1px;
+        }
+    }
 }
 
-.toplevel > div.unknown, .toplevel .badge-unknown {
-    background: @colorUnknown;
+.breadcrumb {
+    > .critical            a { background: @colorCritical; }
+    > .critical.handled    a { background: @colorCriticalHandled; }
+    > .unknown             a { background: @colorUnknown; }
+    > .unknown.handled     a { background: @colorUnknownHandled; }
+    > .warning             a { background: @colorWarning; }
+    > .warning.handled     a { background: @colorWarningHandled; }
+    > .ok                  a { background: @colorOk; }
 }
 
-.toplevel > div.unknown.handled {
-    background: @colorUnknownHandled;
+.breadcrumb {
+    > .critical            a:after { border-left-color: @colorCritical; }
+    > .critical.handled    a:after { border-left-color: @colorCriticalHandled; }
+    > .unknown             a:after { border-left-color: @colorUnknown; }
+    > .unknown.handled     a:after { border-left-color: @colorUnknownHandled; }
+    > .warning             a:after { border-left-color: @colorWarning; }
+    > .warning.handled     a:after { border-left-color: @colorWarningHandled; }
+    > .ok                  a:after { border-left-color: @colorOk; }
 }
 
-.toplevel > div.unreachable, .toplevel .badge-unreachable {
-    background: @colorUnknown;
+.breadcrumb:after {
+    content:'';
+    display:block;
+    clear: both;
+}
+.breadcrumb li {
+    float: left;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+
+}
+.breadcrumb li a {
+    color: white;
+    margin: 0;
+    font-size: 1.2em;
+    text-decoration: none;
+    padding-left: 2em;
+    line-height: 2.5em;
+    background: @icinga-blue;
+    position: relative;
+    display: block;
+    float: left;
+    &:focus {
+        outline: none;
+    }
 }
 
-.toplevel > div.unreachable.handled {
-    background: @colorUnknownHandled;
+.breadcrumb li a:before, .breadcrumb li a:after {
+    content: " ";
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 1.3em solid transparent;
+    border-bottom: 1.2em solid transparent;
+    position: absolute;
+    margin-top: -1.2em;
+    top: 50%;
+    left: 100%;
 }
 
-.toplevel > div.warning, .toplevel .badge-warning {
-    background: @colorWarning;
+.breadcrumb li a:before {
+    border-left: 1.2em solid white;
+    margin-left: 1px;
+    z-index: 1;
 }
 
-.toplevel > div.warning.handled {
-    background: @colorWarningHandled;
+.breadcrumb li a:after {
+    border-left: 1.2em solid @icinga-blue;
+    z-index: 2;
 }
 
-.toplevel > div.ok {
-    background: @colorOk;
+.breadcrumb li:first-child a {
+    padding-left: 1em;
+    padding-right: 0.5em;
+}
+.breadcrumb li:last-child a {
+    cursor: default;
+}
+.breadcrumb li:last-child a:hover {
+
 }
 
-.toplevel > div.pending, .toplevel .badge-pending {
-    background: @colorPending;
+.breadcrumb li:not(:last-child) a:hover { background: @text-color; color: white; }
+.breadcrumb li:not(:last-child) a:hover:after { border-left-color: @text-color; }
+
+.breadcrumb li a:focus {
+    text-decoration: underline;
 }
 
-.toplevel > div.missing, .toplevel .badge-missing {
-    background: #ccc;
+#layout.twocols, #layout.layout-minimal, .compact {
+    .breadcrumb {
+        font-size: 0.9em;
+    }
 }
 
-ul.error {
+/** END of breadcrumb **/
+
+
+ul.error, ul.warning {
     padding: 0;
     list-style-type: none;
     background-color: @colorCritical;
-    font-size: 0.8em;
 
     li {
         font-weight: bold;
@@ -473,7 +673,17 @@ ul.error {
 
     li a {
         color: inherit;
+        text-decoration: underline;
+
+        &:hover {
+            text-decoration: none;
+        }
     }
+}
+
+
+ul.warning {
+    background-color: @colorWarning;
 }
 
 table.sourcecode {
@@ -514,70 +724,390 @@ table.sourcecode {
     }
 }
 
-.badges {
-    display: block;
-    padding: 0.5em;
+/** Forms stolen from director **/
+.content form {
+    margin-bottom: 2em;
+}
 
-    .badge {
-       border: 1px solid white;
-       margin: 0;
-        margin-right: 1px;
+.content form.inline {
+    margin: 0;
+}
+
+.invisible {
+    position: absolute;
+    left: -100%;
+}
+
+form input[type=file] {
+    background-color: white;
+    padding-right: 1em;
+}
+
+
+form input[type=submit] {
+    .button();
+    border-width: 1px;
+    margin-top: 0.5em;
+
+    &:disabled {
+        border-color: @gray-light;
+        background-color: @gray-light;
+        color: #fff;
     }
 }
 
-#bp-overlay-container {
-  display: none;
-  position: absolute;
-  background-color: rgba(250, 250, 255, 0.98);
-  border: 0.25em solid @icinga-blue;
-  z-index: 3000;
-  top: 10%;
-  left: 20%;
-  right: 20%;
-  height: 40em;
-  max-width: 60em;
-
-  .bp-overlay-controls {
-    background-color: @icinga-blue;
-    color: white;
-    height: 2em;
-
-    a {
-        float: right;
-        line-height: 2em;
-        margin-right: 1em;
-    }
-  }
+form input[type=submit]:first-of-type {
+    border-width: 2px;
 }
 
-#layout.minimal-layout #bp-overlay-container {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: auto;
-  height: auto;
-  border: none;
-  overflow: auto;
+form input[type=submit].link-button {
+    color: @icinga-blue;
+    background: none;
+    border: none;
+    padding: 0;
 
-  #bp-overlay {
+    text-align: left;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+form p.description {
+    padding: 1em 1em;
+    margin: 0;
+    font-style: italic;
+    width: 100%;
+}
+
+input, select, select option, textarea {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+form ul.form-errors {
+    margin-bottom: 0.5em;
+
+    ul.errors li {
+        background: @color-critical;
+        font-weight: bold;
+        padding: 0.5em 1em;
+        color: white;
+    }
+}
+
+select::-ms-expand, input::-ms-expand, textarea::-ms-expand { /* for IE 11 */
+    display: none;
+}
+
+select {
+    border: 1px solid #ddd;
+    cursor: pointer;
+    background: none;
+}
+
+input[type=text], input[type=password], textarea, select {
+    max-width: 36em;
+    min-width: 20em;
+    width: 100%;
+    line-height: 2em;
+    height: 2.4em;
+    padding-left: 0.5em;
+    border-style: solid;
+    border-color: transparent;
+    border-bottom-color: @gray-lighter;
+    border-width: 1px 1px 1px 3px;
+    background-color: white;
+
+    &.search {
+        background: transparent url("../img/icons/search.png") no-repeat scroll 0.5em center / 1em 1em;
+        padding-left: 2em;
+    }
+}
+
+select[multiple] {
     height: auto;
-  }
 }
 
-#layout.poor-layout #bp-overlay-container {
-  left: 2%;
-  right: 2%;
+select option {
+    height: 2em;
+    padding-top: 0.3em;
 }
 
-#layout.compact-layout #bp-overlay-container {
-  left: 5%;
-  right: 5%;
-} 
-
-#bp-overlay {
-  padding: 1em;
-  overflow: auto;
-  height: 37.5em;
+select[multiple=multiple] {
+    height: auto;
 }
+
+label {
+    line-height: 2em;
+}
+
+form dl {
+    margin: 0;
+    padding: 0;
+}
+
+select::-moz-focus-inner { border: 0; }
+
+select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #000;
+}
+
+select, input[type=text], textarea {
+    &:hover {
+        border-style: dotted solid dotted solid;
+        border-color: @gray-light;
+    }
+
+    &:focus, &:focus:hover {
+        border-style: solid;
+        border-color: @icinga-blue;
+        outline: none;
+    }
+}
+
+select[value=""] {
+    color: blue;
+    border: 1px solid #666;
+    background-color: white;
+}
+
+select option {
+    color: inherit;
+    padding-left: 0.5em;
+    background-color: white;
+}
+
+select option[value=""] {
+    color: #aaa;
+    background-color: white;
+}
+
+form dt label {
+    width: auto;
+    font-weight: normal;
+    font-size: inherit;
+
+    &.required {
+        &::after {
+            content: '*'
+        }
+    }
+
+    &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}
+
+form fieldset {
+    min-width: 36em;
+}
+
+form dd input.related-action[type='submit'] {
+    display: none;
+}
+
+form dd.active li.active input.related-action[type='submit'] {
+    display: inline-block;
+}
+
+form dd.active {
+    p.description {
+        color: inherit;
+        font-style: normal;
+    }
+}
+
+form dd {
+    padding: 0.3em 0.5em;
+    margin: 0;
+}
+
+form dt {
+    padding: 0.5em 0.5em;
+    margin: 0;
+}
+
+form dt.active, form dd.active {
+    background-color: @tr-active-color;
+}
+
+form dt {
+    display: inline-block;
+    vertical-align: top;
+    min-width: 12em;
+    min-height: 2.5em;
+    width: 30%;
+    &.errors label {
+        color: @color-critical;
+    }
+}
+
+form .errors label {
+    color: @color-critical;
+}
+
+form dd {
+    display: inline-block;
+    width: 63%;
+    min-height: 2.5em;
+    vertical-align: top;
+    margin: 0;
+    &.errors {
+        input[type=text], select {
+            border-color: @color-critical;
+        }
+    }
+
+    &.full-width {
+        padding: 0.5em;
+        width: 100%;
+    }
+}
+
+form dd:after {
+    display: block;
+    content: '';
+}
+
+form textarea {
+    height: auto;
+}
+
+form dd ul.errors {
+    list-style-type: none;
+    padding-left: 0.3em;
+
+    li {
+        color: @colorCritical;
+        padding: 0.3em;
+    }
+}
+
+form div.hint {
+    padding: 1em;
+    background-color: @tr-hover-color;
+    margin: 1em 0;
+    max-width: 65em;
+    font-size: 1em;
+
+    pre {
+        font-style: normal;
+        background-color: white;
+        margin: 0;
+        padding: 1em;
+    }
+}
+
+
+form {
+    #_FAKE_SUBMIT {
+        position: absolute;
+        left: -100%;
+    }
+}
+
+/** END of forms **/
+
+/** php-diff **/
+.Differences {
+    width: 100%;
+    table-layout: fixed;
+    empty-cells: show;
+}
+
+.Differences thead {
+    display: none;
+}
+
+.Differences thead th {
+    text-align: left;
+    padding-left: 4 / 14 * 16em;
+}
+.Differences tbody th {
+    text-align: right;
+    width: 4em;
+    padding: 1px 2px;
+    border-right: 1px solid @gray-light;
+    background: @gray-lightest;
+    font-weight: normal;
+    vertical-align: top;
+}
+
+.Differences tbody td {
+    width: 50%;
+    .preformatted();
+    word-break: break-all;
+}
+
+@color-diff-ins: #bfb;
+@color-diff-del: #faa;
+@color-diff-changed-old: #fdd;
+@color-diff-changed-new: #efe;
+
+.DifferencesSideBySide {
+    ins, del {
+        text-decoration: none;
+    }
+
+    .ChangeInsert {
+        td.Left {
+            background: @gray-lighter;
+        }
+        td.Right {
+            background: @color-diff-ins;
+        }
+    }
+
+    .ChangeDelete {
+        td.Left {
+            background: @color-diff-del;
+        }
+        td.Right {
+            background: @gray-lighter;
+        }
+    }
+
+    .ChangeReplace {
+        td.Left {
+            background: @color-diff-changed-old;
+            del {
+                background: @color-diff-del;
+            }
+        }
+
+        td.Right {
+            background: @color-diff-changed-new;
+            ins {
+                background: @color-diff-ins;
+            }
+        }
+
+    }
+}
+
+.Differences .Skipped {
+    background: @gray-lightest;
+}
+
+.DifferencesInline .ChangeReplace .Left,
+.DifferencesInline .ChangeDelete .Left {
+    background: #fdd;
+}
+
+.DifferencesInline .ChangeReplace .Right,
+.DifferencesInline .ChangeInsert .Right {
+    background: #dfd;
+}
+
+.DifferencesInline .ChangeReplace ins {
+    background: #9e9;
+}
+
+.DifferencesInline .ChangeReplace del {
+    background: #e99;
+}
+/** END of php-diff **/

@@ -2,9 +2,9 @@
 
 namespace Icinga\Module\Businessprocess;
 
-use Icinga\Web\Url;
+use Icinga\Module\Businessprocess\Web\Url;
 
-class ServiceNode extends Node
+class ServiceNode extends MonitoredNode
 {
     protected $hostname;
 
@@ -12,7 +12,7 @@ class ServiceNode extends Node
 
     protected $className = 'service';
 
-    public function __construct(BusinessProcess $bp, $object)
+    public function __construct(BpConfig $bp, $object)
     {
         $this->name = $object->hostname . ';' . $object->service;
         $this->hostname = $object->hostname;
@@ -23,46 +23,6 @@ class ServiceNode extends Node
         } else {
             $this->setState(0)->setMissing();
         }
-    }
-
-    public function renderLink($view)
-    {
-        if ($this->isMissing()) {
-            return '<span class="missing">' . $view->escape($this->getAlias()) . '</span>';
-        }
-
-        $params = array(
-            'host'    => $this->getHostname(),
-            'service' => $this->getServiceDescription()
-        );
-        if ($this->bp->hasBackendName()) {
-            $params['backend'] = $this->bp->getBackendName();
-        }
-        $link = $view->qlink($this->getAlias(), 'monitoring/service/show', $params);
-
-        return $link;
-    }
-    
-    protected function getActionIcons($view)
-    {
-        $icons = array();
-
-        if (! $this->bp->isLocked()) {
-
-            $url = Url::fromPath( 'businessprocess/node/simulate', array(
-                'config' => $this->bp->getName(),
-                'node' => $this->name
-            ));
-
-            $icons[] = $this->actionIcon(
-                $view,
-                'magic',
-                $url,
-                'Simulation'
-            );
-        }
-
-        return $icons;
     }
 
     public function getHostname()
@@ -78,5 +38,19 @@ class ServiceNode extends Node
     public function getAlias()
     {
         return $this->hostname . ': ' . $this->service;
+    }
+
+    public function getUrl()
+    {
+        $params = array(
+            'host'    => $this->getHostname(),
+            'service' => $this->getServiceDescription()
+        );
+
+        if ($this->bp->hasBackendName()) {
+            $params['backend'] = $this->bp->getBackendName();
+        }
+
+        return Url::fromPath('monitoring/service/show', $params);
     }
 }

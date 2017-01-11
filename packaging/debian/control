@@ -1,0 +1,15 @@
+Source: icingaweb2-module-businessprocesss
+Section: admin
+Maintainer: Icinga Development Team <info@icinga.com>
+Priority: optional
+Build-Depends: debhelper (>=9)
+Standards-Version: 3.9.4
+Homepage: https://www.icinga.com
+
+Package: icingaweb2-module-businessprocess
+Architecture: all
+Depends: icingaweb2-common (>= 2.2.0), php-curl|php5-curl, ${misc:Depends}
+Suggests: icingaweb2
+Description: A businessprocess viewer and modeler
+ Supports legacy BPaddon config files
+

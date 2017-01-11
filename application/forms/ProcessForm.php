@@ -2,42 +2,55 @@
 
 namespace Icinga\Module\Businessprocess\Forms;
 
-use Icinga\Web\Notification;
-use Icinga\Web\Request;
-use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\BpNode;
-use Icinga\Module\Businessprocess\Form;
-use Icinga\Module\Businessprocess\ProcessChanges;
+use Icinga\Module\Businessprocess\BpConfig;
+use Icinga\Module\Businessprocess\Modification\ProcessChanges;
+use Icinga\Module\Businessprocess\Web\Form\QuickForm;
+use Icinga\Module\Monitoring\Backend\MonitoringBackend;
+use Icinga\Web\Notification;
+use Icinga\Web\Session\SessionNamespace;
 
-class ProcessForm extends Form
+class ProcessForm extends QuickForm
 {
+    /** @var MonitoringBackend */
     protected $backend;
 
-    protected $process;
+    /** @var BpConfig */
+    protected $bp;
 
+    /** @var BpNode */
     protected $node;
 
     protected $objectList = array();
 
     protected $processList = array();
 
+    /** @var SessionNamespace */
     protected $session;
 
     public function setup()
     {
-        $this->addElement('text', 'name', array(
-            'label'        => $this->translate('Name'),
-            'required'     => true,
-            'description' => $this->translate(
-                'This is the unique identifier of this process'
-            ),
-        ));
+        if ($this->node === null) {
+            $this->addElement('text', 'name', array(
+                'label'        => $this->translate('Name'),
+                'required'     => true,
+                'description' => $this->translate(
+                    'This is the unique identifier of this process'
+                ),
+            ));
+        } else {
+            $this->addHtml(
+                '<h2>' . $this->getView()->escape(
+                    sprintf($this->translate('Modify "%s"'), $this->node->getAlias())
+                ) . '</h2>'
+            );
+        }
 
         $this->addElement('text', 'alias', array(
             'label'        => $this->translate('Title'),
             'description' => $this->translate(
                 'Usually this title will be shown for this node. Equals name'
-              . ' if not given'
+                . ' if not given'
             ),
         ));
 
@@ -67,19 +80,8 @@ class ProcessForm extends Form
                 'Where to show this process'
             ),
             'multiOptions' => array(
-                '0' => $this->translate('Subprocess only'),
                 '1' => $this->translate('Toplevel Process'),
-            )
-        ));
-
-        $this->addElement('multiselect', 'children', array(
-            'label'       => $this->translate('Process components'),
-            'required'    => true,
-            'size'        => 14,
-            'style'       => 'width: 25em;',
-            'description' => $this->translate(
-                'Hosts, services or other processes that should be part of this'
-              . ' business process'
+                '0' => $this->translate('Subprocess only'),
             )
         ));
 
@@ -90,96 +92,54 @@ class ProcessForm extends Form
             )
         ));
 
-        $this->addElement('submit', $this->translate('Store'));
-    }
-
-    public function setBackend($backend)
-    {
-        $this->backend = $backend;
-        $this->fetchObjectList();
-        $this->fillAvailableChildren();
-        return $this;
-    }
-
-    protected function fillAvailableChildren()
-    {
-        if (empty($this->processList)) {
-            $children = $this->objectList;
-        } else {
-            $children = array(
-                $this->translate('Other Business Processes') => $this->processList
-            ) + $this->objectList;
-        }
-
-        $this->getElement('children')->setMultiOptions($children);
-    }
-
-    public function setProcess($process)
-    {
-        $this->process = $process;
-        $this->setBackend($process->getBackend());
-        $this->processList = array();
-        foreach ($process->getNodes() as $node) {
-            if ($node instanceof BpNode) {
-                // TODO: Blacklist parents
-                $this->processList[(string) $node] = (string) $node; // display name?
+        if ($node = $this->node) {
+            if ($node->hasAlias()) {
+                $this->getElement('alias')->setValue($node->getAlias());
+            }
+            $this->getElement('operator')->setValue($node->getOperator());
+            $this->getElement('display')->setValue($node->getDisplay());
+            if ($node->hasInfoUrl()) {
+                $this->getElement('url')->setValue($node->getInfoUrl());
             }
         }
-        natsort($this->processList);
-        $this->fillAvailableChildren();
+    }
+
+    /**
+     * @param MonitoringBackend $backend
+     * @return $this
+     */
+    public function setBackend(MonitoringBackend $backend)
+    {
+        $this->backend = $backend;
         return $this;
     }
 
-    public function setNode(Node $node)
+    /**
+     * @param BpConfig $process
+     * @return $this
+     */
+    public function setProcess(BpConfig $process)
+    {
+        $this->bp = $process;
+        $this->setBackend($process->getBackend());
+        return $this;
+    }
+
+    /**
+     * @param BpNode $node
+     * @return $this
+     */
+    public function setNode(BpNode $node)
     {
         $this->node = $node;
-
-        $this->setDefaults(array(
-            'name'     => (string) $node,
-            'alias'    => $node->hasAlias() ? $node->getAlias() : '',
-            'display'  => $node->getDisplay(),
-            'operator' => $node->getOperator(),
-            'url'      => $node->getInfoUrl(),
-            'children' => array_keys($node->getChildren())
-        ));
-        $this->getElement('name')->setAttrib('readonly', true);
         return $this;
     }
 
-    protected function fetchObjectList()
-    {
-        $this->objectList = array();
-        $hosts = $this->backend->select()->from('hostStatus', array(
-            'hostname'    => 'host_name',
-            'in_downtime' => 'host_in_downtime',
-            'ack'         => 'host_acknowledged',
-            'state'       => 'host_state'
-        ))->order('host_name')->getQuery()->fetchAll();
-
-        $services = $this->backend->select()->from('serviceStatus', array(
-            'hostname'    => 'host_name',
-            'service'     => 'service_description',
-            'in_downtime' => 'service_in_downtime',
-            'ack'         => 'service_acknowledged',
-            'state'       => 'service_state'
-        ))->order('host_name')->order('service_description')->getQuery()->fetchAll();
-
-        foreach ($hosts as $host) {
-            $this->objectList[$host->hostname] = array(
-                $host->hostname . ';Hoststatus' => 'Host Status'
-            );
-        }
-
-        foreach ($services as $service) {
-            $this->objectList[$service->hostname][
-                $service->hostname . ';' . $service->service
-            ] = $service->service;
-        }
-
-        return $this;
-    }
-
-    public function setSession($session)
+    /**
+     * @param SessionNamespace $session
+     * @return $this
+     */
+    public function setSession(SessionNamespace $session)
     {
         $this->session = $session;
         return $this;
@@ -187,10 +147,9 @@ class ProcessForm extends Form
 
     public function onSuccess()
     {
-        $changes = ProcessChanges::construct($this->process, $this->session);
+        $changes = ProcessChanges::construct($this->bp, $this->session);
 
         $modifications = array();
-        $children = $this->getValue('children');
         $alias    = $this->getValue('alias');
         $operator = $this->getValue('operator');
         $display  = $this->getValue('display');
@@ -201,7 +160,6 @@ class ProcessForm extends Form
         if (empty($alias)) {
             $alias = null;
         }
-        ksort($children);
         // TODO: rename
 
         if ($node = $this->node) {
@@ -211,9 +169,6 @@ class ProcessForm extends Form
             }
             if ($operator !== $node->getOperator()) {
                 $modifications['operator'] = $operator;
-            }
-            if ($children !== $node->getChildNames()) {
-                $modifications['childNames'] = $children;
             }
             if ($url !== $node->getInfoUrl()) {
                 $modifications['infoUrl'] = $url;
@@ -225,7 +180,6 @@ class ProcessForm extends Form
             $modifications = array(
                 'display'    => $display,
                 'operator'   => $operator,
-                'childNames' => $children,
                 'infoUrl'    => $url,
                 'alias'      => $alias,
             );
@@ -241,7 +195,7 @@ class ProcessForm extends Form
             Notification::success(
                 sprintf(
                     'Process %s has been modified',
-                    $this->process->getName()
+                    $this->bp->getName()
                 )
             );
         }

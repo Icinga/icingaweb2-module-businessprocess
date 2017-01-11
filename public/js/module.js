@@ -22,42 +22,28 @@
              * Tell Icinga about our event handlers
              */
             this.module.on('beforerender', this.rememberOpenedBps);
-            this.module.on('rendered',     this.rendered);
+            this.module.on('rendered',     this.onRendered);
 
             this.module.on('click', 'table.bp.process > tbody > tr:first-child > td > a:last-child', this.processTitleClick);
             this.module.on('click', 'table.bp > tbody > tr:first-child > th', this.processOperatorClick);
-            this.module.on('click', '.bp-overlay-controls a', this.closeOverlay);
-            this.module.on('click', 'a', this.checkOverlay);
+            this.module.on('focus', 'form input, form textarea, form select', this.formElementFocus);
 
             this.module.on('mouseenter', 'table.bp > tbody > tr > td > a', this.procMouseOver);
             this.module.on('mouseenter', 'table.bp > tbody > tr > th', this.procMouseOver);
             this.module.on('mouseenter', 'table.node.missing > tbody > tr > td > span', this.procMouseOver);
             this.module.on('mouseleave', 'div.bp', this.procMouseOut);
-            if ($('#bp-overlay').length < 1) {
-                $('#layout').append('<div id="bp-module-overlay" class="icinga-module module-businessprocess"><div id="bp-overlay-container"><div class="bp-overlay-controls"><a href="">X</a></div><div id="bp-overlay" class="container"></div></div></div>');
-            }
 
-            this.module.icinga.logger.debug('BP module loaded');
+            this.module.on('click', 'div.tiles > div', this.tileClick);
+
+            this.module.icinga.logger.debug('BP module initialized');
         },
 
-        closeOverlay: function(event) {
-            $('#bp-overlay-container').hide();
-            $('#bp-overlay').html('');
-        },
-
-        checkOverlay: function(event) {
-            $el = $(event.currentTarget);
-            $sourceContainer = $el.closest('.container');
-            $target = $el.closest('[data-base-target]');
-            if ($target.length < 1) { return; }
-
-            targetId = $target.data('baseTarget');
-            if ($target.data('baseTarget') !== 'bp-overlay') { return; }
-
-            $('#bp-overlay').data('sourceContainer', $sourceContainer.attr('id'));
-            $('#bp-overlay-container').css({
-                'display': 'block'
-            });
+        onRendered: function (event) {
+            var $container = $(event.currentTarget);
+            this.fixFullscreen($container);
+            this.fixOpenedBps($container);
+            this.highlightFormErrors($container);
+            this.hideInactiveFormDescriptions($container);
         },
 
         processTitleClick: function (event) {
@@ -87,6 +73,14 @@
                     $el.find('table.bp.process').addClass('collapsed');
                 });
             }
+        },
+
+        hideInactiveFormDescriptions: function($container) {
+            $container.find('dd').not('.active').find('p.description').hide();
+        },
+
+        tileClick: function(event) {
+            $(event.currentTarget).find('> a').first().trigger('click');
         },
 
         /**
@@ -158,44 +152,46 @@
             });*/
         },
 
-        rendered: function(event) {
-            var $container = $(event.currentTarget);
-            if ($container.attr('id') === 'bp-overlay') {
-                this.onOverlayRendered();
+        fixFullscreen: function($container) {
+            var $controls = $container.find('div.controls');
+            var $layout = $('#layout');
+            var icinga = this.module.icinga;
+            if ($controls.hasClass('want-fullscreen')) {
+                if (!$layout.hasClass('fullscreen-layout')) {
+
+                    $layout.addClass('fullscreen-layout');
+                    $controls.removeAttr('style');
+                    $container.find('.fake-controls').remove();
+                    icinga.ui.currentLayout = 'fullscreen';
+                }
+            } else {
+                if ($layout.hasClass('fullscreen-layout')) {
+                    $layout.removeClass('fullscreen-layout');
+                    icinga.ui.layoutHasBeenChanged();
+                    icinga.ui.initializeControls($container);
+                }
             }
-            this.fixOpenedBps($container);
         },
 
         fixOpenedBps: function($container) {
-            var container_id = $container.attr('id');
+            var $bpDiv = $container.find('div.bp');
+            var bpName = $bpDiv.attr('id');
 
-            if (typeof this.idCache[container_id] === 'undefined') {
+            if  (typeof this.idCache[bpName] === 'undefined') {
                 return;
             }
-            var $procs = $('table.process', $container);
-            $.each(this.idCache[container_id], function(idx, id) {
+            var $procs = $bpDiv.find('table.process');
+
+            $.each(this.idCache[bpName], function(idx, id) {
                 var $el = $('#' + id);
                 $procs = $procs.not($el);
 
                 $el.parents('table.process').each(function (idx, el) {
                     $procs = $procs.not($(el));
-
                 });
             });
 
             $procs.addClass('collapsed');
-        },
-
-        onOverlayRendered: function()
-        {
-            // close overlay if required:
-            $overlay = $('#bp-overlay');
-            $overlayContainer = $('#bp-overlay-container');
-            if ($overlayContainer.css('display') === 'block' && $overlay.html().match(/^__CLOSEME__/)) {
-                $source = $('#' + $overlay.data('sourceContainer'));
-                $overlayContainer.hide();
-                self.icinga.loader.loadUrl($source.data('icingaUrl'), $source, undefined, undefined, undefined, true);
-            }
         },
 
         /**
@@ -204,9 +200,11 @@
          * Only get the deepest nodes to keep requests as small as possible
          */
         rememberOpenedBps: function (event) {
-            var $container = $(event.currentTarget);
             var ids = [];
-            $('table.process', $container)
+            var $bpDiv = $(event.currentTarget).find('div.bp');
+            var $bpName = $bpDiv.attr('id');
+
+            $bpDiv.find('table.process')
                 .not('table.process.collapsed')
                 .not('table.process.collapsed table.process')
                 .each(function (key, el) {
@@ -216,8 +214,53 @@
                 return;
             }
 
-            this.idCache[$container.attr('id')] = ids;
+            this.idCache[$bpName] = ids;
+        },
+
+        /** BEGIN Form handling, borrowed from Director **/
+        formElementFocus: function(ev)
+        {
+            var $input = $(ev.currentTarget);
+            var $dd = $input.closest('dd');
+            $dd.find('p.description').show();
+            if ($dd.attr('id') && $dd.attr('id').match(/button/)) {
+                return;
+            }
+            var $li = $input.closest('li');
+            var $dt = $dd.prev();
+            var $form = $dd.closest('form');
+
+            $form.find('dt, dd, li').removeClass('active');
+            $li.addClass('active');
+            $dt.addClass('active');
+            $dd.addClass('active');
+            $dd.find('p.description.fading-out')
+                .stop(true)
+                .removeClass('fading-out')
+                .fadeIn('fast');
+
+            $form.find('dd').not($dd)
+                .find('p.description')
+                .not('.fading-out')
+                .addClass('fading-out')
+                .delay(2000)
+                .fadeOut('slow', function() {
+                    $(this).removeClass('fading-out').hide()
+                });
+        },
+
+        highlightFormErrors: function($container)
+        {
+            $container.find('dd ul.errors').each(function(idx, ul) {
+                var $ul = $(ul);
+                var $dd = $ul.closest('dd');
+                var $dt = $dd.prev();
+
+                $dt.addClass('errors');
+                $dd.addClass('errors');
+            });
         }
+        /** END Form handling **/
     };
 
     Icinga.availableModules.businessprocess = Bp;

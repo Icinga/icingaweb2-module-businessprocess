@@ -2,25 +2,26 @@
 
 namespace Icinga\Module\Businessprocess;
 
-use Icinga\Web\Url;
+use Icinga\Module\Businessprocess\Html\Link;
+use Icinga\Module\Businessprocess\Web\Url;
 
-class HostNode extends Node
+class HostNode extends MonitoredNode
 {
-    protected static $sortStateToStateMap = array(
+    protected $sortStateToStateMap = array(
         4 => self::ICINGA_DOWN,
         3 => self::ICINGA_UNREACHABLE,
         1 => self::ICINGA_PENDING,
         0 => self::ICINGA_UP
     );
 
-    protected static $stateToSortStateMap = array(
+    protected $stateToSortStateMap = array(
         self::ICINGA_PENDING     => 1,
         self::ICINGA_UNREACHABLE => 3,
         self::ICINGA_DOWN        => 4,
         self::ICINGA_UP          => 0,
     );
 
-    protected static $state_names = array(
+    protected $stateNames = array(
         'UP',
         'DOWN',
         'UNREACHABLE',
@@ -31,7 +32,7 @@ class HostNode extends Node
 
     protected $className = 'host';
 
-    public function __construct(BusinessProcess $bp, $object)
+    public function __construct(BpConfig $bp, $object)
     {
         $this->name     = $object->hostname . ';Hoststatus';
         $this->hostname = $object->hostname;
@@ -43,46 +44,31 @@ class HostNode extends Node
         }
     }
 
-    public function renderLink($view)
+    public function getAlias()
     {
-        if ($this->isMissing()) {
-            return '<span class="missing">' . $view->escape($this->hostname) . '</span>';
-        }
-
-        $params = array(
-            'host'    => $this->getHostname(),
-        );
-
-        if ($this->bp->hasBackendName()) {
-            $params['backend'] = $this->bp->getBackendName();
-        }
-        return $view->qlink($this->hostname, 'monitoring/host/show', $params);
-    }
-
-    protected function getActionIcons($view)
-    {
-        $icons = array();
-
-        if (! $this->bp->isLocked()) {
-
-            $url = Url::fromPath( 'businessprocess/node/simulate', array(
-                'config' => $this->bp->getName(),
-                'node' => $this->name
-            ));
-
-            $icons[] = $this->actionIcon(
-                $view,
-                'magic',
-                $url,
-                'Simulation'
-            );
-        }
-
-        return $icons;
+        return $this->getHostname();
     }
 
     public function getHostname()
     {
         return $this->hostname;
+    }
+
+    public function getUrl()
+    {
+        $params = array(
+            'host' => $this->getHostname(),
+        );
+
+        if ($this->bp->hasBackendName()) {
+            $params['backend'] = $this->bp->getBackendName();
+        }
+
+        return Url::fromPath('monitoring/host/show', $params);
+    }
+
+    public function getLink()
+    {
+        return Link::create($this->hostname, $this->getUrl());
     }
 }

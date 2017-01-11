@@ -1,0 +1,86 @@
+stages:
+- Coding Standards
+- Unit-Tests
+- Build Packages
+
+variables:
+  BASE_VERSION: "2.0.0"
+  VERSION_SUFFIX: "-b${CI_BUILD_ID}-${CI_BUILD_REF_SLUG}"
+
+PSR2 CS Test:
+  stage: Coding Standards
+  tags:
+  - xenial
+  script:
+  - phpcs --report-width=auto --report-full --report-gitblame --report-summary -p --standard=PSR2 --extensions=php --encoding=utf-8 -w -s library/Businessprocess/ application/ configuration.php run.php test
+
+Ubuntu Xenial:
+  stage: Unit-Tests
+  tags:
+  - xenial
+  - businessprocess
+  script:
+  - phpunit --testdox --coverage-html=coverage || phpunit --verbose
+  artifacts:
+    expire_in: 1 week
+    name: code-coverage
+    paths:
+      - coverage/*
+
+Debian Jessie:
+  stage: Unit-Tests
+  tags:
+  - jessie
+  - businessprocess
+  script:
+  - phpunit --testdox || phpunit --verbose
+
+CentOS 6:
+  stage: Unit-Tests
+  tags:
+  - centos6
+  - businessprocess
+  script:
+  - phpunit --testdox || phpunit --verbose
+
+CentOS 7:
+  stage: Unit-Tests
+  tags:
+  - centos7
+  - businessprocess
+  script:
+  - phpunit --testdox || phpunit --verbose
+
+Xenial Packages:
+  stage: Build Packages
+  tags:
+  - xenial
+  - businessprocess
+  script:
+    - cp -a packaging/debian debian
+    - dch --no-conf -U -M --empty -v "${BASE_VERSION}${VERSION_SUFFIX}-${CI_BUILD_REF:0:7}" "Automated build triggered by ${GITLAB_USER_ID} <${GITLAB_USER_EMAIL}>"
+    - cp LICENSE debian/copyright
+    - dpkg-buildpackage -us -uc
+    - mkdir build
+    - mv ../icingaweb2-module-businessprocess*.deb build/
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - build/*
+
+Jessie Packages:
+  stage: Build Packages
+  tags:
+  - jessie
+  - businessprocess
+  script:
+    - cp -a packaging/debian debian
+    - dch --no-conf -U -M --empty -v "${BASE_VERSION}${VERSION_SUFFIX}-${CI_BUILD_REF:0:7}" "Automated build triggered by ${GITLAB_USER_ID} <${GITLAB_USER_EMAIL}>"
+    - cp LICENSE debian/copyright
+    - dpkg-buildpackage -us -uc
+    - mkdir build
+    - mv ../icingaweb2-module-businessprocess*.deb build/
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - build/*

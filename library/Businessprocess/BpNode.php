@@ -3,7 +3,7 @@
 namespace Icinga\Module\Businessprocess;
 
 use Icinga\Exception\ConfigurationError;
-use Icinga\Exception\ProgrammingError;
+use Icinga\Module\Businessprocess\Exception\NestingError;
 
 class BpNode extends Node
 {
@@ -14,11 +14,16 @@ class BpNode extends Node
     protected $url;
     protected $info_command;
     protected $display = 0;
+
+    /** @var  Node[] */
     protected $children;
-    protected $child_names = array();
+
+    /** @var array */
+    protected $childNames = array();
     protected $alias;
     protected $counters;
     protected $missing = null;
+    protected $missingChildren;
 
     protected static $emptyStateSummary = array(
         'OK'          => 0,
@@ -42,7 +47,7 @@ class BpNode extends Node
 
     protected $className = 'process';
 
-    public function __construct(BusinessProcess $bp, $object)
+    public function __construct(BpConfig $bp, $object)
     {
         $this->bp = $bp;
         $this->name = $object->name;
@@ -56,7 +61,7 @@ class BpNode extends Node
             $this->getState();
             $this->counters = self::$emptyStateSummary;
 
-            foreach ($this->children as $child) {
+            foreach ($this->getChildren() as $child) {
                 if ($child instanceof BpNode) {
                     $counters = $child->getStateSummary();
                     foreach ($counters as $k => $v) {
@@ -88,6 +93,30 @@ class BpNode extends Node
         return false;
     }
 
+    /**
+     * @param Node $node
+     * @return $this
+     * @throws ConfigurationError
+     */
+    public function addChild(Node $node)
+    {
+        if ($this->children === null) {
+            $this->getChildren();
+        }
+
+        $name = $node->getName();
+        if (array_key_exists($name, $this->children)) {
+            throw new ConfigurationError(
+                'Node "%s" has been defined more than once',
+                $name
+            );
+        }
+        $this->children[$name] = $node;
+        $this->childNames[] = $name;
+        $node->addParent($this);
+        return $this;
+    }
+
     public function getProblematicChildren()
     {
         $problems = array();
@@ -101,6 +130,24 @@ class BpNode extends Node
         }
 
         return $problems;
+    }
+
+    public function hasChild($name)
+    {
+        return in_array($name, $this->childNames);
+    }
+
+    public function removeChild($name)
+    {
+        if (($key = array_search($name, $this->childNames)) !== false) {
+            unset($this->childNames[$key]);
+
+            if (! empty($this->children)) {
+                unset($this->children[$name]);
+            }
+        }
+
+        return $this;
     }
 
     public function getProblemTree()
@@ -133,6 +180,27 @@ class BpNode extends Node
             $this->missing = ! $exists;
         }
         return $this->missing;
+    }
+
+    public function getMissingChildren()
+    {
+        if ($this->missingChildren === null) {
+            $missing = array();
+
+            foreach ($this->getChildren() as $child) {
+                if ($child->isMissing()) {
+                    $missing[(string) $child] = $child;
+                }
+
+                foreach ($child->getMissingChildren() as $m) {
+                    $missing[(string) $m] = $m;
+                }
+            }
+
+            $this->missingChildren = $missing;
+        }
+
+        return $this->missingChildren;
     }
 
     public function getOperator()
@@ -174,7 +242,7 @@ class BpNode extends Node
 
     public function hasInfoUrl()
     {
-        return $this->url !== null;
+        return ! empty($this->url);
     }
 
     public function getInfoUrl()
@@ -213,12 +281,31 @@ class BpNode extends Node
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getState()
     {
         if ($this->state === null) {
-            $this->calculateState();
+            try {
+                $this->reCalculateState();
+            } catch (NestingError $e) {
+                $this->bp->addError(
+                    $this->bp->translate('Nesting error detected: %s'),
+                    $e->getMessage()
+                );
+
+                // Failing nodes are unknown
+                $this->state = 3;
+            }
         }
+
         return $this->state;
+    }
+
+    public function getHtmlId()
+    {
+        return 'businessprocess-' . preg_replace('/[\r\n\t\s]/', '_', (string) $this);
     }
 
     protected function invertSortingState($state)
@@ -226,13 +313,28 @@ class BpNode extends Node
         return self::$sortStateInversionMap[$state >> self::SHIFT_FLAGS] << self::SHIFT_FLAGS;
     }
 
-    protected function calculateState()
+    /**
+     * @return $this
+     */
+    public function reCalculateState()
     {
+        $bp = $this->bp;
+
         $sort_states = array();
         $lastStateChange = 0;
+
+        if (!$this->hasChildren()) {
+            // TODO: delegate this to operators, should mostly fail
+            $this->state = 3;
+            $this->setMissing();
+            return $this;
+        }
+
         foreach ($this->getChildren() as $child) {
+            $bp->beginLoopDetection($this->name);
             $sort_states[] = $child->getSortingState();
             $lastStateChange = max($lastStateChange, $child->getLastStateChange());
+            $bp->endLoopDetection($this->name);
         }
 
         $this->setLastStateChange($lastStateChange);
@@ -266,6 +368,21 @@ class BpNode extends Node
         }
 
         $this->state = $this->sortStateTostate($sort_state);
+        return $this;
+    }
+
+    public function checkForLoops()
+    {
+        $bp = $this->bp;
+        foreach ($this->getChildren() as $child) {
+            $bp->beginLoopDetection($this->name);
+            if ($child instanceof BpNode) {
+                $child->checkForLoops();
+            }
+            $bp->endLoopDetection($this->name);
+        }
+
+        return $this;
     }
 
     public function setDisplay($display)
@@ -282,27 +399,49 @@ class BpNode extends Node
     public function setChildNames($names)
     {
         sort($names);
-        $this->child_names = $names;
+        $this->childNames = $names;
         $this->children = null;
         return $this;
     }
 
+    public function hasChildren($filter = null)
+    {
+        return !empty($this->childNames);
+    }
+
     public function getChildNames()
     {
-        return $this->child_names;
+        return $this->childNames;
     }
 
     public function getChildren($filter = null)
     {
         if ($this->children === null) {
             $this->children = array();
-            natsort($this->child_names);
-            foreach ($this->child_names as $name) {
+            natsort($this->childNames);
+            foreach ($this->childNames as $name) {
                 $this->children[$name] = $this->bp->getNode($name);
                 $this->children[$name]->addParent($this);
             }
         }
+
         return $this->children;
+    }
+
+    /**
+     * return BpNode[]
+     */
+    public function getChildBpNodes()
+    {
+        $children = array();
+
+        foreach ($this->getChildren() as $name => $child) {
+            if ($child instanceof BpNode) {
+                $children[$name] = $child;
+            }
+        }
+
+        return $children;
     }
 
     protected function assertNumericOperator()
@@ -310,76 +449,6 @@ class BpNode extends Node
         if (! is_numeric($this->operator)) {
             throw new ConfigurationError('Got invalid operator: %s', $this->operator);
         }
-    }
-
-    protected function getActionIcons($view)
-    {
-        $icons = array();
-        if (! $this->bp->isLocked() && $this->name !== '__unbound__') {
-            $icons[] = $this->actionIcon(
-                $view,
-                'wrench',
-                $view->url('businessprocess/node/edit', array(
-                    'config' => $this->bp->getName(),
-                    'node'   => $this->name
-                )),
-                mt('businessprocess', 'Modify this node')
-            );
-        }
-        return $icons;
-    }
-
-    public function toLegacyConfigString(& $rendered = array())
-    {
-        $cfg = '';
-        if (array_key_exists($this->name, $rendered)) {
-            return $cfg;
-        }
-        $rendered[$this->name] = true;
-        $children = array();
-        
-        foreach ($this->getChildren() as $name => $child) {
-            $children[] = (string) $child;
-            if (array_key_exists($name, $rendered)) { continue; }
-            if ($child instanceof BpNode) {
-                $cfg .= $child->toLegacyConfigString($rendered) . "\n";
-            }
-        }
-        $eq = '=';
-        $op = $this->operator;
-        if (is_numeric($op)) {
-            $eq = '= ' . $op . ' of:';
-            $op = '+';
-        }
-
-        $strChildren = implode(' ' . $op . ' ', $children);
-        if ((count($children) < 2) && $op !== '&') {
-            $strChildren = $op . ' ' . $strChildren;
-        }
-        $cfg .= sprintf(
-            "%s %s %s\n",
-            $this->name,
-            $eq,
-            $strChildren
-        );
-        if ($this->hasAlias() || $this->getDisplay() > 0) {
-            $prio = $this->getDisplay();
-            $cfg .= sprintf(
-                "display %s;%s;%s\n",
-                $prio,
-                $this->name,
-                $this->getAlias()
-            );
-        }
-        if ($this->hasInfoUrl()) {
-            $cfg .= sprintf(
-                "info_url;%s;%s\n",
-                $this->name,
-                $this->getInfoUrl()
-            );
-        }
-
-        return $cfg;
     }
 
     public function operatorHtml()

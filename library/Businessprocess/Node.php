@@ -2,10 +2,8 @@
 
 namespace Icinga\Module\Businessprocess;
 
-use Icinga\Web\Url;
 use Icinga\Exception\ProgrammingError;
-use Icinga\Data\Filter\Filter;
-use Exception;
+use Icinga\Module\Businessprocess\Html\Link;
 
 abstract class Node
 {
@@ -24,7 +22,7 @@ abstract class Node
     const ICINGA_UNREACHABLE = 2;
     const ICINGA_PENDING     = 99;
 
-    protected static $sortStateToStateMap = array(
+    protected $sortStateToStateMap = array(
         4 => self::ICINGA_CRITICAL,
         3 => self::ICINGA_UNKNOWN,
         2 => self::ICINGA_WARNING,
@@ -32,7 +30,7 @@ abstract class Node
         0 => self::ICINGA_OK
     );
 
-    protected static $stateToSortStateMap = array(
+    protected $stateToSortStateMap = array(
         self::ICINGA_PENDING  => 1,
         self::ICINGA_UNKNOWN  => 3,
         self::ICINGA_CRITICAL => 4,
@@ -43,7 +41,7 @@ abstract class Node
     /**
      * Main business process object
      *
-     * @var BusinessProcess
+     * @var BpConfig
      */
     protected $bp;
 
@@ -96,7 +94,7 @@ abstract class Node
 
     protected $className = 'unknown';
 
-    protected static $state_names = array(
+    protected $stateNames = array(
         'OK',
         'WARNING',
         'CRITICAL',
@@ -104,7 +102,7 @@ abstract class Node
         99 => 'PENDING'
     );
 
-    abstract public function __construct(BusinessProcess $bp, $object);
+    abstract public function __construct(BpConfig $bp, $object);
 
     public function setMissing($missing = true)
     {
@@ -127,29 +125,35 @@ abstract class Node
         return $this->missing;
     }
 
+    public function hasMissingChildren()
+    {
+        return count($this->getMissingChildren()) > 0;
+    }
+
+    public function getMissingChildren()
+    {
+        return array();
+    }
+
     public function hasInfoUrl()
     {
         return false;
     }
 
-    public function addChild(Node $node)
-    {
-        if (array_key_exists((string) $node, $this->children)) {
-            throw new Exception(
-                sprintf(
-                    'Node "%s" has been defined more than once',
-                    $node
-                )
-            );
-        }
-        $this->childs[(string) $node] = $node;
-        $node->addParent($this);
-        return $this;
-    }
-
     public function setState($state)
     {
         $this->state = (int) $state;
+        return $this;
+    }
+
+    /**
+     * Forget my state
+     *
+     * @return $this
+     */
+    public function clearState()
+    {
+        $this->state = null;
         return $this;
     }
 
@@ -165,9 +169,19 @@ abstract class Node
         return $this;
     }
 
-    public function getStateName()
+    public function getStateName($state = null)
     {
-        return static::$state_names[ $this->getState() ];
+        $states = $this->enumStateNames();
+        if ($state === null) {
+            return $states[ $this->getState() ];
+        } else {
+            return $states[ $state ];
+        }
+    }
+
+    public function enumStateNames()
+    {
+        return $this->stateNames;
     }
 
     public function getState()
@@ -180,6 +194,7 @@ abstract class Node
                 )
             );
         }
+
         return $this->state;
     }
 
@@ -238,16 +253,6 @@ abstract class Node
         return $this->ack;
     }
 
-    public function isSimulationMode()
-    {
-        return $this->bp->isSimulationMode();
-    }
-
-    public function isEditMode()
-    {
-        return $this->bp->isEditMode();
-    }
-
     public function getChildren($filter = null)
     {
         return array();
@@ -283,158 +288,90 @@ abstract class Node
         return count($this->parents) > 0;
     }
 
-    protected function stateToSortState($state)
+    public function hasParentName($name)
     {
-        if (array_key_exists($state, static::$stateToSortStateMap)) {
-            return static::$stateToSortStateMap[$state];
+        foreach ($this->getParents() as $parent) {
+            if ($parent->getName() === $name) {
+                return true;
+            }
         }
 
-        throw new ProgrammingError('Got invalid state %s', $sort_state);
+        return false;
+    }
+
+    public function removeParent($name)
+    {
+        $this->parents = array_filter(
+            $this->parents,
+            function (BpNode $parent) use ($name) {
+                return $parent->getName() !== $name;
+            }
+        );
+    }
+
+    /**
+     * @return BpNode[]
+     */
+    public function getParents()
+    {
+        return $this->parents;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPaths()
+    {
+        if ($this->bp->hasRootNode($this->getName())) {
+            return array(array($this->getName()));
+        }
+
+        $paths = array();
+        foreach ($this->parents as $parent) {
+            foreach ($parent->getPaths() as $path) {
+                // $path[] = $this->getName();
+                $paths[] = $path;
+            }
+
+        }
+        // TODO! -> for delete etc
+        return $paths;
+    }
+
+    protected function stateToSortState($state)
+    {
+        if (array_key_exists($state, $this->stateToSortStateMap)) {
+            return $this->stateToSortStateMap[$state];
+        }
+
+        throw new ProgrammingError(
+            'Got invalid state for node %s: %s',
+            $this->getName(),
+            var_export($state, 1) . var_export($this->stateToSortStateMap, 1)
+        );
     }
 
     protected function sortStateTostate($sortState)
     {
         $sortState = $sortState >> self::SHIFT_FLAGS;
-
-        if (array_key_exists($sortState, static::$sortStateToStateMap)) {
-            return static::$sortStateToStateMap[$sortState];
+        if (array_key_exists($sortState, $this->sortStateToStateMap)) {
+            return $this->sortStateToStateMap[$sortState];
         }
 
-        throw new ProgrammingError('Got invalid sorting state %s', $sort_state);
+        throw new ProgrammingError('Got invalid sorting state %s', $sortState);
     }
 
-    protected function renderHtmlForChildren($view)
-    {
-        $html = '';
-        if ($this->hasChildren()) {
-            foreach ($this->getChildren() as $name => $child) {
-                $html .= '<tr><td>'
-                       . $child->renderHtml($view)
-                       . '</td></tr>';
-            }
-        }
-
-        return $html;
-    }
-
-    protected function getId($prefix = '')
-    {
-        return md5($prefix . (string) $this);
-    }
-
-    protected function getObjectClassName()
+    public function getObjectClassName()
     {
         return $this->className;
     }
 
-    protected function getStateClassNames()
+    /**
+     * @return Link
+     */
+    public function getLink()
     {
-        $state = strtolower($this->getStateName());
-
-        if ($this->isMissing()) {
-            return array('missing');
-        } elseif ($state === 'ok') {
-            return array('ok');
-        } else {
-            return array('problem', $state);
-        }
-    }
-
-    public function renderHtml($view, $prefix = '')
-    {
-        $id = $this->getId($prefix);
-        $handled = $this->isAcknowledged() || $this->isInDowntime();
-
-        $html = sprintf(
-            '<table class="bp %s%s%s%s" id="%s"><tbody><tr>',
-            implode(' ', $this->getStateClassNames()),
-            $handled ? ' handled' : '',
-            ($this->hasChildren() ? ' operator ' : ' node '),
-            $this->getObjectClassName(),
-            $id
-        );
-
-        if ($this->hasChildren()) {
-            $html .= sprintf(
-                '<th%s><span class="op">%s</span></th>',
-                sprintf(' rowspan="%d"', $this->countChildren() + 1),
-                $this->operatorHtml()
-            );
-        }
-
-
-        $title = preg_replace(
-            '~(</a>)~',
-            implode('', $this->getIcons($view)) . '$1',
-            $this->renderLink($view)
-        );
-
-        $title = preg_replace('#</a>#', ' ' . $view->timeSince($this->getLastStateChange()) . '</a>', $title);
-        $icons = array();
-
-        foreach ($this->getActionIcons($view) as $icon) {
-            $icons[] = $icon;
-        }
-        
-        if ($this->hasInfoUrl()) {
-            $url = $this->getInfoUrl();
-            $icons[] = $this->actionIcon(
-                $view,
-                'help',
-                $url,
-                sprintf('%s: %s', mt('businessprocess', 'More information'), $url)
-            );
-        }
-        $title = implode("\n", $icons) . $title;
-
-        $html .= sprintf(
-            '<td>%s</td></tr>',
-            $title
-        );
-        foreach ($this->getChildren() as $name => $child) {
-            $html .= '<tr><td>' . $child->renderHtml($view, $id . '-') . '</td></tr>';
-        }
-        $html .= "</tbody></table>\n";
-        return $html;
-    }
-
-    protected function getActionIcons($view)
-    {
-        return array();
-    }
-
-    protected function actionIcon($view, $icon, $url, $title)
-    {
-        if ($url instanceof Url || ! preg_match('~^https?://~', $url)) {
-            $target = '';
-        } else {
-            $target = ' target="_blank"';
-        }
-
-        return sprintf(
-            ' <a href="%s" %stitle="%s" style="float: right" data-base-target="bp-overlay">%s</a>',
-            $url,
-            $target,
-            $view->escape($title),
-            $view->icon($icon)
-        );
-    }
-
-    public function renderLink($view)
-    {
-        return '<a href="#">' . ($this->hasAlias() ? $this->getAlias() : $this->name) . '</a>';
-    }
-
-    public function getIcons($view)
-    {
-        $icons = array();
-        if ($this->isInDowntime()) {
-            $icons[] = $view->icon('moon');
-        }
-        if ($this->isAcknowledged()) {
-            $icons[] = $view->icon('ok');
-        }
-        return $icons;
+        return Link::create($this->getAlias(), '#');
     }
 
     public function operatorHtml()
@@ -442,16 +379,18 @@ abstract class Node
         return '&nbsp;';
     }
 
-    public function toLegacyConfigString(& $rendered = array()) { return '';}
-    //abstract public function toLegacyConfigString();
-
-    public function __toString()
+    public function getName()
     {
         return $this->name;
     }
 
+    public function __toString()
+    {
+        return $this->getName();
+    }
+
     public function __destruct()
     {
-        $this->parents = array();
+        unset($this->parents);
     }
 }

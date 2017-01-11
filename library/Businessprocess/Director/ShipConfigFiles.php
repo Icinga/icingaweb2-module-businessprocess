@@ -3,7 +3,7 @@
 namespace Icinga\Module\Businessprocess\Director;
 
 use Icinga\Application\Config;
-use Icinga\Module\Director\Web\Hook\ShipConfigFilesHook;
+use Icinga\Module\Director\Hook\ShipConfigFilesHook;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 
 class ShipConfigFiles extends ShipConfigFilesHook

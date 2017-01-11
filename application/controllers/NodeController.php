@@ -1,79 +1,60 @@
 <?php
 
-use Icinga\Module\Businessprocess\Controller;
+namespace Icinga\Module\Businessprocess\Controllers;
+
+use Icinga\Module\Businessprocess\Renderer\Breadcrumb;
+use Icinga\Module\Businessprocess\Renderer\TileRenderer;
 use Icinga\Module\Businessprocess\Simulation;
-use Icinga\Module\Businessprocess\Forms\ProcessForm;
-use Icinga\Web\Url;
+use Icinga\Module\Businessprocess\State\MonitoringState;
+use Icinga\Module\Businessprocess\Web\Controller;
+use Icinga\Module\Businessprocess\Web\Url;
 
-/*
-config = <file>
-process = <node>
-
-*/
-class Businessprocess_NodeController extends Controller
+class NodeController extends Controller
 {
-    // rename to config
-    public function editAction()
+    public function impactAction()
     {
-        $bp = $this->loadModifiedBpConfig();
-        $node = $bp->getNode($this->getParam('node'));
-        $detail = Url::fromPath(
-            'businessprocess/node/edit',
-            array(
-                'config' => $this->view->configName,
-                'node'   => $node
-            )
+        $this->setAutorefreshInterval(10);
+        $content = $this->content();
+        $this->controls()->add(
+            $this->singleTab($this->translate('Node Impact'))
         );
+        $name = $this->params->get('name');
+        $this->addTitle($this->translate('Business Impact (%s)'), $name);
 
-        $this->view->form = ProcessForm::construct()
-            ->setProcess($bp)
-            ->setSession($this->session())
-            ->setNode($node)
-            ->setRedirectUrl(
-                sprintf(
-                    'businessprocess/process/show?config=%s&unlocked#!%s',
-                    $bp->getName(),
-                    $detail->getAbsoluteUrl()
-                )
-            )
-            ->handleRequest();
+        foreach ($this->storage()->listProcessNames() as $configName) {
+            $config = $this->storage()->loadProcess($configName);
 
-        $this->view->node = $node;
-    }
+            // TODO: Fix issues with children, they do not exist unless resolved :-/
+            // This is a workaround:
+            foreach ($config->getRootNodes() as $node) {
+                $node->getState();
+            }
+            foreach ($config->getRootNodes() as $node) {
+                $node->clearState();
+            }
 
-    public function simulateAction()
-    {
-        $bp = $this->loadBpConfig();
-        $nodename = $this->getParam('node');
-        $node = $this->view->node = $bp->getNode($nodename);
+            if (! $config->hasNode($name)) {
+                continue;
+            }
 
-        $this->view->form = $this->loadForm('simulation')
-             ->setNode($node)
-             ->setSimulation(new Simulation($bp, $this->session()))
-             ->handleRequest();
+            MonitoringState::apply($config);
+            $simulation = new Simulation($config, $this->session());
+            $config->applySimulation($simulation);
 
-        if ($this->view->form->succeeded()) {
-            $this->render('empty');
+            foreach ($config->getNode($name)->getPaths() as $path) {
+                $node = array_pop($path);
+                $renderer = new TileRenderer($config, $config->getNode($node));
+                $renderer->setUrl(
+                    Url::fromPath(
+                        'businessprocess/process/show',
+                        array('config' => $configName)
+                    )
+                )->setPath($path);
+
+                $bc = Breadcrumb::create($renderer);
+                $bc->attributes()->set('data-base-target', '_next');
+                $content->add($bc);
+            }
         }
-    }
-
-    public function addAction()
-    {
-        $bp = $this->loadBpConfig();
-
-        $redirectUrl = Url::fromPath(
-            'businessprocess/process/show',
-            array('config' => $bp->getName())
-        );
-
-        $this->view->form = ProcessForm::construct()
-            ->setProcess($bp)
-            ->setSession($this->session())
-            ->setRedirectUrl($redirectUrl)
-            ->handleRequest();
-    }
-
-    public function deleteAction()
-    {
     }
 }

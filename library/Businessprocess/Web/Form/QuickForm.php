@@ -3,17 +3,17 @@
 namespace Icinga\Module\Businessprocess\Web\Form;
 
 use Icinga\Application\Icinga;
-use Icinga\Application\Modules\Module;
 use Icinga\Exception\ProgrammingError;
 use Icinga\Web\Notification;
 use Icinga\Web\Request;
+use Icinga\Web\Response;
 use Icinga\Web\Url;
-use Zend_Form;
+use Exception;
 
 /**
  * QuickForm wants to be a base class for simple forms
  */
-abstract class QuickForm extends Zend_Form
+abstract class QuickForm extends QuickBaseForm
 {
     const ID = '__FORM_NAME';
 
@@ -46,70 +46,111 @@ abstract class QuickForm extends Zend_Form
 
     protected $successUrl;
 
-    protected $succeeded;
-
     protected $successMessage;
 
     protected $submitLabel;
 
     protected $submitButtonName;
 
+    protected $deleteButtonName;
+
+    protected $fakeSubmitButtonName;
+
     /**
      * Whether form elements have already been created
      */
     protected $didSetup = false;
 
-    /**
-     * The Icinga module this form belongs to. Usually only set if the
-     * form is initialized through the FormLoader
-     */
-    protected $icingaModule;
-
-    protected $icingaModuleName;
-
-    protected $hintCount = 0;
+    protected $isApiRequest = false;
 
     public function __construct($options = null)
     {
-        parent::__construct($this->handleOptions($options));
+        parent::__construct($options);
+
         $this->setMethod('post');
-        $this->setAction(Url::fromRequest());
-        $this->createIdElement();
-        $this->regenerateCsrfToken();
+        $this->getActionFromRequest()
+            ->createIdElement()
+            ->regenerateCsrfToken()
+            ->setPreferredDecorators();
     }
 
-    protected function handleOptions($options = null)
+    protected function getActionFromRequest()
     {
-        if ($options === null) {
-            return $options;
-        }
+        $this->setAction(Url::fromRequest());
+        return $this;
+    }
 
-        if (array_key_exists('icingaModule', $options)) {
-            $this->icingaModule = $options['icingaModule'];
-            $this->icingaModuleName = $this->icingaModule->getName();
-            unset($options['icingaModule']);
-        }
+    protected function setPreferredDecorators()
+    {
+        $this->setAttrib('class', 'autofocus');
+        $this->setDecorators(
+            array(
+                'Description',
+                array('FormErrors', array('onlyCustomFormErrors' => true)),
+                'FormElements',
+                'Form'
+            )
+        );
 
-        return $options;
+        return $this;
     }
 
     protected function addSubmitButtonIfSet()
     {
-        if (false !== ($label = $this->getSubmitLabel())) {
-            $el = $this->createElement('submit', $label)->setLabel($label)->removeDecorator('Label');
-            $this->submitButtonName = $el->getName();
-            $this->addElement($el);
+        if (false === ($label = $this->getSubmitLabel())) {
+            return;
         }
+
+        if ($this->submitButtonName && $el = $this->getElement($this->submitButtonName)) {
+            return;
+        }
+
+        $el = $this->createElement('submit', $label)
+            ->setLabel($label)
+            ->setDecorators(array('ViewHelper'));
+        $this->submitButtonName = $el->getName();
+        $this->addElement($el);
+
+        $fakeEl = $this->createElement('submit', '_FAKE_SUBMIT')
+            ->setLabel($label)
+            ->setDecorators(array('ViewHelper'));
+        $this->fakeSubmitButtonName = $fakeEl->getName();
+        $this->addElement($fakeEl);
+
+        $this->addDisplayGroup(
+            array($this->fakeSubmitButtonName),
+            'fake_button',
+            array(
+                'decorators' => array('FormElements'),
+                'order' => 1,
+            )
+        );
+
+        $grp = array(
+            $this->submitButtonName,
+            $this->deleteButtonName
+        );
+        $this->addDisplayGroup($grp, 'buttons', array(
+            'decorators' => array(
+                'FormElements',
+                array('HtmlTag', array('tag' => 'dl')),
+                'DtDdWrapper',
+            ),
+            'order' => 1000,
+        ));
     }
 
-    // TODO: This is ugly, we need to defer button creation
-    protected function moveSubmitToBottom()
+    protected function addSimpleDisplayGroup($elements, $name, $options)
     {
-        $name = $this->submitButtonName;
-        if ($name && ($submit = $this->getElement($name))) {
-            $this->removeElement($name);
-            $this->addElement($submit);
+        if (! array_key_exists('decorators', $options)) {
+            $options['decorators'] = array(
+                'FormElements',
+                array('HtmlTag', array('tag' => 'dl')),
+                'Fieldset',
+            );
         }
+        return $this->addDisplayGroup($elements, $name, $options);
+
     }
 
     protected function createIdElement()
@@ -117,13 +158,13 @@ abstract class QuickForm extends Zend_Form
         $this->detectName();
         $this->addHidden(self::ID, $this->getName());
         $this->getElement(self::ID)->setIgnore(true);
+        return $this;
     }
 
-    protected function getSentValue($name, $default = null)
+    public function getSentValue($name, $default = null)
     {
         $request = $this->getRequest();
-
-        if ($request->isPost()) {
+        if ($request->isPost() && $this->hasBeenSent()) {
             return $request->getPost($name);
         } else {
             return $default;
@@ -145,13 +186,15 @@ abstract class QuickForm extends Zend_Form
         return $this;
     }
 
-    protected function loadForm($name, Module $module = null)
+    public function setApiRequest($isApiRequest = true)
     {
-        if ($module === null) {
-            $module = $this->icingaModule;
-        }
+        $this->isApiRequest = $isApiRequest;
+        return $this;
+    }
 
-        return FormLoader::load($name, $module);
+    public function isApiRequest()
+    {
+        return $this->isApiRequest;
     }
 
     public function regenerateCsrfToken()
@@ -171,52 +214,30 @@ abstract class QuickForm extends Zend_Form
         return $this;
     }
 
-    public function addHidden($name, $value = null)
+    public function setSuccessUrl($url, $params = null)
     {
-        $this->addElement('hidden', $name);
-        $el = $this->getElement($name);
-        $el->setDecorators(array('ViewHelper'));
-        if ($value !== null) {
-            $this->setDefault($name, $value);
-            $el->setValue($value);
+        if (! $url instanceof Url) {
+            $url = Url::fromPath($url);
         }
-    
-        return $this;
-    }
-
-    public function addHtmlHint($html, $options = array())
-    {
-        return $this->addHtml('<div class="hint">' . $html . '</div>', $options);
-    }
-
-    public function addHtml($html, $options = array())
-    {
-        $name = '_HINT' . ++$this->hintCount;
-        $this->addElement('note', $name, $options);
-        $this->getElement($name)
-            ->setValue($html)
-            ->setIgnore(true)
-            ->removeDecorator('Label');
-
-        return $this;
-    }
-
-    public function optionalEnum($enum)
-    {
-        return array(
-            null => $this->translate('- please choose -')
-        ) + $enum;
-    }
-
-    public function succeeded()
-    {
-        return $this->succeeded;
-    }
-
-    public function setSuccessUrl($url)
-    {
+        if ($params !== null) {
+            $url->setParams($params);
+        }
         $this->successUrl = $url;
         return $this;
+    }
+
+    public function getSuccessUrl()
+    {
+        $url = $this->successUrl ?: $this->getAction();
+        if (! $url instanceof Url) {
+            $url = Url::fromPath($url);
+        }
+
+        return $url;
+    }
+
+    protected function beforeSetup()
+    {
     }
 
     public function setup()
@@ -236,33 +257,47 @@ abstract class QuickForm extends Zend_Form
         return parent::setAction($action);
     }
 
-    public function setIcingaModule(Module $module)
-    {
-        $this->icingaModule = $module;
-        return $this;
-    }
-
     public function hasBeenSubmitted()
     {
         if ($this->hasBeenSubmitted === null) {
             $req = $this->getRequest();
             if ($req->isPost()) {
-                $post = $req->getPost();
-                $name  = $this->submitButtonName;
-
-                if ($name === null) {
-                    $this->hasBeenSubmitted = $this->hasBeenSent();
-                } else {
-                    $el = $this->getElement($name);
-                    $this->hasBeenSubmitted = array_key_exists($name, $post)
-                         && $post[$name] === $this->getSubmitLabel();
+                if (! $this->hasSubmitButton()) {
+                    return $this->hasBeenSubmitted = $this->hasBeenSent();
                 }
+
+                $this->hasBeenSubmitted = $this->pressedButton(
+                    $this->fakeSubmitButtonName,
+                    $this->getSubmitLabel()
+                ) || $this->pressedButton(
+                    $this->submitButtonName,
+                    $this->getSubmitLabel()
+                );
             } else {
-                $this->hasBeenSubmitted === false;
+                $this->hasBeenSubmitted = false;
             }
         }
 
         return $this->hasBeenSubmitted;
+    }
+
+    protected function hasSubmitButton()
+    {
+        return $this->submitButtonName !== null;
+    }
+
+    protected function pressedButton($name, $label)
+    {
+        $req = $this->getRequest();
+        if (! $req->isPost()) {
+            return false;
+        }
+
+        $req = $this->getRequest();
+        $post = $req->getPost();
+
+        return array_key_exists($name, $post)
+            && $post[$name] === $label;
     }
 
     protected function beforeValidation($data = array())
@@ -272,6 +307,7 @@ abstract class QuickForm extends Zend_Form
     public function prepareElements()
     {
         if (! $this->didSetup) {
+            $this->beforeSetup();
             $this->setup();
             $this->addSubmitButtonIfSet();
             $this->onSetup();
@@ -283,20 +319,27 @@ abstract class QuickForm extends Zend_Form
 
     public function handleRequest(Request $request = null)
     {
-        if ($request !== null) {
+        if ($request === null) {
+            $request = $this->getRequest();
+        } else {
             $this->setRequest($request);
         }
 
+        $this->prepareElements();
+
         if ($this->hasBeenSent()) {
-            $post = $this->getRequest()->getPost();
+            $post = $request->getPost();
             if ($this->hasBeenSubmitted()) {
                 $this->beforeValidation($post);
                 if ($this->isValid($post)) {
-                    $this->onSuccess();
-                    $this->succeeded = true;
+                    try {
+                        $this->onSuccess();
+                    } catch (Exception $e) {
+                        $this->addException($e);
+                        $this->onFailure();
+                    }
                 } else {
                     $this->onFailure();
-                    $this->succeeded = false;
                 }
             } else {
                 $this->setDefaults($post);
@@ -308,12 +351,21 @@ abstract class QuickForm extends Zend_Form
         return $this;
     }
 
-    public function translate($string)
+    public function addException(Exception $e, $elementName = null)
     {
-        if ($this->icingaModuleName === null) {
-            return t($string);
+        $file = preg_split('/[\/\\\]/', $e->getFile(), -1, PREG_SPLIT_NO_EMPTY);
+        $file = array_pop($file);
+        $msg = sprintf(
+            '%s (%s:%d)',
+            $e->getMessage(),
+            $file,
+            $e->getLine()
+        );
+
+        if ($el = $this->getElement($elementName)) {
+            $el->addError($msg);
         } else {
-            return mt($this->icingaModuleName, $string);
+            $this->addError($msg);
         }
     }
 
@@ -341,7 +393,13 @@ abstract class QuickForm extends Zend_Form
 
     public function redirectOnSuccess($message = null)
     {
-        $url = $this->successUrl ?: $this->getAction();
+        if ($this->isApiRequest()) {
+            // TODO: Set the status line message?
+            $this->successMessage = $this->getSuccessMessage($message);
+            return;
+        }
+
+        $url = $this->getSuccessUrl();
         $this->notifySuccess($this->getSuccessMessage($message));
         $this->redirectAndExit($url);
     }
@@ -367,7 +425,15 @@ abstract class QuickForm extends Zend_Form
 
     protected function redirectAndExit($url)
     {
-        Icinga::app()->getFrontController()->getResponse()->redirectAndExit($url);
+        /** @var Response $response */
+        $response = Icinga::app()->getFrontController()->getResponse();
+        $response->redirectAndExit($url);
+    }
+
+    protected function setHttpResponseCode($code)
+    {
+        Icinga::app()->getFrontController()->getResponse()->setHttpResponseCode($code);
+        return $this;
     }
 
     protected function onRequest()
@@ -386,10 +452,15 @@ abstract class QuickForm extends Zend_Form
         return $this;
     }
 
+    /**
+     * @return Request
+     */
     public function getRequest()
     {
         if ($this->request === null) {
-            $this->setRequest(Icinga::app()->getFrontController()->getRequest());
+            /** @var Request $request */
+            $request = Icinga::app()->getFrontController()->getRequest();
+            $this->setRequest($request);
         }
         return $this->request;
     }
@@ -397,13 +468,20 @@ abstract class QuickForm extends Zend_Form
     public function hasBeenSent()
     {
         if ($this->hasBeenSent === null) {
-            $req = $this->getRequest();
+
+            /** @var Request $req */
+            if ($this->request === null) {
+                $req = Icinga::app()->getFrontController()->getRequest();
+            } else {
+                $req = $this->request;
+            }
+
             if ($req->isPost()) {
                 $post = $req->getPost();
                 $this->hasBeenSent = array_key_exists(self::ID, $post) &&
                     $post[self::ID] === $this->getName();
             } else {
-                $this->hasBeenSent === false;
+                $this->hasBeenSent = false;
             }
         }
 
