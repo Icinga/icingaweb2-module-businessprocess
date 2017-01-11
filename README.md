@@ -30,6 +30,11 @@ happily using it in production.
 
 ## Compatibiliy
 
+The Business Process module is tested on PHP versions 5.3 up to 7.1 (including
+nightly builds):
+
+[![Build Status](https://travis-ci.org/Icinga/icingaweb2-module-businessprocess.svg?branch=master)](https://travis-ci.org/Icinga/icingaweb2-module-businessprocess)
+
 We fully support the BPaddon config language and will continue to do so. It's
 also perfectly valid to run both products in parallel based on the very same
 config files.
@@ -47,7 +52,3 @@ environment.
 
 This module is definitively faster than the BPaddon used to be. No need for IDO
 caching or similar.
-
-## Todos
-
-TODO: business impact of a specific object
