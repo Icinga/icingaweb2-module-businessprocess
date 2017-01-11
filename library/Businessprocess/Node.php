@@ -310,7 +310,7 @@ abstract class Node
     }
 
     /**
-     * @return Node[]
+     * @return BpNode[]
      */
     public function getParents()
     {
