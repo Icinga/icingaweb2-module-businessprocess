@@ -6,18 +6,11 @@ use DirectoryIterator;
 use Icinga\Application\Icinga;
 use Icinga\Module\Businessprocess\BusinessProcess;
 use Icinga\Exception\SystemPermissionException;
-use Icinga\Module\Businessprocess\Metadata;
 
 class LegacyStorage extends Storage
 {
     /** @var string */
     protected $configDir;
-
-    /** @var int */
-    protected $parsing_line_number;
-
-    /** @var string */
-    protected $currentFilename;
 
     public function getConfigDir()
     {
@@ -118,55 +111,15 @@ class LegacyStorage extends Storage
         return $files;
     }
 
-    protected function splitCommaSeparated($string)
+    /**
+     * @inheritdoc
+     */
+    public function loadProcess($name)
     {
-        return preg_split('/\s*,\s*/', $string, -1, PREG_SPLIT_NO_EMPTY);
-    }
-
-    protected function readHeader($file, Metadata $metadata)
-    {
-        $fh = fopen($file, 'r');
-        $cnt = 0;
-        while ($cnt < 15 && false !== ($line = fgets($fh))) {
-            $cnt++;
-            $this->parseHeaderLine($line, $metadata);
-        }
-
-        fclose($fh);
-        return $metadata;
-    }
-
-    protected function readHeaderString($string, Metadata $metadata)
-    {
-        foreach (preg_split('/\n/', $string) as $line) {
-            $this->parseHeaderLine($line, $metadata);
-        }
-
-        return $metadata;
-    }
-
-    protected function emptyHeader()
-    {
-        return array(
-            'Title'         => null,
-            'Description'   => null,
-            'Owner'         => null,
-            'AllowedUsers'  => null,
-            'AllowedGroups' => null,
-            'AllowedRoles'  => null,
-            'Backend'       => null,
-            'Statetype'     => 'soft',
-            'SLAHosts'      => null
+        return LegacyConfigParser::parseFile(
+            $name,
+            $this->getFilename($name)
         );
-    }
-
-    protected function parseHeaderLine($line, Metadata $metadata)
-    {
-        if (preg_match('/^\s*#\s+(.+?)\s*:\s*(.+)$/', $line, $m)) {
-            if ($metadata->hasKey($m[1])) {
-                $metadata->set($m[1], $m[2]);
-            }
-        }
     }
 
     /**
@@ -180,46 +133,23 @@ class LegacyStorage extends Storage
         );
     }
 
-    public function render(BusinessProcess $process)
+    /**
+     * @inheritdoc
+     */
+    public function deleteProcess($name)
     {
-        return $this->renderHeader($process)
-            . $this->renderNodes($process);
+        return @unlink($this->getFilename($name));
     }
 
-    public function renderHeader(BusinessProcess $process)
+    /**
+     * @inheritdoc
+     */
+    public function loadMetadata($name)
     {
-        $conf = "### Business Process Config File ###\n#\n";
-
-        $meta = $process->getMetadata();
-        foreach ($meta->getProperties() as $key => $value) {
-            if ($value === null) {
-                continue;
-            }
-
-            $conf .= sprintf("# %-11s : %s\n", $key, $value);
-        }
-
-        $conf .= "#\n###################################\n\n";
-
-        return $conf;
-    }
-
-    public function renderNodes(BusinessProcess $bp)
-    {
-        $rendered = array();
-        $conf = '';
-
-        foreach ($bp->getRootNodes() as $child) {
-            $conf .= $child->toLegacyConfigString($rendered);
-            $rendered[$child->getName()] = true;
-        }
-
-        foreach ($bp->getUnboundNodes() as $name => $node) {
-            $conf .= $node->toLegacyConfigString($rendered);
-            $rendered[$name] = true;
-        }
-
-        return $conf . "\n";
+        return LegacyConfigParser::readMetadataFromFileHeader(
+            $name,
+            $this->getFilename($name)
+        );
     }
 
     public function getSource($name)
@@ -234,19 +164,7 @@ class LegacyStorage extends Storage
 
     public function loadFromString($name, $string)
     {
-        $bp = new BusinessProcess();
-        $bp->setName($name);
-        $this->parseString($string, $bp);
-        $this->readHeaderString($string, $bp->getMetadata());
-        return $bp;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function deleteProcess($name)
-    {
-        return @unlink($this->getFilename($name));
+        return LegacyConfigParser::parseString($name, $string);
     }
 
     /**
@@ -261,213 +179,5 @@ class LegacyStorage extends Storage
         }
 
         return $this->loadMetadata($name)->canRead();
-    }
-
-    public function loadMetadata($name)
-    {
-        $metadata = new Metadata($name);
-        return $this->readHeader($this->getFilename($name), $metadata);
-    }
-
-    /**
-     * @param string $name
-     * @param BusinessProcess $bp
-     */
-    protected function loadHeader($name, $bp)
-    {
-        // TODO: do not open twice, this is quick and dirty based on existing code
-        $file = $this->currentFilename = $this->getFilename($name);
-        $this->readHeader($file, $bp->getMetadata());
-    }
-
-    protected function parseFile($name, $bp)
-    {
-        $file = $this->currentFilename = $this->getFilename($name);
-        $fh = @fopen($file, 'r');
-        if (! $fh) {
-            throw new SystemPermissionException('Could not open "%s"', $file);
-        }
-
-        $this->parsing_line_number = 0;
-        while ($line = fgets($fh)) {
-            $this->parseLine($line, $bp);
-        }
-
-        fclose($fh);
-        unset($this->parsing_line_number);
-        unset($this->currentFilename);
-    }
-
-    protected function parseString($string, BusinessProcess $bp)
-    {
-        foreach (preg_split('/\n/', $string) as $line) {
-            $this->parseLine($line, $bp);
-        }
-    }
-
-    /**
-     * @param $line
-     * @param BusinessProcess $bp
-     */
-    protected function parseDisplay(& $line, BusinessProcess $bp)
-    {
-        list($display, $name, $desc) = preg_split('~\s*;\s*~', substr($line, 8), 3);
-        $bp->getNode($name)->setAlias($desc)->setDisplay($display);
-        if ($display > 0) {
-            $bp->addRootNode($name);
-        }
-    }
-
-    protected function parseExternalInfo(& $line, BusinessProcess $bp)
-    {
-        list($name, $script) = preg_split('~\s*;\s*~', substr($line, 14), 2);
-        $bp->getNode($name)->setInfoCommand($script);
-    }
-
-    protected function parseExtraInfo(& $line, BusinessProcess $bp)
-    {
-        // TODO: Not yet
-        // list($name, $script) = preg_split('~\s*;\s*~', substr($line, 14), 2);
-        // $this->getNode($name)->setExtraInfo($script);
-    }
-
-    protected function parseInfoUrl(& $line, BusinessProcess $bp)
-    {
-        list($name, $url) = preg_split('~\s*;\s*~', substr($line, 9), 2);
-        $bp->getNode($name)->setInfoUrl($url);
-    }
-
-    protected function parseExtraLine(& $line, $typeLength, BusinessProcess $bp)
-    {
-        $type = substr($line, 0, $typeLength);
-        if (substr($type, 0, 7) === 'display') {
-            $this->parseDisplay($line, $bp);
-            return true;
-        }
-
-        switch ($type) {
-            case 'external_info':
-                $this->parseExternalInfo($line, $bp);
-                break;
-            case 'extra_info':
-                $this->parseExtraInfo($line, $bp);
-                break;
-            case 'info_url':
-                $this->parseInfoUrl($line, $bp);
-                break;
-            default:
-                return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Parses a single line
-     *
-     * Adds eventual new knowledge to the given Business Process config
-     *
-     * @param $line
-     * @param $bp
-
-     */
-    protected function parseLine(& $line, BusinessProcess $bp)
-    {
-        $line = trim($line);
-
-        $this->parsing_line_number++;
-
-        // Skip empty or comment-only lines
-        if (empty($line) || $line[0] === '#') {
-            return;
-        }
-
-        // Semicolon found in the first 14 cols? Might be a line with extra information
-        $pos = strpos($line, ';');
-        if ($pos !== false && $pos < 14) {
-            if ($this->parseExtraLine($line, $pos, $bp)) {
-                return;
-            }
-        }
-
-        list($name, $value) = preg_split('~\s*=\s*~', $line, 2);
-
-        if (strpos($name, ';') !== false) {
-            $this->parseError('No semicolon allowed in varname');
-        }
-
-        $op = '&';
-        if (preg_match_all('~([\|\+&\!])~', $value, $m)) {
-            $op = implode('', $m[1]);
-            for ($i = 1; $i < strlen($op); $i++) {
-                if ($op[$i] !== $op[$i - 1]) {
-                    $this->parseError('Mixing operators is not allowed');
-                }
-            }
-        }
-        $op = $op[0];
-        $op_name = $op;
-
-        if ($op === '+') {
-            if (! preg_match('~^(\d+)(?::(\d+))?\s*of:\s*(.+?)$~', $value, $m)) {
-                $this->parseError('syntax: <var> = <num> of: <var1> + <var2> [+ <varn>]*');
-            }
-            $op_name = $m[1];
-            // New feature: $minWarn = $m[2];
-            $value   = $m[3];
-        }
-        $cmps = preg_split('~\s*\\' . $op . '\s*~', $value, -1, PREG_SPLIT_NO_EMPTY);
-        $childNames = array();
-
-        foreach ($cmps as $val) {
-            if (strpos($val, ';') !== false) {
-                if ($bp->hasNode($val)) {
-                    continue;
-                }
-
-                list($host, $service) = preg_split('~;~', $val, 2);
-                if ($service === 'Hoststatus') {
-                    $bp->createHost($host);
-                } else {
-                    $bp->createService($host, $service);
-                }
-            }
-            if ($val[0] === '@') {
-                if (strpos($val, ':') === false) {
-                    throw new ConfigurationError(
-                        "I'm unable to import full external configs, a node needs to be provided for '%s'",
-                        $val
-                    );
-                    // TODO: this might work:
-                    // $node = $bp->createImportedNode(substr($val, 1));
-                } else {
-                    list($config, $nodeName) = preg_split('~:\s*~', substr($val, 1), 2);
-                    $node = $bp->createImportedNode($config, $nodeName);
-                }
-                $val = $node->getName();
-            }
-
-            $childNames[] = $val;
-        }
-
-        $node = new BpNode($bp, (object) array(
-            'name'        => $name,
-            'operator'    => $op_name,
-            'child_names' => $childNames
-        ));
-
-        $bp->addNode($name, $node);
-    }
-
-    protected function parseError($msg)
-    {
-        throw new ConfigurationError(
-            sprintf(
-                'Parse error on %s:%s: %s',
-                $this->currentFilename,
-                $this->parsing_line_number,
-                $msg
-            )
-        );
     }
 }
