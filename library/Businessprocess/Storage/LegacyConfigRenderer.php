@@ -95,7 +95,7 @@ class LegacyConfigRenderer
 
             return '';
         } else {
-
+            $this->renderedNodes[$name] = true;
             return $this->renderBpNode($node);
         }
     }
@@ -107,13 +107,11 @@ class LegacyConfigRenderer
     protected function renderBpNode(BpNode $node)
     {
         $name = $node->getName();
-
         // Doing this before rendering children allows us to store loops
-        $this->renderedNodes[$name] = true;
         $cfg = '';
 
         foreach ($node->getChildBpNodes() as $name => $child) {
-            $cfg .= $this->renderBpNode($child) . "\n";
+            $cfg .= $this->requireRenderedBpNode($child) . "\n";
         }
 
         $cfg .= static::renderSingleBpNode($node);
