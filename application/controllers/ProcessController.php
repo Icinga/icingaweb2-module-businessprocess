@@ -77,7 +77,7 @@ class ProcessController extends Controller
     {
         $bp = $this->loadModifiedBpConfig();
         $node = $this->getNode($bp);
-        $this->redirectOnConfigSwitch();
+
         MonitoringState::apply($bp);
         $this->handleSimulations($bp);
 
@@ -323,51 +323,11 @@ class ProcessController extends Controller
             );
         }
 
-        $actionBar = new ActionBar();
         $this->setTitle($title);
         $this->controls()
-            ->add($this->tabsForConfig()->activate('source'))
+            ->add($this->tabsForConfig($bp)->activate('source'))
             ->add(HtmlTag::h1($title))
-            ->add($actionBar);
-
-        if ($showDiff) {
-            $actionBar->add(
-                Link::create(
-                    $this->translate('Source'),
-                    $this->url()->without('showDiff'),
-                    null,
-                    array(
-                        'class' => 'icon-doc-text',
-                        'title' => $this->translate('Show source code'),
-                    )
-                )
-            );
-        } else {
-            $actionBar->add(
-                Link::create(
-                    $this->translate('Diff'),
-                    $this->url()->with('showDiff', true),
-                    null,
-                    array(
-                        'class' => 'icon-flapping',
-                        'title' => $this->translate('Highlight changes'),
-                    )
-                )
-            );
-        }
-
-        $actionBar->add(
-            Link::create(
-                $this->translate('Download'),
-                'businessprocess/process/download',
-                array('config' => $bp->getName()),
-                array(
-                    'target' => '_blank',
-                    'class'  => 'icon-download',
-                    'title'  => $this->translate('Download process configuration')
-                )
-            )
-        );
+            ->add($this->createConfigActionBar($bp, $showDiff));
 
         $this->setViewScript('process/source');
     }
@@ -377,18 +337,18 @@ class ProcessController extends Controller
      */
     public function downloadAction()
     {
-        $bp = $this->loadModifiedBpConfig();
+        $config = $this->loadModifiedBpConfig();
         $response = $this->getResponse();
         $response->setHeader(
             'Content-Disposition',
             sprintf(
                 'attachment; filename="%s.conf";',
-                $bp->getName()
+                $config->getName()
             )
         );
         $response->setHeader('Content-Type', 'text/plain');
 
-        echo $this->storage()->render($bp);
+        echo LegacyConfigRenderer::renderConfig($config);
         $this->doNotRender();
     }
 
@@ -405,8 +365,9 @@ class ProcessController extends Controller
         );
         $this->setTitle($title);
         $this->controls()
-            ->add($this->tabsForConfig()->activate('config'))
-            ->add(HtmlTag::h1($title));
+            ->add($this->tabsForConfig($bp)->activate('config'))
+            ->add(HtmlTag::h1($title))
+            ->add($this->createConfigActionBar($bp));
 
         $url = Url::fromPath(
             'businessprocess/process/show?unlocked',
@@ -421,20 +382,56 @@ class ProcessController extends Controller
         );
     }
 
-    /**
-     * Redirect to our URL plus the chosen config if someone switched the
-     * config in the appropriate dropdown list
-     */
-    protected function redirectOnConfigSwitch()
+    protected function createConfigActionBar(BpConfig $config, $showDiff = false)
     {
-        $request = $this->getRequest();
-        if ($request->isPost() && $request->getPost('action') === 'switchConfig') {
-            // We switched the process in the config dropdown list
-            $params = array(
-                'config' => $request->getPost('config')
+        $actionBar = new ActionBar();
+
+        if ($showDiff) {
+            $params = array('config' => $config->getName());
+            $actionBar->add(
+                Link::create(
+                    $this->translate('Source'),
+                    'businessprocess/process/source',
+                    $params,
+                    array(
+                        'class' => 'icon-doc-text',
+                        'title' => $this->translate('Show source code'),
+                    )
+                )
             );
-            $this->redirectNow($this->url()->with($params));
+        } else {
+            $params = array(
+                'config'   => $config->getName(),
+                'showDiff' => true
+            );
+
+            $actionBar->add(
+                Link::create(
+                    $this->translate('Diff'),
+                    'businessprocess/process/source',
+                    $params,
+                    array(
+                        'class' => 'icon-flapping',
+                        'title' => $this->translate('Highlight changes'),
+                    )
+                )
+            );
         }
+
+        $actionBar->add(
+            Link::create(
+                $this->translate('Download'),
+                'businessprocess/process/download',
+                array('config' => $config->getName()),
+                array(
+                    'target' => '_blank',
+                    'class'  => 'icon-download',
+                    'title'  => $this->translate('Download process configuration')
+                )
+            )
+        );
+
+        return $actionBar;
     }
 
     protected function tabsForShow()
@@ -459,14 +456,26 @@ class ProcessController extends Controller
         ));
     }
 
-    protected function tabsForConfig()
+    protected function tabsForConfig(BpConfig $config)
     {
-        return $this->tabs()->add('config', array(
+        $params = array(
+            'config' => $config->getName()
+        );
+
+        $tabs = $this->tabs()->add('config', array(
             'label' => $this->translate('Process Configuration'),
-            'url'   => $this->getRequest()->getUrl()->without('nix')->setPath('businessprocess/process/config')
-        ))->add('source', array(
-            'label' => $this->translate('Source'),
-            'url'   => $this->getRequest()->getUrl()->without('nix')->setPath('businessprocess/process/source')
+            'url'   =>Url::fromPath('businessprocess/process/config', $params)
         ));
+
+        if ($this->params->get('showDiff')) {
+            $params['showDiff'] = true;
+        }
+
+        $tabs->add('source', array(
+            'label' => $this->translate('Source'),
+            'url'   =>Url::fromPath('businessprocess/process/source', $params)
+        ));
+
+        return $tabs;
     }
 }
