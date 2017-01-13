@@ -16,5 +16,5 @@ before_script:
   - ln -s icingaweb2-2.4.0/library/vendor/Zend
 
 script:
-  - php phpcs.phar --report=full --standard=PSR2 --extensions=php -w library/Businessprocess/ application/ configuration.php run.php test
+  - php phpcs.phar --report-width=auto --report-full --report-gitblame --report-summary -p --standard=PSR2 --extensions=php --encoding=utf-8 -w -s library/Businessprocess/ application/ configuration.php run.php test
   - phpunit --testdox || phpunit --verbose
