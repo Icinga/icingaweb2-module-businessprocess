@@ -16,12 +16,11 @@ try {
 
     $prio = 0;
     foreach ($storage->listProcessNames() as $name) {
-        $prio++;
-
         $meta = $storage->loadMetadata($name);
         if ($meta->get('AddToMenu') === 'no') {
             continue;
         }
+        $prio++;
 
         if ($prio > 5) {
             $section->add(N_('Show all'), array(
