@@ -274,13 +274,13 @@ table.bp {
             th, td > a { background-color: @colorUnknown; }
         }
         &.unknown.handled > tbody > tr > {
-            th, td > a { background-color: @colorCUnknownHandled; }
+            th, td > a { background-color: @colorUnknownHandled; }
         }
         &.unreachable > tbody > tr > {
             th, td > a { background-color: @colorUnknown; }
         }   
         &.unreachable.handled > tbody > tr > {
-            th, td > a { background-color: @colorCUnreachableHandled; }
+            th, td > a { background-color: @colorUnreachableHandled; }
         }
         &.pending > tbody > tr > {
             th, td > a { background-color: @colorPending; }
@@ -553,8 +553,7 @@ div.bp .badges {
             line-height: 1.25em;
             font-size: 0.8em;
             border: 1px solid white;
-            margin: 0;
-            margin-right: 1px;
+            margin: -0.25em 1px 0 0;
         }
     }
 }
