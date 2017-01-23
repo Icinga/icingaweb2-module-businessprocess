@@ -383,7 +383,9 @@ class AddNodeForm extends QuickForm
             case 'new-process':
                 $properties = $this->getValues();
                 unset($properties['name']);
-                $properties['parentName'] = $this->parent->getName();
+                if ($this->hasParentNode()) {
+                    $properties['parentName'] = $this->parent->getName();
+                }
                 $changes->createNode($this->getValue('name'), $properties);
                 break;
         }
