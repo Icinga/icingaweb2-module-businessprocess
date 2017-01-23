@@ -158,9 +158,16 @@ abstract class Renderer extends Html
 
     public function getNodeClasses(Node $node)
     {
-        $classes = array(
-            strtolower($node->getStateName())
-        );
+        if ($node->isMissing()) {
+            $classes = array('missing');
+        } else {
+            $classes = array(
+                strtolower($node->getStateName())
+            );
+            if ($node->hasMissingChildren()) {
+                $classes[] = 'missing-children';
+            }
+        }
 
         if ($node->isHandled()) {
             $classes[] = 'handled';
@@ -171,7 +178,7 @@ abstract class Renderer extends Html
         } else {
             $classes[] = 'monitored-node';
         }
-
+        // TODO: problem?
         return $classes;
     }
 
