@@ -112,6 +112,14 @@ class LegacyStorageTest extends BaseTestCase
         );
     }
 
+    public function testInfoUrlBeReadFromConfig()
+    {
+        $this->assertEquals(
+            'https://top.example.com/',
+            $this->makeInstance()->loadProcess('simple_with-header')->getNode('top')->getInfoUrl()
+        );
+    }
+
     public function testAConfiguredLoopCanBeParsed()
     {
         $this->assertInstanceOf(
