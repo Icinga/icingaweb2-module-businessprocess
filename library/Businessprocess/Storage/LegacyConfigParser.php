@@ -211,6 +211,9 @@ class LegacyConfigParser
             case 'info_url':
                 $this->parseInfoUrl($line, $bp);
                 break;
+            case 'template':
+                // compat, ignoring for now
+                break;
             default:
                 return false;
         }
@@ -239,12 +242,16 @@ class LegacyConfigParser
             return;
         }
 
-        // Semicolon found in the first 14 cols? Might be a line with extra information
-        $pos = strpos($line, ';');
+        // Space found in the first 14 cols? Might be a line with extra information
+        $pos = strpos($line, ' ');
         if ($pos !== false && $pos < 14) {
             if ($this->parseExtraLine($line, $pos, $bp)) {
                 return;
             }
+        }
+
+        if (strpos($line, '=') === false) {
+            $this->parseError('Got invalid line');
         }
 
         list($name, $value) = preg_split('~\s*=\s*~', $line, 2);

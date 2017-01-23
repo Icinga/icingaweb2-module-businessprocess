@@ -215,7 +215,7 @@ class LegacyConfigRenderer
     {
         if ($node->hasInfoUrl()) {
             return sprintf(
-                "info_url;%s;%s\n",
+                "info_url %s;%s\n",
                 $node->getName(),
                 $node->getInfoUrl()
             );
