@@ -1,4 +1,5 @@
-# Business Processes - Icinga Web 2 module
+Business Processes - Icinga Web 2 module
+========================================
 
 If you want to visualize and monitor hierarchical business processes based on
 any or all objects monitored by Icinga, the Icinga Web 2 business process
@@ -12,7 +13,8 @@ You're running a huge cloud, want to get rid of the monitoring noise triggered
 by your auto-scaling platform but still want to have detailed information just
 a couple of clicks away in case you need them? You will love this little addon!
 
-# Installation
+Installation
+============
 
 Like with any other Icinga Web 2 module just drop me to one of your module
 folders and enable the `businessprocess` module in your web frontend or on CLI.
@@ -20,7 +22,8 @@ folders and enable the `businessprocess` module in your web frontend or on CLI.
 Of course the `monitoring` module needs to be enabled and that's it, we have no
 further dependencies.
 
-# History
+History
+=======
 
 The Business Process module is based on the ideas of the
 Nagios(tm) Business Process Addon written by Bernd Strößenreuther and available
@@ -28,7 +31,22 @@ at http://bp-addon.monitoringexchange.org/. We always loved it's simplicity
 and while it looks pretty oldschool right now there are still many shops
 happily using it in production.
 
-## Compatibiliy
+Contributing
+------------
+
+The Businessprocess module is an Open Source project and lives from your contributions.
+No matter whether these are feature requests, issues, translations, documentation or
+code.
+
+* Please check whether a related issue alredy exists on our [Issue Tracker](https://github.com/icinga/icingaweb2-module-businessprocess/issues)
+* Make sure your code conforms to the [PSR-2: Coding Style Guide](http://www.php-fig.org/psr/psr-2/)
+* [Unit-Tests]( Current ) would be great
+* Send a [Pull Request](https://github.com/Icinga/icingaweb2-module-businessprocess/pulls)
+ (it will automatically be tested on Travis-CI, PSR-2 is enforced)
+* We try hard to keep our master always green: [![Build Status](https://travis-ci.org/Icinga/icingaweb2-module-businessprocess.svg?branch=master)](https://travis-ci.org/Icinga/icingaweb2-module-businessprocess)
+
+Compatibiliy
+------------
 
 The Business Process module is tested on PHP versions 5.3 up to 7.1 (including
 nightly builds):
@@ -46,7 +64,8 @@ support config backends like SQL databases. They are not faster than plain old
 text files, but they make it much easier to distribute configuration in a large
 environment.
 
-## Improvements
+Improvements
+------------
 
 ### Speed
 
