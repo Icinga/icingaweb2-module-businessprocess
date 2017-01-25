@@ -1,5 +1,5 @@
-Web Components: Breadcrumb
-==========================
+<a id="Web-Components-Breadcrumb"></a>Web Components: Breadcrumb
+================================================================
 
 All Business Process renderers show a **breadcrumb** component to always give
 you a quick indication of your current location. 

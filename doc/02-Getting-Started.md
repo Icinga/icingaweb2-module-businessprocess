@@ -77,4 +77,4 @@ But let's first have a look at our Dashboard once again:
 
 ![New on Dashboard](screenshot/02_getting-started/0210_new-on-dashboard.png)
 
-Now let's move on and create some Nodes.
+Now let's move on and [create your first Nodes](03-Create-your-first-process-node.md).

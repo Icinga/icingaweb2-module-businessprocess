@@ -1,5 +1,5 @@
-Installation
-============
+<a id="Installation"></a>Installation
+=====================================
 
 Requirements
 ------------
