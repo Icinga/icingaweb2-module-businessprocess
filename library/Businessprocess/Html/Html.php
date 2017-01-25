@@ -29,6 +29,16 @@ class Html implements Renderable
     }
 
     /**
+     * @param Renderable $element
+     * @return $this
+     */
+    public function prepend(Renderable $element)
+    {
+        array_unshift($this->content, $element);
+        return $this;
+    }
+
+    /**
      * @param Renderable|array|string $content
      * @return $this
      */
