@@ -4,7 +4,6 @@ namespace Icinga\Module\Businessprocess\Web\Component;
 
 use Icinga\Authentication\Auth;
 use Icinga\Module\Businessprocess\BpConfig;
-use Icinga\Module\Businessprocess\Html\BaseElement;
 use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Renderer\Renderer;
 use Icinga\Module\Businessprocess\Renderer\TreeRenderer;
@@ -99,7 +98,7 @@ class RenderedProcessActionBar extends ActionBar
         }
     }
 
-    protected function currentProcessParams($url)
+    protected function currentProcessParams(Url $url)
     {
         $urlParams = $url->getParams();
         $params = array();
