@@ -43,11 +43,22 @@ pressing the `F11` key.
 Once being in full screen mode you'll find an icon on the right side that will
 allow you to switch back to normal view:
 
-![Símple Breadcrumb](screenshot/12_web-components_breadcrumb/1202_return-from-fullscreen.png)
+![Return from fullscreen](screenshot/12_web-components_breadcrumb/1202_return-from-fullscreen.png)
 
 **Hint:** We know that the web application might request real full screen mode
 on their own. We refused doing so as many people find this being an annoying
 feature.
+
+### Unlock the Configuration
+
+When clicking `Unlock`, additional actions are shown. One of them is immediately
+shown next to the `Unlock` link and reads `Config`. It allows you to reach Configuration
+settings for the your currently loaded *Business Process Configutation*:
+
+![Unlocked config](screenshot/12_web-components_breadcrumb/1204_unlocked_config.png)
+
+But there is more. When unlocked, all nodes provide links allowing to modify or
+to delete them. Host/Service Nodes now allow you to simulate a specific state.
 
 Other main actions
 ------------------
