@@ -112,7 +112,12 @@ class ProcessController extends Controller
                     Icon::create('resize-small'),
                     $this->url()->without('showFullscreen')->without('view'),
                     null,
-                    array('style' => 'float: right')
+                    array(
+                        'style' => 'float: right',
+                        'title' => $this->translate(
+                            'Leave full screen and switch back to normal mode'
+                        )
+                    )
                 )
             );
         }

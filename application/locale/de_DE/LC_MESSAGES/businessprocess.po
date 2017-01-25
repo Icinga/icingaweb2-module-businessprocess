@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Businessprocess Module (2.0.0-rc1)\n"
 "Report-Msgid-Bugs-To: dev@icinga.org\n"
-"POT-Creation-Date: 2017-01-25 10:02+0100\n"
-"PO-Revision-Date: 2017-01-25 10:03+0100\n"
+"POT-Creation-Date: 2017-01-25 10:11+0100\n"
+"PO-Revision-Date: 2017-01-25 10:11+0100\n"
 "Last-Translator: Thomas Gelf <thomas@gelf.net>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Language-Team: \n"
 "X-Generator: Poedit 1.8.7.1\n"
 
-#: application/controllers/ProcessController.php:178
+#: application/controllers/ProcessController.php:183
 #, php-format
 msgid "%d applied simulation(s) have been dropped"
 msgstr "%d angewendete Simulation(en) wurde(n) entfernt"
@@ -28,17 +28,17 @@ msgstr "%d angewendete Simulation(en) wurde(n) entfernt"
 msgid "%d pending change(s) have been dropped"
 msgstr "%d vorgenommene Änderung(en) wurde(n) verworfen"
 
-#: application/controllers/ProcessController.php:363
+#: application/controllers/ProcessController.php:368
 #, php-format
 msgid "%s: Configuration"
 msgstr "%s: Konfiguration"
 
-#: application/controllers/ProcessController.php:321
+#: application/controllers/ProcessController.php:326
 #, php-format
 msgid "%s: Source Code"
 msgstr "%s: Quellcode"
 
-#: application/controllers/ProcessController.php:316
+#: application/controllers/ProcessController.php:321
 #, php-format
 msgid "%s: Source Code Differences"
 msgstr "%s: Quellcode Unterschiede"
@@ -137,7 +137,7 @@ msgstr "Business Impact"
 msgid "Business Impact (%s)"
 msgstr "Business Impact (%s)"
 
-#: application/controllers/ProcessController.php:440
+#: application/controllers/ProcessController.php:445
 #: library/Businessprocess/Web/Controller.php:127
 #: library/Businessprocess/Web/Controller.php:138
 msgid "Business Process"
@@ -160,7 +160,7 @@ msgstr "Business-Prozesse"
 msgid "Business process source code"
 msgstr "Business-Prozess Quellcode"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:89
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:88
 msgid "Config"
 msgstr "Konfiguration"
 
@@ -169,7 +169,7 @@ msgstr "Konfiguration"
 msgid "Could not retrieve process state: %s"
 msgstr "Konnte den Prozess-Status nicht ermitteln: %s"
 
-#: application/controllers/ProcessController.php:451
+#: application/controllers/ProcessController.php:456
 #: library/Businessprocess/Web/Component/Dashboard.php:55
 msgid "Create"
 msgstr "Erstelle"
@@ -222,12 +222,12 @@ msgstr "Lösche diesen Knoten"
 msgid "Description"
 msgstr "Beschreibung"
 
-#: application/controllers/ProcessController.php:410
+#: application/controllers/ProcessController.php:415
 msgid "Diff"
 msgstr "Unterschied"
 
-#: application/controllers/ProcessController.php:277
-#: application/controllers/ProcessController.php:289
+#: application/controllers/ProcessController.php:282
+#: application/controllers/ProcessController.php:294
 msgid "Dismiss"
 msgstr "Verwerfen"
 
@@ -235,11 +235,11 @@ msgstr "Verwerfen"
 msgid "Do you really want to delete this node?"
 msgstr "Möchtest du diesen Knoten wirklich löschen?"
 
-#: application/controllers/ProcessController.php:423
+#: application/controllers/ProcessController.php:428
 msgid "Download"
 msgstr "Download"
 
-#: application/controllers/ProcessController.php:429
+#: application/controllers/ProcessController.php:434
 msgid "Download process configuration"
 msgstr "Prozesskonfiguration herunterladen"
 
@@ -264,11 +264,11 @@ msgstr ""
 "Von hier kannst du alle definierten Business-Prozesskonfigurationen "
 "erreichen, neue erstellen oder bestehende bearbeiten"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:47
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:46
 msgid "Fullscreen"
 msgstr "Vollbild"
 
-#: application/controllers/ProcessController.php:415
+#: application/controllers/ProcessController.php:420
 msgid "Highlight changes"
 msgstr "Änderungen hervorheben"
 
@@ -300,11 +300,15 @@ msgstr "In Downtime"
 msgid "Info URL"
 msgstr "Info-URL"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:75
+#: application/controllers/ProcessController.php:118
+msgid "Leave full screen and switch back to normal mode"
+msgstr "Vollbildmodus verlassen, zurück zur normalen Ansicht"
+
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:74
 msgid "Lock"
 msgstr "Sperren"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:80
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:79
 msgid "Lock this process"
 msgstr "Sperre diesen Prozess"
 
@@ -362,7 +366,7 @@ msgstr "Bearbeite diesen Business-Prozessknoten"
 msgid "Modify this node"
 msgstr "Bearbeite diesen Knoten"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:94
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:93
 msgid "Modify this process"
 msgstr "Bearbeite diesen Prozess"
 
@@ -441,7 +445,7 @@ msgstr "Operator"
 msgid "Other processes that should be part of this business process node"
 msgstr "Andere Prozesse welche Teil dieses Business-Prozesses sein sollen"
 
-#: application/controllers/ProcessController.php:466
+#: application/controllers/ProcessController.php:471
 msgid "Process Configuration"
 msgstr "Prozess-Konfiguration"
 
@@ -465,7 +469,7 @@ msgstr "Services welche Teil dieses Business-Prozesses sein sollen"
 msgid "Show all"
 msgstr "Alle anzeigen"
 
-#: application/controllers/ProcessController.php:398
+#: application/controllers/ProcessController.php:403
 msgid "Show source code"
 msgstr "Quellcode anzeigen"
 
@@ -495,8 +499,8 @@ msgstr "Simulation wurde entfernt"
 msgid "Simulation has been set"
 msgstr "Simulation wurde gesetzt"
 
-#: application/controllers/ProcessController.php:393
-#: application/controllers/ProcessController.php:475
+#: application/controllers/ProcessController.php:398
+#: application/controllers/ProcessController.php:480
 #: application/forms/BpUploadForm.php:96
 msgid "Source"
 msgstr "Quelle"
@@ -509,7 +513,7 @@ msgstr "Status"
 msgid "State Type"
 msgstr "Statustyp"
 
-#: application/controllers/ProcessController.php:271
+#: application/controllers/ProcessController.php:276
 #: application/forms/BpConfigForm.php:123
 #: application/forms/BpUploadForm.php:109
 msgid "Store"
@@ -523,15 +527,15 @@ msgstr "Absenden"
 msgid "Subprocess only"
 msgstr "Nur Unterprozess"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:27
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:26
 msgid "Switch to Tile view"
 msgstr "Zur Kachelansicht wechseln"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:39
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:38
 msgid "Switch to Tree view"
 msgstr "Zur Baumansicht wechseln"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:52
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:51
 msgid "Switch to fullscreen mode"
 msgstr "Zum Vollbildmodus wechseln"
 
@@ -544,17 +548,17 @@ msgstr "Der gewünschte Knotentyp"
 msgid "This is the unique identifier of this process"
 msgstr "Das ist der eindeutige Bezeichner dieses Prozesses"
 
-#: application/controllers/ProcessController.php:267
+#: application/controllers/ProcessController.php:272
 #, php-format
 msgid "This process has %d pending change(s)."
 msgstr "Dieser Prozess hat %d ungesicherte Änderung(en)"
 
-#: application/controllers/ProcessController.php:286
+#: application/controllers/ProcessController.php:291
 #, php-format
 msgid "This process shows %d simulated state(s)."
 msgstr "Dieser Prozess zeigt %d simulierte Zustände"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:22
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:21
 msgid "Tiles"
 msgstr "Kacheln"
 
@@ -567,7 +571,7 @@ msgstr "Titel"
 msgid "Toplevel Process"
 msgstr "Toplevel-Prozess"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:34
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:33
 msgid "Tree"
 msgstr "Baum"
 
@@ -575,11 +579,11 @@ msgstr "Baum"
 msgid "URL pointing to more information about this node"
 msgstr "URL zu mehr Informationen über diesen Knoten"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:63
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:62
 msgid "Unlock"
 msgstr "Entsperren"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:68
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:67
 msgid "Unlock this process"
 msgstr "Entsperre diesen Prozess"
 
@@ -588,7 +592,7 @@ msgstr "Entsperre diesen Prozess"
 msgid "Unsure? Show business impact of \"%s\""
 msgstr "Nicht sicher? Zeige den Business Impact von \"%s\""
 
-#: application/controllers/ProcessController.php:454
+#: application/controllers/ProcessController.php:459
 #: library/Businessprocess/Web/Component/Dashboard.php:64
 msgid "Upload"
 msgstr "Hochladen"
