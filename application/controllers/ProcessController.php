@@ -31,13 +31,13 @@ class ProcessController extends Controller
     protected $renderer;
 
     /**
-     * Create a new business process configuration
+     * Create a new Business Process Configuration
      */
     public function createAction()
     {
         $this->assertPermission('businessprocess/create');
 
-        $title = $this->translate('Create a new business process');
+        $title = $this->translate('Create a new Business Process');
         $this->setTitle($title);
         $this->controls()
             ->add($this->tabsForCreate()->activate('create'))
@@ -52,11 +52,11 @@ class ProcessController extends Controller
     }
 
     /**
-     * Upload an existing business process configuration
+     * Upload an existing Business Process Configuration
      */
     public function uploadAction()
     {
-        $title = $this->translate('Upload a business process config file');
+        $title = $this->translate('Upload a Business Process Config file');
         $this->setTitle($title);
         $this->controls()
             ->add($this->tabsForCreate()->activate('upload'))
