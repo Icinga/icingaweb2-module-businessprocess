@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Businessprocess Module (2.0.0)\n"
+"Project-Id-Version: Businessprocess Module (2.0.0-rc1)\n"
 "Report-Msgid-Bugs-To: dev@icinga.org\n"
-"POT-Creation-Date: 2017-01-25 09:31+0100\n"
-"PO-Revision-Date: 2017-01-25 09:46+0100\n"
+"POT-Creation-Date: 2017-01-25 10:02+0100\n"
+"PO-Revision-Date: 2017-01-25 10:03+0100\n"
 "Last-Translator: Thomas Gelf <thomas@gelf.net>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
@@ -160,7 +160,7 @@ msgstr "Business-Prozesse"
 msgid "Business process source code"
 msgstr "Business-Prozess Quellcode"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:83
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:89
 msgid "Config"
 msgstr "Konfiguration"
 
@@ -264,7 +264,7 @@ msgstr ""
 "Von hier kannst du alle definierten Business-Prozesskonfigurationen "
 "erreichen, neue erstellen oder bestehende bearbeiten"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:41
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:47
 msgid "Fullscreen"
 msgstr "Vollbild"
 
@@ -300,11 +300,11 @@ msgstr "In Downtime"
 msgid "Info URL"
 msgstr "Info-URL"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:69
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:75
 msgid "Lock"
 msgstr "Sperren"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:74
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:80
 msgid "Lock this process"
 msgstr "Sperre diesen Prozess"
 
@@ -362,7 +362,7 @@ msgstr "Bearbeite diesen Business-Prozessknoten"
 msgid "Modify this node"
 msgstr "Bearbeite diesen Knoten"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:88
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:94
 msgid "Modify this process"
 msgstr "Bearbeite diesen Prozess"
 
@@ -523,7 +523,15 @@ msgstr "Absenden"
 msgid "Subprocess only"
 msgstr "Nur Unterprozess"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:46
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:27
+msgid "Switch to Tile view"
+msgstr "Zur Kachelansicht wechseln"
+
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:39
+msgid "Switch to Tree view"
+msgstr "Zur Baumansicht wechseln"
+
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:52
 msgid "Switch to fullscreen mode"
 msgstr "Zum Vollbildmodus wechseln"
 
@@ -559,7 +567,7 @@ msgstr "Titel"
 msgid "Toplevel Process"
 msgstr "Toplevel-Prozess"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:31
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:34
 msgid "Tree"
 msgstr "Baum"
 
@@ -567,11 +575,11 @@ msgstr "Baum"
 msgid "URL pointing to more information about this node"
 msgstr "URL zu mehr Informationen über diesen Knoten"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:57
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:63
 msgid "Unlock"
 msgstr "Entsperren"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:62
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:68
 msgid "Unlock this process"
 msgstr "Entsperre diesen Prozess"
 

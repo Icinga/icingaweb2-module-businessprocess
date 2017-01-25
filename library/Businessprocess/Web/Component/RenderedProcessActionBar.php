@@ -22,7 +22,10 @@ class RenderedProcessActionBar extends ActionBar
                     $this->translate('Tiles'),
                     $url->with('mode', 'tile'),
                     null,
-                    array('class' => 'icon-dashboard')
+                    array(
+                        'class' => 'icon-dashboard',
+                        'title' => $this->translate('Switch to Tile view'),
+                    )
                 )
             );
         } else {
@@ -31,7 +34,10 @@ class RenderedProcessActionBar extends ActionBar
                     $this->translate('Tree'),
                     $url->with('mode', 'tree'),
                     null,
-                    array('class' => 'icon-sitemap')
+                    array(
+                        'class' => 'icon-sitemap',
+                        'title' => $this->translate('Switch to Tree view'),
+                    )
                 )
             );
         }
