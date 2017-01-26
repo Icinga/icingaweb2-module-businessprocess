@@ -175,7 +175,7 @@ class ProcessController extends Controller
 
     protected function handleSimulations(BpConfig $bp)
     {
-        $simulation = new Simulation($bp, $this->session());
+        $simulation = Simulation::fromSession($this->session());
 
         if ($this->params->get('dismissSimulations')) {
             Notification::success(
@@ -221,7 +221,7 @@ class ProcessController extends Controller
         } elseif ($action === 'simulation') {
             $form = $this->loadForm('simulation')
                 ->setNode($bp->getNode($this->params->get('simulationnode')))
-                ->setSimulation(new Simulation($bp, $this->session()))
+                ->setSimulation(Simulation::fromSession($this->session()))
                 ->handleRequest();
         }
 

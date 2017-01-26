@@ -21,6 +21,7 @@ class NodeController extends Controller
         $name = $this->params->get('name');
         $this->addTitle($this->translate('Business Impact (%s)'), $name);
 
+        $simulation = Simulation::fromSession($this->session());
         foreach ($this->storage()->listProcessNames() as $configName) {
             $config = $this->storage()->loadProcess($configName);
 
@@ -38,7 +39,6 @@ class NodeController extends Controller
             }
 
             MonitoringState::apply($config);
-            $simulation = new Simulation($config, $this->session());
             $config->applySimulation($simulation);
 
             foreach ($config->getNode($name)->getPaths() as $path) {

@@ -7,70 +7,133 @@ use Icinga\Web\Session\SessionNamespace;
 
 class Simulation
 {
+    const DEFAULT_SESSION_KEY = 'bp-simulations';
+
     /**
      * @var SessionNamespace
      */
     protected $session;
 
     /**
-     * @var BpConfig
-     */
-    protected $bp;
-
-    /**
      * @var string
      */
-    protected $key;
+    protected $sessionKey;
 
     /**
-     * @var
+     * @var array
      */
-    protected $simulations;
+    protected $simulations = array();
 
-    public function __construct(BpConfig $bp, SessionNamespace $session)
-    {
-        $this->bp = $bp;
-        $this->session = $session;
-        $this->key = 'simulations.' . $bp->getName();
-    }
-
-    public function simulations()
-    {
-        if ($this->simulations === null) {
-            $this->simulations = $this->fetchSimulations();
-        }
-
-        return $this->simulations;
-    }
-
-    protected function setSimulations($simulations)
+    /**
+     * Simulation constructor.
+     * @param array $simulations
+     */
+    public function __construct(array $simulations = array())
     {
         $this->simulations = $simulations;
-        $this->session->set($this->key, $simulations);
+    }
+
+    /**
+     * @param array $simulations
+     * @return static
+     */
+    public static function create(array $simulations = array())
+    {
+        return new static($simulations);
+    }
+
+    /**
+     * @param SessionNamespace $session
+     * @param null $sessionKey
+     * @return $this
+     */
+    public static function fromSession(SessionNamespace $session, $sessionKey = null)
+    {
+        return static::create()
+            ->persistToSession($session)
+            ->setSessionKey($sessionKey);
+    }
+
+    /**
+     * @param string $key
+     * @return $this
+     */
+    public function setSessionKey($key = null)
+    {
+        if ($key === null) {
+            $this->sessionKey = Simulation::DEFAULT_SESSION_KEY;
+        } else {
+            $this->sessionKey = $key;
+        }
+
         return $this;
     }
 
-    protected function fetchSimulations()
+    /**
+     * @param SessionNamespace $session
+     * @return $this
+     */
+    public function persistToSession(SessionNamespace $session)
     {
-        return $this->session->get($this->key, array());
+        $this->session = $session;
+        return $this;
     }
 
+    /**
+     * @return array
+     */
+    public function simulations()
+    {
+        return $this->simulations;
+    }
+
+    /**
+     * @param $simulations
+     * @return $this
+     */
+    protected function setSimulations($simulations)
+    {
+        $this->simulations = $simulations;
+        if ($this->session !== null) {
+            $this->session->set($this->sessionKey, $simulations);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
     public function clear()
     {
         $this->simulations = array();
-        $this->session->set($this->key, array());
+        if ($this->session !== null) {
+            $this->session->set($this->sessionKey, array());
+        }
+
+        return $this;
     }
 
+    /**
+     * @return int
+     */
     public function count()
     {
         return count($this->simulations());
     }
 
+    /**
+     * @return bool
+     */
     public function isEmpty()
     {
         return $this->count() === 0;
     }
 
+    /**
+     * @param $node
+     * @param $properties
+     */
     public function set($node, $properties)
     {
         $simulations = $this->simulations();
@@ -78,12 +141,21 @@ class Simulation
         $this->setSimulations($simulations);
     }
 
+    /**
+     * @param $name
+     * @return bool
+     */
     public function hasNode($name)
     {
         $simulations = $this->simulations();
         return array_key_exists($name, $simulations);
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     * @throws ProgrammingError
+     */
     public function getNode($name)
     {
         $simulations = $this->simulations();
@@ -93,6 +165,10 @@ class Simulation
         return $simulations[$name];
     }
 
+    /**
+     * @param $node
+     * @return bool
+     */
     public function remove($node)
     {
         $simulations = $this->simulations();
