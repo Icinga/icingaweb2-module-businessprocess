@@ -118,10 +118,11 @@ table.bp.process {
     &.collapsed {
 
         > tbody > tr:first-child > td:before {
-            -webkit-transform:rotate(-90deg);
             -moz-transform:rotate(-90deg);
+            -ms-transform:rotate(-90deg);
             -o-transform:rotate(-90deg);
-            .rotate(360deg);
+            -webkit-transform:rotate(-90deg);
+            transform:rotate(-90deg);
         }
 
         table.bp, th span {
@@ -141,8 +142,11 @@ table.bp span.op {
     margin-top: 1em;
     display: block;
     line-height: 2em;
-    transform: rotate(-90deg);
     -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+    transform: rotate(-90deg);
 }
 
 table.bp .icon {
