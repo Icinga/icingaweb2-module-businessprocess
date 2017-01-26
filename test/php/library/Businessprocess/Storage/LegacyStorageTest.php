@@ -116,7 +116,7 @@ class LegacyStorageTest extends BaseTestCase
     {
         $this->assertEquals(
             'https://top.example.com/',
-            $this->makeInstance()->loadProcess('simple_with-header')->getNode('top')->getInfoUrl()
+            $this->makeInstance()->loadProcess('simple_with-header')->getBpNode('top')->getInfoUrl()
         );
     }
 
