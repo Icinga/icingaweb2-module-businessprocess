@@ -117,7 +117,7 @@ class TreeRenderer extends Renderer
         if ($node->isHandled()) {
             $attributes->add('class', 'handled');
         }
-        if ($node->hasChildren()) {
+        if ($node instanceof BpNode) {
             $attributes->add('class', 'operator');
         } else {
             $attributes->add('class', 'node');
@@ -126,7 +126,7 @@ class TreeRenderer extends Renderer
         $tbody = $table->createElement('tbody');
         $tr =  $tbody->createElement('tr');
 
-        if ($node->hasChildren()) {
+        if ($node instanceof BpNode) {
             $tr->createElement(
                 'th',
                 array(
