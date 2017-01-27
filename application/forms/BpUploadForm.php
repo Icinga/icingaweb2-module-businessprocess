@@ -108,7 +108,6 @@ class BpUploadForm extends QuickForm
                     $this->addError($error);
                 }
             }
-
         } catch (Exception $e) {
             $this->addError($e->getMessage());
             return null;
