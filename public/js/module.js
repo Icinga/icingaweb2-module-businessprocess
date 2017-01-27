@@ -154,7 +154,7 @@
         },
 
         fixTileLinksOnDashboard: function($container) {
-            if ($container.closest('div.dashboard')) {
+            if ($container.closest('div.dashboard').length) {
                 $container.find('div.tiles').data('baseTarget', '_next');
             }
         },
