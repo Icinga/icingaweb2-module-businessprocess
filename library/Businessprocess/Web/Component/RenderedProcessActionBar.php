@@ -82,7 +82,9 @@ class RenderedProcessActionBar extends ActionBar
             );
         }
 
-        if ($hasChanges || (! $renderer->isLocked()) && $meta->canModify()) {
+        if ($renderer->wantsRootNodes() && (
+                $hasChanges || (! $renderer->isLocked()) && $meta->canModify()
+        )) {
             $this->add(
                 Link::create(
                     $this->translate('Config'),
