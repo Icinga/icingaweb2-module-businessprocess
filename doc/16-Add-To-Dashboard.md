@@ -1,5 +1,5 @@
-<a id="Add-To-Dashboard"></a>Show them on a Dashboard
-=====================================================
+<a id="Add-To-Dashboard"></a>Show Processes on a Dashboard
+==========================================================
 
 When being in *Locked mode*, you can add any Business Process at top or sub level
 to any Icinga Web 2 Dashboard. The related link can be found in the Tab bar:

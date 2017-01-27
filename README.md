@@ -19,14 +19,18 @@ You're running a huge cloud, want to get rid of the monitoring noise triggered
 by your auto-scaling platform but still want to have detailed information just
 a couple of clicks away in case you need them? You will love this little module!
 
-You got me! Where should I start from?
---------------------------------------
-
-Please start with our [installation instructions](doc/01-Installation.md), head
-on to our [getting started](doc/02-Getting-Started.md) introductions and learn
-how to create your first [business process definitions](doc/03-Create-your-first-process-node.md).
-
-You might also want to learn more about some interesting [web components](doc/12-Web-Components-Breadcrumb.md),
-this projects [history](doc/81-History.md) or how to [contribute](doc/84-Contributing.md).
-
 [![Build Status](https://travis-ci.org/Icinga/icingaweb2-module-businessprocess.svg?branch=master)](https://travis-ci.org/Icinga/icingaweb2-module-businessprocess)
+
+Documentation
+-------------
+
+* [Installation](doc/01-Installation.md)
+* [Getting Started](doc/02-Getting-Started.md)
+* [Create your first process node](doc/03-Create-your-first-process-node.md)
+* Web Components
+  * [Breadcrumb](doc/12-Web-Components-Breadcrumb.md)
+  * [Tile Renderer](doc/13-Web-Components-Tile-Renderer.md)
+  * [Tree Renderer](doc/14-Web-Components-Tree-Renderer.md)
+  * [Show Processes on a Dashboard](doc/16-Add-To-Dashboard.md)
+* [Project History](doc/81-History.md)
+* [Contributing](doc/84-Contributing.md)

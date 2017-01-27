@@ -1,5 +1,5 @@
-History
-=======
+Project History
+===============
 
 The Business Process module is based on the ideas of the Nagios(tm) [Business
 Process AddOn](http://bp-addon.monitoringexchange.org/) written by Bernd
