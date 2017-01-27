@@ -67,12 +67,18 @@ class LegacyConfigParser
     {
         Benchmark::measure('Loading BP config from file: ' . $name);
         $parser = new static($name);
+
+        $config = $parser->getParsedConfig();
+        $config->setMetadata(
+            static::readMetadataFromString($name, $string)
+        );
+
         foreach (preg_split('/\n/', $string) as $line) {
             $parser->parseLine($line);
         }
 
         Benchmark::measure('Business process ' . $name . ' loaded');
-        return $parser->getParsedConfig();
+        return $config;
     }
 
     protected function reallyParseFile($filename)
@@ -109,6 +115,18 @@ class LegacyConfigParser
         }
 
         fclose($fh);
+        return $metadata;
+    }
+
+    public static function readMetadataFromString($name, & $string)
+    {
+        $metadata = new Metadata($name);
+
+        $lines = preg_split('/\r?\n/', substr($string, 0, 8092));
+        foreach ($lines as $line) {
+            static::parseHeaderLine($line, $metadata);
+        }
+
         return $metadata;
     }
 
