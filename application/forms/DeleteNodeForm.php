@@ -135,7 +135,7 @@ class DeleteNodeForm extends QuickForm
 
         switch ($this->getValue('confirm')) {
             case 'yes':
-                $changes->deleteNode($this->node, $this->path);
+                $changes->deleteNode($this->node, $this->parentNode->getName());
                 break;
             case 'all':
                 $changes->deleteNode($this->node);

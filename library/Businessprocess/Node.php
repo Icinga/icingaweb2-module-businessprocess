@@ -307,6 +307,8 @@ abstract class Node
                 return $parent->getName() !== $name;
             }
         );
+
+        return $this;
     }
 
     /**

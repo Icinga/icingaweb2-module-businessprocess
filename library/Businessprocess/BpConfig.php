@@ -416,6 +416,24 @@ class BpConfig
         return $node;
     }
 
+    public function calculateAllStates()
+    {
+        foreach ($this->getRootNodes() as $node) {
+            $node->getState();
+        }
+
+        return $this;
+    }
+
+    public function clearAllStates()
+    {
+        foreach ($this->getBpNodes() as $node) {
+            $node->clearState();
+        }
+
+        return $this;
+    }
+
     public function listInvolvedHostNames()
     {
         return array_keys($this->hosts);
