@@ -66,7 +66,7 @@ Other main actions
 ### Add content to your Dashboard
 
 When being in *locked* mode, you are allowed to add the currently shown process
-at the given path with the active renderer in the main (or a custom) Icinga Web 2
-Dashboard:
+at the given path with the active renderer in the main (or a custom) [Icinga Web 2
+Dashboard](16-Add-To-Dashboard.md):
 
 ![Add to Dashboard](screenshot/12_web-components_breadcrumb/1203_add-to-dashboard.png)
