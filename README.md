@@ -38,12 +38,16 @@ Documentation
 * [Show Processes on a Dashboard](doc/16-Add-To-Dashboard.md)
 
 ### Storage
-* [Store your Configuration](doc/21-Store-Config.md)
-* [Upload an existing Configuration](doc/22-Upload-Config.md)
+* [~~Store your Configuration~~](doc/21-Store-Config.md)
+* [~~Upload an existing Configuration~~](doc/22-Upload-Config.md)
 
 ### Monitoring
-* [Discover the CLI](doc/31-Discover-the-CLI.md)
-* [Create related Service Checks](doc/32-Create-Service-Checks.md)
+* [~~Discover the CLI~~](doc/31-Discover-the-CLI.md)
+* [~~Create related Service Checks~~](doc/32-Create-Service-Checks.md)
+
+### Business Impact
+* [~~Apply Simulations~~](doc/41-Simulations.md)
+* [~~Show Business Impact~~](doc/42-Business-Impact.md)
 
 ### The Project
 * [Project History](doc/81-History.md)
