@@ -42,6 +42,7 @@ class NodeController extends Controller
             $config->applySimulation($simulation);
 
             foreach ($config->getNode($name)->getPaths() as $path) {
+                array_pop($path);
                 $node = array_pop($path);
                 $renderer = new TileRenderer($config, $config->getNode($node));
                 $renderer->setUrl(

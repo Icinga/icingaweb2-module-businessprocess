@@ -331,11 +331,11 @@ abstract class Node
         $paths = array();
         foreach ($this->parents as $parent) {
             foreach ($parent->getPaths() as $path) {
-                // $path[] = $this->getName();
+                $path[] = $this->getName();
                 $paths[] = $path;
             }
         }
-        // TODO! -> for delete etc
+
         return $paths;
     }
 
