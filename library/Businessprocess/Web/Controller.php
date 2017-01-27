@@ -86,7 +86,10 @@ class Controller extends ModuleController
     protected function controls()
     {
         if ($this->view->controls === null) {
-            $this->view->controls = Controls::create();
+            $controls = $this->view->controls = Controls::create();
+            if ($this->view->compact) {
+                $controls->attributes()->add('class', 'compact');
+            }
         }
 
         return $this->view->controls;
@@ -98,7 +101,10 @@ class Controller extends ModuleController
     protected function content()
     {
         if ($this->view->content === null) {
-            $this->view->content = Content::create();
+            $content = $this->view->content = Content::create();
+            if ($this->view->compact) {
+                $content->attributes()->add('class', 'compact');
+            }
         }
 
         return $this->view->content;
