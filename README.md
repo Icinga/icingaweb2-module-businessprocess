@@ -5,15 +5,13 @@ If you want to visualize and monitor hierarchical business processes based on
 any or all objects monitored by Icinga, the Icinga Web 2 business process
 module is the way to go.
 
-[![Tree View](doc/screenshot/00_preview/0001_preview-tree-view.png)](doc/14-Web-Components-Tree-Renderer.md)
-[![Tile View](doc/screenshot/00_preview/0002_preview_tile_view.png)](doc/13-Web-Components-Tile-Renderer.md)
+[![Tile View](doc/screenshot/00_preview/0005_preview-smaller-tile-view.png)](doc/13-Web-Components-Tile-Renderer.md)
+[![Tree View](doc/screenshot/00_preview/0006_preview-smaller-tree-view.png)](doc/14-Web-Components-Tree-Renderer.md)
+[![Dashboard](doc/screenshot/00_preview/0007_preview-smallerbusinessprocesses-on-dashboard.png)](doc/16-Add-To-Dashboard.md)
 
 Want to create custom process-based dashboards? Trigger notifications at
 process or sub-process level? Provide a quick top-level view for thousands of
 components on a single screen? That's what this module has been designed for!
-
-[![Dashboard](doc/screenshot/00_preview/0003_preview_businessprocesses_on_dashboard.png)](doc/16-Add-To-Dashboard.md)
-[![Split View](doc/screenshot/00_preview/0004_preview_tile_and_subtree.png)](doc/13-Web-Components-Tile-Renderer.md)
 
 You're running a huge cloud, want to get rid of the monitoring noise triggered
 by your auto-scaling platform but still want to have detailed information just
