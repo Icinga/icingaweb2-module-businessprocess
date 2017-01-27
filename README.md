@@ -26,8 +26,8 @@ Documentation
 * [Installation](doc/01-Installation.md)
 * [Getting Started](doc/02-Getting-Started.md)
 * [Create your first process node](doc/03-Create-your-first-process-node.md)
-* [Create additional nodes](doc/04-Create-additional-nodes.md)
-* [Populate your structure](doc/05-Populate-your-structure.md)
+* [~~Create additional nodes~~](doc/04-Create-additional-nodes.md)
+* [~~Populate your structure~~](doc/05-Populate-your-structure.md)
 
 ### Web Components
 * [Breadcrumb](doc/12-Web-Components-Breadcrumb.md)
@@ -36,7 +36,7 @@ Documentation
 * [Show Processes on a Dashboard](doc/16-Add-To-Dashboard.md)
 
 ### Storage
-* [~~Store your Configuration~~](doc/21-Store-Config.md)
+* [Store your Configuration](doc/21-Store-Config.md)
 * [~~Upload an existing Configuration~~](doc/22-Upload-Config.md)
 
 ### Monitoring
