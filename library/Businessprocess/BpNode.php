@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess;
 
 use Icinga\Exception\ConfigurationError;
+use Icinga\Exception\NotFoundError;
 use Icinga\Module\Businessprocess\Exception\NestingError;
 
 class BpNode extends Node
@@ -121,7 +122,7 @@ class BpNode extends Node
     {
         $problems = array();
 
-        foreach ($this->children as $child) {
+        foreach ($this->getChildren() as $child) {
             if ($child->isProblem()
                 || ($child instanceof BpNode && $child->hasProblems())
             ) {
@@ -442,6 +443,22 @@ class BpNode extends Node
         }
 
         return $children;
+    }
+
+    /**
+     * @param $childName
+     * @return Node
+     * @throws NotFoundError
+     */
+    public function getChildByName($childName)
+    {
+        foreach ($this->getChildren() as $name => $child) {
+            if ($name === $childName) {
+                return $child;
+            }
+        }
+
+        throw new NotFoundError('Trying to get missing child %s', $childName);
     }
 
     protected function assertNumericOperator()
