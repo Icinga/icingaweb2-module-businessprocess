@@ -12,8 +12,8 @@ code.
  (it will automatically be tested on Travis-CI, PSR-2 is enforced)
 * We try hard to keep our master always green: [![Build Status](https://travis-ci.org/Icinga/icingaweb2-module-businessprocess.svg?branch=master)](https://travis-ci.org/Icinga/icingaweb2-module-businessprocess)
 
-Compatibiliy
-------------
+Compatibility
+-------------
 
 The Business Process module is tested on PHP versions 5.3 up to 7.1 (including
 nightly builds).
