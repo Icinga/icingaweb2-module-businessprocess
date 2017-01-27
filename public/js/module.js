@@ -44,6 +44,7 @@
             this.fixOpenedBps($container);
             this.highlightFormErrors($container);
             this.hideInactiveFormDescriptions($container);
+            this.fixTileLinksOnDashboard($container);
         },
 
         processTitleClick: function (event) {
@@ -150,6 +151,12 @@
             /*$container.data('refreshParams', {
                 opened: self.listOpenedBps($container)
             });*/
+        },
+
+        fixTileLinksOnDashboard: function($container) {
+            if ($container.closest('div.dashboard')) {
+                $container.find('div.tiles').data('baseTarget', '_next');
+            }
         },
 
         fixFullscreen: function($container) {
