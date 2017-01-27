@@ -210,6 +210,8 @@ class BpUploadForm extends QuickForm
                 $this->translate('A process named "%s" already exists'),
                 $name
             ));
+
+            return false;
         }
 
         $this->storage->storeProcess($config);
