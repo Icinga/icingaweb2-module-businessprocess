@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess\Clicommands;
 
 use Icinga\Cli\Command;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\HostNode;
 use Icinga\Module\Businessprocess\Node;
@@ -37,25 +38,25 @@ class ProcessCommand extends Command
     }
 
     /**
-     * List all available process
+     * List all available Business Process Configurations
+     *
+     * ...or their BusinessProcess Nodes in case a Configuration name is given
      *
      * USAGE
      *
-     * icingacli businessprocess list processes [options]
+     * icingacli businessprocess list processes [<config-name>] [options]
      *
      * OPTIONS
      *
-     *   --no-title  Show only the process names and no related title
+     *   <config-name>
+     *   --no-title    Show only names and no related title
      */
     public function listAction()
     {
-        $noTitle = $this->params->shift('no-title');
-        foreach ($this->storage->listProcessNames() as $key => $title) {
-            if ($noTitle) {
-                echo $key . "\n";
-            } else {
-                echo $title . "\n";
-            }
+        if ($config = $this->params->shift()) {
+            $this->listBpNames($this->storage->loadProcess($config));
+        } else {
+            $this->listConfigNames(! (bool) $this->params->shift('no-title'));
         }
     }
 
@@ -111,6 +112,24 @@ class ProcessCommand extends Command
         }
 
         exit($node->getState());
+    }
+
+    protected function listConfigNames($withTitle)
+    {
+        foreach ($this->storage->listProcesses() as $key => $title) {
+            if ($withTitle) {
+                echo $title . "\n";
+            } else {
+                echo $key . "\n";
+            }
+        }
+    }
+
+    protected function listBpNames(BpConfig $config)
+    {
+        foreach ($config->listBpNodes() as $title) {
+            echo $title . "\n";
+        }
     }
 
     protected function renderProblemTree($tree, $useColors = false, $depth = 0)
