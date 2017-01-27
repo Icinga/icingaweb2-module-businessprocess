@@ -1,5 +1,5 @@
 <a id="Store-Config"></a>Store your Configuration
-=====================================================
+=================================================
 
 Changes to your *Business Process Configuration* are added to a stack and will
 not be stored immediately. In case there are pending unstored changes, this will
