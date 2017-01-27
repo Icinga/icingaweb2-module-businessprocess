@@ -50,8 +50,8 @@ class Simulation
     public static function fromSession(SessionNamespace $session, $sessionKey = null)
     {
         return static::create()
-            ->persistToSession($session)
-            ->setSessionKey($sessionKey);
+            ->setSessionKey($sessionKey)
+            ->persistToSession($session);
     }
 
     /**
@@ -76,6 +76,7 @@ class Simulation
     public function persistToSession(SessionNamespace $session)
     {
         $this->session = $session;
+        $this->simulations = $this->session->get($this->sessionKey, array());
         return $this;
     }
 
