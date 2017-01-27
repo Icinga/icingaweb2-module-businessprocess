@@ -211,11 +211,9 @@ class Metadata
 
     public function isMemberOfAllowedGroups(User $user)
     {
-        foreach ($this->listAllowedGroups() as $groups) {
-            foreach ($groups as $group) {
-                if ($user->isMemberOf($group)) {
-                    return true;
-                }
+        foreach ($this->listAllowedGroups() as $group) {
+            if ($user->isMemberOf($group)) {
+                return true;
             }
         }
 
