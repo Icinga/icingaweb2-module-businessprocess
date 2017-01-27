@@ -779,6 +779,11 @@ class BpConfig
      */
     public function isEmpty()
     {
-        return $this->countChildren() === 0;
+        // This is faster
+        if (! empty($this->root_nodes)) {
+            return false;
+        }
+
+        return count($this->listBpNodes()) === 0;
     }
 }

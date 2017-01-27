@@ -2,8 +2,10 @@
 
 namespace Icinga\Module\Businessprocess\Forms;
 
+use Exception;
 use Icinga\Application\Config;
 use Icinga\Module\Businessprocess\BpConfig;
+use Icinga\Module\Businessprocess\Storage\LegacyConfigParser;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 use Icinga\Web\Notification;
@@ -26,54 +28,118 @@ class BpUploadForm extends QuickForm
 
     protected $deleteButtonName;
 
+    private $sourceCode;
+
+    /** @var BpConfig */
+    private $uploadedConfig;
+
     public function setup()
+    {
+        $this->showUpload();
+        if ($this->hasSource()) {
+            $this->showDetails();
+        }
+    }
+
+    protected function showDetails()
     {
         $this->addElement('text', 'name', array(
             'label'       => $this->translate('Name'),
-            // 'required'    => true,
+            'required'    => true,
             'description' => $this->translate(
                 'This is the unique identifier of this process'
             ),
-        ));
-
-        $this->addElement('text', 'title', array(
-            'label'       => $this->translate('Title'),
-            'description' => $this->translate(
-                'Usually this title will be shown for this process. Equals name'
-                . ' if not given'
+            'validators' => array(
+                array(
+                    'validator' => 'StringLength',
+                    'options' => array(
+                        'min' => 2,
+                        'max' => 40
+                    )
+                ),
+                array(
+                    'validator' => 'Regex',
+                    'options' => array(
+                        'pattern' => '/^[a-zA-Z0-9](?:[a-zA-Z0-9 ._-]*)?[a-zA-Z0-9_]$/'
+                    )
+                )
             ),
         ));
 
-        $this->addElement('select', 'backend_name', array(
-            'label'       => $this->translate('Backend'),
+        $this->addElement('textarea', 'source', array(
+            'label'       => $this->translate('Source'),
             'description' => $this->translate(
-                'Icinga Web Monitoring Backend where current object states for'
-                . ' this process should be retrieved from'
+                'Business process source code'
             ),
-            'multiOptions' => array(
-                null => $this->translate('Use the configured default backend'),
-            ) + $this->listAvailableBackends()
+            'value' => $this->sourceCode,
+            'class' => 'preformatted smaller',
+            'rows'  => 7,
         ));
 
-        $this->addElement('select', 'state_type', array(
-            'label'       => $this->translate('State Type'),
-            'required'    => true,
-            'description' => $this->translate(
-                'Whether this process should be based on Icinga hard or soft states'
-            ),
-            'multiOptions' => array(
-                'hard' => $this->translate('Use HARD states'),
-                'soft' => $this->translate('Use SOFT states'),
-            )
-        ));
+        $this->getUploadedConfig();
 
+        $this->setSubmitLabel(
+            $this->translate('Store')
+        );
+    }
+
+    public function getUploadedConfig()
+    {
+        if ($this->uploadedConfig === null) {
+            $this->uploadedConfig = $this->parseSubmittedSourceCode();
+        }
+
+        return $this->uploadedConfig;
+    }
+
+    protected function parseSubmittedSourceCode()
+    {
+        $code = $this->getSentValue('source');
+        $name = $this->getSentValue('name', '<new config>');
+        if (empty($code)) {
+            $code = $this->sourceCode;
+        }
+
+        try {
+            $config = LegacyConfigParser::parseString($name, $code);
+
+            if ($config->hasErrors()) {
+                foreach ($config->getErrors() as $error) {
+                    $this->addError($error);
+                }
+            }
+
+        } catch (Exception $e) {
+            $this->addError($e->getMessage());
+            return null;
+        }
+
+        return $config;
+    }
+
+    protected function hasSource()
+    {
+        if ($this->hasBeenSent() && $source = $this->getSentValue('source')) {
+            $this->sourceCode = $source;
+        } else {
+            $this->processUploadedSource();
+        }
+
+        if (empty($this->sourceCode)) {
+            return false;
+        } else {
+            $this->removeElement('uploaded_file');
+            return true;
+        }
+    }
+
+    protected function showUpload()
+    {
         $this->setAttrib('enctype', 'multipart/form-data');
-
-        $tmpdir = sys_get_temp_dir();
 
         $this->addElement('file', 'uploaded_file', array(
             'label'       => $this->translate('File'),
-            'destination' => $tmpdir,
+            'destination' => $this->getTempDir(),
             'required'    => true,
         ));
 
@@ -81,44 +147,9 @@ class BpUploadForm extends QuickForm
         $el = $this->getElement('uploaded_file');
         $el->setValueDisabled(true);
 
-        if ($this->config === null) {
-            $this->setSubmitLabel(
-                $this->translate('Add')
-            );
-        } else {
-            $config = $this->config;
-
-            $this->getElement('name')
-                 ->setValue($config->getName())
-                 ->setAttrib('readonly', true);
-
-            if ($config->hasTitle()) {
-                $this->getElement('title')->setValue($config->getTitle());
-            }
-
-            if ($config->hasBackend()) {
-                $this->getElement('backend_name')->setValue(
-                    $config->getBackend()->getName()
-                );
-            }
-            if ($config->usesSoftStates()) {
-                $this->getElement('state_type')->setValue('soft');
-            } else {
-                $this->getElement('state_type')->setValue('hard');
-            }
-
-            $this->setSubmitLabel(
-                $this->translate('Upload')
-            );
-/*
-            $label = $this->translate('Delete');
-            $el = $this->createElement('submit', $label)
-                ->setLabel($label)
-                ->setDecorators(array('ViewHelper'));
-            $this->deleteButtonName = $el->getName();
-            $this->addElement($el);
-*/
-        }
+        $this->setSubmitLabel(
+            $this->translate('Next')
+        );
     }
 
     protected function listAvailableBackends()
@@ -139,94 +170,50 @@ class BpUploadForm extends QuickForm
         return $this;
     }
 
-    public function onSuccess()
+    protected function getTempDir()
     {
+        return sys_get_temp_dir();
+    }
 
-        $tmpdir = sys_get_temp_dir();
-        $tmpfile = tempnam($tmpdir, 'bpupload_');
-        unlink($tmpfile);
-        $values = $this->getValues();
+    protected function processUploadedSource()
+    {
         /** @var \Zend_Form_Element_File $el */
         $el = $this->getElement('uploaded_file');
-        var_dump($el->getFileName());
-        var_dump($tmpfile);
-        $el->addFilter('Rename', $tmpfile);
-        if (!$el->receive()) {
-            print_r($el->file->getMessages());
-        }
-        echo file_get_contents($tmpfile);
-        unlink($tmpfile);
-        echo "DONE\n";
-        exit;
-        $name    = $this->getValue('name');
-        $title   = $this->getValue('title');
-        $backend = $this->getValue('backend');
-        /*
-        onSuccess:
-        $uploadedData = $form->getValues();
-        $fullFilePath = $form->file->getFileName();
-         */
-        var_dump($this->getValues());
 
-        exit;
+        if ($el && $this->hasBeenSent()) {
+            $tmpdir = $this->getTempDir();
+            $tmpfile = tempnam($tmpdir, 'bpupload_');
 
-        if ($this->config === null) {
-            // New config
-            $config = new BpConfig();
-            $config->setName($name);
-            if ($title) {
-                $config->setTitle($title);
-            }
-            if ($backend) {
-                $config->setBackendName($backend);
-            }
-            if ($this->getValue('state_type') === 'soft') {
-                $config->useSoftStates();
+            // TODO: race condition, try to do this without unlinking here
+            unlink($tmpfile);
+
+            $el->addFilter('Rename', $tmpfile);
+            if ($el->receive()) {
+                $this->sourceCode = file_get_contents($tmpfile);
+                unlink($tmpfile);
             } else {
-                $config->useHardStates();
+                foreach ($el->file->getMessages() as $error) {
+                    $this->addError($error);
+                }
             }
-            $this->storage->storeProcess($config);
-            $config->clearAppliedChanges();
-            $this->setSuccessUrl(
-                $this->getSuccessUrl()->setParams(
-                    array('config' => $name, 'unlocked' => true)
-                )
-            );
-
-            $this->redirectOnSuccess(sprintf('Process %s has been created', $name));
-        } else {
-            $config = $this->config;
-            if ($title) {
-                $config->setTitle($title);
-            }
-            if ($backend) {
-                $config->setBackendName($backend);
-            }
-            if ($this->getValue('state_type') === 'soft') {
-                $config->useSoftStates();
-            } else {
-                $config->useHardStates();
-            }
-
-            $this->storage->storeProcess($config);
-            $config->clearAppliedChanges();
-            $this->getSuccessUrl()->setParam('config', $name);
-            Notification::success(sprintf('Process %s has been stored', $name));
         }
+
+        return $this;
     }
 
-    public function hasDeleteButton()
+    public function onSuccess()
     {
-        return $this->deleteButtonName !== null;
-    }
+        $config = $this->getUploadedConfig();
+        $name = $config->getName();
 
-    public function shouldBeDeleted()
-    {
-        if (! $this->hasDeleteButton()) {
-            return false;
+        if ($this->storage->hasProcess($name)) {
+            $this->addError(sprintf(
+                $this->translate('A process named "%s" already exists'),
+                $name
+            ));
         }
 
-        $name = $this->deleteButtonName;
-        return $this->getSentValue($name) === $this->getElement($name)->getLabel();
+        $this->storage->storeProcess($config);
+        Notification::success(sprintf('Process %s has been stored', $name));
     }
 }
