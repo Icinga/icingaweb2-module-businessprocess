@@ -2,28 +2,12 @@
 
 namespace Icinga\Module\Businessprocess\Forms;
 
-use Icinga\Application\Config;
 use Icinga\Authentication\Auth;
 use Icinga\Module\Businessprocess\BpConfig;
-use Icinga\Module\Businessprocess\Storage\Storage;
-use Icinga\Module\Businessprocess\Web\Form\QuickForm;
+use Icinga\Module\Businessprocess\Web\Form\BpConfigBaseForm;
 
-class BpConfigForm extends QuickForm
+class BpConfigForm extends BpConfigBaseForm
 {
-    /** @var Storage */
-    protected $storage;
-
-    protected $backend;
-
-    /** @var  BpConfig */
-    protected $config;
-
-    protected $node;
-
-    protected $objectList = array();
-
-    protected $processList = array();
-
     protected $deleteButtonName;
 
     public function setup()
@@ -132,24 +116,6 @@ class BpConfigForm extends QuickForm
         }
     }
 
-    protected function listAvailableBackends()
-    {
-        $keys = array_keys(Config::module('monitoring', 'backends')->toArray());
-        return array_combine($keys, $keys);
-    }
-
-    public function setStorage($storage)
-    {
-        $this->storage = $storage;
-        return $this;
-    }
-
-    public function setProcessConfig($config)
-    {
-        $this->config = $config;
-        return $this;
-    }
-
     protected function onRequest()
     {
         $name = $this->getValue('name');
@@ -170,7 +136,11 @@ class BpConfigForm extends QuickForm
             // New config
             $config = new BpConfig();
             $config->setName($name);
-            $config->getMetadata()->set('Owner', Auth::getInstance()->getUser()->getUsername());
+
+            if (! $this->prepareMetadata($config)) {
+                return;
+            }
+
             $this->setSuccessUrl(
                 $this->getSuccessUrl()->setParams(
                     array('config' => $name, 'unlocked' => true)

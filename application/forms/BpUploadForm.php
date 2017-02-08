@@ -3,22 +3,14 @@
 namespace Icinga\Module\Businessprocess\Forms;
 
 use Exception;
-use Icinga\Application\Config;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Storage\LegacyConfigParser;
-use Icinga\Module\Businessprocess\Storage\LegacyStorage;
-use Icinga\Module\Businessprocess\Web\Form\QuickForm;
+use Icinga\Module\Businessprocess\Web\Form\BpConfigBaseForm;
 use Icinga\Web\Notification;
 
-class BpUploadForm extends QuickForm
+class BpUploadForm extends BpConfigBaseForm
 {
-    /** @var LegacyStorage */
-    protected $storage;
-
     protected $backend;
-
-    /** @var BpConfig */
-    protected $config;
 
     protected $node;
 
@@ -151,24 +143,6 @@ class BpUploadForm extends QuickForm
         );
     }
 
-    protected function listAvailableBackends()
-    {
-        $keys = array_keys(Config::module('monitoring', 'backends')->toArray());
-        return array_combine($keys, $keys);
-    }
-
-    public function setStorage(LegacyStorage $storage)
-    {
-        $this->storage = $storage;
-        return $this;
-    }
-
-    public function setProcessConfig(BpConfig $config)
-    {
-        $this->config = $config;
-        return $this;
-    }
-
     protected function getTempDir()
     {
         return sys_get_temp_dir();
@@ -211,7 +185,11 @@ class BpUploadForm extends QuickForm
                 $name
             ));
 
-            return false;
+            return;
+        }
+
+        if (! $this->prepareMetadata($config)) {
+            return;
         }
 
         $this->storage->storeProcess($config);
