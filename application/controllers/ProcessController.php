@@ -56,6 +56,8 @@ class ProcessController extends Controller
      */
     public function uploadAction()
     {
+        $this->assertPermission('businessprocess/create');
+
         $title = $this->translate('Upload a Business Process Config file');
         $this->setTitle($title);
         $this->controls()
@@ -308,6 +310,8 @@ class ProcessController extends Controller
      */
     public function sourceAction()
     {
+        $this->assertPermission('businessprocess/modify');
+
         $bp = $this->loadModifiedBpConfig();
         $this->view->showDiff = $showDiff = (bool) $this->params->get('showDiff', false);
 
@@ -342,6 +346,8 @@ class ProcessController extends Controller
      */
     public function downloadAction()
     {
+        $this->assertPermission('businessprocess/modify');
+
         $config = $this->loadModifiedBpConfig();
         $response = $this->getResponse();
         $response->setHeader(
@@ -362,6 +368,8 @@ class ProcessController extends Controller
      */
     public function configAction()
     {
+        $this->assertPermission('businessprocess/modify');
+
         $bp = $this->loadModifiedBpConfig();
 
         $title = sprintf(
