@@ -201,20 +201,22 @@ class ProcessController extends Controller
             return;
         }
 
-        if ($action === 'add') {
+        $canEdit =  $bp->getMetadata()->canModify();
+
+        if ($action === 'add' && $canEdit) {
             $form = $this->loadForm('AddNode')
                 ->setProcess($bp)
                 ->setParentNode($node)
                 ->setSession($this->session())
                 ->handleRequest();
-        } elseif ($action === 'delete') {
+        } elseif ($action === 'delete' && $canEdit) {
                 $form =$this->loadForm('DeleteNode')
                     ->setProcess($bp)
                     ->setNode($bp->getNode($this->params->get('deletenode')))
                     ->setParentNode($node)
                     ->setSession($this->session())
                     ->handleRequest();
-        } elseif ($action === 'edit') {
+        } elseif ($action === 'edit' && $canEdit) {
             $form =$this->loadForm('Process')
                 ->setProcess($bp)
                 ->setNode($bp->getNode($this->params->get('editnode')))
