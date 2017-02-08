@@ -27,7 +27,9 @@ class TileRenderer extends Renderer
 
         $nodes = $this->getChildNodes();
 
-        if (! $this->isLocked() && count($nodes) > 8) {
+        if (! $this->isLocked() && count($nodes) > 8
+            && $this->config->getMetadata()->canModify()
+        ) {
             $this->add($this->addNewNode());
         }
 
@@ -44,7 +46,7 @@ class TileRenderer extends Renderer
             }
         }
 
-        if (! $this->isLocked()) {
+        if (! $this->isLocked() && $this->config->getMetadata()->canModify()) {
             $this->add($this->addNewNode());
         }
 

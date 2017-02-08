@@ -242,15 +242,7 @@ class NodeTile extends BaseElement
     {
         $node = $this->node;
         $renderer = $this->renderer;
-
-        if ($node instanceof BpNode) {
-            $this->actions()->add(Link::create(
-                Icon::create('edit'),
-                $renderer->getUrl()->with('action', 'edit')->with('editnode', $node->getName()),
-                null,
-                array('title' => $this->translate('Modify this business process node'))
-            ));
-        } elseif ($node instanceof MonitoredNode) {
+        if ($node instanceof MonitoredNode) {
             $this->actions()->add(Link::create(
                 Icon::create('magic'),
                 $renderer->getUrl()->with('action', 'simulation')
@@ -259,6 +251,19 @@ class NodeTile extends BaseElement
                 array('title' => $this->translate(
                     'Show the business impact of this node by simulating a specific state'
                 ))
+            ));
+        }
+
+        if (! $this->renderer->getBusinessProcess()->getMetadata()->canModify()) {
+            return;
+        }
+
+        if ($node instanceof BpNode) {
+            $this->actions()->add(Link::create(
+                Icon::create('edit'),
+                $renderer->getUrl()->with('action', 'edit')->with('editnode', $node->getName()),
+                null,
+                array('title' => $this->translate('Modify this business process node'))
             ));
         }
 

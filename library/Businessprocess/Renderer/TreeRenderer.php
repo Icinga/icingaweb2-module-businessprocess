@@ -170,7 +170,7 @@ class TreeRenderer extends Renderer
             );
         }
 
-        if (! $this->isLocked() && $node instanceof BpNode) {
+        if (! $this->isLocked() && $node instanceof BpNode && $bp->getMetadata()->canModify()) {
             $tbody->createElement('tr')->createElement('td')->setContent(
                 $this->renderAddNewNode($node)
             );
@@ -182,7 +182,11 @@ class TreeRenderer extends Renderer
     protected function getActionIcons(BpConfig $bp, Node $node)
     {
         if ($node instanceof BpNode) {
-            return $this->createEditAction($bp, $node);
+            if ($bp->getMetadata()->canModify()) {
+                return $this->createEditAction($bp, $node);
+            } else {
+                return '';
+            }
         } else {
             return $this->createSimulationAction($bp, $node);
         }
