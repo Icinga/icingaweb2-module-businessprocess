@@ -53,3 +53,7 @@ $this->providePermission(
     'businessprocess/modify',
     $this->translate('Allow to modify process definitions, to add and remove nodes')
 );
+$this->provideRestriction(
+    'businessprocess/prefix',
+    $this->translate('Restrict access to configurations with the given prefix')
+);

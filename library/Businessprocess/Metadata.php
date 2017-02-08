@@ -137,6 +137,13 @@ class Metadata
             }
         }
 
+        $prefixes = $auth->getRestrictions('businessprocess/prefix');
+        if (! empty($prefixes)) {
+            if (! $this->nameIsPrefixedWithOneOf($prefixes)) {
+                return false;
+            }
+        }
+
         if ($auth->hasPermission('businessprocess/showall')) {
             return true;
         }
@@ -150,6 +157,17 @@ class Metadata
         }
 
         return $this->userCanRead($auth->getUser());
+    }
+
+    public function nameIsPrefixedWithOneOf(array $prefixes)
+    {
+        foreach ($prefixes as $prefix) {
+            if (substr($this->name, 0, strlen($prefix)) === $prefix) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected function userCanRead(User $user)
