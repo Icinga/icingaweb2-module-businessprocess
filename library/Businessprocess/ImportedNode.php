@@ -4,6 +4,7 @@ namespace Icinga\Module\Businessprocess;
 
 use Icinga\Application\Config;
 use Icinga\Module\Businessprocess\Html\Link;
+use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Businessprocess\Web\Url;
 use Exception;
@@ -66,12 +67,14 @@ class ImportedNode extends Node
     {
         if ($this->state === null) {
             try {
-                $this->importedConfig()->retrieveStatesFromBackend();
+                MonitoringState::apply($this->importedConfig());
             } catch (Exception $e) {
             }
 
             $this->state = $this->importedNode()->getState();
+            $this->setMissing(false);
         }
+
         return $this->state;
     }
 
@@ -168,6 +171,9 @@ class ImportedNode extends Node
         }
     }
 
+    /**
+     * @return BpConfig
+     */
     protected function importedConfig()
     {
         if ($this->config === null) {
