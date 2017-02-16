@@ -23,7 +23,7 @@ class ImportedNode extends Node
     protected $className = 'subtree';
 
     /** @var BpConfig */
-    protected $config;
+    private $config;
 
     /**
      * @inheritdoc
@@ -42,8 +42,6 @@ class ImportedNode extends Node
 
         if (isset($object->state)) {
             $this->setState($object->state);
-        } else {
-            $this->setMissing();
         }
     }
 
@@ -101,8 +99,9 @@ class ImportedNode extends Node
      */
     public function isMissing()
     {
-        // TODO: WHY? return $this->getState() === null;
-        return $this->importedNode()->isMissing();
+        $this->getState();
+        // Probably doesn't work, as we create a fake node with worse state
+        return $this->missing;
     }
 
     /**

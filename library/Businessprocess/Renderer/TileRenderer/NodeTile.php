@@ -190,6 +190,9 @@ class NodeTile extends BaseElement
             );
         } else {
             $link = Link::create($node->getAlias(), $url);
+            if ($node instanceof ImportedNode) {
+                $link->attributes()->add('data-base-target', '_next');
+            }
         }
 
         return $link;
