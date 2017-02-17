@@ -230,8 +230,8 @@ class ImportedNode extends Node
             $this->getAlias(),
             'businessprocess/process/show',
             array(
-                'config'  => $this->configName,
-                'process' => $this->name
+                'config' => $this->configName,
+                'node'   => $this->nodeName
             )
         );
     }
