@@ -240,12 +240,10 @@ class Metadata
 
     public function hasOneOfTheAllowedRoles(User $user)
     {
-        foreach ($this->listAllowedRoles() as $roles) {
-            foreach ($roles as $roleName) {
-                foreach ($user->getRoles() as $role) {
-                    if ($role->getName() === $roleName) {
-                        return true;
-                    }
+        foreach ($this->listAllowedRoles() as $roleName) {
+            foreach ($user->getRoles() as $role) {
+                if ($role->getName() === $roleName) {
+                    return true;
                 }
             }
         }
