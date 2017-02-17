@@ -196,9 +196,9 @@ class TreeRenderer extends Renderer
     {
         return $this->actionIcon(
             'wrench',
-            Url::fromPath('businessprocess/node/edit', array(
-                'config' => $bp->getName(),
-                'node'   => $node->getName()
+            $this->getUrl()->with(array(
+                'action'   => 'edit',
+                'editnode' => $node->getName()
             )),
             $this->translate('Modify this node')
         );
@@ -226,6 +226,7 @@ class TreeRenderer extends Renderer
             sprintf('%s: %s', $this->translate('More information'), $url)
         );
     }
+
     protected function actionIcon($icon, $url, $title)
     {
         return Link::create(
