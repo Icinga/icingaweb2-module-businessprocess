@@ -166,7 +166,6 @@ class ProcessController extends Controller
 
     protected function getProcessTabs(BpConfig $bp, Renderer $renderer)
     {
-
         $tabs = $this->singleTab($bp->getTitle());
         if ($renderer->isLocked()) {
             $tabs->extend(new DashboardAction());
