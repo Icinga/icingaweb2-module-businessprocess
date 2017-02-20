@@ -326,19 +326,19 @@ class BpNode extends Node
 
         if (!$this->hasChildren()) {
             // TODO: delegate this to operators, should mostly fail
-            $this->state = 3;
+            $this->setState(self::ICINGA_UNKNOWN);
             $this->setMissing();
             return $this;
         }
 
         foreach ($this->getChildren() as $child) {
             $bp->beginLoopDetection($this->name);
-            $sort_states[] = $child->getSortingState();
-            $lastStateChange = max($lastStateChange, $child->getLastStateChange());
-            $bp->endLoopDetection($this->name);
             if ($child instanceof MonitoredNode && $child->isMissing()) {
                 $child->setState(self::ICINGA_UNKNOWN);
             }
+            $sort_states[] = $child->getSortingState();
+            $lastStateChange = max($lastStateChange, $child->getLastStateChange());
+            $bp->endLoopDetection($this->name);
         }
 
         $this->setLastStateChange($lastStateChange);
