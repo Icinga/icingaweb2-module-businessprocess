@@ -309,25 +309,7 @@ abstract class Renderer extends Html
 
     protected function createUnboundParent(BpConfig $bp)
     {
-        // Hint: state is useless here, but triggers parent/child "calculation"
-        //       This is an ugly workaround and should be made obsolete
-        foreach ($bp->getBpNodes() as $p) {
-            $p->getState();
-        }
-        $unbound = $bp->getUnboundNodes();
-
-        $parent = new BpNode($bp, (object) array(
-            'name'        => '__unbound__',
-            'operator'    => '|',
-            'child_names' => array_keys($unbound)
-        ));
-        $parent->getState();
-        $parent->setMissing()
-            ->setDowntime(false)
-            ->setAck(false)
-            ->setAlias('Unbound nodes');
-
-        return $parent;
+        return $bp->getNode('__unbound__');
     }
 
     /**

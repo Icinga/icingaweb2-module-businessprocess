@@ -483,6 +483,11 @@ class BpConfig
      */
     public function getNode($name)
     {
+        if ($name === '__unbound__') {
+            return $this->getUnboundBaseNode();
+
+        }
+
         if (array_key_exists($name, $this->nodes)) {
             return $this->nodes[$name];
         }
@@ -504,6 +509,25 @@ class BpConfig
         throw new Exception(
             sprintf('The node "%s" doesn\'t exist', $name)
         );
+    }
+
+    /**
+     * @return BpNode
+     */
+    public function getUnboundBaseNode()
+    {
+        // Hint: state is useless here, but triggers parent/child "calculation"
+        //       This is an ugly workaround and should be made obsolete
+        $this->calculateAllStates();
+
+        $names = array_keys($this->getUnboundNodes());
+        $bp = new BpNode($this, (object) array(
+            'name' => '__unbound__',
+            'operator' => '&',
+            'child_names' => $names
+        ));
+        $bp->setAlias($this->translate('Unbound nodes'));
+        return $bp;
     }
 
     /**
