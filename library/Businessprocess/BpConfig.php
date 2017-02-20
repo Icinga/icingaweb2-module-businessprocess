@@ -495,7 +495,6 @@ class BpConfig
     {
         if ($name === '__unbound__') {
             return $this->getUnboundBaseNode();
-
         }
 
         if (array_key_exists($name, $this->nodes)) {
