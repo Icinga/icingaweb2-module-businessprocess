@@ -143,6 +143,7 @@ abstract class Node
     public function setState($state)
     {
         $this->state = (int) $state;
+        $this->missing = false;
         return $this;
     }
 

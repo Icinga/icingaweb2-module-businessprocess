@@ -334,7 +334,13 @@ class BpNode extends Node
         foreach ($this->getChildren() as $child) {
             $bp->beginLoopDetection($this->name);
             if ($child instanceof MonitoredNode && $child->isMissing()) {
-                $child->setState(self::ICINGA_UNKNOWN);
+                if ($child instanceof HostNode) {
+                    $child->setState(self::ICINGA_UNREACHABLE);
+                } else {
+                    $child->setState(self::ICINGA_UNKNOWN);
+                }
+
+                $child->setMissing();
             }
             $sort_states[] = $child->getSortingState();
             $lastStateChange = max($lastStateChange, $child->getLastStateChange());
