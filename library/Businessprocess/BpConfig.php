@@ -464,6 +464,16 @@ class BpConfig
         return $this->createBp($name)->setMissing();
     }
 
+    public function getMissingChildren()
+    {
+        $missing = array();
+        foreach ($this->getRootNodes() as $root) {
+            $missing += $root->getMissingChildren();
+        }
+
+        return $missing;
+    }
+
     public function createImportedNode($config, $name = null)
     {
         $params = (object) array('configName' => $config);

@@ -96,8 +96,13 @@ class ProcessController extends Controller
         }
 
         $this->prepareControls($bp, $renderer);
+        $missing = $bp->getMissingChildren();
+        if (! empty($missing)) {
+            $bp->addError(sprintf('There are missing nodes: %s', implode(', ', $missing)));
+        }
         $this->content()->addContent($this->showHints($bp));
         $this->content()->addContent($this->showWarnings($bp));
+        $this->content()->addContent($this->showErrors($bp));
         $this->content()->add($renderer);
         $this->loadActionForm($bp, $node);
         $this->setDynamicAutorefresh();
@@ -256,6 +261,20 @@ class ProcessController extends Controller
             $ul = Element::create('ul', array('class' => 'warning'));
             foreach ($bp->getWarnings() as $warning) {
                 $ul->createElement('li')->addContent($warning);
+            }
+
+            return $ul;
+        } else {
+            return null;
+        }
+    }
+
+    protected function showErrors(BpConfig $bp)
+    {
+        if ($bp->hasWarnings()) {
+            $ul = Element::create('ul', array('class' => 'error'));
+            foreach ($bp->getErrors() as $msg) {
+                $ul->createElement('li')->addContent($msg);
             }
 
             return $ul;

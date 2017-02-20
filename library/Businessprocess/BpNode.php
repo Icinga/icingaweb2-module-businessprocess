@@ -336,6 +336,9 @@ class BpNode extends Node
             $sort_states[] = $child->getSortingState();
             $lastStateChange = max($lastStateChange, $child->getLastStateChange());
             $bp->endLoopDetection($this->name);
+            if ($child instanceof MonitoredNode && $child->isMissing()) {
+                $child->setState(self::ICINGA_UNKNOWN);
+            }
         }
 
         $this->setLastStateChange($lastStateChange);
