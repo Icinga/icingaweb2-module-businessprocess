@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Businessprocess Module (2.0.0-rc1)\n"
+"Project-Id-Version: Businessprocess Module (2.1.0)\n"
 "Report-Msgid-Bugs-To: dev@icinga.org\n"
-"POT-Creation-Date: 2017-01-25 10:11+0100\n"
-"PO-Revision-Date: 2017-01-25 10:11+0100\n"
+"POT-Creation-Date: 2017-02-20 15:18+0100\n"
+"PO-Revision-Date: 2017-02-20 15:20+0100\n"
 "Last-Translator: Thomas Gelf <thomas@gelf.net>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
@@ -18,27 +18,27 @@ msgstr ""
 "Language-Team: \n"
 "X-Generator: Poedit 1.8.7.1\n"
 
-#: application/controllers/ProcessController.php:183
+#: application/controllers/ProcessController.php:189
 #, php-format
 msgid "%d applied simulation(s) have been dropped"
 msgstr "%d angewendete Simulation(en) wurde(n) entfernt"
 
-#: library/Businessprocess/Web/Controller.php:195
+#: library/Businessprocess/Web/Controller.php:201
 #, php-format
 msgid "%d pending change(s) have been dropped"
 msgstr "%d vorgenommene Änderung(en) wurde(n) verworfen"
 
-#: application/controllers/ProcessController.php:368
+#: application/controllers/ProcessController.php:396
 #, php-format
 msgid "%s: Configuration"
 msgstr "%s: Konfiguration"
 
-#: application/controllers/ProcessController.php:326
+#: application/controllers/ProcessController.php:350
 #, php-format
 msgid "%s: Source Code"
 msgstr "%s: Quellcode"
 
-#: application/controllers/ProcessController.php:321
+#: application/controllers/ProcessController.php:345
 #, php-format
 msgid "%s: Source Code Differences"
 msgstr "%s: Quellcode Unterschiede"
@@ -51,7 +51,12 @@ msgstr "(keine Prozess-Konfiguration gewählt)"
 msgid "- please choose -"
 msgstr "- bitte wählen -"
 
-#: application/forms/BpConfigForm.php:65
+#: application/forms/BpUploadForm.php:184
+#, php-format
+msgid "A process named \"%s\" already exists"
+msgstr "Ein Prozess namens \"%s\" existiert bereits"
+
+#: application/forms/BpConfigForm.php:49
 msgid ""
 "A slightly more detailed description for this process, about 100-150 "
 "characters long"
@@ -67,16 +72,15 @@ msgstr "UND"
 msgid "Acknowledged"
 msgstr "Bestätigt"
 
-#: application/forms/BpConfigForm.php:107
-#: application/forms/BpUploadForm.php:105
-#: library/Businessprocess/Renderer/TreeRenderer.php:241
-#: library/Businessprocess/Renderer/TileRenderer.php:93
+#: application/forms/BpConfigForm.php:91
+#: library/Businessprocess/Renderer/TreeRenderer.php:246
+#: library/Businessprocess/Renderer/TileRenderer.php:95
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: library/Businessprocess/Renderer/TreeRenderer.php:246
-#: library/Businessprocess/Renderer/TileRenderer.php:97
-#: library/Businessprocess/Renderer/TileRenderer.php:106
+#: library/Businessprocess/Renderer/TreeRenderer.php:251
+#: library/Businessprocess/Renderer/TileRenderer.php:99
+#: library/Businessprocess/Renderer/TileRenderer.php:108
 msgid "Add a new business process node"
 msgstr "Neuen Business-Prozess hinzufügen"
 
@@ -94,7 +98,7 @@ msgstr "Neuen Knoten zu %s hinzufügen"
 msgid "Add simulation for %s"
 msgstr "Simulation für %s hinzufügen"
 
-#: application/forms/BpConfigForm.php:94
+#: application/forms/BpConfigForm.php:78
 msgid "Add to menu"
 msgstr "Zum Menü hinzufügen"
 
@@ -123,7 +127,7 @@ msgstr "Anwenden"
 msgid "Are you sure?"
 msgstr "Sind Sie sicher?"
 
-#: application/forms/BpConfigForm.php:71 application/forms/BpUploadForm.php:73
+#: application/forms/BpConfigForm.php:55
 msgid "Backend"
 msgstr "Backend"
 
@@ -137,13 +141,13 @@ msgstr "Business Impact"
 msgid "Business Impact (%s)"
 msgstr "Business Impact (%s)"
 
-#: application/controllers/ProcessController.php:445
-#: library/Businessprocess/Web/Controller.php:127
-#: library/Businessprocess/Web/Controller.php:138
+#: application/controllers/ProcessController.php:473
+#: library/Businessprocess/Web/Controller.php:133
+#: library/Businessprocess/Web/Controller.php:144
 msgid "Business Process"
 msgstr "Business-Prozess"
 
-#: application/controllers/ProcessController.php:84
+#: application/controllers/ProcessController.php:86
 #, php-format
 msgid "Business Process \"%s\""
 msgstr "Business-Prozess \"%s\""
@@ -156,11 +160,11 @@ msgstr "Business-Prozessübersicht"
 msgid "Business Processes"
 msgstr "Business-Prozesse"
 
-#: application/forms/BpUploadForm.php:98
+#: application/forms/BpUploadForm.php:64
 msgid "Business process source code"
 msgstr "Business-Prozess Quellcode"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:88
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:90
 msgid "Config"
 msgstr "Konfiguration"
 
@@ -169,7 +173,7 @@ msgstr "Konfiguration"
 msgid "Could not retrieve process state: %s"
 msgstr "Konnte den Prozess-Status nicht ermitteln: %s"
 
-#: application/controllers/ProcessController.php:456
+#: application/controllers/ProcessController.php:484
 #: library/Businessprocess/Web/Component/Dashboard.php:55
 msgid "Create"
 msgstr "Erstelle"
@@ -190,7 +194,7 @@ msgstr "Aktuelle Simulation"
 msgid "DEG"
 msgstr "DEG"
 
-#: application/forms/BpConfigForm.php:126
+#: application/forms/BpConfigForm.php:110
 msgid "Delete"
 msgstr "Löschen"
 
@@ -214,20 +218,20 @@ msgstr "Entferne von %s"
 msgid "Delete root node \"%s\""
 msgstr "Lösche den Wurzelknoten \"%s\""
 
-#: library/Businessprocess/Renderer/TileRenderer/NodeTile.php:274
+#: library/Businessprocess/Renderer/TileRenderer/NodeTile.php:282
 msgid "Delete this node"
 msgstr "Lösche diesen Knoten"
 
-#: application/forms/BpConfigForm.php:63
+#: application/forms/BpConfigForm.php:47
 msgid "Description"
 msgstr "Beschreibung"
 
-#: application/controllers/ProcessController.php:415
+#: application/controllers/ProcessController.php:443
 msgid "Diff"
 msgstr "Unterschied"
 
-#: application/controllers/ProcessController.php:282
-#: application/controllers/ProcessController.php:294
+#: application/controllers/ProcessController.php:304
+#: application/controllers/ProcessController.php:316
 msgid "Dismiss"
 msgstr "Verwerfen"
 
@@ -235,11 +239,11 @@ msgstr "Verwerfen"
 msgid "Do you really want to delete this node?"
 msgstr "Möchtest du diesen Knoten wirklich löschen?"
 
-#: application/controllers/ProcessController.php:428
+#: application/controllers/ProcessController.php:456
 msgid "Download"
 msgstr "Download"
 
-#: application/controllers/ProcessController.php:434
+#: application/controllers/ProcessController.php:462
 msgid "Download process configuration"
 msgstr "Prozesskonfiguration herunterladen"
 
@@ -247,7 +251,7 @@ msgstr "Prozesskonfiguration herunterladen"
 msgid "Existing Process"
 msgstr "Existierender Prozess"
 
-#: application/forms/BpUploadForm.php:145
+#: application/forms/BpUploadForm.php:132
 msgid "File"
 msgstr "Datei"
 
@@ -268,7 +272,7 @@ msgstr ""
 msgid "Fullscreen"
 msgstr "Vollbild"
 
-#: application/controllers/ProcessController.php:420
+#: application/controllers/ProcessController.php:448
 msgid "Highlight changes"
 msgstr "Änderungen hervorheben"
 
@@ -284,7 +288,7 @@ msgstr "Hosts"
 msgid "Hosts that should be part of this business process node"
 msgstr "Hosts welche Teil dieses Business-Prozesses sein sollen"
 
-#: application/forms/BpConfigForm.php:73 application/forms/BpUploadForm.php:75
+#: application/forms/BpConfigForm.php:57
 msgid ""
 "Icinga Web Monitoring Backend where current object states for this process "
 "should be retrieved from"
@@ -300,7 +304,7 @@ msgstr "In Downtime"
 msgid "Info URL"
 msgstr "Info-URL"
 
-#: application/controllers/ProcessController.php:118
+#: application/controllers/ProcessController.php:125
 msgid "Leave full screen and switch back to normal mode"
 msgstr "Vollbildmodus verlassen, zurück zur normalen Ansicht"
 
@@ -358,19 +362,19 @@ msgstr "Bearbeite \"%s\""
 msgid "Modify simulation for %s"
 msgstr "Bearbeite die Simulation für %s"
 
-#: library/Businessprocess/Renderer/TileRenderer/NodeTile.php:251
+#: library/Businessprocess/Renderer/TileRenderer/NodeTile.php:269
 msgid "Modify this business process node"
 msgstr "Bearbeite diesen Business-Prozessknoten"
 
-#: library/Businessprocess/Renderer/TreeRenderer.php:199
+#: library/Businessprocess/Renderer/TreeRenderer.php:203
 msgid "Modify this node"
 msgstr "Bearbeite diesen Knoten"
 
-#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:93
+#: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:95
 msgid "Modify this process"
 msgstr "Bearbeite diesen Prozess"
 
-#: library/Businessprocess/Renderer/TreeRenderer.php:222
+#: library/Businessprocess/Renderer/TreeRenderer.php:226
 msgid "More information"
 msgstr "Weitere Informationen"
 
@@ -378,12 +382,12 @@ msgstr "Weitere Informationen"
 msgid "NOT"
 msgstr "NICHT"
 
-#: application/forms/BpConfigForm.php:32 application/forms/AddNodeForm.php:68
-#: application/forms/BpUploadForm.php:42 application/forms/ProcessForm.php:35
+#: application/forms/BpConfigForm.php:16 application/forms/AddNodeForm.php:68
+#: application/forms/BpUploadForm.php:39 application/forms/ProcessForm.php:35
 msgid "Name"
 msgstr "Name"
 
-#: library/Businessprocess/BpNode.php:294
+#: library/Businessprocess/BpNode.php:295
 #, php-format
 msgid "Nesting error detected: %s"
 msgstr "Verschachtelungsfehler erkannt: %s"
@@ -393,11 +397,11 @@ msgid "New Process Node"
 msgstr "Neuer Prozessknoten"
 
 #: application/forms/AddNodeForm.php:60 application/forms/AddNodeForm.php:183
-#: application/forms/BpUploadForm.php:155
+#: application/forms/BpUploadForm.php:142
 msgid "Next"
 msgstr "Weiter"
 
-#: application/forms/BpConfigForm.php:101
+#: application/forms/BpConfigForm.php:85
 #: application/forms/DeleteNodeForm.php:74
 msgid "No"
 msgstr "Nein"
@@ -406,17 +410,17 @@ msgstr "Nein"
 msgid "No Business Process has been defined for you"
 msgstr "Es wurde noch kein Business-Prozess für dich definiert"
 
-#: library/Businessprocess/BpConfig.php:677
+#: library/Businessprocess/BpConfig.php:728
 #, php-format
 msgid "No business process nodes for \"%s\" have been defined yet"
 msgstr "Es wurden noch keine Business-Prozess Knoten für \"%s\" definiert"
 
-#: library/Businessprocess/Web/Controller.php:220
+#: library/Businessprocess/Web/Controller.php:226
 #, php-format
 msgid "No such process config: \"%s\""
 msgstr "Keine entsprechende Prozesskonfiguration gefunden: \"%s\""
 
-#: library/Businessprocess/BpConfig.php:544
+#: library/Businessprocess/BpConfig.php:595
 #, php-format
 msgid "Node \"%s\" has been defined twice"
 msgstr "Der Knoten \"%s\" wurde doppelt definiert"
@@ -445,13 +449,27 @@ msgstr "Operator"
 msgid "Other processes that should be part of this business process node"
 msgstr "Andere Prozesse welche Teil dieses Business-Prozesses sein sollen"
 
-#: application/controllers/ProcessController.php:471
+#: library/Businessprocess/Web/Form/BpConfigBaseForm.php:45
+#, php-format
+msgid "Please prefix the name with \"%s\""
+msgstr "Bitte stelle \"%s\" dem Namen voran"
+
+#: library/Businessprocess/Web/Form/BpConfigBaseForm.php:50
+#, php-format
+msgid "Please prefix the name with one of \"%s\""
+msgstr "Bitte stelle dem Namen eines von \"%s\" voran"
+
+#: application/controllers/ProcessController.php:499
 msgid "Process Configuration"
 msgstr "Prozess-Konfiguration"
 
 #: application/forms/AddNodeForm.php:215
 msgid "Process nodes"
 msgstr "Prozess-Knoten"
+
+#: configuration.php:58
+msgid "Restrict access to configurations with the given prefix"
+msgstr "Beschränke den Zugriff auf Konfigurationen mit dem gegebenen Präfix"
 
 #: application/forms/AddNodeForm.php:132
 msgid "Service"
@@ -469,25 +487,25 @@ msgstr "Services welche Teil dieses Business-Prozesses sein sollen"
 msgid "Show all"
 msgstr "Alle anzeigen"
 
-#: application/controllers/ProcessController.php:403
+#: application/controllers/ProcessController.php:431
 msgid "Show source code"
 msgstr "Quellcode anzeigen"
 
-#: library/Businessprocess/Renderer/TileRenderer/NodeTile.php:260
+#: library/Businessprocess/Renderer/TileRenderer/NodeTile.php:255
 msgid "Show the business impact of this node by simulating a specific state"
 msgstr ""
 "Zeige den Business Impact dieses Knoten durch Simulation eines gewünschten "
 "Zustandes"
 
-#: library/Businessprocess/Renderer/TileRenderer/NodeTile.php:217
+#: library/Businessprocess/Renderer/TileRenderer/NodeTile.php:220
 msgid "Show this subtree as a tree"
 msgstr "Zeige diesen Teilbaum als eigenen Baum"
 
-#: library/Businessprocess/Renderer/TileRenderer/NodeTile.php:209
+#: library/Businessprocess/Renderer/TileRenderer/NodeTile.php:212
 msgid "Show tiles for this subtree"
 msgstr "Zeige Kacheln für diesen Teilbaum"
 
-#: library/Businessprocess/Renderer/TreeRenderer.php:212
+#: library/Businessprocess/Renderer/TreeRenderer.php:216
 msgid "Simulate a specific state"
 msgstr "Einen bestimmten Zustand simulieren"
 
@@ -499,9 +517,9 @@ msgstr "Simulation wurde entfernt"
 msgid "Simulation has been set"
 msgstr "Simulation wurde gesetzt"
 
-#: application/controllers/ProcessController.php:398
-#: application/controllers/ProcessController.php:480
-#: application/forms/BpUploadForm.php:96
+#: application/controllers/ProcessController.php:426
+#: application/controllers/ProcessController.php:508
+#: application/forms/BpUploadForm.php:62
 msgid "Source"
 msgstr "Quelle"
 
@@ -509,13 +527,12 @@ msgstr "Quelle"
 msgid "State"
 msgstr "Status"
 
-#: application/forms/BpConfigForm.php:82 application/forms/BpUploadForm.php:84
+#: application/forms/BpConfigForm.php:66
 msgid "State Type"
 msgstr "Statustyp"
 
-#: application/controllers/ProcessController.php:276
-#: application/forms/BpConfigForm.php:123
-#: application/forms/BpUploadForm.php:109
+#: application/controllers/ProcessController.php:298
+#: application/forms/BpConfigForm.php:107 application/forms/BpUploadForm.php:74
 msgid "Store"
 msgstr "Speichern"
 
@@ -543,17 +560,17 @@ msgstr "Zum Vollbildmodus wechseln"
 msgid "The node type you want to add"
 msgstr "Der gewünschte Knotentyp"
 
-#: application/forms/BpConfigForm.php:50 application/forms/AddNodeForm.php:71
-#: application/forms/BpUploadForm.php:45 application/forms/ProcessForm.php:38
+#: application/forms/BpConfigForm.php:34 application/forms/AddNodeForm.php:71
+#: application/forms/BpUploadForm.php:42 application/forms/ProcessForm.php:38
 msgid "This is the unique identifier of this process"
 msgstr "Das ist der eindeutige Bezeichner dieses Prozesses"
 
-#: application/controllers/ProcessController.php:272
+#: application/controllers/ProcessController.php:294
 #, php-format
 msgid "This process has %d pending change(s)."
 msgstr "Dieser Prozess hat %d ungesicherte Änderung(en)"
 
-#: application/controllers/ProcessController.php:291
+#: application/controllers/ProcessController.php:313
 #, php-format
 msgid "This process shows %d simulated state(s)."
 msgstr "Dieser Prozess zeigt %d simulierte Zustände"
@@ -562,8 +579,8 @@ msgstr "Dieser Prozess zeigt %d simulierte Zustände"
 msgid "Tiles"
 msgstr "Kacheln"
 
-#: application/forms/BpConfigForm.php:55 application/forms/AddNodeForm.php:76
-#: application/forms/BpUploadForm.php:65 application/forms/ProcessForm.php:50
+#: application/forms/BpConfigForm.php:39 application/forms/AddNodeForm.php:76
+#: application/forms/ProcessForm.php:50
 msgid "Title"
 msgstr "Titel"
 
@@ -579,6 +596,10 @@ msgstr "Baum"
 msgid "URL pointing to more information about this node"
 msgstr "URL zu mehr Informationen über diesen Knoten"
 
+#: library/Businessprocess/BpConfig.php:538
+msgid "Unbound nodes"
+msgstr "Ungebundene Knoten"
+
 #: library/Businessprocess/Web/Component/RenderedProcessActionBar.php:62
 msgid "Unlock"
 msgstr "Entsperren"
@@ -592,12 +613,12 @@ msgstr "Entsperre diesen Prozess"
 msgid "Unsure? Show business impact of \"%s\""
 msgstr "Nicht sicher? Zeige den Business Impact von \"%s\""
 
-#: application/controllers/ProcessController.php:459
+#: application/controllers/ProcessController.php:487
 #: library/Businessprocess/Web/Component/Dashboard.php:64
 msgid "Upload"
 msgstr "Hochladen"
 
-#: application/controllers/ProcessController.php:59
+#: application/controllers/ProcessController.php:61
 msgid "Upload a Business Process Config file"
 msgstr "Lade eine Business-Prozess Konfigurationsdatei hoch"
 
@@ -605,11 +626,11 @@ msgstr "Lade eine Business-Prozess Konfigurationsdatei hoch"
 msgid "Upload an existing Business Process configuration"
 msgstr "Lade eine existierende Business-Prozess Konfigurationsdatei hoch"
 
-#: application/forms/BpConfigForm.php:89 application/forms/BpUploadForm.php:90
+#: application/forms/BpConfigForm.php:73
 msgid "Use HARD states"
 msgstr "HARD-States benutzen"
 
-#: application/forms/BpConfigForm.php:88 application/forms/BpUploadForm.php:91
+#: application/forms/BpConfigForm.php:72
 msgid "Use SOFT states"
 msgstr "SOFT-States benutzen"
 
@@ -618,7 +639,7 @@ msgstr "SOFT-States benutzen"
 msgid "Use current state (%s)"
 msgstr "Aktuellen Status benutzen (%s)"
 
-#: application/forms/BpConfigForm.php:77 application/forms/BpUploadForm.php:79
+#: application/forms/BpConfigForm.php:61
 msgid "Use the configured default backend"
 msgstr "Benutze das konfigurierte Standard-Backend"
 
@@ -629,7 +650,7 @@ msgstr ""
 "Für gewöhnlich wird dieser Titel für diesen Knoten angezeigt. Entspricht dem "
 "Namen, wenn nicht angegeben"
 
-#: application/forms/BpConfigForm.php:57 application/forms/BpUploadForm.php:67
+#: application/forms/BpConfigForm.php:41
 msgid ""
 "Usually this title will be shown for this process. Equals name if not given"
 msgstr ""
@@ -652,15 +673,15 @@ msgstr "Na gut, vielleicht nächstes Mal"
 msgid "Where to show this process"
 msgstr "Wo dieser Prozess angezeigt werden soll"
 
-#: application/forms/BpConfigForm.php:85 application/forms/BpUploadForm.php:87
+#: application/forms/BpConfigForm.php:69
 msgid "Whether this process should be based on Icinga hard or soft states"
 msgstr "Ob dieser Prozess auf Icinga's Hard- oder Softstates basieren soll"
 
-#: application/forms/BpConfigForm.php:97
+#: application/forms/BpConfigForm.php:81
 msgid "Whether this process should be linked in the main Icinga Web 2 menu"
 msgstr "Ob dieser Prozess ins Icinga Web 2 Hauptmenü verlinkt werden soll"
 
-#: application/forms/BpConfigForm.php:100
+#: application/forms/BpConfigForm.php:84
 msgid "Yes"
 msgstr "Ja"
 
