@@ -44,9 +44,8 @@ class Html implements Renderable
      */
     public function setContent($content)
     {
-        $this->content = array(
-            static::escape($content)
-        );
+        $this->content = array();
+        static::addContent($content);
 
         return $this;
     }
@@ -57,7 +56,14 @@ class Html implements Renderable
      */
     public function addContent($content)
     {
-        $this->content[] = static::escape($content);
+        if (is_array($content)) {
+            foreach ($content as $c) {
+                static::addContent($c);
+            }
+        } else {
+            $this->content[] = static::escape($content);
+        }
+
         return $this;
     }
 
