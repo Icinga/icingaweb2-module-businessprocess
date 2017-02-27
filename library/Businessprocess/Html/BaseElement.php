@@ -48,7 +48,7 @@ abstract class BaseElement extends Html
      */
     public function addAttributes($attributes)
     {
-        $this->attributes = Attributes::wantAttributes($attributes);
+        $this->attributes()->add($attributes);
         return $this;
     }
 
