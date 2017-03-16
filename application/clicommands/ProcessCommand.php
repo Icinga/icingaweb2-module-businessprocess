@@ -74,9 +74,10 @@ class ProcessCommand extends Command
      *   --config <configname>   Name of the config that contains <process>
      *   --details               Show problem details as a tree
      *   --colors                Show colored output
-     *   --htmlcolors            Show colored output as htmltable. You need 
-     *                           to set the baseurl in the config-section 
-     *                           [main] of the modules config.ini
+     *   --htmlcolors            Show colored output as htmltable with links
+     *                           to the displayed hosts. You need to set your
+     *                           baseurl in the config-section [main] to use
+     *                           this feature
      *   --state-type <type>     Define which state type to look at. Could be
      *                           either soft or hard, overrides an eventually
      *                           configured default
@@ -155,33 +156,33 @@ class ProcessCommand extends Command
             if ($useColors) {
                 $state = $this->screen->colorize($state, $colors[0], $colors[1]);
             }
-	    if($htmlcolors){
-		$state = substr($state, 1 , strlen($state)-2); 
-		$lstate = strtolower($node->getStateName());
-		$config = $this->Config();
-		FakeRequest::setConfiguredBaseUrl($config->get("Main","baseurl"));
-		$output.="<table class=''><tbody><tr>"
-			.str_repeat('<td></td><td></td><td></td>', $depth)
-			."<td>";
-			if ($node instanceof BpNode){
-				$output.=$node->getOperator();
-			}else{
-				$output.="-";
-			}
-			$output.="</td><td><div class='badge state-$lstate'>$state</div> ";
-			$node instanceof BpNode ? 
-				$output.=$node->getAlias() :	
-				$output.="<a href='".$node->getUrl()."'>".$node->getAlias()."</a>";
-			$output.="</td></tr></tbody></table>";
-	    }else{
-	            $output .= sprintf(
-	                "%s%s %s %s\n",
-	                str_repeat('  ', $depth),
-	                $node instanceof BpNode ? $node->getOperator() : '-',
-	                $state,
-                	$node->getAlias()
-            	);
-	    }
+            if ($htmlcolors) {
+                $state = substr($state, 1, strlen($state)-2);
+                $lstate = strtolower($node->getStateName());
+                $config = $this->Config();
+                FakeRequest::setConfiguredBaseUrl($config->get("Main", "baseurl"));
+                $output.="<table class=''><tbody><tr>"
+                .str_repeat('<td></td><td></td><td></td>', $depth)
+                ."<td>";
+                if ($node instanceof BpNode) {
+                    $output.=$node->getOperator();
+                } else {
+                    $output.="-";
+                }
+                    $output.="</td><td><div class='badge state-$lstate'>$state</div> ";
+                    $node instanceof BpNode ?
+                    $output.=$node->getAlias() :
+                    $output.="<a href='".$node->getUrl()."'>".$node->getAlias()."</a>";
+                    $output.="</td></tr></tbody></table>";
+            } else {
+                $output .= sprintf(
+                    "%s%s %s %s\n",
+                    str_repeat('  ', $depth),
+                    $node instanceof BpNode ? $node->getOperator() : '-',
+                    $state,
+                    $node->getAlias()
+                );
+            }
             $output .= $this->renderProblemTree($subtree['children'], $useColors, $htmlcolors, $depth + 1);
         }
 
