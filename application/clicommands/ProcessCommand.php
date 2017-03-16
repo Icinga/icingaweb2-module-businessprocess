@@ -114,7 +114,11 @@ class ProcessCommand extends Command
 
         printf("Business Process %s: %s\n", $node->getStateName(), $node->getAlias());
         if ($this->params->shift('details')) {
-            echo $this->renderProblemTree($node->getProblemTree(), $this->params->shift('colors'), $this->params->shift('htmlcolors'));
+            echo $this->renderProblemTree(
+                $node->getProblemTree(),
+                $this->params->shift('colors'),
+                $this->params->shift('htmlcolors')
+            );
         }
 
         exit($node->getState());
