@@ -74,8 +74,8 @@ class ProcessCommand extends Command
      *   --config <configname>   Name of the config that contains <process>
      *   --details               Show problem details as a tree
      *   --colors                Show colored output
-     *   --htmlcolors            Show colored output as htmltable You need 
-     *                           to set your baseurl in the config-section 
+     *   --htmlcolors            Show colored output as htmltable. You need 
+     *                           to set the baseurl in the config-section 
      *                           [main] of the modules config.ini
      *   --state-type <type>     Define which state type to look at. Could be
      *                           either soft or hard, overrides an eventually
