@@ -173,11 +173,14 @@ class BpNode extends Node
     {
         if ($this->missing === null) {
             $exists = false;
+            $bp = $this->bp;
+            $bp->beginLoopDetection($this->name);
             foreach ($this->getChildren() as $child) {
                 if (! $child->isMissing()) {
                     $exists = true;
                 }
             }
+            $bp->endLoopDetection($this->name);
             $this->missing = ! $exists;
         }
         return $this->missing;
