@@ -145,6 +145,23 @@ class ProcessChanges
         $this->session->set($this->getSessionKey(), null);
         return $this;
     }
+    
+    /**
+    * Forget the last change that was made and remove it from the Session
+    *
+    * @return $this
+    */
+    public function clearLastElement()
+    {
+        $currentSession = $this->session->getAll();
+        $changes = array_pop($currentSession);
+
+        $lastElement = sizeOf($changes) - 1;
+        unset($changes[$lastElement]);
+
+        $this->session->set($this->getSessionKey(), $changes);
+        return $this;
+    }
 
     /**
      * Whether there are no stacked changes

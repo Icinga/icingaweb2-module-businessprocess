@@ -5,6 +5,7 @@ namespace Icinga\Module\Businessprocess\Modification;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\Node;
+use Icinga\Exception\ConfigurationError;
 
 class NodeCreateAction extends NodeAction
 {
@@ -95,7 +96,11 @@ class NodeCreateAction extends NodeAction
 
         foreach ($this->getProperties() as $key => $val) {
             if ($key === 'parentName') {
-                $config->getBpNode($val)->addChild($node);
+                try {
+                    $config->getBpNode($val)->addChild($node);
+                } catch (ConfigurationError $configError) {
+                    throw $configError;
+                }
                 continue;
             }
             $func = 'set' . ucfirst($key);

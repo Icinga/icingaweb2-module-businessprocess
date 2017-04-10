@@ -6,7 +6,9 @@ use Icinga\Exception\IcingaException;
 use Icinga\Exception\NotFoundError;
 use Icinga\Module\Businessprocess\Exception\NestingError;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
+use Icinga\Module\Businessprocess\Modification\NodeRemoveAction;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
+use Icinga\Exception\ConfigurationError;
 use Exception;
 
 class BpConfig
@@ -150,11 +152,18 @@ class BpConfig
         $cnt = 0;
         foreach ($changes->getChanges() as $change) {
             $cnt++;
-            $change->applyTo($this);
-        }
-        $this->changeCount = $cnt;
+            try {
+                $change->applyTo($this);
+            } catch (ConfigurationError $configError) {
+                if (!is_a($change, 'Icinga\Module\Businessprocess\Modification\NodeRemoveAction')) {
+                    $changes->clearLastElement();
+                    throw $configError;
+                }
+            }
+            $this->changeCount = $cnt;
 
-        $this->appliedChanges = $changes;
+            $this->appliedChanges = $changes;
+        }
 
         return $this;
     }
