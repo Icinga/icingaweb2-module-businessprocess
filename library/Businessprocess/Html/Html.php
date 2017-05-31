@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess\Html;
 
 use Icinga\Exception\ProgrammingError;
+use Exception;
 
 class Html implements Renderable
 {
