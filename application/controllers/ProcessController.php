@@ -98,7 +98,11 @@ class ProcessController extends Controller
         $this->prepareControls($bp, $renderer);
         $missing = $bp->getMissingChildren();
         if (! empty($missing)) {
-            $bp->addError(sprintf('There are missing nodes: %s', implode(', ', $missing)));
+            if (($count = count($missing)) > 10) {
+                $missing = array_slice($missing, 0, 10);
+                $missing[] = '...';
+            }
+            $bp->addError(sprintf('There are %d missing nodes: %s', $count, implode(', ', $missing)));
         }
         $this->content()->addContent($this->showHints($bp));
         $this->content()->addContent($this->showWarnings($bp));
