@@ -73,7 +73,7 @@ class LegacyConfigParser
             static::readMetadataFromString($name, $string)
         );
 
-        foreach (preg_split('/\n/', $string) as $line) {
+        foreach (preg_split('/\r?\n/', $string) as $line) {
             $parser->parseLine($line);
         }
 
@@ -137,7 +137,7 @@ class LegacyConfigParser
 
     protected function readHeaderString($string, Metadata $metadata)
     {
-        foreach (preg_split('/\n/', $string) as $line) {
+        foreach (preg_split('/\r?\n/', $string) as $line) {
             $this->parseHeaderLine($line, $metadata);
         }
 
@@ -168,8 +168,7 @@ class LegacyConfigParser
      */
     protected static function parseHeaderLine($line, Metadata $metadata)
     {
-        $line = trim($line);
-        if (preg_match('/^\s*#\s+(.+?)\s*:\s*(.+)$/', $line, $m)) {
+        if (preg_match('/^\s*#\s+(.+?)\s*:\s*(.+)$/', trim($line), $m)) {
             if ($metadata->hasKey($m[1])) {
                 $metadata->set($m[1], $m[2]);
             }
