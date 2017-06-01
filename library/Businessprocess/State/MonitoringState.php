@@ -49,7 +49,6 @@ class MonitoringState
 
         Benchmark::measure('Retrieving states for business process ' . $config->getName());
         $backend = $this->backend;
-        $hostFilter = $config->listInvolvedHostNames();
 
         if ($config->usesHardStates()) {
             $hostStateColumn          = 'host_hard_state';
@@ -62,14 +61,13 @@ class MonitoringState
             $serviceStateColumn       = 'service_state';
             $serviceStateChangeColumn = 'service_last_state_change';
         }
-        $filter = Filter::matchAny();
-        foreach ($hostFilter as $host) {
-            $filter->addFilter(Filter::where('host_name', $host));
-        }
 
-        if ($filter->isEmpty()) {
+        $hosts = $config->listInvolvedHostNames();
+        if (empty($hosts)) {
             return $this;
         }
+
+        $hostFilter = Filter::expression('host', '=', $hosts);
 
         $hostStatus = $backend->select()->from('hostStatus', array(
             'hostname'          => 'host_name',
@@ -77,8 +75,13 @@ class MonitoringState
             'in_downtime'       => 'host_in_downtime',
             'ack'               => 'host_acknowledged',
             'state'             => $hostStateColumn
-        ))->applyFilter($filter)->getQuery()->fetchAll();
+        ))->applyFilter($hostFilter)->getQuery()->fetchAll();
 
+        Benchmark::measure('Retrieved states for ' . count($hostStatus) . ' hosts in ' . $config->getName());
+
+        // NOTE: we intentionally filter by host_name ONLY
+        // Tests with host IN ... AND service IN shows longer query times
+        // while retrieving 1635 (in 5ms) vs. 1388 (in ~430ms) services
         $serviceStatus = $backend->select()->from('serviceStatus', array(
             'hostname'          => 'host_name',
             'service'           => 'service_description',
@@ -86,7 +89,9 @@ class MonitoringState
             'in_downtime'       => 'service_in_downtime',
             'ack'               => 'service_acknowledged',
             'state'             => $serviceStateColumn
-        ))->applyFilter($filter)->getQuery()->fetchAll();
+        ))->applyFilter($hostFilter)->getQuery()->fetchAll();
+
+        Benchmark::measure('Retrieved states for ' . count($serviceStatus) . ' services in ' . $config->getName());
 
         foreach ($serviceStatus as $row) {
             $this->handleDbRow($row, $config);
