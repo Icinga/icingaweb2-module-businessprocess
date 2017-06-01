@@ -123,6 +123,10 @@ class TreeRenderer extends Renderer
             $attributes->add('class', 'node');
         }
 
+        if (count($path) > 0) {
+            $attributes->add('class', 'collapsed');
+        }
+
         $tbody = $table->createElement('tbody');
         $tr =  $tbody->createElement('tr');
 
