@@ -151,7 +151,7 @@ class TreeRenderer extends Renderer
         $link->attributes()->set('data-base-target', '_next');
         $link->addContent($this->getNodeIcons($node));
 
-        if ($node->hasChildren()) {
+        if ($node->hasStateSummary()) {
             $link->addContent($this->renderStateBadges($node->getStateSummary()));
         }
 

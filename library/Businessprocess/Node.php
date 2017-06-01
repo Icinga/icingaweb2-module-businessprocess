@@ -38,6 +38,18 @@ abstract class Node
         self::ICINGA_OK       => 0,
     );
 
+    protected static $emptyStateSummary = array(
+        'OK'          => 0,
+        'WARNING'     => 0,
+        'CRITICAL'    => 0,
+        'UNKNOWN'     => 0,
+        'PENDING'     => 0,
+        'UP'          => 0,
+        'DOWN'        => 0,
+        'UNREACHABLE' => 0,
+        'MISSING'     => 0,
+    );
+
     /**
      * Main business process object
      *
@@ -101,6 +113,19 @@ abstract class Node
         'UNKNOWN',
         99 => 'PENDING'
     );
+
+    /**
+     * If the node provides a state summary
+     *
+     * @var bool
+     */
+    protected $stateSummary = false;
+
+    /**
+     * Counters for state summary
+     * @var array
+     */
+    protected $counters;
 
     abstract public function __construct(BpConfig $bp, $object);
 
@@ -220,6 +245,69 @@ abstract class Node
     {
         $this->lastStateChange = $timestamp;
         return $this;
+    }
+
+    public function hasStateSummary()
+    {
+        return $this->stateSummary;
+    }
+
+    public function getStateSummary()
+    {
+        if ($this->counters === null) {
+            $this->getState();
+            $this->counters = self::$emptyStateSummary;
+
+            foreach ($this->getChildren() as $child) {
+                if ($child->hasStateSummary()) {
+                    $counters = $child->getStateSummary();
+                    foreach ($counters as $k => $v) {
+                        $this->counters[$k] += $v;
+                    }
+                } elseif ($child->isMissing()) {
+                    $this->counters['MISSING']++;
+                } else {
+                    $state = $child->getStateName();
+                    $this->counters[$state]++;
+                }
+            }
+            if (! $this->hasChildren()) {
+                $this->counters['MISSING']++;
+            }
+        }
+        return $this->counters;
+    }
+
+    public function getProblematicChildren()
+    {
+        $problems = array();
+
+        foreach ($this->getChildren() as $child) {
+            if ($child->isProblem()
+                || ($child->hasStateSummary() && $child->hasProblems())
+            ) {
+                $problems[] = $child;
+            }
+        }
+
+        return $problems;
+    }
+
+    public function hasProblems()
+    {
+        if ($this->isProblem()) {
+            return true;
+        }
+
+        $okStates = array('OK', 'UP', 'PENDING', 'MISSING');
+
+        foreach ($this->getStateSummary() as $state => $cnt) {
+            if ($cnt !== 0 && ! in_array($state, $okStates)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function addParent(Node $parent)
