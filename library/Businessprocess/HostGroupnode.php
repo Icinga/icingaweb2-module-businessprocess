@@ -20,7 +20,9 @@ class HostGroupnode extends MonitoredNode
         if (isset($object->state)) {
             $this->setState($object->state);
         } else {
-            $this->setState(0)->setMissing();
+            $this->setState(3)->setMissing();
+            $this->counters = static::$emptyStateSummary;
+            $this->counters['MISSING'] = 1;
         }
     }
 
