@@ -400,9 +400,9 @@ div.bp .badges {
 
 .badge-critical, .badge-down { background: @colorCritical; }
 .badge-unknown, .badge-unreachable { background: @colorUnknown; }
-.badge-warning { background: @colorWarning; }
-.badge-pending { background: @colorPending; }
-.badge-missing { background: #ccc; }
+.badge-warning { background: @colorWarning; color: #6d572b; }
+.badge-pending { background: @colorPending; color: #32486d; }
+.badge-missing { background: #ccc; color: #32486d; }
 /** END Badges **/
 
 /** BEGIN Tiles **/
@@ -422,11 +422,28 @@ div.bp .badges {
     margin-bottom: 0.2em;
     height: 6em;
     cursor: pointer;
+    position: relative;
 
     .badges {
+        display: block;
+        position: absolute;
+        top: 0.3em;
+        right: 0.3em;
+
         text-align: center;
         font-size: 0.5em;
-        display: block;
+
+        // background: white;
+        padding: 0;
+        //border-radius: 0.3em;
+        //border: none;
+
+        opacity: 0.8;
+
+        .badge {
+            margin: 0;
+            border-width: 2px;
+        }
     }
 
     > a {
@@ -442,6 +459,7 @@ div.bp .badges {
         margin-left: 0.5em;
         padding-top: 0.2em;
         height: 1.8em;
+        color: white;
 
         i {
             float: none;
@@ -459,11 +477,13 @@ div.bp .badges {
             width: 1.5em;
             height: 1.5em;
             border-radius: 0.3em;
+            opacity: 0.6;
         }
 
         a:hover {
             background-color: white;
             color: @text-color;
+            opacity: 0.9;
         }
     }
 }
@@ -482,7 +502,7 @@ div.bp .badges {
 
 .tiles > div > a {
     text-decoration: none;
-    font-size: 0.5em;
+    font-size: 0.6em;
     color: inherit;
     vertical-align: middle;
     text-align: center;
@@ -494,20 +514,20 @@ div.bp .badges {
 }
 
 .tiles {
-    > .critical            { background-color: @colorCritical; background-color: @colorCritical; color: white; }
-    > .critical.handled    { background-color: @colorCriticalHandled; }
-    > .down                { background-color: @colorCritical; }
-    > .down.handled        { background-color: @colorCriticalHandled; }
-    > .unknown             { background-color: @colorUnknown; }
-    > .unknown.handled     { background-color: @colorUnknownHandled; }
-    > .unreachable         { background-color: @colorUnknown; }
-    > .unreachable.handled { background-color: @colorUnknownHandled; }
-    > .warning             { background-color: @colorWarning; }
-    > .warning.handled     { background-color: @colorWarningHandled; }
-    > .ok                  { background-color: @colorOk; }
-    > .up                  { background-color: @colorOk; }
-    > .pending             { background-color: @colorPending; }
-    > .missing             { background-color: #ccc; }
+    > .critical            { background-color: @colorCritical;        color: white; }
+    > .critical.handled    { background-color: @colorCriticalHandled; color: #6d4148; }
+    > .down                { background-color: @colorCritical;        color: white; }
+    > .down.handled        { background-color: @colorCriticalHandled; color: #6d4148; }
+    > .unknown             { background-color: @colorUnknown;         color: white; }
+    > .unknown.handled     { background-color: @colorUnknownHandled;  color: #57326d; }
+    > .unreachable         { background-color: @colorUnknown;         color: white; }
+    > .unreachable.handled { background-color: @colorUnknownHandled;  color: #57326d; }
+    > .warning             { background-color: @colorWarning;         color: #6d572b; }
+    > .warning.handled     { background-color: @colorWarningHandled;  color: #6d572b; }
+    > .ok                  { background-color: @colorOk;              color: white; }
+    > .up                  { background-color: @colorOk;              color: white; }
+    > .pending             { background-color: @colorPending;         color: #32486d; }
+    > .missing             { background-color: #ccc;                  color: #32486d; }
     > .addnew              { background-color: @icinga-blue; }
 }
 
