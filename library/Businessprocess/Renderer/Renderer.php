@@ -36,6 +36,9 @@ abstract class Renderer extends Html
     /** @var bool */
     protected $isBreadcrumb = false;
 
+    /** @var bool */
+    protected $isCompact = false;
+
     /**
      * Renderer constructor.
      *
@@ -310,6 +313,17 @@ abstract class Renderer extends Html
     protected function createUnboundParent(BpConfig $bp)
     {
         return $bp->getNode('__unbound__');
+    }
+
+    public function setCompact($compact)
+    {
+        $this->isCompact = (bool) $compact;
+        return $this;
+    }
+
+    public function isCompact()
+    {
+        return $this->isCompact;
     }
 
     /**

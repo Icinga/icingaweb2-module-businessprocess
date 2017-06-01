@@ -167,6 +167,8 @@ class ProcessController extends Controller
             $renderer->setUrl($this->url())
                 ->setPath($this->params->getValues('path'));
 
+            $renderer->setCompact($this->showFullscreen || $this->view->compact);
+
             $this->renderer = $renderer;
         }
 

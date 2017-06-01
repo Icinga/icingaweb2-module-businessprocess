@@ -88,12 +88,12 @@ class NodeTile extends BaseElement
             }
         }
 
-        if (! $renderer->isBreadcrumb()) {
+        if (! $renderer->isBreadcrumb() && ! $this->renderer->isCompact()) {
             $this->addDetailsActions();
-        }
 
-        if (! $renderer->isLocked()) {
-            $this->addActionLinks();
+            if (! $renderer->isLocked()) {
+                $this->addActionLinks();
+            }
         }
 
         return parent::render();
