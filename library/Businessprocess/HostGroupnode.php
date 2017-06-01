@@ -8,6 +8,8 @@ class HostGroupnode extends MonitoredNode
 {
     protected $className = 'hostgroup';
 
+    protected $stateSummary = true;
+
     protected $hostgroup_name;
 
     public function __construct(BpConfig $bp, $object)
@@ -45,5 +47,11 @@ class HostGroupnode extends MonitoredNode
         }
 
         return Url::fromPath('monitoring/list/services', $params);
+    }
+
+    public function setCounters($counters)
+    {
+        $this->counters = $counters;
+        return $this;
     }
 }
