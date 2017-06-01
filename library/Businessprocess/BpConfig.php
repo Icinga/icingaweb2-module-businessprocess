@@ -88,6 +88,13 @@ class BpConfig
      */
     protected $hosts = array();
 
+    /**
+     * All host groups { 'hostgroupA' => true, ... }
+     *
+     * @var array
+     */
+    protected $hostgroups = array();
+
     /** @var bool Whether catchable errors should be thrown nonetheless */
     protected $throwErrors = false;
 
@@ -416,6 +423,16 @@ class BpConfig
         return $node;
     }
 
+    public function createHostgroup($hostgroup)
+    {
+        $node = new HostGroupnode($this, (object) array(
+            'name' => $hostgroup,
+        ));
+        $this->nodes['HOSTGROUP;' . $hostgroup] = $node;
+        $this->hostgroups[$hostgroup] = true;
+        return $node;
+    }
+
     public function calculateAllStates()
     {
         foreach ($this->getRootNodes() as $node) {
@@ -437,6 +454,11 @@ class BpConfig
     public function listInvolvedHostNames()
     {
         return array_keys($this->hosts);
+    }
+
+    public function listInvolvedHostGroups()
+    {
+        return array_keys($this->hostgroups);
     }
 
     /**
@@ -505,13 +527,14 @@ class BpConfig
         $this->warn(sprintf('The node "%s" doesn\'t exist', $name));
         $pos = strpos($name, ';');
         if ($pos !== false) {
-            $host = substr($name, 0, $pos);
-            $service = substr($name, $pos + 1);
-            // TODO: deactivated, this scares me, test it
-            if ($service === 'Hoststatus') {
-                return $this->createHost($host);
+            $a = substr($name, 0, $pos);
+            $b = substr($name, $pos + 1);
+            if ($a === 'HOSTGROUP') {
+                return $this->createHostgroup($b);
+            } elseif ($b === 'Hoststatus') {
+                return $this->createHost($a);
             } else {
-                return $this->createService($host, $service);
+                return $this->createService($a, $b);
             }
         }
 
