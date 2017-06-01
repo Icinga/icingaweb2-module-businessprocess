@@ -68,10 +68,15 @@ class BpNode extends Node
                     foreach ($counters as $k => $v) {
                         $this->counters[$k] += $v;
                     }
+                } elseif ($child->isMissing()) {
+                    $this->counters['MISSING']++;
                 } else {
                     $state = $child->getStateName();
                     $this->counters[$state]++;
                 }
+            }
+            if (! $this->hasChildren()) {
+                $this->counters['MISSING']++;
             }
         }
         return $this->counters;
