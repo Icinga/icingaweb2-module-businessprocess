@@ -1,5 +1,10 @@
+[![Build Status](https://travis-ci.org/Icinga/icingaweb2-module-businessprocess.png?branch=master)](https://travis-ci.org/Icinga/icingaweb2-module-businessprocess)
+[![Github Tag](https://img.shields.io/github/tag/Icinga/icingaweb2-module-businessprocess.svg)](https://github.com/Icinga/icingaweb2-module-businessprocess)
+
 Business Processes - Icinga Web 2 module
 ========================================
+
+![Icinga Logo](https://www.icinga.com/wp-content/uploads/2014/06/icinga_logo.png)
 
 If you want to visualize and monitor hierarchical business processes based on
 any or all objects monitored by Icinga, the Icinga Web 2 business process
@@ -16,8 +21,6 @@ components on a single screen? That's what this module has been designed for!
 You're running a huge cloud, want to get rid of the monitoring noise triggered
 by your auto-scaling platform but still want to have detailed information just
 a couple of clicks away in case you need them? You will love this little module!
-
-[![Build Status](https://travis-ci.org/Icinga/icingaweb2-module-businessprocess.svg?branch=master)](https://travis-ci.org/Icinga/icingaweb2-module-businessprocess)
 
 Documentation
 -------------
