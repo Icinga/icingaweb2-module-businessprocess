@@ -308,11 +308,13 @@ class LegacyConfigParser
                     continue;
                 }
 
-                list($host, $service) = preg_split('~;~', $val, 2);
-                if ($service === 'Hoststatus') {
-                    $bp->createHost($host);
+                list($a, $b) = preg_split('~;~', $val, 2);
+                if ($a === 'HOSTGROUP') {
+                    $bp->createHostgroup($b);
+                } else if ($b === 'Hoststatus') {
+                    $bp->createHost($a);
                 } else {
-                    $bp->createService($host, $service);
+                    $bp->createService($a, $b);
                 }
             }
             if ($val[0] === '@') {

@@ -6,6 +6,9 @@ use Exception;
 use Icinga\Application\Benchmark;
 use Icinga\Data\Filter\Filter;
 use Icinga\Module\Businessprocess\BpConfig;
+use Icinga\Module\Businessprocess\HostGroupnode;
+use Icinga\Module\Businessprocess\Ido\BpHostgroupsummaryQuery;
+use Icinga\Module\Businessprocess\Ido\HostgroupsummaryQuery;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 
 class MonitoringState
@@ -93,6 +96,44 @@ class MonitoringState
 
         Benchmark::measure('Retrieved states for ' . count($serviceStatus) . ' services in ' . $config->getName());
 
+        if (! empty($hostgroups = $config->listInvolvedHostGroups())) {
+            $hostgroupFilter = Filter::expression('hostgroup_name', '=', $hostgroups);
+            $hostgroupSummary = new BpHostgroupsummaryQuery($backend->getResource(), array(
+                'hostgroup_alias',
+                'hostgroup_name',
+                'hosts_down_handled',
+                'hosts_down_handled_last_state_change',
+                'hosts_down_unhandled',
+                'hosts_down_unhandled_last_state_change',
+                'hosts_pending',
+                'hosts_pending_last_state_change',
+                'hosts_total',
+                'hosts_unreachable_handled',
+                'hosts_unreachable_handled_last_state_change',
+                'hosts_unreachable_unhandled',
+                'hosts_unreachable_unhandled_last_state_change',
+                'hosts_up',
+                'hosts_up_last_state_change',
+                'services_critical_handled',
+                'services_critical_unhandled',
+                'services_ok',
+                'services_pending',
+                'services_total',
+                'services_unknown_handled',
+                'services_unknown_unhandled',
+                'services_warning_handled',
+                'services_warning_unhandled'
+            ));
+            if ($config->usesHardStates()) {
+                $hostgroupSummary->setStateType('hard');
+            }
+            $hostgroupStatus = $hostgroupSummary->applyFilter($hostgroupFilter)->fetchAll();
+
+            Benchmark::measure('Retrieved states for ' . count($hostgroupStatus) . ' hostgroups in ' . $config->getName());
+        } else {
+            $hostgroupStatus = array();
+        }
+
         foreach ($serviceStatus as $row) {
             $this->handleDbRow($row, $config);
         }
@@ -100,6 +141,11 @@ class MonitoringState
         foreach ($hostStatus as $row) {
             $this->handleDbRow($row, $config);
         }
+
+        foreach ($hostgroupStatus as $row) {
+            $this->handleHostgroupRow($row, $config);
+        }
+
         // TODO: Union, single query?
         Benchmark::measure('Got states for business process ' . $config->getName());
 
@@ -134,5 +180,51 @@ class MonitoringState
         if ((int) $row->ack === 1) {
             $node->setAck(true);
         }
+    }
+
+    protected function handleHostgroupRow($row, BpConfig $config)
+    {
+        $key = 'HOSTGROUP;' . $row->hostgroup_name;
+
+        if (! $config->hasNode($key)) {
+            $config->addError('Could not add hostgroup status for %s', $key);
+            return;
+        }
+
+        /** @var HostgroupNode $node */
+        $node = $config->getNode($key);
+
+        // TODO: all special TLV handlings?
+        // TODO: badges
+
+        if ($row->hosts_down_unhandled > 0 || $row->services_critical_unhandled) {
+            $node->setState(2);
+        } elseif ($row->hosts_down_handled > 0 || $row->services_critical_handled) {
+            $node->setState(2);
+            $node->setAck(true);
+        } elseif ($row->services_warning_unhandled > 0) {
+            $node->setState(1);
+        } elseif ($row->services_warning_handled > 0) {
+            $node->setState(1);
+            $node->setAck(true);
+        } else {
+            $node->setState(0);
+        }
+
+        $node->setMissing(false);
+
+        // TODO: last change
+
+        $node->setCounters(array(
+            'OK'          => $row->services_ok,
+            'WARNING'     => $row->services_warning_handled + $row->services_warning_unhandled,
+            'CRITICAL'    => $row->services_critical_handled + $row->services_critical_unhandled,
+            'UNKNOWN'     => $row->services_unknown_handled + $row->services_unknown_unhandled,
+            'PENDING'     => $row->services_pending + $row->hosts_pending,
+            'UP'          => $row->hosts_up,
+            'DOWN'        => $row->hosts_down_handled + $row->hosts_down_unhandled,
+            'UNREACHABLE' => $row->hosts_unreachable_handled + $row->hosts_unreachable_unhandled,
+            'MISSING'     => 0,
+        ));
     }
 }

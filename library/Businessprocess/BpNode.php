@@ -22,21 +22,9 @@ class BpNode extends Node
     /** @var array */
     protected $childNames = array();
     protected $alias;
-    protected $counters;
     protected $missing = null;
     protected $missingChildren;
-
-    protected static $emptyStateSummary = array(
-        'OK'          => 0,
-        'WARNING'     => 0,
-        'CRITICAL'    => 0,
-        'UNKNOWN'     => 0,
-        'PENDING'     => 0,
-        'UP'          => 0,
-        'DOWN'        => 0,
-        'UNREACHABLE' => 0,
-        'MISSING'     => 0,
-    );
+    protected $stateSummary = true;
 
     protected static $sortStateInversionMap = array(
         4 => 0,
@@ -54,44 +42,6 @@ class BpNode extends Node
         $this->name = $object->name;
         $this->setOperator($object->operator);
         $this->setChildNames($object->child_names);
-    }
-
-    public function getStateSummary()
-    {
-        if ($this->counters === null) {
-            $this->getState();
-            $this->counters = self::$emptyStateSummary;
-
-            foreach ($this->getChildren() as $child) {
-                if ($child instanceof BpNode) {
-                    $counters = $child->getStateSummary();
-                    foreach ($counters as $k => $v) {
-                        $this->counters[$k] += $v;
-                    }
-                } else {
-                    $state = $child->getStateName();
-                    $this->counters[$state]++;
-                }
-            }
-        }
-        return $this->counters;
-    }
-
-    public function hasProblems()
-    {
-        if ($this->isProblem()) {
-            return true;
-        }
-
-        $okStates = array('OK', 'UP', 'PENDING', 'MISSING');
-
-        foreach ($this->getStateSummary() as $state => $cnt) {
-            if ($cnt !== 0 && ! in_array($state, $okStates)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -116,21 +66,6 @@ class BpNode extends Node
         $this->childNames[] = $name;
         $node->addParent($this);
         return $this;
-    }
-
-    public function getProblematicChildren()
-    {
-        $problems = array();
-
-        foreach ($this->getChildren() as $child) {
-            if ($child->isProblem()
-                || ($child instanceof BpNode && $child->hasProblems())
-            ) {
-                $problems[] = $child;
-            }
-        }
-
-        return $problems;
     }
 
     public function hasChild($name)

@@ -6,7 +6,6 @@ use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\HostNode;
 use Icinga\Module\Businessprocess\Html\BaseElement;
 use Icinga\Module\Businessprocess\Html\Container;
-use Icinga\Module\Businessprocess\Html\HtmlString;
 use Icinga\Module\Businessprocess\Html\Icon;
 use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\ImportedNode;
@@ -81,7 +80,7 @@ class NodeTile extends BaseElement
         $link = $this->getMainNodeLink();
         $this->add($link);
 
-        if ($node instanceof BpNode) {
+        if ($node->hasStateSummary()) {
             if ($renderer->isBreadcrumb()) {
                 $link->addContent($renderer->renderStateBadges($node->getStateSummary()));
             } else {
@@ -89,12 +88,12 @@ class NodeTile extends BaseElement
             }
         }
 
-        if (! $renderer->isBreadcrumb()) {
+        if (! $renderer->isBreadcrumb() && ! $this->renderer->isCompact()) {
             $this->addDetailsActions();
-        }
 
-        if (! $renderer->isLocked()) {
-            $this->addActionLinks();
+            if (! $renderer->isLocked()) {
+                $this->addActionLinks();
+            }
         }
 
         return parent::render();
@@ -174,16 +173,16 @@ class NodeTile extends BaseElement
     {
         $node = $this->node;
         $url = $this->getMainNodeUrl($node);
-        if ($node instanceof ServiceNode) {
+        if ($node instanceof HostNode) {
             $link = Link::create(
-                $node->getAlias(),
+                $node->getHostname(),
                 $url,
                 null,
                 array('data-base-target' => '_next')
             );
-        } elseif ($node instanceof HostNode) {
+        } elseif ($node instanceof MonitoredNode) {
             $link = Link::create(
-                $node->getHostname(),
+                $node->getAlias(),
                 $url,
                 null,
                 array('data-base-target' => '_next')
