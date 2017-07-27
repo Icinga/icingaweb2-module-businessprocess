@@ -8,15 +8,23 @@ php:
   - '7.1'
   - nightly
 
+cache:
+  directories:
+    - vendor
+
+env:
+  - ICINGAWEB_VERSION=2.4.1 PHPCS_VERSION=2.9.1
+
 before_script:
+  - test -d vendor || mkdir vendor
   # TODO: Re-enable after dropping 5.3 support:
   # - curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
-  - curl -OL https://github.com/squizlabs/PHP_CodeSniffer/releases/download/2.9.1/phpcs.phar
-  - wget https://github.com/Icinga/icingaweb2/archive/v2.4.0.tar.gz
-  - tar xfz v2.4.0.tar.gz
-  - ln -s icingaweb2-2.4.0/library/Icinga
-  - ln -s icingaweb2-2.4.0/library/vendor/Zend
+  - test -e vendor/phpcs-${PHPCS_VERSION}.phar || wget -O vendor/phpcs-${PHPCS_VERSION}.phar https://github.com/squizlabs/PHP_CodeSniffer/releases/download/${PHPCS_VERSION}/phpcs.phar
+  - test -e vendor/v${ICINGAWEB_VERSION}.tar.gz || (cd vendor/ && wget https://github.com/Icinga/icingaweb2/archive/v${ICINGAWEB_VERSION}.tar.gz)
+  - test -d vendor/icingaweb2-${ICINGAWEB_VERSION} || (cd vendor && tar xfz v${ICINGAWEB_VERSION}.tar.gz)
+  - ln -s vendor/icingaweb2-${ICINGAWEB_VERSION}/library/Icinga
+  - ln -s vendor/icingaweb2-${ICINGAWEB_VERSION}/library/vendor/Zend
 
 script:
-  - php phpcs.phar --report-width=auto --report-full --report-gitblame --report-summary -p --standard=PSR2 --extensions=php --encoding=utf-8 -w -s library/Businessprocess/ application/ configuration.php run.php test
+  - php vendor/phpcs-${PHPCS_VERSION}.phar
   - phpunit --testdox || phpunit --verbose
