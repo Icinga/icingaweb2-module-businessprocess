@@ -21,7 +21,7 @@ stored as commented metadata in the file header and therefore invisible to the
 old AddOn.
 
 The only way to break compatibility is to use newly introduced operators like
-`ǸOT`. Once you do so, the old AddOn will no longer be able to parse your
+`NOT`. Once you do so, the old AddOn will no longer be able to parse your
 configuration.
 
 ![BpAddOn Details](screenshot/81_history/8102_bpaddon-detail.png)
