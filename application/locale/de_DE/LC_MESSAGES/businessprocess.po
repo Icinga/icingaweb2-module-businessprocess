@@ -435,7 +435,7 @@ msgstr "Knotentyp"
 
 #: library/Businessprocess/Web/Component/Dashboard.php:75
 msgid "Not available"
-msgstr "NIcht verfügbar"
+msgstr "Nicht verfügbar"
 
 #: application/forms/AddNodeForm.php:88 application/forms/ProcessForm.php:62
 msgid "OR"
