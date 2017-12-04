@@ -327,15 +327,32 @@ class AddNodeForm extends QuickForm
     {
         $list = array();
 
+        $parents = array();
+        $this->collectAllParents($this->parent, $parents);
+        $parents[$this->parent->getName()] = $this->parent;
+
         foreach ($this->bp->getNodes() as $node) {
-            if ($node instanceof BpNode) {
-                // TODO: Blacklist parents
+            if ($node instanceof BpNode && ! isset($parents[$node->getName()])) {
                 $list[(string) $node] = (string) $node; // display name?
             }
         }
 
         natsort($list);
         return $list;
+    }
+
+    /**
+     * Collect the given node's parents recursively into the given array by their names
+     *
+     * @param   BpNode      $node
+     * @param   BpNode[]    $parents
+     */
+    protected function collectAllParents(BpNode $node, array & $parents)
+    {
+        foreach ($node->getParents() as $parent) {
+            $parents[$parent->getName()] = $parent;
+            $this->collectAllParents($parent, $parents);
+        }
     }
 
     protected function fetchObjectList()
