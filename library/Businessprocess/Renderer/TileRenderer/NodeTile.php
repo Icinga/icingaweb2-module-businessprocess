@@ -97,6 +97,22 @@ class NodeTile extends BaseElement
             $this->addActionLinks();
         }
 
+        if ($node instanceof BpNode) {
+            $url = $node->getInfoUrl();
+
+            if ($url !== null) {
+                $this->actions()->add(Link::create(
+                    Icon::create('help'),
+                    $url,
+                    null,
+                    array(
+                        'title' => sprintf('%s: %s', $this->translate('More information'), $url),
+                        'style' => 'float: right'
+                    )
+                ));
+            }
+        }
+
         return parent::render();
     }
 
