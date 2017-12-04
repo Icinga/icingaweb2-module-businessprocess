@@ -1,0 +1,17 @@
+<?php
+/** @var \Icinga\Web\View $this */
+/** @var \Icinga\Web\Widget\Tabs $tabs */
+/** @var string $host */
+/** @var string $service */
+?>
+<div class="controls">
+    <?= $tabs->showOnlyCloseButton() ?>
+</div>
+<div class="content">
+    <h1><?= $this->escape($this->translate('Access denied')) ?></h1>
+    <p><?php printf(
+        $this->escape($this->translate('Access to service "%s" of host "%s" denied')),
+        $service,
+        $host
+    ) ?></p>
+</div>

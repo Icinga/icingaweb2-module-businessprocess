@@ -51,6 +51,6 @@ class ServiceNode extends MonitoredNode
             $params['backend'] = $this->bp->getBackendName();
         }
 
-        return Url::fromPath('monitoring/service/show', $params);
+        return Url::fromPath('businessprocess/service/show', $params);
     }
 }
