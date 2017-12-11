@@ -72,7 +72,7 @@ class ProcessCommand extends Command
      *   --config <configname>   Name of the config that contains <process>
      *   --details               Show problem details as a tree
      *   --colors                Show colored output
-     *   --handled               Show global Acknowledge handle state
+     *   --handled               Show handle state
      *   --state-type <type>     Define which state type to look at. Could be
      *                           either soft or hard, overrides an eventually
      *                           configured default
@@ -114,7 +114,7 @@ class ProcessCommand extends Command
             } else {
                 $handleState = "FALSE";
             }
-            printf("Acknowledged: %s\n", $handleState);
+            printf("Handled: %s\n", $handleState);
         }
         if ($this->params->shift('details')) {
             echo $this->renderProblemTree($node->getProblemTree(), $this->params->shift('colors'));
