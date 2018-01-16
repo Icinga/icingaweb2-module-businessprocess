@@ -14,15 +14,6 @@ use Icinga\Web\Url as WebUrl;
  */
 class Url extends WebUrl
 {
-    public function setBasePath($basePath)
-    {
-        if (property_exists($this, 'basePath')) {
-            parent::setBasePath($basePath);
-        } else {
-            return $this->setBaseUrl($basePath);
-        }
-    }
-
     protected static function getRequest()
     {
         $app = Icinga::app();
