@@ -1,4 +1,11 @@
+## editors
 .idea/
+.*.sw[op]
+
+## packaging
 /debian
+
+## test
+/vendor
 /build
 /coverage
