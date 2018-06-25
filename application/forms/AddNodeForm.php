@@ -328,8 +328,11 @@ class AddNodeForm extends QuickForm
         $list = array();
 
         $parents = array();
-        $this->collectAllParents($this->parent, $parents);
-        $parents[$this->parent->getName()] = $this->parent;
+
+        if ($this->hasParentNode()) {
+            $this->collectAllParents($this->parent, $parents);
+            $parents[$this->parent->getName()] = $this->parent;
+        }
 
         foreach ($this->bp->getNodes() as $node) {
             if ($node instanceof BpNode && ! isset($parents[$node->getName()])) {
