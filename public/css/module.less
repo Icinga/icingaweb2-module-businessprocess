@@ -436,7 +436,7 @@ div.bp .badges {
 
     > a {
         display: block;
-        line-height: 6em;
+        position: relative;
         text-decoration: none;
         font-size: 0.7em;
         text-align: center;
@@ -445,6 +445,10 @@ div.bp .badges {
         word-wrap: break-word;
         text-shadow: 0 0 1px @text-color;
         color: @text-color-inverted;
+        top: 50%;
+        -ms-transform: translateY(-50%);
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%);
     }
 
     &:hover {
