@@ -163,7 +163,7 @@ class BpConfigForm extends BpConfigBaseForm
 
         $this->storage->storeProcess($config);
         $config->clearAppliedChanges();
-        $this->setSuccessUrl('businessprocess/process/show', array('config' => $name));
+        $this->setSuccessUrl('businessprocess/process/show', array('config' => $name, 'unlocked' => '1'));
         parent::onSuccess();
     }
 
