@@ -59,24 +59,24 @@ class RenderedProcessActionBar extends ActionBar
         if ($renderer->isLocked()) {
             $this->add(
                 Link::create(
-                    $this->translate('Unlock'),
+                    $this->translate('Editing locked'),
                     $url->with('unlocked', true),
                     null,
                     array(
-                        'class' => 'icon-lock-open',
-                        'title' => $this->translate('Unlock this process'),
+                        'class' => 'icon-lock',
+                        'title' => $this->translate('Click to unlock editing for this process'),
                     )
                 )
             );
         } elseif (! $hasChanges) {
             $this->add(
                 Link::create(
-                    $this->translate('Lock'),
+                    $this->translate('Editing unlocked'),
                     $url->without('unlocked')->without('action'),
                     null,
                     array(
-                        'class' => 'icon-lock',
-                        'title' => $this->translate('Lock this process'),
+                        'class' => 'icon-lock-open',
+                        'title' => $this->translate('Click to lock editing for this process'),
                     )
                 )
             );
