@@ -226,12 +226,12 @@ class NodeTile extends BaseElement
 
             if ($url !== null) {
                 $this->actions()->add(Link::create(
-                    Icon::create('help'),
+                    Icon::create('info-circled'),
                     $url,
                     null,
                     array(
                         'title' => sprintf('%s: %s', $this->translate('More information'), $url),
-                        'class' => 'node-help'
+                        'class' => 'node-info'
                     )
                 ));
             }
