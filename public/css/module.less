@@ -482,19 +482,19 @@ div.bp .badges {
 
 .tiles > div > a {
     text-decoration: none;
-    font-size: 0.5em;
-    color: inherit;
-    vertical-align: middle;
+    font-size: 0.7em;
     text-align: center;
     padding: 1em;
     font-weight: bold;
     word-wrap: break-word;
     width: 100%;
     box-sizing: border-box;
+    text-shadow: 0 0 1px @text-color;
+    color: @text-color-inverted;
 }
 
 .tiles {
-    > .critical            { background-color: @colorCritical; background-color: @colorCritical; color: white; }
+    > .critical            { background-color: @colorCritical;}
     > .critical.handled    { background-color: @colorCriticalHandled; }
     > .down                { background-color: @colorCritical; }
     > .down.handled        { background-color: @colorCriticalHandled; }
@@ -507,7 +507,7 @@ div.bp .badges {
     > .ok                  { background-color: @colorOk; }
     > .up                  { background-color: @colorOk; }
     > .pending             { background-color: @colorPending; }
-    > .missing             { background-color: #ccc; }
+    > .missing             { background-color: @gray-light; }
     > .addnew              { background-color: @icinga-blue; }
 }
 
