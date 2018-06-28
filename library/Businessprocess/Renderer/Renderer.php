@@ -126,9 +126,7 @@ abstract class Renderer extends Html
      */
     public function renderStateBadges($summary)
     {
-        $container = Container::create(
-            array('class' => 'badges')
-        )/* ->renderIfEmpty(false) */;
+        $elements = [];
 
         foreach ($summary as $state => $cnt) {
             if ($cnt === 0
@@ -138,22 +136,31 @@ abstract class Renderer extends Html
                 continue;
             }
 
-            $container->addContent(
-                Element::create(
-                    'span',
-                    array(
-                        'class' => array(
-                            'badge',
-                            'badge-' . strtolower($state)
-                        ),
-                        // TODO: We should translate this in this module
-                        'title' => mt('monitoring', $state)
-                    )
-                )->setContent($cnt)
-            );
+            $elements[] = Element::create(
+                'span',
+                array(
+                    'class' => array(
+                        'badge',
+                        'badge-' . strtolower($state)
+                    ),
+                    // TODO: We should translate this in this module
+                    'title' => mt('monitoring', $state)
+                )
+            )->setContent($cnt);
         }
 
-        return $container;
+        if (!empty($elements)) {
+            $container = Container::create(
+                array('class' => 'badges')
+            )/* ->renderIfEmpty(false) */;
+
+            foreach ($elements as $element) {
+                $container->addContent($element);
+            }
+
+            return $container;
+        }
+        return null;
     }
 
     public function getNodeClasses(Node $node)
