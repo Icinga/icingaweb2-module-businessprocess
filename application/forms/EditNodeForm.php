@@ -53,7 +53,7 @@ class EditNodeForm extends QuickForm
         if ($this->isService()) {
             $monitoredNodeType = 'service';
         } else {
-           $monitoredNodeType = 'host';
+            $monitoredNodeType = 'host';
         }
 
         $type = $this->selectNodeType($monitoredNodeType);
@@ -74,20 +74,10 @@ class EditNodeForm extends QuickForm
                 $this->setSubmitLabel($this->translate('Next'));
                 return;
         }
-/*
-        $this->getElement('name')->setValue($this->getNode()->getName());
-        if ($node->hasAlias()) {
-            $this->getElement('alias')->setValue($this->getNode()->getAlias());
-        }
-        $this->getElement('operator')->setValue($this->getNode()->getOperator());
-        $this->getElement('display')->setValue($this->getNode()->getDisplay());
-        if ($node->hasInfoUrl()) {
-            $this->getElement('url')->setValue($this->getNode()->getInfoUrl());
-        }
-*/
     }
 
-    protected function isService() {
+    protected function isService()
+    {
         if (strpos($this->getNode()->getName(), ';Hoststatus')) {
             return false;
         }
