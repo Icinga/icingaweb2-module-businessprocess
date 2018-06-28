@@ -28,21 +28,35 @@ class EditNodeForm extends QuickForm
 
     protected $processList = array();
 
+    protected $service;
+
+    protected $host;
+
     /** @var SessionNamespace */
     protected $session;
 
     public function setup()
     {
-        $node = $this->node;
+        $this->host = substr($this->getNode()->getName(), 0, strpos($this->getNode()->getName(), ';'));
+        if ($this->isService()) {
+            $this->service = substr($this->getNode()->getName(), strpos($this->getNode()->getName(), ';') + 1);
+        }
 
         $view = $this->getView();
         $this->addHtml(
             '<h2>' . $view->escape(
-                sprintf($this->translate('Modify "%s"'), $node->getAlias())
+                sprintf($this->translate('Modify "%s"'), $this->getNode()->getAlias())
             ) . '</h2>'
         );
 
-        $type = $this->selectNodeType();
+        $monitoredNodeType = null;
+        if ($this->isService()) {
+            $monitoredNodeType = 'service';
+        } else {
+           $monitoredNodeType = 'host';
+        }
+
+        $type = $this->selectNodeType($monitoredNodeType);
         switch ($type) {
             case 'host':
                 $this->selectHost();
@@ -60,6 +74,24 @@ class EditNodeForm extends QuickForm
                 $this->setSubmitLabel($this->translate('Next'));
                 return;
         }
+/*
+        $this->getElement('name')->setValue($this->getNode()->getName());
+        if ($node->hasAlias()) {
+            $this->getElement('alias')->setValue($this->getNode()->getAlias());
+        }
+        $this->getElement('operator')->setValue($this->getNode()->getOperator());
+        $this->getElement('display')->setValue($this->getNode()->getDisplay());
+        if ($node->hasInfoUrl()) {
+            $this->getElement('url')->setValue($this->getNode()->getInfoUrl());
+        }
+*/
+    }
+
+    protected function isService() {
+        if (strpos($this->getNode()->getName(), ';Hoststatus')) {
+            return false;
+        }
+        return true;
     }
 
     protected function addNewProcess()
@@ -120,24 +152,12 @@ class EditNodeForm extends QuickForm
                 'URL pointing to more information about this node'
             )
         ));
-
-
-        $node = $this->node;
-        $this->getElement('name')->setValue($node->getName());
-        if ($node->hasAlias()) {
-            $this->getElement('alias')->setValue($node->getAlias());
-        }
-        $this->getElement('operator')->setValue($node->getOperator());
-        $this->getElement('display')->setValue($node->getDisplay());
-        if ($node->hasInfoUrl()) {
-            $this->getElement('url')->setValue($node->getInfoUrl());
-        }
     }
 
     /**
      * @return string|null
      */
-    protected function selectNodeType()
+    protected function selectNodeType($monitoredNodeType = null)
     {
         $types = array();
         if ($this->hasParentNode()) {
@@ -170,6 +190,13 @@ class EditNodeForm extends QuickForm
             'multiOptions' => $this->optionalEnum($types)
         ));
 
+        if ($monitoredNodeType !== null) {
+            $this->getElement('node_type')->setValue($monitoredNodeType);
+            if ($this->getSentValue('node_type') === null) {
+                return $monitoredNodeType;
+            }
+        }
+
         return $this->getSentValue('node_type');
     }
 
@@ -190,7 +217,10 @@ class EditNodeForm extends QuickForm
     protected function selectService()
     {
         $this->addHostElement();
-        if ($host = $this->getSentValue('host')) {
+
+        if ($this->getSentValue('hosts') === null) {
+            $this->addServicesElement($this->host);
+        } elseif ($host = $this->getSentValue('hosts')) {
             $this->addServicesElement($host);
         } else {
             $this->setSubmitLabel($this->translate('Next'));
@@ -199,13 +229,15 @@ class EditNodeForm extends QuickForm
 
     protected function addHostElement()
     {
-        $this->addElement('select', 'host', array(
+        $this->addElement('select', 'hosts', array(
             'label'        => $this->translate('Host'),
             'required'     => true,
             'ignore'       => true,
             'class'        => 'autosubmit',
             'multiOptions' => $this->optionalEnum($this->enumHostForServiceList()),
         ));
+
+        $this->getElement('hosts')->setValue($this->host);
     }
 
     protected function addServicesElement($host)
@@ -412,6 +444,11 @@ class EditNodeForm extends QuickForm
     {
         $this->node = $node;
         return $this;
+    }
+
+    public function getNode()
+    {
+        return $this->node;
     }
 
     public function onSuccess()
