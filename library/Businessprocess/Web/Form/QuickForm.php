@@ -44,6 +44,9 @@ abstract class QuickForm extends QuickBaseForm
      */
     protected $request;
 
+    /**
+     * @var Url
+     */
     protected $successUrl;
 
     protected $successMessage;

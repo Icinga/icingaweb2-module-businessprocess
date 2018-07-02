@@ -133,9 +133,10 @@ class DeleteNodeForm extends QuickForm
     {
         $changes = ProcessChanges::construct($this->bp, $this->session);
 
-        switch ($this->getValue('confirm')) {
+        $confirm = $this->getValue('confirm');
+        switch ($confirm) {
             case 'yes':
-                $changes->deleteNode($this->node, $this->parentNode->getName());
+                $changes->deleteNode($this->node, $this->parentNode === null ? null : $this->parentNode->getName());
                 break;
             case 'all':
                 $changes->deleteNode($this->node);
@@ -143,6 +144,17 @@ class DeleteNodeForm extends QuickForm
             case 'no':
                 $this->setSuccessMessage($this->translate('Well, maybe next time'));
         }
+
+        switch ($confirm) {
+            case 'yes':
+            case 'all':
+                if ($this->successUrl === null) {
+                    $this->successUrl = clone $this->getRequest()->getUrl();
+                }
+
+                $this->successUrl->getParams()->remove(array('action', 'deletenode'));
+        }
+
         // Trigger session desctruction to make sure it get's stored.
         // TODO: figure out why this is necessary, might be an unclean shutdown on redirect
         unset($changes);
