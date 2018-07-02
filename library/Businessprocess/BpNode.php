@@ -369,13 +369,23 @@ class BpNode extends Node
                 break;
             default:
                 // MIN:
-                sort($sort_states);
-
-                // default -> unknown
                 $sort_state = 3 << self::SHIFT_FLAGS;
 
-                for ($i = 1; $i <= $this->operator; $i++) {
-                    $sort_state = array_shift($sort_states);
+                if (count($sort_states) >= $this->operator) {
+                    $actualGood = 0;
+                    foreach ($sort_states as $s) {
+                        if (($s >> self::SHIFT_FLAGS) === self::ICINGA_OK) {
+                            $actualGood++;
+                        }
+                    }
+
+                    if ($actualGood >= $this->operator) {
+                        // condition is fulfilled
+                        $sort_state = self::ICINGA_OK;
+                    } else {
+                        // worst state if not fulfilled
+                        $sort_state = max($sort_states);
+                    }
                 }
         }
         if ($sort_state & self::FLAG_DOWNTIME) {
