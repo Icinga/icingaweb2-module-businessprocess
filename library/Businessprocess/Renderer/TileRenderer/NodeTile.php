@@ -221,6 +221,20 @@ class NodeTile extends BaseElement
                     'data-base-target' => '_next'
                 )
             ));
+
+            $url = $node->getInfoUrl();
+
+            if ($url !== null) {
+                $this->actions()->add(Link::create(
+                    Icon::create('info-circled'),
+                    $url,
+                    null,
+                    array(
+                        'title' => sprintf('%s: %s', $this->translate('More information'), $url),
+                        'class' => 'node-info'
+                    )
+                ));
+            }
         } else {
             // $url = $this->makeMonitoredNodeUrl($node);
             if ($node instanceof ServiceNode) {
