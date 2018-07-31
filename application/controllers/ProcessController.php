@@ -213,25 +213,37 @@ class ProcessController extends Controller
 
         if ($action === 'add' && $canEdit) {
             $form = $this->loadForm('AddNode')
+                ->setSuccessUrl(Url::fromRequest()->without('action'))
                 ->setProcess($bp)
                 ->setParentNode($node)
                 ->setSession($this->session())
                 ->handleRequest();
+        } elseif ($action === 'editmonitored' && $canEdit) {
+            $form = $this->loadForm('EditNode')
+                ->setSuccessUrl(Url::fromRequest()->without('action'))
+                ->setProcess($bp)
+                ->setNode($bp->getNode($this->params->get('editmonitorednode')))
+                ->setParentNode($node)
+                ->setSession($this->session())
+                ->handleRequest();
         } elseif ($action === 'delete' && $canEdit) {
-                $form =$this->loadForm('DeleteNode')
-                    ->setProcess($bp)
-                    ->setNode($bp->getNode($this->params->get('deletenode')))
-                    ->setParentNode($node)
-                    ->setSession($this->session())
-                    ->handleRequest();
+            $form = $this->loadForm('DeleteNode')
+                ->setSuccessUrl(Url::fromRequest()->without('action'))
+                ->setProcess($bp)
+                ->setNode($bp->getNode($this->params->get('deletenode')))
+                ->setParentNode($node)
+                ->setSession($this->session())
+                ->handleRequest();
         } elseif ($action === 'edit' && $canEdit) {
-            $form =$this->loadForm('Process')
+            $form = $this->loadForm('Process')
+                ->setSuccessUrl(Url::fromRequest()->without('action'))
                 ->setProcess($bp)
                 ->setNode($bp->getNode($this->params->get('editnode')))
                 ->setSession($this->session())
                 ->handleRequest();
         } elseif ($action === 'simulation') {
             $form = $this->loadForm('simulation')
+                ->setSuccessUrl(Url::fromRequest()->without('action'))
                 ->setNode($bp->getNode($this->params->get('simulationnode')))
                 ->setSimulation(Simulation::fromSession($this->session()))
                 ->handleRequest();

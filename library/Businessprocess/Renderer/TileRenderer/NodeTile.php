@@ -269,6 +269,13 @@ class NodeTile extends BaseElement
                     'Show the business impact of this node by simulating a specific state'
                 ))
             ));
+
+            $this->actions()->add(Link::create(
+                Icon::create('edit'),
+                $renderer->getUrl()->with('action', 'editmonitored')->with('editmonitorednode', $node->getName()),
+                null,
+                array('title' => $this->translate('Modify this monitored node'))
+            ));
         }
 
         if (! $this->renderer->getBusinessProcess()->getMetadata()->canModify()) {
