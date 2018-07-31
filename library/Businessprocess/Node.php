@@ -395,4 +395,49 @@ abstract class Node
     {
         unset($this->parents);
     }
+
+    /**
+     * Export the node to array
+     *
+     * @param   array   $parent The node's parent. Used to construct the path to the node
+     * @param   bool    $flat   If false, children will be added to the array key children, else the array will be flat
+     *
+     * @return  array
+     */
+    public function toArray(array $parent = null, $flat = false)
+    {
+        $data = [
+            'name'  => $this->getAlias(),
+            'state' => $this->getStateName(),
+            'since' => $this->getLastStateChange()
+        ];
+
+        if ($parent !== null) {
+            $data['path'] = $parent['path'] . '!' . $this->getAlias();
+        } else {
+            $data['path'] = $this->getAlias();
+        }
+
+        $children = [];
+
+        foreach ($this->getChildren() as $node) {
+            if ($flat) {
+                $children = array_merge($children, $node->toArray($data, $flat));
+            } else {
+                $children[] = $node->toArray($data, $flat);
+            }
+        }
+
+        if ($flat) {
+            $data = [$data];
+
+            if (! empty($children)) {
+                $data = array_merge($data, $children);
+            }
+        } else {
+            $data['children'] = $children;
+        }
+
+        return $data;
+    }
 }
