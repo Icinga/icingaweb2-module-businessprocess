@@ -443,6 +443,9 @@ class EditNodeForm extends QuickForm
     public function onSuccess()
     {
         $changes = ProcessChanges::construct($this->bp, $this->session);
+
+        $changes->deleteNode($this->node, $this->parent->getName());
+
         switch ($this->getValue('node_type')) {
             case 'host':
             case 'service':
@@ -458,8 +461,6 @@ class EditNodeForm extends QuickForm
                 $changes->createNode($this->getValue('name'), $properties);
                 break;
         }
-
-        $changes->deleteNode($this->node, $this->parent->getName());
 
         // Trigger session destruction to make sure it get's stored.
         // TODO: figure out why this is necessary, might be an unclean shutdown on redirect
