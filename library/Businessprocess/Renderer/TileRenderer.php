@@ -21,7 +21,7 @@ class TileRenderer extends Renderer
                     'tiles',
                     $this->howMany()
                 ),
-                'data-base-target' => '_self',
+                'data-base-target' => '_next',
             )
         );
 
@@ -81,14 +81,11 @@ class TileRenderer extends Renderer
     protected function addNewNode()
     {
         $div = Container::create(
-            array('class' => 'addnew')
+            array('class' => 'addnew', 'data-base-target' => '_self')
         );
 
         $actions = Container::create(
-            array(
-                'class'            => 'actions',
-                'data-base-target' => '_self'
-            )
+            array('class'=> 'actions')
         );
 
         $link = Link::create(
