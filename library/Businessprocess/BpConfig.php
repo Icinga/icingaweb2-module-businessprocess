@@ -837,4 +837,41 @@ class BpConfig
 
         return count($this->listBpNodes()) === 0;
     }
+
+    /**
+     * Export the config to array
+     *
+     * @param   bool    $flat   If false, children will be added to the array key children, else the array will be flat
+     *
+     * @return  array
+     */
+    public function toArray($flat = false)
+    {
+        $data = [
+            'name' => $this->getTitle(),
+            'path' => $this->getTitle()
+        ];
+
+        $children = [];
+
+        foreach ($this->getChildren() as $node) {
+            if ($flat) {
+                $children = array_merge($children, $node->toArray($data, $flat));
+            } else {
+                $children[] = $node->toArray($data, $flat);
+            }
+        }
+
+        if ($flat) {
+            $data = [$data];
+
+            if (! empty($children)) {
+                $data = array_merge($data, $children);
+            }
+        } else {
+            $data['children'] = $children;
+        }
+
+        return $data;
+    }
 }

@@ -2,9 +2,9 @@
 
 namespace Icinga\Module\Businessprocess\Controllers;
 
+use Icinga\Date\DateFormatter;
 use Icinga\Module\Businessprocess\BpConfig;
-use Icinga\Module\Businessprocess\State\MonitoringState;
-use Icinga\Module\Businessprocess\Storage\ConfigDiff;
+use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\Html\Element;
 use Icinga\Module\Businessprocess\Html\HtmlString;
 use Icinga\Module\Businessprocess\Html\HtmlTag;
@@ -16,14 +16,18 @@ use Icinga\Module\Businessprocess\Renderer\Renderer;
 use Icinga\Module\Businessprocess\Renderer\TileRenderer;
 use Icinga\Module\Businessprocess\Renderer\TreeRenderer;
 use Icinga\Module\Businessprocess\Simulation;
+use Icinga\Module\Businessprocess\State\MonitoringState;
+use Icinga\Module\Businessprocess\Storage\ConfigDiff;
 use Icinga\Module\Businessprocess\Storage\LegacyConfigRenderer;
 use Icinga\Module\Businessprocess\Web\Component\ActionBar;
 use Icinga\Module\Businessprocess\Web\Component\RenderedProcessActionBar;
 use Icinga\Module\Businessprocess\Web\Component\Tabs;
 use Icinga\Module\Businessprocess\Web\Controller;
 use Icinga\Module\Businessprocess\Web\Url;
+use Icinga\Util\Json;
 use Icinga\Web\Notification;
 use Icinga\Web\Widget\Tabextension\DashboardAction;
+use Icinga\Web\Widget\Tabextension\OutputFormat;
 
 class ProcessController extends Controller
 {
@@ -95,7 +99,12 @@ class ProcessController extends Controller
             $this->redirectNow($this->url()->with('unlocked', true));
         }
 
+        $this->handleFormatRequest($bp, $node);
+
         $this->prepareControls($bp, $renderer);
+
+        $this->tabs()->extend(new OutputFormat());
+
         $missing = $bp->getMissingChildren();
         if (! empty($missing)) {
             if (($count = count($missing)) > 10) {
@@ -526,5 +535,66 @@ class ProcessController extends Controller
         ));
 
         return $tabs;
+    }
+
+    protected function handleFormatRequest(BpConfig $bp, BpNode $node = null)
+    {
+        $desiredContentType = $this->getRequest()->getHeader('Accept');
+        if ($desiredContentType === 'application/json') {
+            $desiredFormat = 'json';
+        } elseif ($desiredContentType === 'text/csv') {
+            $desiredFormat = 'csv';
+        } else {
+            $desiredFormat = strtolower($this->params->get('format', 'html'));
+        }
+
+        switch ($desiredFormat) {
+            case 'json':
+                $response = $this->getResponse();
+                $response
+                    ->setHeader('Content-Type', 'application/json')
+                    ->setHeader('Cache-Control', 'no-store')
+                    ->setHeader(
+                        'Content-Disposition',
+                        'inline; filename=' . $this->getRequest()->getActionName() . '.json'
+                    )
+                    ->appendBody(Json::sanitize($node !== null ? $node->toArray() : $bp->toArray()))
+                    ->sendResponse();
+                exit;
+            case 'csv':
+                $csv = fopen('php://temp', 'w');
+
+                fputcsv($csv, ['Path', 'Name', 'State', 'Since']);
+
+                foreach ($node !== null ? $node->toArray(null, true) : $bp->toArray(true) as $node) {
+                    $data = [$node['path'], $node['name']];
+
+                    if (isset($node['state'])) {
+                        $data[] = $node['state'];
+                    }
+
+                    if (isset($node['since'])) {
+                        $data[] = DateFormatter::formatDateTime($node['since']);
+                    }
+
+                    fputcsv($csv, $data);
+                }
+
+                $response = $this->getResponse();
+                $response
+                    ->setHeader('Content-Type', 'text/csv')
+                    ->setHeader('Cache-Control', 'no-store')
+                    ->setHeader(
+                        'Content-Disposition',
+                        'attachment; filename=' . $this->getRequest()->getActionName() . '.csv'
+                    )
+                    ->sendHeaders();
+
+                rewind($csv);
+
+                fpassthru($csv);
+
+                exit;
+        }
     }
 }
