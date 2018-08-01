@@ -34,6 +34,7 @@
             this.module.on('mouseleave', 'div.bp', this.procMouseOut);
 
             this.module.on('click', 'div.tiles > div', this.tileClick);
+            this.module.on('click', '.dashboard-tile', this.dashboardTileClick);
 
             this.module.icinga.logger.debug('BP module initialized');
         },
@@ -82,6 +83,10 @@
 
         tileClick: function(event) {
             $(event.currentTarget).find('> a').first().trigger('click');
+        },
+
+        dashboardTileClick: function(event) {
+            $(event.currentTarget).find('> .bp-link > a').first().trigger('click');
         },
 
         /**

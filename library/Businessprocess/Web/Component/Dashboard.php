@@ -6,6 +6,7 @@ use Icinga\Authentication\Auth;
 use Icinga\Module\Businessprocess\Html\BaseElement;
 use Icinga\Module\Businessprocess\Html\Container;
 use Icinga\Module\Businessprocess\Html\HtmlTag;
+use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Storage\Storage;
 
 class Dashboard extends BaseElement
@@ -85,7 +86,12 @@ class Dashboard extends BaseElement
             } else {
                 $title = $name;
             }
-            $this->add(new DashboardAction(
+
+            $bp = $storage->loadProcess($name);
+            MonitoringState::apply($bp);
+
+            $this->add(new BpDashboardTile(
+                $bp,
                 $title,
                 $meta->get('Description'),
                 'sitemap',
