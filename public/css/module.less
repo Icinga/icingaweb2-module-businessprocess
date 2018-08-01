@@ -286,7 +286,7 @@ table.bp {
         }
         &.unreachable > tbody > tr > {
             th, td > a { background-color: @colorUnknown; }
-        }   
+        }
         &.unreachable.handled > tbody > tr > {
             th, td > a { background-color: @colorUnreachableHandled; }
         }
@@ -337,11 +337,65 @@ div.knightrider table.bp {
 
 /** BEGIN Dashboard **/
 .overview-dashboard {
-    > div.action {
+    .header {
+        font-weight: bold;
+        display: block;
+        font-size: 1.25em;
+    }
+
+    i {
+        float: left;
+        font-size: 2.5em;
+        margin-top: -0.1em;
+        margin-bottom: 2em;
+        color: inherit;
+    }
+
+    .bp-root-tiles {
+        margin-left: 3em;
+    }
+
+    .dashboard-tile {
+        cursor: pointer;
+        padding: 1em;
+
+        &:hover {
+            background-color: @gray-lighter;
+        }
+
+        .bp-link {
+            > a {
+                text-decoration: none;
+                color: inherit;
+                vertical-align: middle;
+                word-wrap: break-word;
+                width: 100%;
+                overflow: hidden;
+            }
+        }
+
+        .badge {
+            margin-top: 0.25em;
+            text-decoration: none;
+
+            &:last-child {
+                margin-right: 0;
+            }
+
+            &:hover {
+                box-shadow: 0px 0px 5px #666;
+            }
+        }
+    }
+
+    .dashboard-tile,
+    div.action {
         width: 20em;
         display: inline-block;
         vertical-align: top;
+    }
 
+    .action {
         > a {
             text-decoration: none;
             color: inherit;
@@ -350,31 +404,12 @@ div.knightrider table.bp {
             padding: 1em;
             word-wrap: break-word;
             width: 100%;
-            height: 12em;
             overflow: hidden;
             box-sizing: border-box;
 
-            > span.header {
-                font-weight: bold;
-                display: block;
-                font-size: 1.25em;
-            }
-
-            &:hover {
-                background-color: @text-color;
-                color: white;
-            }
-
             &.addnew:hover {
                 background-color: @icinga-blue;
-            }
-
-            i {
-                float: left;
-                font-size: 2.5em;
-                margin-top: -0.1em;
-                margin-bottom: 2em;
-                color: inherit;
+                color: white;
             }
         }
     }
