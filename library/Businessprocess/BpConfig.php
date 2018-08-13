@@ -368,14 +368,14 @@ class BpConfig
      */
     public function getRootNodes()
     {
-        ksort($this->root_nodes);
+        ksort($this->root_nodes, SORT_NATURAL | SORT_FLAG_CASE);
         return $this->root_nodes;
     }
 
     public function listRootNodes()
     {
         $names = array_keys($this->root_nodes);
-        sort($names);
+        natcasesort($names);
         return $names;
     }
 
@@ -665,7 +665,7 @@ class BpConfig
             $nodes[$name] = $name === $alias ? $name : sprintf('%s (%s)', $alias, $node);
         }
 
-        natsort($nodes);
+        natcasesort($nodes);
         return $nodes;
     }
 

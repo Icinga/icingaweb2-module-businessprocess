@@ -374,7 +374,7 @@ class EditNodeForm extends QuickForm
             }
         }
 
-        natsort($list);
+        natcasesort($list);
         return $list;
     }
 
