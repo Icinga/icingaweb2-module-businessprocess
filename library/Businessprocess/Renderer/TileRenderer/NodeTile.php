@@ -278,7 +278,9 @@ class NodeTile extends BaseElement
             ));
         }
 
-        if (! $this->renderer->getBusinessProcess()->getMetadata()->canModify()) {
+        if (! $this->renderer->getBusinessProcess()->getMetadata()->canModify()
+            || $node->getName() === '__unbound__'
+        ) {
             return;
         }
 
