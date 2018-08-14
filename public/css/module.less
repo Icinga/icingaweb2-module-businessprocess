@@ -40,6 +40,7 @@ table.bp {
     box-sizing: border-box;
     font-size: 1em;
     font-weight: normal;
+    table-layout: fixed;
 
     /* Reset all paddings and margins, just to be on the safe side */
     th, td {
@@ -203,6 +204,9 @@ table.bp.node td > a:last-child, table.node.missing td > span {
     background-repeat: no-repeat;
     background-position: 0.5em 0.5em;
     border-left-width: 0.8em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 table.bp.node.handled td > a:last-child, table.bp.node.ok td > a:last-child,
