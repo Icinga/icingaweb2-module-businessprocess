@@ -81,7 +81,7 @@ class TileRenderer extends Renderer
     protected function addNewNode()
     {
         $div = Container::create(
-            array('class' => 'addnew', 'data-base-target' => '_self')
+            array('class' => 'addnew', 'data-base-target' => '_next')
         );
 
         $actions = Container::create(

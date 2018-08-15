@@ -60,7 +60,7 @@ class NodeTile extends BaseElement
         $this->actions = Container::create(
             array(
                 'class'            => 'actions',
-                'data-base-target' => '_self'
+                'data-base-target' => '_next'
             )
         );
 

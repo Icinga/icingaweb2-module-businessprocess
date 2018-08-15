@@ -259,6 +259,7 @@ class ProcessController extends Controller
         }
 
         if ($form) {
+            $form->getElement($form->getSubmitLabel())->setAttrib('data-base-target', '_main');
             $this->content()->prependContent(HtmlString::create((string) $form));
         }
     }
@@ -322,7 +323,8 @@ class ProcessController extends Controller
                 Link::create(
                     $this->translate('Store'),
                     'businessprocess/process/config',
-                    array('config' => $bp->getName())
+                    array('config' => $bp->getName()),
+                    ['data-base-target' => '_next']
                 )
             )->addContent(
                 Link::create(
