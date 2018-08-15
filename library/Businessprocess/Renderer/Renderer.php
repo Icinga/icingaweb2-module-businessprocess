@@ -219,13 +219,14 @@ abstract class Renderer extends Html
     public function setUrl(Url $url)
     {
         $this->url = $url->without(array(
+            'action',
             'deletenode',
             'deleteparent',
             'editnode',
             'simulationnode',
             'view'
         ));
-        $this->setBaseUrl($url);
+        $this->setBaseUrl($this->url);
         return $this;
     }
 
@@ -233,9 +234,9 @@ abstract class Renderer extends Html
      * @param Url $url
      * @return $this
      */
-    public function setBaseUrl(Url $url)
+    protected function setBaseUrl(Url $url)
     {
-        $this->baseUrl = $url->without(array('node', 'path', 'view'));
+        $this->baseUrl = $url->without(array('node', 'path'));
         return $this;
     }
 
