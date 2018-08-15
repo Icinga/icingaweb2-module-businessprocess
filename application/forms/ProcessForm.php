@@ -199,6 +199,10 @@ class ProcessForm extends QuickForm
             );
         }
 
+        // Trigger session destruction to make sure it get's stored.
+        // TODO: figure out why this is necessary, might be an unclean shutdown on redirect
+        unset($changes);
+
         parent::onSuccess();
     }
 }
