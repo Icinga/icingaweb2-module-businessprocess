@@ -111,7 +111,8 @@ class SimulationForm extends QuickForm
                 $this->notifySuccess($this->translate('Simulation has been removed'));
             }
         }
-        $this->redirectOnSuccess();
+
+        parent::onSuccess();
     }
 
     /**

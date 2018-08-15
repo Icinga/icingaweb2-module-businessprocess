@@ -198,5 +198,7 @@ class ProcessForm extends QuickForm
                 )
             );
         }
+
+        parent::onSuccess();
     }
 }
