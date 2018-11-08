@@ -225,7 +225,7 @@ class NodeTile extends BaseElement
             $url = $node->getInfoUrl();
 
             if ($url !== null) {
-                $this->actions()->add(Link::create(
+                $link = Link::create(
                     Icon::create('info-circled'),
                     $url,
                     null,
@@ -233,7 +233,11 @@ class NodeTile extends BaseElement
                         'title' => sprintf('%s: %s', $this->translate('More information'), $url),
                         'class' => 'node-info'
                     )
-                ));
+                );
+                if (preg_match('#^http(?:s)?://#', $url)) {
+                    $link->addAttributes(array('target' => '_blank'));
+                }
+                $this->actions()->add($link);
             }
         } else {
             // $url = $this->makeMonitoredNodeUrl($node);
