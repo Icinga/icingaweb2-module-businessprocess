@@ -6,7 +6,9 @@ use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\Html\BaseElement;
 use Icinga\Module\Businessprocess\Html\Element;
 use Icinga\Module\Businessprocess\Html\Link;
+use Icinga\Module\Businessprocess\Html\Icon;
 use Icinga\Module\Businessprocess\Renderer\TileRenderer\NodeTile;
+use Icinga\Module\Businessprocess\Web\Url;
 
 class Breadcrumb extends BaseElement
 {
@@ -29,6 +31,15 @@ class Breadcrumb extends BaseElement
         if ($bpUrl->getParam('action') === 'delete') {
             $bpUrl->remove('action');
         }
+
+        $breadcrumb->add(Element::create('li')->add(
+            Link::create(
+                Icon::create('dashboard'),
+                Url::fromPath('businessprocess'),
+                null,
+                ['title' => mt('businessprocess', 'Show Overview')]
+            )
+        ));
         $breadcrumb->add(Element::create('li')->add(
             Link::create($bp->getTitle(), $bpUrl)
         ));
