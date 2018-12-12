@@ -21,7 +21,7 @@ class BpDashboardTile extends BaseElement
     {
         $this->add(
             Container::create(
-                ['class' => 'bp-link'],
+                ['class' => 'bp-link', 'data-base-target' => '_main'],
                 Link::create(
                     Icon::create($icon),
                     $url,

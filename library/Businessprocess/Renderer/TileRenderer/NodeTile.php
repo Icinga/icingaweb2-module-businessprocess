@@ -192,6 +192,8 @@ class NodeTile extends BaseElement
             $link = Link::create($node->getAlias(), $url);
             if ($node instanceof ImportedNode) {
                 $link->attributes()->add('data-base-target', '_next');
+            } else {
+                $link->attributes()->add('data-base-target', '_self');
             }
         }
 
@@ -210,7 +212,7 @@ class NodeTile extends BaseElement
                 null,
                 array(
                     'title' => $this->translate('Show tiles for this subtree'),
-                    'data-base-target' => '_next'
+                    'data-base-target' => '_self'
                 )
             ))->add(Link::create(
                 Icon::create('sitemap'),
