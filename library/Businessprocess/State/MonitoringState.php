@@ -67,7 +67,7 @@ class MonitoringState
             return $this;
         }
 
-        $hostFilter = Filter::expression('host', '=', $hosts);
+        $hostFilter = Filter::expression('host_name', '=', $hosts);
 
         $hostStatus = $backend->select()->from('hostStatus', array(
             'hostname'          => 'host_name',
