@@ -35,6 +35,7 @@
 
             this.module.on('click', 'div.tiles > div', this.tileClick);
             this.module.on('click', '.dashboard-tile', this.dashboardTileClick);
+            this.module.on('end', 'div.tiles.sortable', this.tileDropped);
 
             this.module.icinga.logger.debug('BP module initialized');
         },
@@ -87,6 +88,32 @@
 
         dashboardTileClick: function(event) {
             $(event.currentTarget).find('> .bp-link > a').first().trigger('click');
+        },
+
+        tileDropped: function(event) {
+            var evt = event.originalEvent;
+            if (evt.oldIndex !== evt.newIndex) {
+                var $target = $(evt.to);
+                var actionUrl = icinga.utils.addUrlParams($target.data('actionUrl'), {
+                    action: 'move',
+                    movenode: $(evt.item).data('nodeName')
+                });
+
+                if (! $target.is('.few') && $('.addnew', $target).length === 2) {
+                    // This assumes we're not moving things between different lists
+                    evt.oldIndex -= 1;
+                    evt.newIndex -= 1;
+                }
+
+                var data = {
+                    csrfToken: $target.data('csrfToken'),
+                    movenode: 'movenode', // That's the submit button..
+                    from: evt.oldIndex,
+                    to: evt.newIndex
+                };
+
+                icinga.loader.loadUrl(actionUrl, $target.closest('.container'), data, 'post');
+            }
         },
 
         /**

@@ -23,6 +23,10 @@ div.bp {
   margin-bottom: 4px;
 }
 
+div.bp.sortable > .sortable-ghost {
+    opacity: 0.5;
+}
+
 .simulation div.bp {
     border-right: 1em solid @colorCriticalHandled;
     padding-right: 1em;
@@ -456,6 +460,11 @@ td > a > .badges {
     content:'';
     display:block;
     clear: both;
+}
+
+.tiles.sortable > .sortable-ghost {
+    opacity: 0.5;
+    border: .2em dashed black;
 }
 
 .tiles > div {

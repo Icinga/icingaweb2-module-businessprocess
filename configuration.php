@@ -57,3 +57,6 @@ $this->provideRestriction(
     'businessprocess/prefix',
     $this->translate('Restrict access to configurations with the given prefix')
 );
+
+$this->provideJsFile('behavior/sortable.js');
+$this->provideJsFile('vendor/jquery.fn.sortable.js');
