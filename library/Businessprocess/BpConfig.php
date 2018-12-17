@@ -388,14 +388,32 @@ class BpConfig
      */
     public function getRootNodes()
     {
-        ksort($this->root_nodes, SORT_NATURAL | SORT_FLAG_CASE);
+        if ($this->getMetadata()->isManuallyOrdered()) {
+            uasort($this->root_nodes, function (BpNode $a, BpNode $b) {
+                $a = $a->getDisplay();
+                $b = $b->getDisplay();
+                return $a > $b ? 1 : ($a < $b ? -1 : 0);
+            });
+        } else {
+            ksort($this->root_nodes, SORT_NATURAL | SORT_FLAG_CASE);
+        }
+
         return $this->root_nodes;
     }
 
     public function listRootNodes()
     {
         $names = array_keys($this->root_nodes);
-        natcasesort($names);
+        if ($this->getMetadata()->isManuallyOrdered()) {
+            uasort($names, function ($a, $b) {
+                $a = $this->root_nodes[$a]->getDisplay();
+                $b = $this->root_nodes[$b]->getDisplay();
+                return $a > $b ? 1 : ($a < $b ? -1 : 0);
+            });
+        } else {
+            natcasesort($names);
+        }
+
         return $names;
     }
 
@@ -685,7 +703,16 @@ class BpConfig
             $nodes[$name] = $name === $alias ? $name : sprintf('%s (%s)', $alias, $node);
         }
 
-        natcasesort($nodes);
+        if ($this->getMetadata()->isManuallyOrdered()) {
+            uasort($nodes, function ($a, $b) {
+                $a = $this->nodes[$a]->getDisplay();
+                $b = $this->nodes[$b]->getDisplay();
+                return $a > $b ? 1 : ($a < $b ? -1 : 0);
+            });
+        } else {
+            natcasesort($nodes);
+        }
+
         return $nodes;
     }
 
