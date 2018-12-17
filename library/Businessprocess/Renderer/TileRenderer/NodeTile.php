@@ -73,6 +73,9 @@ class NodeTile extends BaseHtmlElement
         $attributes = $this->getAttributes();
         $attributes->add('class', $renderer->getNodeClasses($node));
         $attributes->add('id', 'bp-' . (string) $node);
+        if (! $renderer->isLocked()) {
+            $attributes->add('data-node-name', (string) $node);
+        }
 
         $this->addActions();
 

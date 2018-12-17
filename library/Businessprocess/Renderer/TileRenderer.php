@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess\Renderer;
 
 use Icinga\Module\Businessprocess\Renderer\TileRenderer\NodeTile;
+use Icinga\Module\Businessprocess\Web\Form\CsrfToken;
 use ipl\Html\Html;
 
 class TileRenderer extends Renderer
@@ -16,8 +17,13 @@ class TileRenderer extends Renderer
         $nodesDiv = Html::tag(
             'div',
             [
-                'class'             => ['tiles', $this->howMany()],
-                'data-base-target'  => '_next'
+                'class'                         => ['sortable', 'tiles', $this->howMany()],
+                'data-base-target'              => '_next',
+                'data-sortable-disabled'        => $this->isLocked(),
+                'data-sortable-data-id-attr'    => 'id',
+                'data-sortable-filter'          => '.addnew',
+                'data-csrf-token'               => CsrfToken::generate(),
+                'data-action-url'               => $this->getUrl()->getAbsoluteUrl()
             ]
         );
 
