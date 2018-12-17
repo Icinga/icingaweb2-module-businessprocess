@@ -121,6 +121,26 @@ class ProcessChanges
     }
 
     /**
+     * Move the given node
+     *
+     * @param   Node    $node
+     * @param   int     $from
+     * @param   int     $to
+     * @param   string  $parentName
+     *
+     * @return  $this
+     */
+    public function moveNode(Node $node, $from, $to, $parentName = null)
+    {
+        $action = new NodeMoveAction($node);
+        $action->setParentName($parentName);
+        $action->setFrom($from);
+        $action->setTo($to);
+
+        return $this->push($action);
+    }
+
+    /**
      * Apply manual order on the entire bp configuration file
      *
      * @return  $this
