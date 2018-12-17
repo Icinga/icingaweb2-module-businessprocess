@@ -250,6 +250,14 @@ class ProcessController extends Controller
                 ->setNode($bp->getNode($this->params->get('simulationnode')))
                 ->setSimulation(Simulation::fromSession($this->session()))
                 ->handleRequest();
+        } elseif ($action === 'move') {
+            $form = $this->loadForm('MoveNode')
+                ->setProcess($bp)
+                ->setParentNode($node)
+                ->setSession($this->session())
+                ->setNode($bp->getNode($this->params->get('movenode')))
+                ->setSuccessUrl(Url::fromRequest()->without(['action', 'movenode']))
+                ->handleRequest();
         }
 
         if ($form) {
