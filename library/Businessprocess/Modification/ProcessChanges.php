@@ -121,6 +121,16 @@ class ProcessChanges
     }
 
     /**
+     * Apply manual order on the entire bp configuration file
+     *
+     * @return  $this
+     */
+    public function applyManualOrder()
+    {
+        return $this->push(new NodeApplyManualOrderAction());
+    }
+
+    /**
      * Add a new action to the stack
      *
      * @param NodeAction $change
