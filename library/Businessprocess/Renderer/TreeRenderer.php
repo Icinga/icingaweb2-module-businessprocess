@@ -5,6 +5,7 @@ namespace Icinga\Module\Businessprocess\Renderer;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Node;
+use Icinga\Module\Businessprocess\Web\Form\CsrfToken;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
 
@@ -19,8 +20,13 @@ class TreeRenderer extends Renderer
         $this->add(Html::tag(
             'div',
             [
-                'id'    => $bp->getHtmlId(),
-                'class' => 'bp'
+                'id'                            => $bp->getHtmlId(),
+                'class'                         => ['bp', 'sortable'],
+                'data-sortable-disabled'        => $this->isLocked(),
+                'data-sortable-data-id-attr'    => 'id',
+                'data-sortable-direction'       => 'vertical',
+                'data-csrf-token'               => CsrfToken::generate(),
+                'data-action-url'               => $this->getUrl()->getAbsoluteUrl()
             ],
             $this->renderBp($bp)
         ));
@@ -103,11 +109,9 @@ class TreeRenderer extends Renderer
         $table = Html::tag(
             'table',
             [
-                'id' => $this->getId($node, $path),
-                'class' => array(
-                    'bp',
-                    $node->getObjectClassName()
-                )
+                'id'                => $this->getId($node, $path),
+                'class'             => ['bp', $node->getObjectClassName()],
+                'data-node-name'    => $node->getName()
             ]
         );
         $attributes = $table->getAttributes();
@@ -121,7 +125,17 @@ class TreeRenderer extends Renderer
             $attributes->add('class', 'node');
         }
 
-        $tbody = Html::tag('tbody');
+        $tbody = Html::tag('tbody', [
+            'class'                         => 'sortable',
+            'data-sortable-disabled'        => $this->isLocked(),
+            'data-sortable-data-id-attr'    => 'id',
+            'data-sortable-draggable'       => '.movable',
+            'data-sortable-direction'       => 'vertical',
+            'data-csrf-token'               => CsrfToken::generate(),
+            'data-action-url'               => $this->getUrl()
+                ->overwriteParams(['node' => (string) $node])
+                ->getAbsoluteUrl()
+        ]);
         $table->add($tbody);
         $tr =  Html::tag('tr');
         $tbody->add($tr);
@@ -161,10 +175,15 @@ class TreeRenderer extends Renderer
 
         $td->add($link);
 
+        $path[] = (string) $node;
         foreach ($node->getChildren() as $name => $child) {
             $tbody->add(Html::tag(
                 'tr',
-                null,
+                [
+                    'class'             => 'movable',
+                    'id'                => $this->getId($child, $path),
+                    'data-node-name'    => $name
+                ],
                 Html::tag(
                     'td',
                     null,

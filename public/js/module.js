@@ -36,6 +36,7 @@
             this.module.on('click', 'div.tiles > div', this.tileClick);
             this.module.on('click', '.dashboard-tile', this.dashboardTileClick);
             this.module.on('end', 'div.tiles.sortable', this.tileDropped);
+            this.module.on('end', 'div.bp.sortable, table.bp tbody.sortable', this.rowDropped);
 
             this.module.icinga.logger.debug('BP module initialized');
         },
@@ -104,6 +105,26 @@
                     evt.oldIndex -= 1;
                     evt.newIndex -= 1;
                 }
+
+                var data = {
+                    csrfToken: $target.data('csrfToken'),
+                    movenode: 'movenode', // That's the submit button..
+                    from: evt.oldIndex,
+                    to: evt.newIndex
+                };
+
+                icinga.loader.loadUrl(actionUrl, $target.closest('.container'), data, 'post');
+            }
+        },
+
+        rowDropped: function(event) {
+            var evt = event.originalEvent;
+            if (evt.oldIndex !== evt.newIndex) {
+                var $target = $(evt.to);
+                var actionUrl = icinga.utils.addUrlParams($target.data('actionUrl'), {
+                    action: 'move',
+                    movenode: $(evt.item).data('nodeName')
+                });
 
                 var data = {
                     csrfToken: $target.data('csrfToken'),

@@ -251,12 +251,17 @@ class ProcessController extends Controller
                 ->setSimulation(Simulation::fromSession($this->session()))
                 ->handleRequest();
         } elseif ($action === 'move') {
+            $url = Url::fromRequest()->without(['action', 'movenode']);
+            if ($url->getParam('mode') === 'tree') {
+                $url = $url->without('node');
+            }
+
             $form = $this->loadForm('MoveNode')
                 ->setProcess($bp)
                 ->setParentNode($node)
                 ->setSession($this->session())
                 ->setNode($bp->getNode($this->params->get('movenode')))
-                ->setSuccessUrl(Url::fromRequest()->without(['action', 'movenode']))
+                ->setSuccessUrl($url)
                 ->handleRequest();
         }
 
