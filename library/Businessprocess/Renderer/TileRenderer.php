@@ -22,6 +22,7 @@ class TileRenderer extends Renderer
                 'data-sortable-disabled'        => $this->isLocked(),
                 'data-sortable-data-id-attr'    => 'id',
                 'data-sortable-filter'          => '.addnew',
+                'data-sortable-direction'       => 'horizontal', // Otherwise movement is buggy on small lists
                 'data-csrf-token'               => CsrfToken::generate(),
                 'data-action-url'               => $this->getUrl()->getAbsoluteUrl()
             ]
