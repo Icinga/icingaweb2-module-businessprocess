@@ -33,6 +33,38 @@ div.bp.sortable > .sortable-ghost {
     background: white;
 }
 
+
+
+/* New tree stuff START */
+
+div.tree {
+    padding: 1em;
+
+    div.placeholder {
+        // Helps to assist Sortable.js/the browser to properly place items at the top
+        height: 1em;
+    }
+
+    > div.process,
+    ul.sortable li {
+        border: .2em solid @gray;
+        margin-bottom: .2em;
+        padding-left: .2em;
+
+        &.sortable-ghost {
+            border: .2em dashed @gray-light;
+        }
+    }
+
+    ul {
+        list-style-type: none;
+    }
+}
+
+/* New tree stuff END */
+
+
+
 table.bp {
     /* Business process table styling starts here */
     width: 100%;

@@ -21,9 +21,10 @@ class TreeRenderer extends Renderer
             'div',
             [
                 'id'                            => $bp->getHtmlId(),
-                'class'                         => ['bp', 'sortable'],
+                'class'                         => ['tree', 'sortable'],
                 'data-sortable-disabled'        => $this->isLocked(),
                 'data-sortable-data-id-attr'    => 'id',
+                'data-sortable-filter'          => '.placeholder',
                 'data-sortable-direction'       => 'vertical',
                 'data-csrf-token'               => CsrfToken::generate(),
                 'data-action-url'               => $this->getUrl()->getAbsoluteUrl()
@@ -47,6 +48,7 @@ class TreeRenderer extends Renderer
             $nodes = $this->parent->getChildren();
         }
 
+        $html[] = Html::tag('div', ['class' => 'placeholder']);
         foreach ($nodes as $name => $node) {
             $html[] = $this->renderNode($bp, $node);
         }
@@ -107,10 +109,10 @@ class TreeRenderer extends Renderer
     public function renderNode(BpConfig $bp, Node $node, $path = array())
     {
         $table = Html::tag(
-            'table',
+            'div',
             [
                 'id'                => $this->getId($node, $path),
-                'class'             => ['bp', $node->getObjectClassName()],
+                'class'             => ['bp', 'movable', $node->getObjectClassName()],
                 'data-node-name'    => $node->getName()
             ]
         );
@@ -125,30 +127,16 @@ class TreeRenderer extends Renderer
             $attributes->add('class', 'node');
         }
 
-        $tbody = Html::tag('tbody', [
-            'class'                         => 'sortable',
-            'data-sortable-disabled'        => $this->isLocked(),
-            'data-sortable-data-id-attr'    => 'id',
-            'data-sortable-draggable'       => '.movable',
-            'data-sortable-direction'       => 'vertical',
-            'data-csrf-token'               => CsrfToken::generate(),
-            'data-action-url'               => $this->getUrl()
-                ->overwriteParams(['node' => (string) $node])
-                ->getAbsoluteUrl()
-        ]);
-        $table->add($tbody);
-        $tr =  Html::tag('tr');
-        $tbody->add($tr);
-
         if ($node instanceof BpNode) {
-            $tr->add(Html::tag(
-                'th',
-                ['rowspan' => $node->countChildren() + 1 + ($this->isLocked() ? 0 : 1)],
+            $table->add(Html::tag(
+                'div',
+                null,
                 Html::tag('span', ['class' => 'op'], $node->operatorHtml())
             ));
         }
-        $td = Html::tag('td');
-        $tr->add($td);
+
+        $td = Html::tag('div');
+        $table->add($td);
 
         if ($node instanceof BpNode && $node->hasInfoUrl()) {
             $td->add($this->createInfoAction($node));
@@ -175,36 +163,80 @@ class TreeRenderer extends Renderer
 
         $td->add($link);
 
+        $tbody = Html::tag('ul', [
+            'class'                         => 'sortable',
+            'data-sortable-disabled'        => $this->isLocked(),
+            'data-sortable-data-id-attr'    => 'id',
+            'data-sortable-draggable'       => '.movable',
+            'data-sortable-direction'       => 'vertical',
+            'data-csrf-token'               => CsrfToken::generate(),
+            'data-action-url'               => $this->getUrl()
+                ->overwriteParams(['node' => (string) $node])
+                ->getAbsoluteUrl()
+        ]);
+        $table->add($tbody);
+
         $path[] = (string) $node;
         foreach ($node->getChildren() as $name => $child) {
-            $tbody->add(Html::tag(
-                'tr',
-                [
-                    'class'             => 'movable',
-                    'id'                => $this->getId($child, $path),
-                    'data-node-name'    => $name
-                ],
-                Html::tag(
-                    'td',
-                    null,
+            if ($child->hasChildren()) {
+                $tbody->add(Html::tag(
+                    'li',
+                    [
+                        'class'             => 'movable',
+                        'id'                => $this->getId($child, $path),
+                        'data-node-name'    => $name
+                    ],
                     $this->renderNode($bp, $child, $this->getCurrentPath())
-                )
-            ));
+                ));
+            } else {
+                $this->renderChild($bp, $tbody, $child, $path);
+            }
         }
 
         if (! $this->isLocked() && $node instanceof BpNode && $bp->getMetadata()->canModify()) {
             $tbody->add(Html::tag(
-                'tr',
+                'li',
                 null,
-                Html::tag(
-                    'td',
-                    null,
-                    $this->renderAddNewNode($node)
-                )
+                $this->renderAddNewNode($node)
             ));
         }
 
         return $table;
+    }
+
+    protected function renderChild($bp, BaseHtmlElement $ul, $node, $path = null)
+    {
+        $li = Html::tag('li', [
+            'class'             => 'movable',
+            'id'                => $this->getId($node, $path ?: []),
+            'data-node-name'    => (string) $node
+        ]);
+        $ul->add($li);
+
+        if ($node instanceof BpNode && $node->hasInfoUrl()) {
+            $li->add($this->createInfoAction($node));
+        }
+
+        if (! $this->isLocked()) {
+            $li->add($this->getActionIcons($bp, $node));
+        }
+
+        $link = $node->getLink();
+        $link->getAttributes()->set('data-base-target', '_next');
+        $link->add($this->getNodeIcons($node));
+
+        if ($node->hasChildren()) {
+            $link->add($this->renderStateBadges($node->getStateSummary()));
+        }
+
+        if ($time = $node->getLastStateChange()) {
+            $since = $this->timeSince($time)->prepend(
+                sprintf(' (%s ', $node->getStateName())
+            )->add(')');
+            $link->add($since);
+        }
+
+        $li->add($link);
     }
 
     protected function getActionIcons(BpConfig $bp, Node $node)

@@ -36,7 +36,7 @@
             this.module.on('click', 'div.tiles > div', this.tileClick);
             this.module.on('click', '.dashboard-tile', this.dashboardTileClick);
             this.module.on('end', 'div.tiles.sortable', this.tileDropped);
-            this.module.on('end', 'div.bp.sortable, table.bp tbody.sortable', this.rowDropped);
+            this.module.on('end', 'div.tree.sortable, ul.sortable', this.rowDropped);
 
             this.module.icinga.logger.debug('BP module initialized');
         },
@@ -125,6 +125,11 @@
                     action: 'move',
                     movenode: $(evt.item).data('nodeName')
                 });
+
+                if ($('.placeholder', $target).length) {
+                    evt.oldIndex -= 1;
+                    evt.newIndex -= 1;
+                }
 
                 var data = {
                     csrfToken: $target.data('csrfToken'),
