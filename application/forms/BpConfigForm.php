@@ -116,6 +116,11 @@ class BpConfigForm extends BpConfigBaseForm
         }
     }
 
+    protected function onSetup()
+    {
+        $this->getElement($this->getSubmitLabel())->setAttrib('data-base-target', '_main');
+    }
+
     protected function onRequest()
     {
         $name = $this->getValue('name');
