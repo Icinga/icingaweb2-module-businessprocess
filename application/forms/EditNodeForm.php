@@ -148,10 +148,14 @@ class EditNodeForm extends QuickForm
      */
     protected function selectNodeType($monitoredNodeType = null)
     {
-        $types = array();
         if ($this->hasParentNode()) {
-            $types['host'] = $this->translate('Host');
-            $types['service'] = $this->translate('Service');
+            $this->addElement('hidden', 'node_type', [
+                'disabled'      => true,
+                'decorators'    => ['ViewHelper'],
+                'value'         => $monitoredNodeType
+            ]);
+
+            return $monitoredNodeType;
         } elseif (! $this->hasProcesses()) {
             $this->addElement('hidden', 'node_type', array(
                 'ignore'     => true,
@@ -161,45 +165,16 @@ class EditNodeForm extends QuickForm
 
             return 'new-process';
         }
-
-        if ($this->hasProcesses()) {
-            $types['process'] = $this->translate('Existing Process');
-        }
-
-        $types['new-process'] = $this->translate('New Process Node');
-
-        $this->addElement('select', 'node_type', array(
-            'label'        => $this->translate('Node type'),
-            'required'     => true,
-            'description'  => $this->translate(
-                'The node type you want to add'
-            ),
-            'ignore'       => true,
-            'class'        => 'autosubmit',
-            'multiOptions' => $this->optionalEnum($types)
-        ));
-
-        if ($monitoredNodeType !== null) {
-            $this->getElement('node_type')->setValue($monitoredNodeType);
-            if ($this->getSentValue('node_type') === null) {
-                return $monitoredNodeType;
-            }
-        }
-
-        return $this->getSentValue('node_type');
     }
 
     protected function selectHost()
     {
-        $this->addElement('multiselect', 'children', array(
-            'label'        => $this->translate('Hosts'),
-            'required'     => true,
-            'size'         => 8,
-            'style'        => 'width: 25em',
-            'multiOptions' => $this->enumHostList(),
-            'description'  => $this->translate(
-                'Hosts that should be part of this business process node'
-            )
+        $this->addElement('select', 'children', array(
+            'required'      => true,
+            'value'         => $this->getNode()->getName(),
+            'multiOptions'  => $this->enumHostList(),
+            'label'         => $this->translate('Host'),
+            'description'   => $this->translate('The host for this business process node')
         ));
     }
 
@@ -231,15 +206,12 @@ class EditNodeForm extends QuickForm
 
     protected function addServicesElement($host)
     {
-        $this->addElement('multiselect', 'children', array(
-            'label'        => $this->translate('Services'),
-            'required'     => true,
-            'size'         => 8,
-            'style'        => 'width: 25em',
-            'multiOptions' => $this->enumServiceList($host),
-            'description'  => $this->translate(
-                'Services that should be part of this business process node'
-            )
+        $this->addElement('select', 'children', array(
+            'required'      => true,
+            'value'         => $this->getNode()->getName(),
+            'multiOptions'  => $this->enumServiceList($host),
+            'label'         => $this->translate('Service'),
+            'description'   => $this->translate('The service for this business process node')
         ));
     }
 
@@ -467,5 +439,19 @@ class EditNodeForm extends QuickForm
         unset($changes);
 
         parent::onSuccess();
+    }
+
+    public function isValid($data)
+    {
+        // Don't allow to override disabled elements. This is probably too harsh
+        // but also wouldn't be necessary if this would be a Icinga\Web\Form...
+        foreach ($this->getElements() as $element) {
+            /** @var \Zend_Form_Element $element */
+            if ($element->getAttrib('disabled')) {
+                $data[$element->getName()] = $element->getValue();
+            }
+        }
+
+        return parent::isValid($data);
     }
 }
