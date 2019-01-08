@@ -477,23 +477,28 @@ td > a > .badges {
         margin: 0.5em;
         text-align: center;
         font-size: 0.5em;
-        display: block;
     }
 
     > a {
         display: block;
-        position: relative;
         text-decoration: none;
         font-size: 0.7em;
         text-align: center;
-        padding: 1em;
+        padding: 1em 1em 0;
         font-weight: bold;
         word-wrap: break-word;
         color: @text-color-inverted;
-        top: 50%;
-        -ms-transform: translateY(-50%);
-        -webkit-transform: translateY(-50%);
-        transform: translateY(-50%);
+
+        & + p.children-count {
+            margin: 0;
+            font-size: .5em;
+            text-align: center;
+
+            span {
+                font-size: .8em;
+                font-weight: bold;
+            }
+        }
     }
 
     &:hover {
@@ -502,10 +507,6 @@ td > a > .badges {
 
     .actions {
         opacity: 0.8;
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
         margin: 0.5em 0 0 0.5em;
         font-size: 0.75em;
         height: 1.8em;
