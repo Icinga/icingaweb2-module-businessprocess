@@ -314,7 +314,12 @@ class ProcessController extends Controller
                 $bp->countChanges()
             ))->add(Html::tag(
                 'a',
-                ['href' => Url::fromPath('businessprocess/process/config', ['config' => $bp->getName()])],
+                [
+                    'href' => Url::fromPath(
+                        'businessprocess/process/config',
+                        $this->getRequest()->getUrl()->getParams()->toArray(false)
+                    )
+                ],
                 $this->translate('Store')
             ))->add(Html::tag(
                 'a',
@@ -422,8 +427,8 @@ class ProcessController extends Controller
             ->add($this->createConfigActionBar($bp));
 
         $url = Url::fromPath(
-            'businessprocess/process/show?unlocked',
-            array('config' => $bp->getName())
+            'businessprocess/process/show',
+            $this->getRequest()->getUrl()->getParams()->toArray(false)
         );
         $this->content()->add(
             $this->loadForm('bpConfig')
