@@ -23,12 +23,6 @@ class TileRenderer extends Renderer
 
         $nodes = $this->getChildNodes();
 
-        if (! $this->isLocked() && count($nodes) > 8
-            && $this->config->getMetadata()->canModify()
-        ) {
-            $this->add($this->addNewNode());
-        }
-
         $path = $this->getCurrentPath();
         foreach ($nodes as $name => $node) {
             $this->add(new NodeTile($this, $name, $node, $path));
@@ -40,10 +34,6 @@ class TileRenderer extends Renderer
                 $name = $unbound->getName();
                 $this->add(new NodeTile($this, $name, $unbound));
             }
-        }
-
-        if (! $this->isLocked() && $this->config->getMetadata()->canModify()) {
-            $this->add($this->addNewNode());
         }
 
         $nodesDiv->add($this->getContent());
@@ -72,33 +62,5 @@ class TileRenderer extends Renderer
         }
 
         return $howMany;
-    }
-
-    protected function addNewNode()
-    {
-        $div = Html::tag('div', ['class' => 'addnew', 'data-base-target' => '_self']);
-
-        $actions = Html::tag('div', ['class'=> 'actions']);
-
-        $link = Html::tag(
-            'a',
-            [
-                'href'  => $this->getUrl()->with('action', 'add'),
-                'title' => mt('businessprocess', 'Add a new business process node')
-            ],
-            mt('businessprocess', 'Add')
-        );
-        $actions->add(
-            Html::tag(
-                'a',
-                [
-                    'href'  => $this->getUrl()->with('action', 'add'),
-                    'title' => mt('businessprocess', 'Add a new business process node')
-                ],
-                Html::tag('i', ['class' => 'icon icon-plus'])
-            )
-        );
-
-        return $div->add($actions)->add($link);
     }
 }

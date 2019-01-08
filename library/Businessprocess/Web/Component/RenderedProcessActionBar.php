@@ -84,6 +84,18 @@ class RenderedProcessActionBar extends ActionBar
                 mt('businessprocess', 'Config')
             ));
         }
+
+        if (($hasChanges || (! $renderer->isLocked())) && $meta->canModify()) {
+            $this->add(Html::tag(
+                'a',
+                [
+                    'href'  => $url->with('action', 'add'),
+                    'title' => mt('businessprocess', 'Add a new business process node'),
+                    'class' => 'icon-plus'
+                ],
+                mt('businessprocess', 'Add')
+            ));
+        }
     }
 
     protected function currentProcessParams(Url $url)
