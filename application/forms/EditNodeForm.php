@@ -174,7 +174,22 @@ class EditNodeForm extends QuickForm
             'value'         => $this->getNode()->getName(),
             'multiOptions'  => $this->enumHostList(),
             'label'         => $this->translate('Host'),
-            'description'   => $this->translate('The host for this business process node')
+            'description'   => $this->translate('The host for this business process node'),
+            'validators'    => [
+                ['Callback', true, [
+                    'callback'  => function ($value) {
+                        if ($this->hasParentNode() && $this->parent->hasChild($value)) {
+                            $el = $this->getElement('children');
+                            $el->addError(sprintf(
+                                $this->translate('%s is already defined in this process'),
+                                $el->getMultiOptions()[$value]
+                            ));
+                        }
+
+                        return true;
+                    }
+                ]]
+            ]
         ));
     }
 
@@ -211,7 +226,22 @@ class EditNodeForm extends QuickForm
             'value'         => $this->getNode()->getName(),
             'multiOptions'  => $this->enumServiceList($host),
             'label'         => $this->translate('Service'),
-            'description'   => $this->translate('The service for this business process node')
+            'description'   => $this->translate('The service for this business process node'),
+            'validators'    => [
+                ['Callback', true, [
+                    'callback'  => function ($value) {
+                        if ($this->hasParentNode() && $this->parent->hasChild($value)) {
+                            $el = $this->getElement('children');
+                            $el->addError(sprintf(
+                                $this->translate('%s is already defined in this process'),
+                                $el->getMultiOptions()[$value]
+                            ));
+                        }
+
+                        return true;
+                    }
+                ]]
+            ]
         ));
     }
 

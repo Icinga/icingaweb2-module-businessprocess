@@ -19,4 +19,7 @@
     <arg name="encoding" value="UTF-8"/>
 
     <rule ref="PSR2"/>
+    <rule ref="PSR2.Methods.MethodDeclaration.Underscore">
+        <exclude-pattern>library/Businessprocess/Web/Form/Element/Multiselect.php</exclude-pattern>
+    </rule>
 </ruleset>

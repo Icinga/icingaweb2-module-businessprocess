@@ -5,6 +5,7 @@ namespace Icinga\Module\Businessprocess\Forms;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
+use Icinga\Module\Businessprocess\Web\Form\Element\Multiselect;
 use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 use Icinga\Web\Session\SessionNamespace;
@@ -161,7 +162,7 @@ class AddNodeForm extends QuickForm
 
     protected function selectHost()
     {
-        $this->addElement('multiselect', 'children', array(
+        $this->addElement(new Multiselect('children', [
             'label'        => $this->translate('Hosts'),
             'required'     => true,
             'size'         => 8,
@@ -169,8 +170,23 @@ class AddNodeForm extends QuickForm
             'multiOptions' => $this->enumHostList(),
             'description'  => $this->translate(
                 'Hosts that should be part of this business process node'
-            )
-        ));
+            ),
+            'validators'    => [
+                ['Callback', true, [
+                    'callback'  => function ($value) {
+                        if ($this->hasParentNode() && $this->parent->hasChild($value)) {
+                            $el = $this->getElement('children');
+                            $el->addError(sprintf(
+                                $this->translate('%s is already defined in this process'),
+                                $el->getMultiOptions()[$value]
+                            ));
+                        }
+
+                        return true;
+                    }
+                ]]
+            ]
+        ]));
     }
 
     protected function selectService()
@@ -196,7 +212,7 @@ class AddNodeForm extends QuickForm
 
     protected function addServicesElement($host)
     {
-        $this->addElement('multiselect', 'children', array(
+        $this->addElement(new Multiselect('children', [
             'label'        => $this->translate('Services'),
             'required'     => true,
             'size'         => 8,
@@ -204,13 +220,28 @@ class AddNodeForm extends QuickForm
             'multiOptions' => $this->enumServiceList($host),
             'description'  => $this->translate(
                 'Services that should be part of this business process node'
-            )
-        ));
+            ),
+            'validators'    => [
+                ['Callback', true, [
+                    'callback'  => function ($value) {
+                        if ($this->hasParentNode() && $this->parent->hasChild($value)) {
+                            $el = $this->getElement('children');
+                            $el->addError(sprintf(
+                                $this->translate('%s is already defined in this process'),
+                                $el->getMultiOptions()[$value]
+                            ));
+                        }
+
+                        return true;
+                    }
+                ]]
+            ]
+        ]));
     }
 
     protected function selectProcess()
     {
-        $this->addElement('multiselect', 'children', array(
+        $this->addElement(new Multiselect('children', [
             'label'        => $this->translate('Process nodes'),
             'required'     => true,
             'size'         => 8,
@@ -218,8 +249,23 @@ class AddNodeForm extends QuickForm
             'multiOptions' => $this->enumProcesses(),
             'description'  => $this->translate(
                 'Other processes that should be part of this business process node'
-            )
-        ));
+            ),
+            'validators'    => [
+                ['Callback', true, [
+                    'callback'  => function ($value) {
+                        if ($this->hasParentNode() && $this->parent->hasChild($value)) {
+                            $el = $this->getElement('children');
+                            $el->addError(sprintf(
+                                $this->translate('%s is already defined in this process'),
+                                $el->getMultiOptions()[$value]
+                            ));
+                        }
+
+                        return true;
+                    }
+                ]]
+            ]
+        ]));
     }
 
     /**
