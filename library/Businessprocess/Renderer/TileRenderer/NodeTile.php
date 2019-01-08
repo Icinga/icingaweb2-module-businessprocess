@@ -295,6 +295,18 @@ class NodeTile extends BaseHtmlElement
                 ],
                 Html::tag('i', ['class' => 'icon icon-edit'])
             ));
+
+            $this->actions()->add(Html::tag(
+                'a',
+                [
+                    'href'  => $renderer->getUrl()->with([
+                        'action'    => 'add',
+                        'node'      => $node->getName()
+                    ]),
+                    'title' => mt('businessprocess', 'Add a new sub-node to this business process')
+                ],
+                Html::tag('i', ['class' => 'icon icon-plus'])
+            ));
         }
 
         $params = array(
