@@ -133,6 +133,14 @@ class BpConfigForm extends BpConfigBaseForm
         $name = $this->getValue('name');
 
         if ($this->config === null) {
+            if ($this->storage->hasProcess($name)) {
+                $this->addError(sprintf(
+                    $this->translate('A process named "%s" already exists'),
+                    $name
+                ));
+                return;
+            }
+
             // New config
             $config = new BpConfig();
             $config->setName($name);
