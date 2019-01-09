@@ -13,7 +13,7 @@ class BpConfigForm extends BpConfigBaseForm
     public function setup()
     {
         $this->addElement('text', 'name', array(
-            'label' => $this->translate('Name'),
+            'label' => $this->translate('ID'),
             'required'    => true,
             'validators' => array(
                 array(
@@ -36,9 +36,9 @@ class BpConfigForm extends BpConfigBaseForm
         ));
 
         $this->addElement('text', 'Title', array(
-            'label'       => $this->translate('Title'),
+            'label'       => $this->translate('Display Name'),
             'description' => $this->translate(
-                'Usually this title will be shown for this process. Equals name'
+                'Usually this name will be shown for this process. Equals ID'
                 . ' if not given'
             ),
         ));

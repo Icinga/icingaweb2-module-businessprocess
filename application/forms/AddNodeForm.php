@@ -66,7 +66,7 @@ class AddNodeForm extends QuickForm
     protected function addNewProcess()
     {
         $this->addElement('text', 'name', array(
-            'label'        => $this->translate('Name'),
+            'label'        => $this->translate('ID'),
             'required'     => true,
             'description' => $this->translate(
                 'This is the unique identifier of this process'
@@ -74,9 +74,9 @@ class AddNodeForm extends QuickForm
         ));
 
         $this->addElement('text', 'alias', array(
-            'label'        => $this->translate('Title'),
+            'label'        => $this->translate('Display Name'),
             'description' => $this->translate(
-                'Usually this title will be shown for this node. Equals name'
+                'Usually this name will be shown for this node. Equals ID'
                 . ' if not given'
             ),
         ));
