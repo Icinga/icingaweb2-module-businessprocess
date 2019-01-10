@@ -113,7 +113,7 @@
                     to: evt.newIndex
                 };
 
-                icinga.loader.loadUrl(actionUrl, $target.closest('.container'), data, 'post');
+                icinga.loader.loadUrl(actionUrl, $target.closest('.container'), data, 'POST');
             }
         },
 
@@ -138,7 +138,7 @@
                     to: evt.newIndex
                 };
 
-                icinga.loader.loadUrl(actionUrl, $target.closest('.container'), data, 'post');
+                icinga.loader.loadUrl(actionUrl, $target.closest('.container'), data, 'POST');
             }
         },
 
