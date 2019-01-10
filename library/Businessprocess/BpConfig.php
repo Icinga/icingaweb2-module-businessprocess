@@ -51,7 +51,7 @@ class BpConfig
      *
      * @var int
      */
-    protected $state_type = self::HARD_STATE;
+    protected $state_type;
 
     /**
      * Warnings, usually filled at process build time
@@ -305,6 +305,26 @@ class BpConfig
         return $this;
     }
 
+    public function getStateType()
+    {
+        if ($this->state_type === null) {
+            if ($this->getMetadata()->has('Statetype')) {
+                switch ($this->getMetadata()->get('Statetype')) {
+                    case 'hard':
+                        $this->state_type = self::HARD_STATE;
+                        break;
+                    case 'soft':
+                        $this->state_type = self::SOFT_STATE;
+                        break;
+                }
+            } else {
+                $this->state_type = self::HARD_STATE;
+            }
+        }
+
+        return $this->state_type;
+    }
+
     public function useSoftStates()
     {
         $this->state_type = self::SOFT_STATE;
@@ -319,12 +339,12 @@ class BpConfig
 
     public function usesSoftStates()
     {
-        return $this->state_type === self::SOFT_STATE;
+        return $this->getStateType() === self::SOFT_STATE;
     }
 
     public function usesHardStates()
     {
-        return $this->state_type === self::HARD_STATE;
+        return $this->getStateType() === self::HARD_STATE;
     }
 
     public function addRootNode($name)
