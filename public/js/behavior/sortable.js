@@ -32,6 +32,11 @@
                 }
             });
 
+            if (typeof options.group !== 'undefined' && typeof options.group.put === 'string' && options.group.put.startsWith('function:')) {
+                var module = icinga.module($el.closest('.icinga-module').data('icingaModule'));
+                options.group.put = module.object[options.group.put.substr(9)];
+            }
+
             $(this).sortable(options);
         });
     };

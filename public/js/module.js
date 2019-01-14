@@ -118,27 +118,46 @@
         },
 
         rowDropped: function(event) {
-            var evt = event.originalEvent;
-            if (evt.oldIndex !== evt.newIndex) {
-                var $target = $(evt.to);
-                var actionUrl = icinga.utils.addUrlParams($target.data('actionUrl'), {
-                    action: 'move',
-                    movenode: $(evt.item).data('nodeName')
-                });
+            var evt = event.originalEvent,
+                $source = $(evt.from),
+                $target = $(evt.to);
 
-                if ($('.placeholder', $target).length) {
-                    evt.oldIndex -= 1;
-                    evt.newIndex -= 1;
-                }
-
+            if (evt.oldIndex !== evt.newIndex || !$target.is($source)) {
                 var data = {
                     csrfToken: $target.data('csrfToken'),
                     movenode: 'movenode', // That's the submit button..
+                    parent: $target.parent('.process').data('nodeName') || '',
                     from: evt.oldIndex,
                     to: evt.newIndex
                 };
 
+                var actionUrl = icinga.utils.addUrlParams($source.data('actionUrl'), {
+                    action: 'move',
+                    movenode: $(evt.item).data('nodeName')
+                });
+
                 icinga.loader.loadUrl(actionUrl, $target.closest('.container'), data, 'POST');
+                event.stopPropagation();
+            }
+        },
+
+        /**
+         * Called by Sortable.js while in Tree-View
+         *
+         * See group option on the sortable elements.
+         *
+         * @param to
+         * @param from
+         * @param item
+         * @param event
+         * @returns {*}
+         */
+        rowPutAllowed: function(to, from, item, event) {
+            if (from.options.group.name === 'root') {
+                return true;
+            }
+            if (to.options.group.name === 'root') {
+                return $(item).is('.process');
             }
         },
 

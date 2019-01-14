@@ -24,8 +24,12 @@ class TreeRenderer extends Renderer
                 'class'                         => ['tree', 'sortable'],
                 'data-sortable-disabled'        => $this->isLocked(),
                 'data-sortable-data-id-attr'    => 'id',
-                'data-sortable-filter'          => '.placeholder',
                 'data-sortable-direction'       => 'vertical',
+                'data-sortable-group'           => json_encode([
+                    'name'  => 'root',
+                    'put'   => 'function:rowPutAllowed'
+                ]),
+                'data-sortable-invert-swap'     => 'true',
                 'data-csrf-token'               => CsrfToken::generate(),
                 'data-action-url'               => $this->getUrl()->getAbsoluteUrl()
             ],
@@ -165,6 +169,10 @@ class TreeRenderer extends Renderer
             'data-sortable-data-id-attr'    => 'id',
             'data-sortable-draggable'       => '.movable',
             'data-sortable-direction'       => 'vertical',
+            'data-sortable-group'           => json_encode([
+                'name'  => 'branch',
+                'put'   => 'function:rowPutAllowed'
+            ]),
             'data-csrf-token'               => CsrfToken::generate(),
             'data-action-url'               => $this->getUrl()
                 ->overwriteParams(['node' => (string) $node])
