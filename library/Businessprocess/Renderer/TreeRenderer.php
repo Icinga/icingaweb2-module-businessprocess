@@ -52,7 +52,6 @@ class TreeRenderer extends Renderer
             $nodes = $this->parent->getChildren();
         }
 
-        $html[] = Html::tag('li', ['class' => 'placeholder']);
         foreach ($nodes as $name => $node) {
             $html[] = $this->renderNode($bp, $node);
         }
