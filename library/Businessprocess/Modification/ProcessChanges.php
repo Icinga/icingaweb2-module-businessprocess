@@ -14,6 +14,9 @@ class ProcessChanges
     /** @var Session */
     protected $session;
 
+    /** @var BpConfig */
+    protected $config;
+
     /** @var bool */
     protected $hasBeenModified = false;
 
@@ -47,6 +50,7 @@ class ProcessChanges
             }
         }
         $changes->session = $session;
+        $changes->config = $bp;
 
         return $changes;
     }
@@ -61,7 +65,7 @@ class ProcessChanges
     {
         $action = new NodeModifyAction($node);
         $action->setNodeProperties($node, $properties);
-        return $this->push($action);
+        return $this->push($action, true);
     }
 
     /**
@@ -74,7 +78,7 @@ class ProcessChanges
     {
         $action = new NodeAddChildrenAction($node);
         $action->setChildren($children);
-        return $this->push($action);
+        return $this->push($action, true);
     }
 
     /**
@@ -91,7 +95,7 @@ class ProcessChanges
         if ($parent !== null) {
             $action->setParent($parent);
         }
-        return $this->push($action);
+        return $this->push($action, true);
     }
 
     /**
@@ -117,7 +121,7 @@ class ProcessChanges
             $action->setParentName($parentName);
         }
 
-        return $this->push($action);
+        return $this->push($action, true);
     }
 
     /**
@@ -139,7 +143,7 @@ class ProcessChanges
         $action->setFrom($from);
         $action->setTo($to);
 
-        return $this->push($action);
+        return $this->push($action, true);
     }
 
     /**
@@ -149,18 +153,23 @@ class ProcessChanges
      */
     public function applyManualOrder()
     {
-        return $this->push(new NodeApplyManualOrderAction());
+        return $this->push(new NodeApplyManualOrderAction(), true);
     }
 
     /**
      * Add a new action to the stack
      *
-     * @param NodeAction $change
+     * @param   NodeAction  $change
+     * @param   bool        $apply
      *
      * @return $this
      */
-    public function push(NodeAction $change)
+    public function push(NodeAction $change, $apply = false)
     {
+        if ($apply && $change->appliesTo($this->config)) {
+            $change->applyTo($this->config);
+        }
+
         $this->changes[] = $change;
         $this->hasBeenModified = true;
         return $this;
