@@ -176,9 +176,9 @@ class NodeMoveAction extends NodeAction
                 $config->addRootNode($name);
 
                 $i = 0;
-                foreach ($newNodes as $_ => $newNode) {
+                foreach ($newNodes as $newName => $newNode) {
                     /** @var BpNode $newNode */
-                    if ($newNode->getDisplay() > 0) {
+                    if ($newNode->getDisplay() > 0 || $newName === $name) {
                         $i += 1;
                         if ($newNode->getDisplay() !== $i) {
                             $newNode->setDisplay($i);
@@ -193,6 +193,7 @@ class NodeMoveAction extends NodeAction
         } else {
             if ($this->newParent !== null) {
                 $config->removeRootNode($name);
+                $node->setDisplay(0);
             }
 
             $i = 0;
