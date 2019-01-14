@@ -40,12 +40,21 @@ class NodeRemoveAction extends NodeAction
      */
     public function appliesTo(BpConfig $config)
     {
+        $name = $this->getNodeName();
         $parent = $this->getParentName();
         if ($parent === null) {
-            return $config->hasNode($this->getNodeName());
+            if (!$config->hasNode($name)) {
+                $this->error('Toplevel process "%s" not found', $name);
+            }
         } else {
-            return $config->hasNode($this->getNodeName()) && $config->hasNode($this->getParentName());
+            if (! $config->hasNode($parent)) {
+                $this->error('Parent process "%s" missing', $parent);
+            } elseif (! $config->getBpNode($parent)->hasChild($name)) {
+                $this->error('Node "%s" not found in process "%s"', $name, $parent);
+            }
         }
+
+        return true;
     }
 
     /**

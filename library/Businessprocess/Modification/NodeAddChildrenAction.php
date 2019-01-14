@@ -17,11 +17,11 @@ class NodeAddChildrenAction extends NodeAction
     {
         $name = $this->getNodeName();
 
-        if (! $config->hasNode($name)) {
-            return false;
+        if (! $config->hasBpNode($name)) {
+            $this->error('Process "%s" not found', $name);
         }
 
-        return $config->getNode($name) instanceof BpNode;
+        return true;
     }
 
     /**

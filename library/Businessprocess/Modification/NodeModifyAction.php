@@ -47,15 +47,21 @@ class NodeModifyAction extends NodeAction
         $name = $this->getNodeName();
 
         if (! $config->hasNode($name)) {
-            return false;
+            $this->error('Node "%s" not found', $name);
         }
 
         $node = $config->getNode($name);
 
         foreach ($this->properties as $key => $val) {
-            $func = 'get' . ucfirst($key);
-            if ($this->formerProperties[$key] !== $node->$func()) {
-                return false;
+            $currentVal = $node->{'get' . ucfirst($key)}();
+            if ($this->formerProperties[$key] !== $currentVal) {
+                $this->error(
+                    'Property %s of node "%s" changed its value from "%s" to "%s"',
+                    $key,
+                    $name,
+                    $this->formerProperties[$key],
+                    $currentVal
+                );
             }
         }
 

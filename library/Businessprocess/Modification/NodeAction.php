@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess\Modification;
 
 use Icinga\Module\Businessprocess\BpConfig;
+use Icinga\Module\Businessprocess\Exception\ModificationError;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Exception\ProgrammingError;
 
@@ -48,10 +49,13 @@ abstract class NodeAction
     abstract public function applyTo(BpConfig $config);
 
     /**
-     * Every NodeAction must be able to tell whether it could be applied to a BusinessProcess
+     * Every NodeAction must be able to tell whether it can be applied to a BusinessProcess
      *
-     * @param BpConfig $config
-     * @return bool
+     * @param   BpConfig    $config
+     *
+     * @throws  ModificationError
+     *
+     * @return  bool
      */
     abstract public function appliesTo(BpConfig $config);
 
@@ -79,6 +83,21 @@ abstract class NodeAction
     public function is($actionName)
     {
         return $this->getActionName() === $actionName;
+    }
+
+    /**
+     * Throw a ModificationError
+     *
+     * @param   string  $msg
+     * @param   mixed   ...
+     *
+     * @throws  ModificationError
+     */
+    protected function error($msg)
+    {
+        $error = ModificationError::create(func_get_args());
+        /** @var ModificationError $error */
+        throw $error;
     }
 
     /**

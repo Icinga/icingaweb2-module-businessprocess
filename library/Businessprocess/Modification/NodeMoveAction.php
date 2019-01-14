@@ -72,46 +72,55 @@ class NodeMoveAction extends NodeAction
     public function appliesTo(BpConfig $config)
     {
         if (! $config->getMetadata()->isManuallyOrdered()) {
-            return false;
+            $this->error('Process configuration is not manually ordered yet');
         }
 
         $name = $this->getNodeName();
         if ($this->parent !== null) {
             if (! $config->hasBpNode($this->parent)) {
-                return false;
+                $this->error('Parent process "%s" missing', $this->parent);
             }
             $parent = $config->getBpNode($this->parent);
             if (! $parent->hasChild($name)) {
-                return false;
+                $this->error('Node "%s" not found in process "%s"', $name, $this->parent);
             }
 
             $nodes = $parent->getChildNames();
             if (! isset($nodes[$this->from]) || $nodes[$this->from] !== $name) {
-                return false;
+                $this->error('Node "%s" not found at position %d', $name, $this->from);
             }
         } else {
             if (! $config->hasNode($name)) {
-                return false;
+                $this->error('Toplevel process "%s" not found', $name);
             }
 
-            if ($config->getBpNode($name)->getDisplay() !== $this->getFrom()) {
-                return false;
+            if ($config->getBpNode($name)->getDisplay() !== $this->from) {
+                $this->error('Toplevel process "%s" not found at position %d', $name, $this->from);
             }
         }
 
         if ($this->parent !== $this->newParent) {
             if ($this->newParent !== null) {
                 if (! $config->hasBpNode($this->newParent)) {
-                    return false;
+                    $this->error('New parent process "%s" missing', $this->newParent);
                 }
 
                 $childrenCount = $config->getBpNode($this->newParent)->countChildren();
+                if ($this->to > 0 && $childrenCount < $this->to) {
+                    $this->error(
+                        'New parent process "%s" has not enough children. Target position %d out of range',
+                        $this->newParent,
+                        $this->to
+                    );
+                }
             } else {
                 $childrenCount = $config->countChildren();
-            }
-
-            if ($this->getTo() > 0 && $childrenCount < $this->getTo()) {
-                return false;
+                if ($this->to > 0 && $childrenCount < $this->to) {
+                    $this->error(
+                        'Process configuration has not enough toplevel processes. Target position %d out of range',
+                        $this->to
+                    );
+                }
             }
         }
 
