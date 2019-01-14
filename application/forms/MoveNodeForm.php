@@ -6,6 +6,7 @@ use Icinga\Application\Icinga;
 use Icinga\Exception\Http\HttpException;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
+use Icinga\Module\Businessprocess\Exception\ModificationError;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Web\Form\CsrfToken;
@@ -144,13 +145,18 @@ class MoveNodeForm extends QuickForm
             $changes->applyManualOrder();
         }
 
-        $changes->moveNode(
-            $this->node,
-            $this->getValue('from'),
-            $this->getValue('to'),
-            $this->getValue('parent'),
-            $this->parentNode !== null ? $this->parentNode->getName() : null
-        );
+        try {
+            $changes->moveNode(
+                $this->node,
+                $this->getValue('from'),
+                $this->getValue('to'),
+                $this->getValue('parent'),
+                $this->parentNode !== null ? $this->parentNode->getName() : null
+            );
+        } catch (ModificationError $e) {
+            $this->notifyError($e->getMessage())
+                ->redirectAndExit($this->getSuccessUrl());
+        }
 
         // Trigger session destruction to make sure it get's stored.
         unset($changes);
