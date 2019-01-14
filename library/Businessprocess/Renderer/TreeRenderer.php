@@ -18,7 +18,7 @@ class TreeRenderer extends Renderer
     {
         $bp = $this->config;
         $this->add(Html::tag(
-            'div',
+            'ul',
             [
                 'id'                            => $bp->getHtmlId(),
                 'class'                         => ['tree', 'sortable'],
@@ -48,7 +48,7 @@ class TreeRenderer extends Renderer
             $nodes = $this->parent->getChildren();
         }
 
-        $html[] = Html::tag('div', ['class' => 'placeholder']);
+        $html[] = Html::tag('li', ['class' => 'placeholder']);
         foreach ($nodes as $name => $node) {
             $html[] = $this->renderNode($bp, $node);
         }
@@ -109,7 +109,7 @@ class TreeRenderer extends Renderer
     public function renderNode(BpConfig $bp, Node $node, $path = array())
     {
         $table = Html::tag(
-            'div',
+            'li',
             [
                 'id'                => $this->getId($node, $path),
                 'class'             => ['bp', 'movable', $node->getObjectClassName()],
@@ -128,11 +128,7 @@ class TreeRenderer extends Renderer
         }
 
         if ($node instanceof BpNode) {
-            $table->add(Html::tag(
-                'div',
-                null,
-                Html::tag('span', ['class' => 'op'], $node->operatorHtml())
-            ));
+            $table->add(Html::tag('span', ['class' => 'op'], $node->operatorHtml()));
         }
 
         $td = Html::tag('div');
@@ -179,15 +175,7 @@ class TreeRenderer extends Renderer
         $path[] = (string) $node;
         foreach ($node->getChildren() as $name => $child) {
             if ($child->hasChildren()) {
-                $tbody->add(Html::tag(
-                    'li',
-                    [
-                        'class'             => 'movable',
-                        'id'                => $this->getId($child, $path),
-                        'data-node-name'    => $name
-                    ],
-                    $this->renderNode($bp, $child, $this->getCurrentPath())
-                ));
+                $tbody->add($this->renderNode($bp, $child, $this->getCurrentPath()));
             } else {
                 $this->renderChild($bp, $tbody, $child, $path);
             }

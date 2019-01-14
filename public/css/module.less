@@ -37,22 +37,22 @@ div.bp.sortable > .sortable-ghost {
 
 /* New tree stuff START */
 
-div.tree {
+ul.tree {
     padding: 1em;
 
-    div.placeholder {
+    li.placeholder {
         // Helps to assist Sortable.js/the browser to properly place items at the top
         height: 1em;
     }
 
-    > div.process,
+    > li.process,
     ul.sortable li {
-        border: .2em solid @gray;
         margin-bottom: .2em;
         padding-left: .2em;
 
         &.sortable-ghost {
             border: .2em dashed @gray-light;
+            border-left-width: 0;
         }
     }
 
