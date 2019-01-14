@@ -181,14 +181,6 @@ class TreeRenderer extends Renderer
             }
         }
 
-        if (! $this->isLocked() && $node instanceof BpNode && $bp->getMetadata()->canModify()) {
-            $tbody->add(Html::tag(
-                'li',
-                null,
-                $this->renderAddNewNode($node)
-            ));
-        }
-
         return $table;
     }
 
@@ -231,7 +223,7 @@ class TreeRenderer extends Renderer
     {
         if ($node instanceof BpNode) {
             if ($bp->getMetadata()->canModify()) {
-                return $this->createEditAction($bp, $node);
+                return [$this->createEditAction($bp, $node), $this->renderAddNewNode($node)];
             } else {
                 return '';
             }
@@ -290,16 +282,12 @@ class TreeRenderer extends Renderer
 
     protected function renderAddNewNode($parent)
     {
-        return Html::tag(
-            'a',
-            [
-                'href'  => $this->getUrl()
-                    ->with('action', 'add')
-                    ->with('node', $parent->getName()),
-                'title' => mt('businessprocess', 'Add a new business process node'),
-                'class' => 'addnew icon-plus'
-            ],
-            mt('businessprocess', 'Add')
+        return $this->actionIcon(
+            'plus',
+            $this->getUrl()
+                ->with('action', 'add')
+                ->with('node', $parent->getName()),
+            mt('businessprocess', 'Add a new business process node')
         );
     }
 }
