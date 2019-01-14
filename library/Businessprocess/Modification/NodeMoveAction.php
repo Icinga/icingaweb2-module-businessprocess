@@ -103,6 +103,12 @@ class NodeMoveAction extends NodeAction
             if ($this->newParent !== null) {
                 if (! $config->hasBpNode($this->newParent)) {
                     $this->error('New parent process "%s" missing', $this->newParent);
+                } elseif ($config->getBpNode($this->newParent)->hasChild($name)) {
+                    $this->error(
+                        'New parent process "%s" already has a node with the name "%s"',
+                        $this->newParent,
+                        $name
+                    );
                 }
 
                 $childrenCount = $config->getBpNode($this->newParent)->countChildren();
@@ -114,6 +120,10 @@ class NodeMoveAction extends NodeAction
                     );
                 }
             } else {
+                if ($config->hasRootNode($name)) {
+                    $this->error('Process "%s" is already a toplevel process', $name);
+                }
+
                 $childrenCount = $config->countChildren();
                 if ($this->to > 0 && $childrenCount < $this->to) {
                     $this->error(
