@@ -10,7 +10,12 @@ class NodeMoveAction extends NodeAction
     /**
      * @var string
      */
-    protected $parentName;
+    protected $parent;
+
+    /**
+     * @var string
+     */
+    protected $newParent;
 
     /**
      * @var int
@@ -22,16 +27,26 @@ class NodeMoveAction extends NodeAction
      */
     protected $to;
 
-    protected $preserveProperties = ['parentName', 'from', 'to'];
+    protected $preserveProperties = ['parent', 'newParent', 'from', 'to'];
 
-    public function setParentName($name)
+    public function setParent($name)
     {
-        $this->parentName = $name;
+        $this->parent = $name;
     }
 
-    public function getParentName()
+    public function getParent()
     {
-        return $this->parentName;
+        return $this->parent;
+    }
+
+    public function setNewParent($name)
+    {
+        $this->newParent = $name;
+    }
+
+    public function getNewParent()
+    {
+        return $this->newParent;
     }
 
     public function setFrom($from)
@@ -61,11 +76,11 @@ class NodeMoveAction extends NodeAction
         }
 
         $name = $this->getNodeName();
-        if ($this->parentName !== null) {
-            if (! $config->hasBpNode($this->parentName)) {
+        if ($this->parent !== null) {
+            if (! $config->hasBpNode($this->parent)) {
                 return false;
             }
-            $parent = $config->getBpNode($this->parentName);
+            $parent = $config->getBpNode($this->parent);
             if (! $parent->hasChild($name)) {
                 return false;
             }
@@ -84,14 +99,30 @@ class NodeMoveAction extends NodeAction
             }
         }
 
+        if ($this->parent !== $this->newParent) {
+            if ($this->newParent !== null) {
+                if (! $config->hasBpNode($this->newParent)) {
+                    return false;
+                }
+
+                $childrenCount = $config->getBpNode($this->newParent)->countChildren();
+            } else {
+                $childrenCount = $config->countChildren();
+            }
+
+            if ($this->getTo() > 0 && $childrenCount < $this->getTo()) {
+                return false;
+            }
+        }
+
         return true;
     }
 
     public function applyTo(BpConfig $config)
     {
         $name = $this->getNodeName();
-        if ($this->parentName !== null) {
-            $nodes = $config->getBpNode($this->parentName)->getChildren();
+        if ($this->parent !== null) {
+            $nodes = $config->getBpNode($this->parent)->getChildren();
         } else {
             $nodes = $config->getRootNodes();
         }
@@ -101,22 +132,57 @@ class NodeMoveAction extends NodeAction
             array_slice($nodes, 0, $this->from, true),
             array_slice($nodes, $this->from + 1, null, true)
         );
-        $nodes = array_merge(
-            array_slice($nodes, 0, $this->to, true),
-            [$name => $node],
-            array_slice($nodes, $this->to, null, true)
-        );
-
-        if ($this->parentName !== null) {
-            $config->getBpNode($this->parentName)->setChildNames(array_keys($nodes));
+        if ($this->parent === $this->newParent) {
+            $nodes = array_merge(
+                array_slice($nodes, 0, $this->to, true),
+                [$name => $node],
+                array_slice($nodes, $this->to, null, true)
+            );
         } else {
+            if ($this->newParent !== null) {
+                $newNodes = $config->getBpNode($this->newParent)->getChildren();
+            } else {
+                $newNodes = $config->getRootNodes();
+            }
+
+            $newNodes = array_merge(
+                array_slice($newNodes, 0, $this->to, true),
+                [$name => $node],
+                array_slice($newNodes, $this->to, null, true)
+            );
+
+            if ($this->newParent !== null) {
+                $config->getBpNode($this->newParent)->setChildNames(array_keys($newNodes));
+            } else {
+                $config->addRootNode($name);
+
+                $i = 0;
+                foreach ($newNodes as $_ => $newNode) {
+                    /** @var BpNode $newNode */
+                    if ($newNode->getDisplay() > 0) {
+                        $i += 1;
+                        if ($newNode->getDisplay() !== $i) {
+                            $newNode->setDisplay($i);
+                        }
+                    }
+                }
+            }
+        }
+
+        if ($this->parent !== null) {
+            $config->getBpNode($this->parent)->setChildNames(array_keys($nodes));
+        } else {
+            if ($this->newParent !== null) {
+                $config->removeRootNode($name);
+            }
+
             $i = 0;
-            foreach ($nodes as $name => $node) {
-                /** @var BpNode $node */
-                if ($node->getDisplay() > 0) {
+            foreach ($nodes as $_ => $oldNode) {
+                /** @var BpNode $oldNode */
+                if ($oldNode->getDisplay() > 0) {
                     $i += 1;
-                    if ($node->getDisplay() !== $i) {
-                        $node->setDisplay($i);
+                    if ($oldNode->getDisplay() !== $i) {
+                        $oldNode->setDisplay($i);
                     }
                 }
             }

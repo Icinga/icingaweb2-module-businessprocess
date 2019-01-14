@@ -126,14 +126,16 @@ class ProcessChanges
      * @param   Node    $node
      * @param   int     $from
      * @param   int     $to
-     * @param   string  $parentName
+     * @param   string  $newParent
+     * @param   string  $parent
      *
      * @return  $this
      */
-    public function moveNode(Node $node, $from, $to, $parentName = null)
+    public function moveNode(Node $node, $from, $to, $newParent, $parent = null)
     {
         $action = new NodeMoveAction($node);
-        $action->setParentName($parentName);
+        $action->setParent($parent);
+        $action->setNewParent($newParent);
         $action->setFrom($from);
         $action->setTo($to);
 

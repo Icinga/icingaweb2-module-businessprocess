@@ -49,6 +49,24 @@ class MoveNodeForm extends QuickForm
     public function setup()
     {
         $this->addElement(
+            'text',
+            'parent',
+            [
+                'allowEmpty'    => true,
+                'filters'       => ['Null'],
+                'validators'    => [
+                    ['Callback', true, [
+                        'callback'  => function($name) {
+                            return empty($name) || $this->bp->hasBpNode($name);
+                        },
+                        'messages'  => [
+                            'callbackValue' => $this->translate('No process found with name %value%')
+                        ]
+                    ]]
+                ]
+            ]
+        );
+        $this->addElement(
             'number',
             'from',
             [
@@ -130,6 +148,7 @@ class MoveNodeForm extends QuickForm
             $this->node,
             $this->getValue('from'),
             $this->getValue('to'),
+            $this->getValue('parent'),
             $this->parentNode !== null ? $this->parentNode->getName() : null
         );
 
