@@ -3,7 +3,6 @@
 namespace Icinga\Module\Businessprocess\Modification;
 
 use Icinga\Module\Businessprocess\BpConfig;
-use Icinga\Module\Businessprocess\BpNode;
 
 class NodeApplyManualOrderAction extends NodeAction
 {
@@ -15,8 +14,7 @@ class NodeApplyManualOrderAction extends NodeAction
     public function applyTo(BpConfig $config)
     {
         $i = 0;
-        foreach ($config->getRootNodes() as $name => $node) {
-            /** @var BpNode $node */
+        foreach ($config->getBpNodes() as $name => $node) {
             if ($node->getDisplay() > 0) {
                 $node->setDisplay(++$i);
             }
