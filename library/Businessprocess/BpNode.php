@@ -428,6 +428,7 @@ class BpNode extends Node
     {
         if (! $this->bp->getMetadata()->isManuallyOrdered()) {
             natcasesort($names);
+            $names = array_values($names);
         }
 
         $this->childNames = $names;
@@ -451,6 +452,7 @@ class BpNode extends Node
             $this->children = array();
             if (! $this->bp->getMetadata()->isManuallyOrdered()) {
                 natcasesort($this->childNames);
+                $this->childNames = array_values($this->childNames);
             }
             foreach ($this->childNames as $name) {
                 $this->children[$name] = $this->bp->getNode($name);
