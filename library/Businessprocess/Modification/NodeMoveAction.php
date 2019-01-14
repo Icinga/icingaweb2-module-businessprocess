@@ -94,8 +94,8 @@ class NodeMoveAction extends NodeAction
                 $this->error('Toplevel process "%s" not found', $name);
             }
 
-            if ($config->getBpNode($name)->getDisplay() !== $this->from) {
-                $this->error('Toplevel process "%s" not found at position %d', $name, $this->from);
+            if ($config->getBpNode($name)->getDisplay() !== $this->from + 1) {
+                $this->error('Toplevel process "%s" not found at position %d', $name, $this->from + 1);
             }
         }
 
