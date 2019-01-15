@@ -94,26 +94,27 @@
         tileDropped: function(event) {
             var evt = event.originalEvent;
             if (evt.oldIndex !== evt.newIndex) {
-                var $target = $(evt.to);
-                var actionUrl = icinga.utils.addUrlParams($target.data('actionUrl'), {
+                var $source = $(evt.from);
+                var actionUrl = icinga.utils.addUrlParams($source.data('actionUrl'), {
                     action: 'move',
                     movenode: $(evt.item).data('nodeName')
                 });
 
-                if (! $target.is('.few') && $('.addnew', $target).length === 2) {
+                if (! $source.is('.few') && $('.addnew', $source).length === 2) {
                     // This assumes we're not moving things between different lists
                     evt.oldIndex -= 1;
                     evt.newIndex -= 1;
                 }
 
                 var data = {
-                    csrfToken: $target.data('csrfToken'),
+                    csrfToken: $source.data('csrfToken'),
                     movenode: 'movenode', // That's the submit button..
+                    parent: $(evt.to).data('nodeName') || '',
                     from: evt.oldIndex,
                     to: evt.newIndex
                 };
 
-                icinga.loader.loadUrl(actionUrl, $target.closest('.container'), data, 'POST');
+                icinga.loader.loadUrl(actionUrl, $source.closest('.container'), data, 'POST');
             }
         },
 

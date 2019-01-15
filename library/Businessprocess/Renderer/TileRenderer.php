@@ -27,6 +27,9 @@ class TileRenderer extends Renderer
                 'data-action-url'               => $this->getUrl()->getAbsoluteUrl()
             ]
         );
+        if (! $this->wantsRootNodes()) {
+            $nodesDiv->attributes()->add('data-node-name', $this->parent->getName());
+        }
 
         $nodes = $this->getChildNodes();
 
