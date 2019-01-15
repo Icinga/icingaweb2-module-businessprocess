@@ -90,12 +90,13 @@ class NodeMoveAction extends NodeAction
                 $this->error('Node "%s" not found at position %d', $name, $this->from);
             }
         } else {
-            if (! $config->hasNode($name)) {
+            if (! $config->hasRootNode($name)) {
                 $this->error('Toplevel process "%s" not found', $name);
             }
 
-            if ($config->getBpNode($name)->getDisplay() !== $this->from + 1) {
-                $this->error('Toplevel process "%s" not found at position %d', $name, $this->from + 1);
+            $nodes = $config->listRootNodes();
+            if (! isset($nodes[$this->from]) || $nodes[$this->from] !== $name) {
+                $this->error('Toplevel process "%s" not found at position %d', $name, $this->from);
             }
         }
 
