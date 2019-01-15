@@ -112,6 +112,15 @@ class NodeCreateAction extends NodeAction
             $node->$func($val);
         }
 
+        if ($node->getDisplay() > 1) {
+            $i = $node->getDisplay();
+            foreach ($config->getRootNodes() as $_ => $rootNode) {
+                if ($rootNode->getDisplay() >= $node->getDisplay()) {
+                    $rootNode->setDisplay(++$i);
+                }
+            }
+        }
+
         $config->addNode($name, $node);
 
         return $node;
