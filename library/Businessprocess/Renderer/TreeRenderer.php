@@ -181,7 +181,7 @@ class TreeRenderer extends Renderer
 
         $path[] = (string) $node;
         foreach ($node->getChildren() as $name => $child) {
-            if ($child->hasChildren()) {
+            if ($child instanceof BpNode) {
                 $tbody->add($this->renderNode($bp, $child, $this->getCurrentPath()));
             } else {
                 $this->renderChild($bp, $tbody, $child, $path);
@@ -191,7 +191,7 @@ class TreeRenderer extends Renderer
         return $table;
     }
 
-    protected function renderChild($bp, BaseHtmlElement $ul, $node, $path = null)
+    protected function renderChild($bp, BaseHtmlElement $ul, Node $node, $path = null)
     {
         $li = Html::tag('li', [
             'class'             => 'movable',
@@ -200,10 +200,6 @@ class TreeRenderer extends Renderer
         ]);
         $ul->add($li);
 
-        if ($node instanceof BpNode && $node->hasInfoUrl()) {
-            $li->add($this->createInfoAction($node));
-        }
-
         if (! $this->isLocked()) {
             $li->add($this->getActionIcons($bp, $node));
         }
@@ -211,10 +207,6 @@ class TreeRenderer extends Renderer
         $link = $node->getLink();
         $link->getAttributes()->set('data-base-target', '_next');
         $link->add($this->getNodeIcons($node));
-
-        if ($node->hasChildren()) {
-            $link->add($this->renderStateBadges($node->getStateSummary()));
-        }
 
         if ($time = $node->getLastStateChange()) {
             $since = $this->timeSince($time)->prepend(
