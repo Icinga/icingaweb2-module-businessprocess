@@ -6,6 +6,7 @@ use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Web\Form\Element\Multiselect;
+use Icinga\Module\Businessprocess\Storage\Storage;
 use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 use Icinga\Web\Session\SessionNamespace;
@@ -14,6 +15,9 @@ class AddNodeForm extends QuickForm
 {
     /** @var MonitoringBackend */
     protected $backend;
+
+    /** @var Storage */
+    protected $storage;
 
     /** @var BpConfig */
     protected $bp;
@@ -140,7 +144,7 @@ class AddNodeForm extends QuickForm
             return 'new-process';
         }
 
-        if ($this->hasProcesses()) {
+        if ($this->hasProcesses() || ($this->hasParentNode() && $this->hasMoreConfigs())) {
             $types['process'] = $this->translate('Existing Process');
         }
 
@@ -239,33 +243,56 @@ class AddNodeForm extends QuickForm
         ]));
     }
 
+    protected function addFileElement()
+    {
+        $this->addElement('select', 'file', [
+            'label'         => $this->translate('File'),
+            'required'      => true,
+            'ignore'        => true,
+            'value'         => $this->bp->getName(),
+            'class'         => 'autosubmit',
+            'multiOptions'  => $this->optionalEnum($this->enumConfigs()),
+            'description'   => $this->translate(
+                'Choose a different configuration file to import its processes'
+            )
+        ]);
+    }
+
     protected function selectProcess()
     {
-        $this->addElement(new Multiselect('children', [
-            'label'        => $this->translate('Process nodes'),
-            'required'     => true,
-            'size'         => 8,
-            'style'        => 'width: 25em',
-            'multiOptions' => $this->enumProcesses(),
-            'description'  => $this->translate(
-                'Other processes that should be part of this business process node'
-            ),
-            'validators'    => [
-                ['Callback', true, [
-                    'callback'  => function ($value) {
-                        if ($this->hasParentNode() && $this->parent->hasChild($value)) {
-                            $el = $this->getElement('children');
-                            $el->addError(sprintf(
-                                $this->translate('%s is already defined in this process'),
-                                $el->getMultiOptions()[$value]
-                            ));
-                        }
+        if ($this->hasParentNode()) {
+            $this->addFileElement();
+        }
 
-                        return true;
-                    }
-                ]]
-            ]
-        ]));
+        if (($file = $this->getSentValue('file')) || !$this->hasParentNode()) {
+            $this->addElement(new Multiselect('children', [
+                'label'        => $this->translate('Process nodes'),
+                'required'     => true,
+                'size'         => 8,
+                'style'        => 'width: 25em',
+                'multiOptions' => $this->enumProcesses($file),
+                'description'  => $this->translate(
+                    'Other processes that should be part of this business process node'
+                ),
+                'validators'    => [
+                    ['Callback', true, [
+                        'callback'  => function ($value) {
+                            if ($this->hasParentNode() && $this->parent->hasChild($value)) {
+                                $el = $this->getElement('children');
+                                $el->addError(sprintf(
+                                    $this->translate('%s is already defined in this process'),
+                                    $el->getMultiOptions()[$value]
+                                ));
+                            }
+
+                            return true;
+                        }
+                    ]]
+                ]
+            ]));
+        } else {
+            $this->setSubmitLabel($this->translate('Next'));
+        }
     }
 
     /**
@@ -275,6 +302,16 @@ class AddNodeForm extends QuickForm
     public function setBackend(MonitoringBackend $backend)
     {
         $this->backend = $backend;
+        return $this;
+    }
+
+    /**
+     * @param Storage $storage
+     * @return $this
+     */
+    public function setStorage(Storage $storage)
+    {
+        $this->storage = $storage;
         return $this;
     }
 
@@ -368,25 +405,52 @@ class AddNodeForm extends QuickForm
         return count($this->enumProcesses()) > 0;
     }
 
-    protected function enumProcesses()
+    /**
+     * @param string $file
+     * @return array
+     */
+    protected function enumProcesses($file = null)
     {
         $list = array();
 
         $parents = array();
 
-        if ($this->hasParentNode()) {
+        $differentFile = $file !== null && $file !== $this->bp->getName();
+
+        if (! $differentFile && $this->hasParentNode()) {
             $this->collectAllParents($this->parent, $parents);
             $parents[$this->parent->getName()] = $this->parent;
         }
 
-        foreach ($this->bp->getNodes() as $node) {
+        $bp = $this->bp;
+        if ($differentFile) {
+            $bp = $this->storage->loadProcess($file);
+        }
+
+        foreach ($bp->getNodes() as $node) {
             if ($node instanceof BpNode && ! isset($parents[$node->getName()])) {
-                $list[(string) $node] = (string) $node; // display name?
+                $name = $node->getName();
+                if ($differentFile) {
+                    $name = '@' . $file . ':' . $name;
+                }
+
+                $list[$name] = (string) $node; // display name?
             }
         }
 
         natcasesort($list);
         return $list;
+    }
+
+    protected function hasMoreConfigs()
+    {
+        $configs = $this->enumConfigs();
+        return !empty($configs);
+    }
+
+    protected function enumConfigs()
+    {
+        return $this->storage->listProcesses();
     }
 
     /**
@@ -443,7 +507,14 @@ class AddNodeForm extends QuickForm
             case 'host':
             case 'service':
             case 'process':
-                $changes->addChildrenToNode($this->getValue('children'), $this->parent);
+                if ($this->hasParentNode()) {
+                    $changes->addChildrenToNode($this->getValue('children'), $this->parent);
+                } else {
+                    foreach ($this->getValue('children') as $nodeName) {
+                        $changes->copyNode($nodeName);
+                    }
+                }
+
                 break;
             case 'new-process':
                 $properties = $this->getValues();

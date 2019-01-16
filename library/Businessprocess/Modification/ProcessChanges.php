@@ -95,6 +95,17 @@ class ProcessChanges
     }
 
     /**
+     * @param $nodeName
+     * @param Node|null $parent
+     * @return $this
+     */
+    public function copyNode($nodeName)
+    {
+        $action = new NodeCopyAction($nodeName);
+        return $this->push($action, true);
+    }
+
+    /**
      * @param Node $node
      * @param string $parentName
      * @return $this

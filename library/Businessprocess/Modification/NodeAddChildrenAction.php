@@ -3,7 +3,6 @@
 namespace Icinga\Module\Businessprocess\Modification;
 
 use Icinga\Module\Businessprocess\BpConfig;
-use Icinga\Module\Businessprocess\BpNode;
 
 class NodeAddChildrenAction extends NodeAction
 {
@@ -30,13 +29,6 @@ class NodeAddChildrenAction extends NodeAction
      */
     public function applyTo(BpConfig $config)
     {
-        /** @var BpNode $node */
-        if (! $this->hasNode()) {
-            // TODO: We end up here when defining "top nodes", but that would probably
-            //       be a different action
-            return $this;
-        }
-
         $node = $config->getBpNode($this->getNodeName());
 
         foreach ($this->children as $name) {
@@ -49,6 +41,9 @@ class NodeAddChildrenAction extends NodeAction
                     } else {
                         $config->createService($host, $service);
                     }
+                } elseif ($name[0] === '@' && strpos($name, ':') !== false) {
+                    list($configName, $nodeName) = preg_split('~:\s*~', substr($name, 1), 2);
+                    $config->createImportedNode($configName, $nodeName);
                 }
             }
             $node->addChild($config->getNode($name));

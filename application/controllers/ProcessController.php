@@ -216,6 +216,7 @@ class ProcessController extends Controller
         if ($action === 'add' && $canEdit) {
             $form = $this->loadForm('AddNode')
                 ->setSuccessUrl(Url::fromRequest()->without('action'))
+                ->setStorage($this->storage())
                 ->setProcess($bp)
                 ->setParentNode($node)
                 ->setSession($this->session())
