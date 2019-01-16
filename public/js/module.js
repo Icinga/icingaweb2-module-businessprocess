@@ -151,15 +151,24 @@
          * @param from
          * @param item
          * @param event
-         * @returns {*}
+         * @returns boolean
          */
         rowPutAllowed: function(to, from, item, event) {
-            if (from.options.group.name === 'root') {
-                return true;
-            }
             if (to.options.group.name === 'root') {
                 return $(item).is('.process');
             }
+
+            // Otherwise we're facing a nesting error next
+            var $item = $(item),
+                childrenNames = $item.find('.process').map(function () {
+                    return $(this).data('nodeName');
+                }).get();
+            childrenNames.push($item.data('nodeName'));
+            var loopDetected = $(to.el).parents('.process').toArray().some(function (parent) {
+                return childrenNames.indexOf($(parent).data('nodeName')) !== -1;
+            });
+
+            return !loopDetected;
         },
 
         /**

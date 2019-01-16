@@ -111,10 +111,11 @@ class TreeRenderer extends Renderer
      */
     public function renderNode(BpConfig $bp, Node $node, $path = array())
     {
+        $htmlId = $this->getId($node, $path);
         $table = Html::tag(
             'li',
             [
-                'id'                => $this->getId($node, $path),
+                'id'                => $htmlId,
                 'class'             => ['bp', 'movable', $node->getObjectClassName()],
                 'data-node-name'    => $node->getName()
             ]
@@ -169,7 +170,7 @@ class TreeRenderer extends Renderer
             'data-sortable-draggable'       => '.movable',
             'data-sortable-direction'       => 'vertical',
             'data-sortable-group'           => json_encode([
-                'name'  => 'branch',
+                'name'  => $htmlId, // Unique, so that the function below is the only deciding factor
                 'put'   => 'function:rowPutAllowed'
             ]),
             'data-csrf-token'               => CsrfToken::generate(),
