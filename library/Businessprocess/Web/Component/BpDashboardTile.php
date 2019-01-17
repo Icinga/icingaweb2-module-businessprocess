@@ -3,15 +3,12 @@
 namespace Icinga\Module\Businessprocess\Web\Component;
 
 use Icinga\Module\Businessprocess\BpConfig;
-use Icinga\Module\Businessprocess\Html\BaseElement;
-use Icinga\Module\Businessprocess\Html\Container;
-use Icinga\Module\Businessprocess\Html\Element;
-use Icinga\Module\Businessprocess\Html\Icon;
-use Icinga\Module\Businessprocess\Html\Link;
-use Icinga\Module\Businessprocess\Html\Text;
-use Icinga\Module\Businessprocess\Web\Url;
+use Icinga\Web\Url;
+use ipl\Html\BaseHtmlElement;
+use ipl\Html\Html;
+use ipl\Html\Text;
 
-class BpDashboardTile extends BaseElement
+class BpDashboardTile extends BaseHtmlElement
 {
     protected $tag = 'div';
 
@@ -19,33 +16,32 @@ class BpDashboardTile extends BaseElement
 
     public function __construct(BpConfig $bp, $title, $description, $icon, $url, $urlParams = null, $attributes = null)
     {
-        $this->add(
-            Container::create(
-                ['class' => 'bp-link', 'data-base-target' => '_main'],
-                Link::create(
-                    Icon::create($icon),
-                    $url,
-                    $urlParams,
-                    $attributes
-                )->add(
-                    Element::create('span', array('class' => 'header'))->addContent($title)
-                )->addContent($description)
-            )
-        );
+        if (! isset($attributes['href'])) {
+            $attributes['href'] = Url::fromPath($url, $urlParams ?: []);
+        }
 
-        $tiles = Container::create(['class' => 'bp-root-tiles']);
+        $this->add(Html::tag(
+            'div',
+            ['class' => 'bp-link', 'data-base-target' => '_main'],
+            Html::tag('a', $attributes, Html::tag('i', ['class' => 'icon icon-' . $icon]))
+                ->add(Html::tag('span', ['class' => 'header'], $title))
+                ->add($description)
+        ));
+
+        $tiles = Html::tag('div', ['class' => 'bp-root-tiles']);
 
         foreach ($bp->getChildren() as $node) {
             $state = strtolower($node->getStateName());
 
-            $tiles->add(
-                Link::create(
-                    Text::create('&nbsp;')->setEscaped(),
-                    $url,
-                    $urlParams + ['node' => $node->getName()],
-                    ['class' => "badge state-{$state}", 'title' => $node->getAlias()]
-                )
-            );
+            $tiles->add(Html::tag(
+                'a',
+                [
+                    'href'  => Url::fromPath($url, $urlParams ?: [])->with(['node' => $node->getName()]),
+                    'class' => "badge state-{$state}",
+                    'title' => $node->getAlias()
+                ],
+                Text::create('&nbsp;')->setEscaped()
+            ));
         }
 
         $this->add($tiles);

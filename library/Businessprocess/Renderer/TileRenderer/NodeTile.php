@@ -4,18 +4,15 @@ namespace Icinga\Module\Businessprocess\Renderer\TileRenderer;
 
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\HostNode;
-use Icinga\Module\Businessprocess\Html\BaseElement;
-use Icinga\Module\Businessprocess\Html\Container;
-use Icinga\Module\Businessprocess\Html\HtmlString;
-use Icinga\Module\Businessprocess\Html\Icon;
-use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\MonitoredNode;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Renderer\Renderer;
 use Icinga\Module\Businessprocess\ServiceNode;
+use ipl\Html\BaseHtmlElement;
+use ipl\Html\Html;
 
-class NodeTile extends BaseElement
+class NodeTile extends BaseHtmlElement
 {
     protected $tag = 'div';
 
@@ -28,7 +25,7 @@ class NodeTile extends BaseElement
     protected $path;
 
     /**
-     * @var Container
+     * @var BaseHtmlElement
      */
     private $actions;
 
@@ -57,11 +54,12 @@ class NodeTile extends BaseElement
 
     protected function addActions()
     {
-        $this->actions = Container::create(
-            array(
+        $this->actions = Html::tag(
+            'div',
+            [
                 'class'            => 'actions',
                 'data-base-target' => '_self'
-            )
+            ]
         );
 
         return $this->add($this->actions);
@@ -72,7 +70,7 @@ class NodeTile extends BaseElement
         $renderer = $this->renderer;
         $node = $this->node;
 
-        $attributes = $this->attributes();
+        $attributes = $this->getAttributes();
         $attributes->add('class', $renderer->getNodeClasses($node));
         $attributes->add('id', 'bp-' . (string) $node);
 
@@ -83,9 +81,9 @@ class NodeTile extends BaseElement
 
         if ($node instanceof BpNode) {
             if ($renderer->isBreadcrumb()) {
-                $link->addContent($renderer->renderStateBadges($node->getStateSummary()));
+                $link->add($renderer->renderStateBadges($node->getStateSummary()));
             } else {
-                $this->addContent($renderer->renderStateBadges($node->getStateSummary()));
+                $this->add($renderer->renderStateBadges($node->getStateSummary()));
             }
         }
 
@@ -168,32 +166,22 @@ class NodeTile extends BaseElement
     }
 
     /**
-     * @return Link
+     * @return BaseHtmlElement
      */
     protected function getMainNodeLink()
     {
         $node = $this->node;
         $url = $this->getMainNodeUrl($node);
         if ($node instanceof ServiceNode) {
-            $link = Link::create(
-                $node->getAlias(),
-                $url,
-                null,
-                array('data-base-target' => '_next')
-            );
+            $link = Html::tag('a', ['href' => $url, 'data-base-target' => '_next'], $node->getAlias());
         } elseif ($node instanceof HostNode) {
-            $link = Link::create(
-                $node->getHostname(),
-                $url,
-                null,
-                array('data-base-target' => '_next')
-            );
+            $link = Html::tag('a', ['href' => $url, 'data-base-target' => '_next'], $node->getHostname());
         } else {
-            $link = Link::create($node->getAlias(), $url);
+            $link = Html::tag('a', ['href' => $url], $node->getAlias());
             if ($node instanceof ImportedNode) {
-                $link->attributes()->add('data-base-target', '_next');
+                $link->getAttributes()->add('data-base-target', '_next');
             } else {
-                $link->attributes()->add('data-base-target', '_self');
+                $link->getAttributes()->add('data-base-target', '_self');
             }
         }
 
@@ -206,56 +194,54 @@ class NodeTile extends BaseElement
         $url = $this->getMainNodeUrl($node);
 
         if ($node instanceof BpNode) {
-            $this->actions()->add(Link::create(
-                Icon::create('dashboard'),
-                $url->with('mode', 'tile'),
-                null,
-                array(
-                    'title' => $this->translate('Show tiles for this subtree'),
-                    'data-base-target' => '_self'
-                )
-            ))->add(Link::create(
-                Icon::create('sitemap'),
-                $url->with('mode', 'tree'),
-                null,
-                array(
-                    'title' => $this->translate('Show this subtree as a tree'),
-                    'data-base-target' => '_next'
-                )
+            $this->actions()->add(Html::tag(
+                'a',
+                [
+                    'data-base-target' => '_self',
+                    'href'  => $url->with('mode', 'tile'),
+                    'title' => mt('businessprocess', 'Show tiles for this subtree')
+                ],
+                Html::tag('i', ['class' => 'icon icon-dashboard'])
+            ))->add(Html::tag(
+                'a',
+                [
+                    'data-base-target' => '_next',
+                    'href'  => $url->with('mode', 'tree'),
+                    'title' => mt('businessprocess', 'Show this subtree as a tree')
+                ],
+                Html::tag('i', ['class' => 'icon icon-sitemap'])
             ));
 
             $url = $node->getInfoUrl();
 
             if ($url !== null) {
-                $link = Link::create(
-                    Icon::create('info-circled'),
-                    $url,
-                    null,
-                    array(
-                        'title' => sprintf('%s: %s', $this->translate('More information'), $url),
-                        'class' => 'node-info'
-                    )
+                $link = Html::tag(
+                    'a',
+                    [
+                        'href'  => $url,
+                        'class' => 'node-info',
+                        'title' => sprintf('%s: %s', mt('businessprocess', 'More information'), $url)
+                    ],
+                    Html::tag('i', ['class' => 'icon icon-circled'])
                 );
                 if (preg_match('#^http(?:s)?://#', $url)) {
-                    $link->addAttributes(array('target' => '_blank'));
+                    $link->addAttributes(['target' => '_blank']);
                 }
                 $this->actions()->add($link);
             }
         } else {
             // $url = $this->makeMonitoredNodeUrl($node);
             if ($node instanceof ServiceNode) {
-                $this->actions()->add(Link::create(
-                    Icon::create('service'),
-                    $node->getUrl(),
-                    null,
-                    array('data-base-target' => '_next')
+                $this->actions()->add(Html::tag(
+                    'a',
+                    ['href' => $node->getUrl(), 'data-base-target' => '_next'],
+                    Html::tag('i', ['class' => 'icon icon-service'])
                 ));
             } elseif ($node instanceof HostNode) {
-                $this->actions()->add(Link::create(
-                    Icon::create('host'),
-                    $node->getUrl(),
-                    null,
-                    array('data-base-target' => '_next')
+                $this->actions()->add(Html::tag(
+                    'a',
+                    ['href' => $node->getUrl(), 'data-base-target' => '_next'],
+                    Html::tag('i', ['class' => 'icon icon-host'])
                 ));
             }
         }
@@ -266,21 +252,29 @@ class NodeTile extends BaseElement
         $node = $this->node;
         $renderer = $this->renderer;
         if ($node instanceof MonitoredNode) {
-            $this->actions()->add(Link::create(
-                Icon::create('magic'),
-                $renderer->getUrl()->with('action', 'simulation')
-                    ->with('simulationnode', $this->name),
-                null,
-                array('title' => $this->translate(
-                    'Show the business impact of this node by simulating a specific state'
-                ))
+            $this->actions()->add(Html::tag(
+                'a',
+                [
+                    'href'  => $renderer->getUrl()
+                        ->with('action', 'simulation')
+                        ->with('simulationnode', $this->name),
+                    'title' => mt(
+                        'businessprocess',
+                        'Show the business impact of this node by simulating a specific state'
+                    )
+                ],
+                Html::tag('i', ['class' => 'icon icon-magic'])
             ));
 
-            $this->actions()->add(Link::create(
-                Icon::create('edit'),
-                $renderer->getUrl()->with('action', 'editmonitored')->with('editmonitorednode', $node->getName()),
-                null,
-                array('title' => $this->translate('Modify this monitored node'))
+            $this->actions()->add(Html::tag(
+                'a',
+                [
+                    'href'  => $renderer->getUrl()
+                        ->with('action', 'editmonitored')
+                        ->with('editmonitorednode', $node->getName()),
+                    'title' => mt('businessprocess', 'Modify this monitored node')
+                ],
+                Html::tag('i', ['class' => 'icon icon-edit'])
             ));
         }
 
@@ -291,11 +285,15 @@ class NodeTile extends BaseElement
         }
 
         if ($node instanceof BpNode) {
-            $this->actions()->add(Link::create(
-                Icon::create('edit'),
-                $renderer->getUrl()->with('action', 'edit')->with('editnode', $node->getName()),
-                null,
-                array('title' => $this->translate('Modify this business process node'))
+            $this->actions()->add(Html::tag(
+                'a',
+                [
+                    'href'  => $renderer->getUrl()
+                        ->with('action', 'edit')
+                        ->with('editnode', $node->getName()),
+                    'title' => mt('businessprocess', 'Modify this business process node')
+                ],
+                Html::tag('i', ['class' => 'icon icon-edit'])
             ));
         }
 
@@ -304,11 +302,13 @@ class NodeTile extends BaseElement
             'deletenode' => $node->getName(),
         );
 
-        $this->actions()->add(Link::create(
-            Icon::create('cancel'),
-            $renderer->getUrl()->with($params),
-            null,
-            array('title' => $this->translate('Delete this node'))
+        $this->actions()->add(Html::tag(
+            'a',
+            [
+                'href'  => $renderer->getUrl()->with($params),
+                'title' => mt('businessprocess', 'Delete this node')
+            ],
+            Html::tag('i', ['class' => 'icon icon-cancle'])
         ));
     }
 }

@@ -53,7 +53,7 @@ class NodeController extends Controller
                 )->setPath($path);
 
                 $bc = Breadcrumb::create($renderer);
-                $bc->attributes()->set('data-base-target', '_next');
+                $bc->getAttributes()->set('data-base-target', '_next');
                 $content->add($bc);
             }
         }

@@ -3,14 +3,12 @@
 namespace Icinga\Module\Businessprocess\Renderer;
 
 use Icinga\Module\Businessprocess\BpNode;
-use Icinga\Module\Businessprocess\Html\BaseElement;
-use Icinga\Module\Businessprocess\Html\Element;
-use Icinga\Module\Businessprocess\Html\Link;
-use Icinga\Module\Businessprocess\Html\Icon;
 use Icinga\Module\Businessprocess\Renderer\TileRenderer\NodeTile;
 use Icinga\Module\Businessprocess\Web\Url;
+use ipl\Html\BaseHtmlElement;
+use ipl\Html\Html;
 
-class Breadcrumb extends BaseElement
+class Breadcrumb extends BaseHtmlElement
 {
     protected $tag = 'ul';
 
@@ -32,16 +30,18 @@ class Breadcrumb extends BaseElement
             $bpUrl->remove('action');
         }
 
-        $breadcrumb->add(Element::create('li')->add(
-            Link::create(
-                Icon::create('dashboard'),
-                Url::fromPath('businessprocess'),
-                null,
-                ['title' => mt('businessprocess', 'Show Overview')]
+        $breadcrumb->add(Html::tag('li')->add(
+            Html::tag(
+                'a',
+                [
+                    'href'  => Url::fromPath('businessprocess'),
+                    'title' => mt('businessprocess', 'Show Overview')
+                ],
+                Html::tag('i', ['class' => 'icon icon-dashboard'])
             )
         ));
-        $breadcrumb->add(Element::create('li')->add(
-            Link::create($bp->getTitle(), $bpUrl)
+        $breadcrumb->add(Html::tag('li')->add(
+            Html::tag('a', ['href' => $bpUrl], $bp->getTitle())
         ));
         $path = $renderer->getCurrentPath();
 
@@ -52,7 +52,7 @@ class Breadcrumb extends BaseElement
                 static::renderNode($bp->getNode($node), $path, $renderer)
             );
         }
-        $breadcrumb->addContent($parts);
+        $breadcrumb->add($parts);
 
         return $breadcrumb;
     }
@@ -70,7 +70,7 @@ class Breadcrumb extends BaseElement
         $renderer = clone($renderer);
         $renderer->lock()->setIsBreadcrumb();
         $p = new NodeTile($renderer, (string) $node, $node, $path);
-        $p->attributes()->add('class', $renderer->getNodeClasses($node));
+        $p->getAttributes()->add('class', $renderer->getNodeClasses($node));
         $p->setTag('li');
         return $p;
     }

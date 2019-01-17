@@ -4,12 +4,9 @@ namespace Icinga\Module\Businessprocess\Renderer;
 
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
-use Icinga\Module\Businessprocess\Html\Container;
-use Icinga\Module\Businessprocess\Html\Element;
-use Icinga\Module\Businessprocess\Html\Icon;
-use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Node;
-use Icinga\Module\Businessprocess\Web\Url;
+use ipl\Html\BaseHtmlElement;
+use ipl\Html\Html;
 
 class TreeRenderer extends Renderer
 {
@@ -19,11 +16,12 @@ class TreeRenderer extends Renderer
     public function render()
     {
         $bp = $this->config;
-        $this->add(Container::create(
-            array(
+        $this->add(Html::tag(
+            'div',
+            [
                 'id'    => $bp->getHtmlId(),
                 'class' => 'bp'
-            ),
+            ],
             $this->renderBp($bp)
         ));
 
@@ -79,16 +77,16 @@ class TreeRenderer extends Renderer
 
     /**
      * @param Node $node
-     * @return Icon[]
+     * @return BaseHtmlElement[]
      */
     public function getNodeIcons(Node $node)
     {
         $icons = array();
         if ($node->isInDowntime()) {
-            $icons[] = Icon::create('moon');
+            $icons[] = Html::tag('i', ['class' => 'icon icon-moon']);
         }
         if ($node->isAcknowledged()) {
-            $icons[] = Icon::create('ok');
+            $icons[] = Html::tag('i', ['class' => 'icon icon-ok']);
         }
         return $icons;
     }
@@ -102,17 +100,17 @@ class TreeRenderer extends Renderer
      */
     public function renderNode(BpConfig $bp, Node $node, $path = array())
     {
-        $table = Element::create(
+        $table = Html::tag(
             'table',
-            array(
+            [
                 'id' => $this->getId($node, $path),
                 'class' => array(
                     'bp',
                     $node->getObjectClassName()
                 )
-            )
+            ]
         );
-        $attributes = $table->attributes();
+        $attributes = $table->getAttributes();
         $attributes->add('class', $this->getStateClassNames($node));
         if ($node->isHandled()) {
             $attributes->add('class', 'handled');
@@ -123,57 +121,68 @@ class TreeRenderer extends Renderer
             $attributes->add('class', 'node');
         }
 
-        $tbody = $table->createElement('tbody');
-        $tr =  $tbody->createElement('tr');
+        $tbody = Html::tag('tbody');
+        $table->add($tbody);
+        $tr =  Html::tag('tr');
+        $tbody->add($tr);
 
         if ($node instanceof BpNode) {
-            $tr->createElement(
+            $tr->add(Html::tag(
                 'th',
-                array(
-                    'rowspan' => $node->countChildren() + 1 + ($this->isLocked() ? 0 : 1)
-                )
-            )->createElement(
-                'span',
-                array('class' => 'op')
-            )->setContent($node->operatorHtml());
+                ['rowspan' => $node->countChildren() + 1 + ($this->isLocked() ? 0 : 1)],
+                Html::tag('span', ['class' => 'op'], $node->operatorHtml())
+            ));
         }
-        $td = $tr->createElement('td');
+        $td = Html::tag('td');
+        $tr->add($td);
 
         if ($node instanceof BpNode && $node->hasInfoUrl()) {
             $td->add($this->createInfoAction($node));
         }
 
         if (! $this->isLocked()) {
-            $td->addContent($this->getActionIcons($bp, $node));
+            $td->add($this->getActionIcons($bp, $node));
         }
 
         $link = $node->getLink();
-        $link->attributes()->set('data-base-target', '_next');
-        $link->addContent($this->getNodeIcons($node));
+        $link->getAttributes()->set('data-base-target', '_next');
+        $link->add($this->getNodeIcons($node));
 
         if ($node->hasChildren()) {
-            $link->addContent($this->renderStateBadges($node->getStateSummary()));
+            $link->add($this->renderStateBadges($node->getStateSummary()));
         }
 
         if ($time = $node->getLastStateChange()) {
-            $since = $this->timeSince($time)->prependContent(
+            $since = $this->timeSince($time)->prepend(
                 sprintf(' (%s ', $node->getStateName())
-            )->addContent(')');
-            $link->addContent($since);
+            )->add(')');
+            $link->add($since);
         }
 
-        $td->addContent($link);
+        $td->add($link);
 
         foreach ($node->getChildren() as $name => $child) {
-            $tbody->createElement('tr')->createElement('td')->setContent(
-                $this->renderNode($bp, $child, $this->getCurrentPath())
-            );
+            $tbody->add(Html::tag(
+                'tr',
+                null,
+                Html::tag(
+                    'td',
+                    null,
+                    $this->renderNode($bp, $child, $this->getCurrentPath())
+                )
+            ));
         }
 
         if (! $this->isLocked() && $node instanceof BpNode && $bp->getMetadata()->canModify()) {
-            $tbody->createElement('tr')->createElement('td')->setContent(
-                $this->renderAddNewNode($node)
-            );
+            $tbody->add(Html::tag(
+                'tr',
+                null,
+                Html::tag(
+                    'td',
+                    null,
+                    $this->renderAddNewNode($node)
+                )
+            ));
         }
 
         return $table;
@@ -200,7 +209,7 @@ class TreeRenderer extends Renderer
                 'action'   => 'edit',
                 'editnode' => $node->getName()
             )),
-            $this->translate('Modify this node')
+            mt('businessprocess', 'Modify this node')
         );
     }
 
@@ -213,7 +222,7 @@ class TreeRenderer extends Renderer
                 'action' => 'simulation',
                 'simulationnode' => $node->getName()
             )),
-            $this->translate('Simulate a specific state')
+            mt('businessprocess', 'Simulate a specific state')
         );
     }
 
@@ -223,33 +232,35 @@ class TreeRenderer extends Renderer
         return $this->actionIcon(
             'help',
             $url,
-            sprintf('%s: %s', $this->translate('More information'), $url)
+            sprintf('%s: %s', mt('businessprocess', 'More information'), $url)
         );
     }
 
     protected function actionIcon($icon, $url, $title)
     {
-        return Link::create(
-            Icon::create($icon),
-            $url,
-            null,
-            array(
+        return Html::tag(
+            'a',
+            [
+                'href'  => $url,
                 'title' => $title,
-                'style' => 'float: right',
-            )
+                'style' => 'float: right'
+            ],
+            Html::tag('i', ['class' => 'icon icon-' . $icon])
         );
     }
 
     protected function renderAddNewNode($parent)
     {
-        return Link::create(
-            $this->translate('Add'),
-            $this->getUrl()->with('action', 'add')->with('node', $parent->getName()),
-            null,
-            array(
-                'class' => 'addnew icon-plus',
-                'title' => $this->translate('Add a new business process node')
-            )
+        return Html::tag(
+            'a',
+            [
+                'href'  => $this->getUrl()
+                    ->with('action', 'add')
+                    ->with('node', $parent->getName()),
+                'title' => mt('businessprocess', 'Add a new business process node'),
+                'class' => 'addnew icon-plus'
+            ],
+            mt('businessprocess', 'Add')
         );
     }
 }

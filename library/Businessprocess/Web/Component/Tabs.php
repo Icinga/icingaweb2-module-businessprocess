@@ -2,8 +2,8 @@
 
 namespace Icinga\Module\Businessprocess\Web\Component;
 
-use Icinga\Module\Businessprocess\Html\Renderable;
+use ipl\Html\ValidHtml;
 
-class Tabs extends WtfTabs implements Renderable
+class Tabs extends WtfTabs implements ValidHtml
 {
 }

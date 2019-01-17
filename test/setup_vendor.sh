@@ -9,6 +9,8 @@ PHP_VERSION="$(php -r 'echo phpversion();')"
 ICINGAWEB_VERSION=${ICINGAWEB_VERSION:=2.5.1}
 ICINGAWEB_GITREF=${ICINGAWEB_GITREF:=}
 
+IPL_VERSION=${IPL_VERSION:=0.1.1}
+
 PHPCS_VERSION=${PHPCS_VERSION:=2.9.1}
 
 if [ "$PHP_VERSION" '<' 5.6.0 ]; then
@@ -51,6 +53,18 @@ else
 fi
 ln -svf "${icingaweb_path}"/library/Icinga
 ln -svf "${icingaweb_path}"/library/vendor/Zend
+
+# ipl
+ipl_path="ipl"
+if [ ! -d "$ipl_path" ]; then
+  git clone https://github.com/Icinga/icingaweb2-module-ipl.git "$ipl_path"
+fi
+(
+  set -e
+  cd "$ipl_path"
+  git fetch -p
+  git checkout -f "stable/$IPL_VERSION"
+)
 
 # phpunit
 phpunit_path="phpunit-${PHPUNIT_VERSION}"

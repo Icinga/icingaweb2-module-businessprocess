@@ -2,7 +2,7 @@
 
 namespace Icinga\Module\Businessprocess;
 
-use Icinga\Module\Businessprocess\Html\Link;
+use ipl\Html\Html;
 
 abstract class MonitoredNode extends Node
 {
@@ -11,9 +11,9 @@ abstract class MonitoredNode extends Node
     public function getLink()
     {
         if ($this->isMissing()) {
-            return Link::create($this->getAlias(), '#');
+            return Html::tag('a', ['href' => '#'], $this->getAlias());
         } else {
-            return Link::create($this->getAlias(), $this->getUrl());
+            return Html::tag('a', ['href' => $this->getUrl()], $this->getAlias());
         }
     }
 }

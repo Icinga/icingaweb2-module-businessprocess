@@ -7,9 +7,9 @@ use Diff_Renderer_Html_Inline;
 use Diff_Renderer_Html_SideBySide;
 use Diff_Renderer_Text_Context;
 use Diff_Renderer_Text_Unified;
-use Icinga\Module\Businessprocess\Html\Renderable;
+use ipl\Html\ValidHtml;
 
-class ConfigDiff implements Renderable
+class ConfigDiff implements ValidHtml
 {
     protected $a;
 

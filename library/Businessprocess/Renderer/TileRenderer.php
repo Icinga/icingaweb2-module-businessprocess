@@ -2,10 +2,8 @@
 
 namespace Icinga\Module\Businessprocess\Renderer;
 
-use Icinga\Module\Businessprocess\Html\Container;
-use Icinga\Module\Businessprocess\Html\Icon;
-use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Renderer\TileRenderer\NodeTile;
+use ipl\Html\Html;
 
 class TileRenderer extends Renderer
 {
@@ -15,14 +13,12 @@ class TileRenderer extends Renderer
     public function render()
     {
         $bp = $this->config;
-        $nodesDiv = Container::create(
-            array(
-                'class' => array(
-                    'tiles',
-                    $this->howMany()
-                ),
-                'data-base-target' => '_next',
-            )
+        $nodesDiv = Html::tag(
+            'div',
+            [
+                'class'             => ['tiles', $this->howMany()],
+                'data-base-target'  => '_next'
+            ]
         );
 
         $nodes = $this->getChildNodes();
@@ -50,7 +46,7 @@ class TileRenderer extends Renderer
             $this->add($this->addNewNode());
         }
 
-        $nodesDiv->addContent($this->getContent());
+        $nodesDiv->add($this->getContent());
         $this->setContent($nodesDiv);
 
         return parent::render();
@@ -80,30 +76,26 @@ class TileRenderer extends Renderer
 
     protected function addNewNode()
     {
-        $div = Container::create(
-            array('class' => 'addnew', 'data-base-target' => '_self')
-        );
+        $div = Html::tag('div', ['class' => 'addnew', 'data-base-target' => '_self']);
 
-        $actions = Container::create(
-            array('class'=> 'actions')
-        );
+        $actions = Html::tag('div', ['class'=> 'actions']);
 
-        $link = Link::create(
-            $this->translate('Add'),
-            $this->getUrl()->with('action', 'add'),
-            null,
-            array(
-                'title' => $this->translate('Add a new business process node')
-            )
+        $link = Html::tag(
+            'a',
+            [
+                'href'  => $this->getUrl()->with('action', 'add'),
+                'title' => mt('businessprocess', 'Add a new business process node')
+            ],
+            mt('businessprocess', 'Add')
         );
         $actions->add(
-            Link::create(
-                Icon::create('plus'),
-                $this->getUrl()->with('action', 'add'),
-                null,
-                array(
-                    'title' => $this->translate('Add a new business process node')
-                )
+            Html::tag(
+                'a',
+                [
+                    'href'  => $this->getUrl()->with('action', 'add'),
+                    'title' => mt('businessprocess', 'Add a new business process node')
+                ],
+                Html::tag('i', ['class' => 'icon icon-plus'])
             )
         );
 

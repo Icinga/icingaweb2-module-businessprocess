@@ -2,9 +2,9 @@
 
 namespace Icinga\Module\Businessprocess\Web\Component;
 
-use Icinga\Module\Businessprocess\Html\BaseElement;
+use ipl\Html\BaseHtmlElement;
 
-class ActionBar extends BaseElement
+class ActionBar extends BaseHtmlElement
 {
     protected $contentSeparator = ' ';
 
