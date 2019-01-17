@@ -23,6 +23,7 @@ class Bootstrap
 
         Cli::start($testsDir, $configDir)
             ->getModuleManager()
+            ->loadModule('ipl', $basedir . '/vendor/ipl')
             ->loadModule('businessprocess', $basedir);
     }
 }

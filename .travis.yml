@@ -21,6 +21,7 @@ cache:
 
 env:
   - ICINGAWEB_VERSION=2.5.1
+  - IPL_VERSION=0.1.1
 
 before_script:
   - ./test/setup_vendor.sh
