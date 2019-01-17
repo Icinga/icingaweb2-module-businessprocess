@@ -6,14 +6,14 @@ use Icinga\Date\DateFormatter;
 use Icinga\Exception\ProgrammingError;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
-use Icinga\Module\Businessprocess\Html\Container;
-use Icinga\Module\Businessprocess\Html\Element;
-use Icinga\Module\Businessprocess\Html\Html;
-use Icinga\Module\Businessprocess\Html\HtmlString;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Web\Url;
+use ipl\Html\BaseHtmlElement;
+use ipl\Html\Html;
+use ipl\Html\HtmlDocument;
+use ipl\Html\HtmlString;
 
-abstract class Renderer extends Html
+abstract class Renderer extends HtmlDocument
 {
     /** @var BpConfig */
     protected $config;
@@ -122,7 +122,7 @@ abstract class Renderer extends Html
 
     /**
      * @param $summary
-     * @return Container
+     * @return BaseHtmlElement
      */
     public function renderStateBadges($summary)
     {
@@ -136,26 +136,24 @@ abstract class Renderer extends Html
                 continue;
             }
 
-            $elements[] = Element::create(
+            $elements[] = Html::tag(
                 'span',
-                array(
-                    'class' => array(
+                [
+                    'class' => [
                         'badge',
                         'badge-' . strtolower($state)
-                    ),
+                    ],
                     // TODO: We should translate this in this module
                     'title' => mt('monitoring', $state)
-                )
-            )->setContent($cnt);
+                ],
+                $cnt
+            );
         }
 
         if (!empty($elements)) {
-            $container = Container::create(
-                array('class' => 'badges')
-            )/* ->renderIfEmpty(false) */;
-
+            $container = Html::tag('div', ['class' => 'badges']);
             foreach ($elements as $element) {
-                $container->addContent($element);
+                $container->add($element);
             }
 
             return $container;
@@ -306,13 +304,14 @@ abstract class Renderer extends Html
             return HtmlString::create('');
         }
 
-        return Element::create(
+        return Html::tag(
             'span',
-            array(
-                'class' => array('relative-time', 'time-since'),
-                'title' => DateFormatter::formatDateTime($time),
-            )
-        )->setContent(DateFormatter::timeSince($time, $timeOnly));
+            [
+                'class' => ['relative-time', 'time-since'],
+                'title' => DateFormatter::formatDateTime($time)
+            ],
+            DateFormatter::timeSince($time, $timeOnly)
+        );
     }
 
     protected function createUnboundParent(BpConfig $bp)

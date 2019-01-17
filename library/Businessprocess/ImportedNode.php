@@ -3,11 +3,11 @@
 namespace Icinga\Module\Businessprocess;
 
 use Icinga\Application\Config;
-use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
-use Icinga\Module\Businessprocess\Web\Url;
 use Exception;
+use Icinga\Web\Url;
+use ipl\Html\Html;
 
 class ImportedNode extends Node
 {
@@ -226,13 +226,15 @@ class ImportedNode extends Node
      */
     public function getLink()
     {
-        return Link::create(
-            $this->getAlias(),
-            'businessprocess/process/show',
-            array(
-                'config' => $this->configName,
-                'node'   => $this->nodeName
-            )
+        return Html::tag(
+            'a',
+            [
+                'href'  => Url::fromPath('businessprocess/process/show', [
+                    'config'    => $this->configName,
+                    'node'      => $this->nodeName
+                ])
+            ],
+            $this->getAlias()
         );
     }
 }

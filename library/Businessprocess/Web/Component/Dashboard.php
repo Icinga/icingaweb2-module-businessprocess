@@ -3,13 +3,12 @@
 namespace Icinga\Module\Businessprocess\Web\Component;
 
 use Icinga\Authentication\Auth;
-use Icinga\Module\Businessprocess\Html\BaseElement;
-use Icinga\Module\Businessprocess\Html\Container;
-use Icinga\Module\Businessprocess\Html\HtmlTag;
 use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Storage\Storage;
+use ipl\Html\BaseHtmlElement;
+use ipl\Html\Html;
 
-class Dashboard extends BaseElement
+class Dashboard extends BaseHtmlElement
 {
     /** @var string */
     protected $contentSeparator = "\n";
@@ -40,21 +39,22 @@ class Dashboard extends BaseElement
         // TODO: Auth?
         $processes = $storage->listProcessNames();
         $this->add(
-            HtmlTag::h1($this->translate('Welcome to your Business Process Overview'))
+            Html::tag('h1', null, mt('businessprocess', 'Welcome to your Business Process Overview'))
         );
-        $this->add(
-            HtmlTag::p(
-                $this->translate(
-                    'From here you can reach all your defined Business Process'
-                    . ' configurations, create new or modify existing ones'
-                )
+        $this->add(Html::tag(
+            'p',
+            null,
+            mt(
+                'businessprocess',
+                'From here you can reach all your defined Business Process'
+                . ' configurations, create new or modify existing ones'
             )
-        );
+        ));
         if ($auth->hasPermission('businessprocess/create')) {
             $this->add(
                 new DashboardAction(
-                    $this->translate('Create'),
-                    $this->translate('Create a new Business Process configuration'),
+                    mt('businessprocess', 'Create'),
+                    mt('businessprocess', 'Create a new Business Process configuration'),
                     'plus',
                     'businessprocess/process/create',
                     null,
@@ -62,8 +62,8 @@ class Dashboard extends BaseElement
                 )
             )->add(
                 new DashboardAction(
-                    $this->translate('Upload'),
-                    $this->translate('Upload an existing Business Process configuration'),
+                    mt('businessprocess', 'Upload'),
+                    mt('businessprocess', 'Upload an existing Business Process configuration'),
                     'upload',
                     'businessprocess/process/upload',
                     null,
@@ -71,10 +71,13 @@ class Dashboard extends BaseElement
                 )
             );
         } elseif (empty($processes)) {
-            $this->addContent(
-                Container::create()
-                    ->add(HtmlTag::h1($this->translate('Not available')))
-                    ->add(HtmlTag::p($this->translate('No Business Process has been defined for you')))
+            $this->add(
+                Html::tag('div')
+                    ->add(Html::tag('h1', null, mt('businessprocess', 'Not available')))
+                    ->add(Html::tag('p', null, mt(
+                        'businessprocess',
+                        'No Business Process has been defined for you'
+                    )))
             );
         }
 

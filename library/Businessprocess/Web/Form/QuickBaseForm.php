@@ -4,10 +4,10 @@ namespace Icinga\Module\Businessprocess\Web\Form;
 
 use Icinga\Application\Icinga;
 use Icinga\Application\Modules\Module;
-use Icinga\Module\Businessprocess\Html\Renderable;
+use ipl\Html\ValidHtml;
 use Zend_Form;
 
-abstract class QuickBaseForm extends Zend_Form implements Renderable
+abstract class QuickBaseForm extends Zend_Form implements ValidHtml
 {
     /**
      * The Icinga module this form belongs to. Usually only set if the

@@ -2,10 +2,12 @@
 
 namespace Icinga\Module\Businessprocess\Web\Component;
 
-use Icinga\Module\Businessprocess\Html\Container;
+use ipl\Html\BaseHtmlElement;
 
-class Controls extends Container
+class Controls extends BaseHtmlElement
 {
+    protected $tag = 'div';
+
     protected $contentSeparator = "\n";
 
     protected $defaultAttributes = array('class' => 'controls');

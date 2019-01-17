@@ -4,7 +4,6 @@ namespace Icinga\Module\Businessprocess\Web;
 
 use Icinga\Application\Icinga;
 use Icinga\Module\Businessprocess\BpConfig;
-use Icinga\Module\Businessprocess\Html\HtmlTag;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Businessprocess\Storage\Storage;
@@ -16,6 +15,7 @@ use Icinga\Module\Businessprocess\Web\Form\FormLoader;
 use Icinga\Web\Controller as ModuleController;
 use Icinga\Web\Notification;
 use Icinga\Web\View;
+use ipl\Html\Html;
 
 class Controller extends ModuleController
 {
@@ -86,9 +86,9 @@ class Controller extends ModuleController
     protected function controls()
     {
         if ($this->view->controls === null) {
-            $controls = $this->view->controls = Controls::create();
+            $controls = $this->view->controls = new Controls();
             if ($this->view->compact) {
-                $controls->attributes()->add('class', 'compact');
+                $controls->getAttributes()->add('class', 'compact');
             }
         }
 
@@ -101,9 +101,9 @@ class Controller extends ModuleController
     protected function content()
     {
         if ($this->view->content === null) {
-            $content = $this->view->content = Content::create();
+            $content = $this->view->content = new Content();
             if ($this->view->compact) {
-                $content->attributes()->add('class', 'compact');
+                $content->getAttributes()->add('class', 'compact');
             }
         }
 
@@ -187,7 +187,7 @@ class Controller extends ModuleController
         $args = func_get_args();
         array_shift($args);
         $this->view->title = vsprintf($title, $args);
-        $this->controls()->add(HtmlTag::h1($this->view->title));
+        $this->controls()->add(Html::tag('h1', null, $this->view->title));
         return $this;
     }
 

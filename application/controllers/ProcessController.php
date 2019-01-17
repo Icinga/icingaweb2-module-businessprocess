@@ -5,11 +5,6 @@ namespace Icinga\Module\Businessprocess\Controllers;
 use Icinga\Date\DateFormatter;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
-use Icinga\Module\Businessprocess\Html\Element;
-use Icinga\Module\Businessprocess\Html\HtmlString;
-use Icinga\Module\Businessprocess\Html\HtmlTag;
-use Icinga\Module\Businessprocess\Html\Icon;
-use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Renderer\Breadcrumb;
 use Icinga\Module\Businessprocess\Renderer\Renderer;
@@ -23,11 +18,13 @@ use Icinga\Module\Businessprocess\Web\Component\ActionBar;
 use Icinga\Module\Businessprocess\Web\Component\RenderedProcessActionBar;
 use Icinga\Module\Businessprocess\Web\Component\Tabs;
 use Icinga\Module\Businessprocess\Web\Controller;
-use Icinga\Module\Businessprocess\Web\Url;
 use Icinga\Util\Json;
 use Icinga\Web\Notification;
+use Icinga\Web\Url;
 use Icinga\Web\Widget\Tabextension\DashboardAction;
 use Icinga\Web\Widget\Tabextension\OutputFormat;
+use ipl\Html\Html;
+use ipl\Html\HtmlString;
 
 class ProcessController extends Controller
 {
@@ -45,7 +42,7 @@ class ProcessController extends Controller
         $this->setTitle($title);
         $this->controls()
             ->add($this->tabsForCreate()->activate('create'))
-            ->add(HtmlTag::h1($title));
+            ->add(Html::tag('h1', null, $title));
 
         $this->content()->add(
             $this->loadForm('bpConfig')
@@ -66,7 +63,7 @@ class ProcessController extends Controller
         $this->setTitle($title);
         $this->controls()
             ->add($this->tabsForCreate()->activate('upload'))
-            ->add(HtmlTag::h1($title));
+            ->add(Html::tag('h1', null, $title));
 
         $this->content()->add(
             $this->loadForm('BpUpload')
@@ -113,9 +110,9 @@ class ProcessController extends Controller
             }
             $bp->addError(sprintf('There are %d missing nodes: %s', $count, implode(', ', $missing)));
         }
-        $this->content()->addContent($this->showHints($bp));
-        $this->content()->addContent($this->showWarnings($bp));
-        $this->content()->addContent($this->showErrors($bp));
+        $this->content()->add($this->showHints($bp));
+        $this->content()->add($this->showWarnings($bp));
+        $this->content()->add($this->showErrors($bp));
         $this->content()->add($renderer);
         $this->loadActionForm($bp, $node);
         $this->setDynamicAutorefresh();
@@ -126,27 +123,23 @@ class ProcessController extends Controller
         $controls = $this->controls();
 
         if ($this->showFullscreen) {
-            $controls->attributes()->add('class', 'want-fullscreen');
-            $controls->add(
-                Link::create(
-                    Icon::create('resize-small'),
-                    $this->url()->without('showFullscreen')->without('view'),
-                    null,
-                    array(
-                        'style' => 'float: right',
-                        'title' => $this->translate(
-                            'Leave full screen and switch back to normal mode'
-                        )
-                    )
-                )
-            );
+            $controls->getAttributes()->add('class', 'want-fullscreen');
+            $controls->add(Html::tag(
+                'a',
+                [
+                    'href'  => $this->url()->without('showFullscreen')->without('view'),
+                    'title' => $this->translate('Leave full screen and switch back to normal mode'),
+                    'style' => 'float: right'
+                ],
+                Html::tag('i', ['class' => 'icon icon-resize-small'])
+            ));
         }
 
         if (! ($this->showFullscreen || $this->view->compact)) {
             $controls->add($this->getProcessTabs($bp, $renderer));
         }
         if (! $this->view->compact) {
-            $controls->add(Element::create('h1')->setContent($this->view->title));
+            $controls->add(Html::tag('h1')->setContent($this->view->title));
         }
         $controls->add(Breadcrumb::create($renderer));
         if (! $this->showFullscreen && ! $this->view->compact) {
@@ -259,7 +252,7 @@ class ProcessController extends Controller
         }
 
         if ($form) {
-            $this->content()->prependContent(HtmlString::create((string) $form));
+            $this->content()->prepend(HtmlString::create((string) $form));
         }
     }
 
@@ -283,9 +276,9 @@ class ProcessController extends Controller
     protected function showWarnings(BpConfig $bp)
     {
         if ($bp->hasWarnings()) {
-            $ul = Element::create('ul', array('class' => 'warning'));
+            $ul = Html::tag('ul', array('class' => 'warning'));
             foreach ($bp->getWarnings() as $warning) {
-                $ul->createElement('li')->addContent($warning);
+                $ul->add(Html::tag('li')->setContent($warning));
             }
 
             return $ul;
@@ -297,9 +290,9 @@ class ProcessController extends Controller
     protected function showErrors(BpConfig $bp)
     {
         if ($bp->hasWarnings()) {
-            $ul = Element::create('ul', array('class' => 'error'));
+            $ul = Html::tag('ul', array('class' => 'error'));
             foreach ($bp->getErrors() as $msg) {
-                $ul->createElement('li')->addContent($msg);
+                $ul->add(Html::tag('li')->setContent($msg));
             }
 
             return $ul;
@@ -310,40 +303,41 @@ class ProcessController extends Controller
 
     protected function showHints(BpConfig $bp)
     {
-        $ul = Element::create('ul', array('class' => 'error'));
+        $ul = Html::tag('ul', ['class' => 'error']);
         foreach ($bp->getErrors() as $error) {
-            $ul->createElement('li')->addContent($error);
+            $ul->add(Html::tag('li')->setContent($error));
         }
         if ($bp->hasChanges()) {
-            $ul->createElement('li')->setSeparator(' ')->addContent(sprintf(
+            $li = Html::tag('li')->setSeparator(' ');
+            $li->add(sprintf(
                 $this->translate('This process has %d pending change(s).'),
                 $bp->countChanges()
-            ))->addContent(
-                Link::create(
-                    $this->translate('Store'),
-                    'businessprocess/process/config',
-                    array('config' => $bp->getName())
-                )
-            )->addContent(
-                Link::create(
-                    $this->translate('Dismiss'),
-                    $this->url()->with('dismissChanges', true),
-                    null
-                )
-            );
+            ))->add(Html::tag(
+                'a',
+                ['href' => Url::fromPath('businessprocess/process/config', ['config' => $bp->getName()])],
+                $this->translate('Store')
+            ))->add(Html::tag(
+                'a',
+                ['href' => $this->url()->with('dismissChanges', true)],
+                $this->translate('Dismiss')
+            ));
+            $ul->add($li);
         }
 
         if ($bp->hasSimulations()) {
-            $ul->createElement('li')->setSeparator(' ')->addContent(sprintf(
+            $li = Html::tag('li')->setSeparator(' ');
+            $li->add(sprintf(
                 $this->translate('This process shows %d simulated state(s).'),
                 $bp->countSimulations()
-            ))->addContent(Link::create(
-                $this->translate('Dismiss'),
-                $this->url()->with('dismissSimulations', true)
+            ))->add(Html::tag(
+                'a',
+                ['href' => $this->url()->with('dismissSimulations', true)],
+                $this->translate('Dismiss')
             ));
+            $ul->add($li);
         }
 
-        if ($ul->hasContent()) {
+        if (! $ul->isEmpty()) {
             return $ul;
         } else {
             return null;
@@ -380,7 +374,7 @@ class ProcessController extends Controller
         $this->setTitle($title);
         $this->controls()
             ->add($this->tabsForConfig($bp)->activate('source'))
-            ->add(HtmlTag::h1($title))
+            ->add(Html::tag('h1', null, $title))
             ->add($this->createConfigActionBar($bp, $showDiff));
 
         $this->setViewScript('process/source');
@@ -424,7 +418,7 @@ class ProcessController extends Controller
         $this->setTitle($title);
         $this->controls()
             ->add($this->tabsForConfig($bp)->activate('config'))
-            ->add(HtmlTag::h1($title))
+            ->add(Html::tag('h1', null, $title))
             ->add($this->createConfigActionBar($bp));
 
         $url = Url::fromPath(
@@ -446,48 +440,42 @@ class ProcessController extends Controller
 
         if ($showDiff) {
             $params = array('config' => $config->getName());
-            $actionBar->add(
-                Link::create(
-                    $this->translate('Source'),
-                    'businessprocess/process/source',
-                    $params,
-                    array(
-                        'class' => 'icon-doc-text',
-                        'title' => $this->translate('Show source code'),
-                    )
-                )
-            );
+            $actionBar->add(Html::tag(
+                'a',
+                [
+                    'href'  => Url::fromPath('businessprocess/process/source', $params),
+                    'class' => 'icon-doc-text',
+                    'title' => $this->translate('Show source code')
+                ],
+                $this->translate('Source')
+            ));
         } else {
             $params = array(
                 'config'   => $config->getName(),
                 'showDiff' => true
             );
 
-            $actionBar->add(
-                Link::create(
-                    $this->translate('Diff'),
-                    'businessprocess/process/source',
-                    $params,
-                    array(
-                        'class' => 'icon-flapping',
-                        'title' => $this->translate('Highlight changes'),
-                    )
-                )
-            );
+            $actionBar->add(Html::tag(
+                'a',
+                [
+                    'href'  => Url::fromPath('businessprocess/process/source', $params),
+                    'class' => 'icon-flapping',
+                    'title' => $this->translate('Highlight changes')
+                ],
+                $this->translate('Diff')
+            ));
         }
 
-        $actionBar->add(
-            Link::create(
-                $this->translate('Download'),
-                'businessprocess/process/download',
-                array('config' => $config->getName()),
-                array(
-                    'target' => '_blank',
-                    'class'  => 'icon-download',
-                    'title'  => $this->translate('Download process configuration')
-                )
-            )
-        );
+        $actionBar->add(Html::tag(
+            'a',
+            [
+                'href'      => Url::fromPath('businessprocess/process/download', ['config' => $config->getName()]),
+                'class'     => 'icon-download',
+                'target'    => '_blank',
+                'title'     => $this->translate('Download process configuration')
+            ],
+            $this->translate('Download')
+        ));
 
         return $actionBar;
     }

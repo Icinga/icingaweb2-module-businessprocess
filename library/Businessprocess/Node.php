@@ -3,7 +3,7 @@
 namespace Icinga\Module\Businessprocess;
 
 use Icinga\Exception\ProgrammingError;
-use Icinga\Module\Businessprocess\Html\Link;
+use ipl\Html\Html;
 
 abstract class Node
 {
@@ -368,12 +368,9 @@ abstract class Node
         return $this->className;
     }
 
-    /**
-     * @return Link
-     */
     public function getLink()
     {
-        return Link::create($this->getAlias(), '#');
+        return Html::tag('a', ['href' => '#'], $this->getAlias());
     }
 
     public function operatorHtml()

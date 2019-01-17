@@ -4,10 +4,10 @@ namespace Icinga\Module\Businessprocess\Web\Component;
 
 use Icinga\Authentication\Auth;
 use Icinga\Module\Businessprocess\BpConfig;
-use Icinga\Module\Businessprocess\Html\Link;
 use Icinga\Module\Businessprocess\Renderer\Renderer;
 use Icinga\Module\Businessprocess\Renderer\TreeRenderer;
-use Icinga\Module\Businessprocess\Web\Url;
+use Icinga\Web\Url;
+use ipl\Html\Html;
 
 class RenderedProcessActionBar extends ActionBar
 {
@@ -16,87 +16,73 @@ class RenderedProcessActionBar extends ActionBar
         $meta = $config->getMetadata();
 
         if ($renderer instanceof TreeRenderer) {
-            $this->add(
-                Link::create(
-                    $this->translate('Tiles'),
-                    $url->with('mode', 'tile'),
-                    null,
-                    array(
-                        'class' => 'icon-dashboard',
-                        'title' => $this->translate('Switch to Tile view'),
-                    )
-                )
-            );
+            $this->add(Html::tag(
+                'a',
+                [
+                    'href'  => $url->with('mode', 'tile'),
+                    'title' => mt('businessprocess', 'Switch to Tile view'),
+                    'class' => 'icon-dashboard'
+                ],
+                mt('businessprocess', 'Tiles')
+            ));
         } else {
-            $this->add(
-                Link::create(
-                    $this->translate('Tree'),
-                    $url->with('mode', 'tree'),
-                    null,
-                    array(
-                        'class' => 'icon-sitemap',
-                        'title' => $this->translate('Switch to Tree view'),
-                    )
-                )
-            );
+            $this->add(Html::tag(
+                'a',
+                [
+                    'href'  => $url->with('mode', 'tree'),
+                    'title' => mt('businessprocess', 'Switch to Tree view'),
+                    'class' => 'icon-sitemap'
+                ],
+                mt('businessprocess', 'Tree')
+            ));
         }
 
-        $this->add(
-            Link::create(
-                $this->translate('Fullscreen'),
-                $url->with('showFullscreen', true),
-                null,
-                array(
-                    'class'            => 'icon-resize-full-alt',
-                    'title'            => $this->translate('Switch to fullscreen mode'),
-                    'data-base-target' => '_main',
-                )
-            )
-        );
+        $this->add(Html::tag(
+            'a',
+            [
+                'data-base-target' => '_main',
+                'href'  => $url->with('showFullscreen', true),
+                'title' => mt('businessprocess', 'Switch to fullscreen mode'),
+                'class' => 'icon-resize-full-alt'
+            ],
+            mt('businessprocess', 'Fullscreen')
+        ));
 
         $hasChanges = $config->hasSimulations() || $config->hasBeenChanged();
 
         if ($renderer->isLocked()) {
-            $this->add(
-                Link::create(
-                    $this->translate('Editing locked'),
-                    $url->with('unlocked', true),
-                    null,
-                    array(
-                        'class' => 'icon-lock',
-                        'title' => $this->translate('Click to unlock editing for this process'),
-                    )
-                )
-            );
+            $this->add(Html::tag(
+                'a',
+                [
+                    'href'  => $url->with('unlocked', true),
+                    'title' => mt('businessprocess', 'Click to unlock editing for this process'),
+                    'class' => 'icon-lock'
+                ],
+                mt('businessprocess', 'Editing locked')
+            ));
         } elseif (! $hasChanges) {
-            $this->add(
-                Link::create(
-                    $this->translate('Editing unlocked'),
-                    $url->without('unlocked')->without('action'),
-                    null,
-                    array(
-                        'class' => 'icon-lock-open',
-                        'title' => $this->translate('Click to lock editing for this process'),
-                    )
-                )
-            );
+            $this->add(Html::tag(
+                'a',
+                [
+                    'href'  => $url->without('unlocked')->without('action'),
+                    'title' => mt('businessprocess', 'Click to lock editing for this process'),
+                    'class' => 'icon-lock-open'
+                ],
+                mt('businessprocess', 'Editing unlocked')
+            ));
         }
 
-        if ($renderer->wantsRootNodes() && (
-                ($hasChanges || (! $renderer->isLocked())) && $meta->canModify()
-        )) {
-            $this->add(
-                Link::create(
-                    $this->translate('Config'),
-                    'businessprocess/process/config',
-                    $this->currentProcessParams($url),
-                    array(
-                        'class'            => 'icon-wrench',
-                        'title'            => $this->translate('Modify this process'),
-                        'data-base-target' => '_next',
-                    )
-                )
-            );
+        if ($renderer->wantsRootNodes() && (($hasChanges || (! $renderer->isLocked())) && $meta->canModify())) {
+            $this->add(Html::tag(
+                'a',
+                [
+                    'data-base-target' => '_next',
+                    'href'  => Url::fromPath('businessprocess/process/config', $this->currentProcessParams($url)),
+                    'title' => mt('businessprocess', 'Modify this process'),
+                    'class' => 'icon-wrench'
+                ],
+                mt('businessprocess', 'Config')
+            ));
         }
     }
 
