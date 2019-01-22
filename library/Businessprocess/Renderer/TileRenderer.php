@@ -28,7 +28,7 @@ class TileRenderer extends Renderer
             ]
         );
         if (! $this->wantsRootNodes()) {
-            $nodesDiv->attributes()->add('data-node-name', $this->parent->getName());
+            $nodesDiv->getAttributes()->add('data-node-name', $this->parent->getName());
         }
 
         $nodes = $this->getChildNodes();
