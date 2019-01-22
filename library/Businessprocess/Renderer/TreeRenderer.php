@@ -53,7 +53,11 @@ class TreeRenderer extends Renderer
         }
 
         foreach ($nodes as $name => $node) {
-            $html[] = $this->renderNode($bp, $node);
+            if ($node instanceof BpNode) {
+                $html[] = $this->renderNode($bp, $node);
+            } else {
+                $html[] = $this->renderChild($bp, $node);
+            }
         }
 
         return $html;
@@ -183,23 +187,22 @@ class TreeRenderer extends Renderer
         $path[] = (string) $node;
         foreach ($node->getChildren() as $name => $child) {
             if ($child instanceof BpNode) {
-                $tbody->add($this->renderNode($bp, $child, $this->getCurrentPath()));
+                $tbody->add($this->renderNode($bp, $child, $path));
             } else {
-                $this->renderChild($bp, $tbody, $child, $path);
+                $tbody->add($this->renderChild($bp, $child, $path));
             }
         }
 
         return $table;
     }
 
-    protected function renderChild($bp, BaseHtmlElement $ul, Node $node, $path = null)
+    protected function renderChild($bp, Node $node, $path = null)
     {
         $li = Html::tag('li', [
             'class'             => 'movable',
             'id'                => $this->getId($node, $path ?: []),
             'data-node-name'    => (string) $node
         ]);
-        $ul->add($li);
 
         if (! $this->isLocked()) {
             $li->add($this->getActionIcons($bp, $node));
@@ -216,7 +219,7 @@ class TreeRenderer extends Renderer
             $link->add($since);
         }
 
-        $li->add($link);
+        return $li;
     }
 
     protected function getActionIcons(BpConfig $bp, Node $node)
