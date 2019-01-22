@@ -22,7 +22,7 @@ class TreeRenderer extends Renderer
             [
                 'id'                            => $bp->getHtmlId(),
                 'class'                         => ['tree', 'sortable'],
-                'data-sortable-disabled'        => $this->isLocked(),
+                'data-sortable-disabled'        => $this->isLocked() ? 'true' : 'false',
                 'data-sortable-data-id-attr'    => 'id',
                 'data-sortable-direction'       => 'vertical',
                 'data-sortable-group'           => json_encode([
@@ -165,7 +165,7 @@ class TreeRenderer extends Renderer
 
         $tbody = Html::tag('ul', [
             'class'                         => 'sortable',
-            'data-sortable-disabled'        => $this->isLocked(),
+            'data-sortable-disabled'        => $this->isLocked() ? 'true' : 'false',
             'data-sortable-data-id-attr'    => 'id',
             'data-sortable-draggable'       => '.movable',
             'data-sortable-direction'       => 'vertical',
