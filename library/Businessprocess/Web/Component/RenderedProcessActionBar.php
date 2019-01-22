@@ -58,7 +58,7 @@ class RenderedProcessActionBar extends ActionBar
                     'title' => mt('businessprocess', 'Click to unlock editing for this process'),
                     'class' => 'icon-lock'
                 ],
-                mt('businessprocess', 'Editing locked')
+                mt('businessprocess', 'Unlock Editing')
             ));
         } elseif (! $hasChanges) {
             $this->add(Html::tag(
@@ -68,7 +68,7 @@ class RenderedProcessActionBar extends ActionBar
                     'title' => mt('businessprocess', 'Click to lock editing for this process'),
                     'class' => 'icon-lock-open'
                 ],
-                mt('businessprocess', 'Editing unlocked')
+                mt('businessprocess', 'Lock Editing')
             ));
         }
 

@@ -121,6 +121,7 @@ class ProcessController extends Controller
     protected function prepareControls($bp, $renderer)
     {
         $controls = $this->controls();
+        $controls->getAttributes()->add('class', 'separated');
 
         if ($this->showFullscreen) {
             $controls->getAttributes()->add('class', 'want-fullscreen');
@@ -137,9 +138,6 @@ class ProcessController extends Controller
 
         if (! ($this->showFullscreen || $this->view->compact)) {
             $controls->add($this->getProcessTabs($bp, $renderer));
-        }
-        if (! $this->view->compact) {
-            $controls->add(Html::tag('h1')->setContent($this->view->title));
         }
         $controls->add(Breadcrumb::create($renderer));
         if (! $this->showFullscreen && ! $this->view->compact) {
