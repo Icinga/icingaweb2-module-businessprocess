@@ -32,6 +32,8 @@ class HostNode extends MonitoredNode
 
     protected $className = 'host';
 
+    protected $icon = 'host';
+
     public function __construct(BpConfig $bp, $object)
     {
         $this->name     = $object->hostname . ';Hoststatus';

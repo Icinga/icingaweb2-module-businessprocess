@@ -12,6 +12,8 @@ class ServiceNode extends MonitoredNode
 
     protected $className = 'service';
 
+    protected $icon = 'service';
+
     public function __construct(BpConfig $bp, $object)
     {
         $this->name = $object->hostname . ';' . $object->service;

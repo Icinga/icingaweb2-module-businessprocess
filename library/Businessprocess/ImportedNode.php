@@ -22,6 +22,8 @@ class ImportedNode extends Node
 
     protected $className = 'subtree';
 
+    protected $icon = 'download';
+
     /** @var BpConfig */
     private $config;
 

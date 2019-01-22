@@ -520,4 +520,10 @@ class BpNode extends Node
                 return 'min:' . $this->operator;
         }
     }
+
+    public function getIcon()
+    {
+        $this->icon = $this->hasParents() ? 'cubes' : 'sitemap';
+        return parent::getIcon();
+    }
 }
