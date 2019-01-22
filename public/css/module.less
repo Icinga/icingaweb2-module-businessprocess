@@ -9,11 +9,10 @@ a:focus {
 .action-bar {
     display: flex;
     align-items: center;
+    font-size: 1.3em;
+    color: @icinga-blue;
 
-    a {
-        font-size: 1.3em;
-        color: @icinga-blue;
-
+    > a {
         &:hover::before {
             text-decoration: none;
         }
@@ -32,6 +31,40 @@ a:focus {
 
             &:last-child {
                 margin-left: auto;
+            }
+        }
+    }
+
+    > div.view-toggle {
+        margin-right: 1em;
+
+        span {
+            color: @gray;
+            margin-right: .5em;
+        }
+
+        a {
+            padding: .25em .5em;
+            border: 1px solid @icinga-blue;
+
+            i::before {
+                margin-right: 0;
+            }
+
+            &.active {
+                color: white;
+                background-color: @icinga-blue;
+            }
+
+            &:first-of-type {
+                border-right-width: 0;
+                border-top-left-radius: .25em;
+                border-bottom-left-radius: .25em;
+            }
+            &:last-of-type {
+                border-left-width: 0;
+                border-top-right-radius: .25em;
+                border-bottom-right-radius: .25em;
             }
         }
     }

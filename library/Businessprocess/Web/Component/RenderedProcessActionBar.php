@@ -15,27 +15,27 @@ class RenderedProcessActionBar extends ActionBar
     {
         $meta = $config->getMetadata();
 
-        if ($renderer instanceof TreeRenderer) {
-            $this->add(Html::tag(
-                'a',
-                [
-                    'href'  => $url->with('mode', 'tile'),
-                    'title' => mt('businessprocess', 'Switch to Tile view'),
-                    'class' => 'icon-dashboard'
-                ],
-                mt('businessprocess', 'Tiles')
-            ));
-        } else {
-            $this->add(Html::tag(
-                'a',
-                [
-                    'href'  => $url->with('mode', 'tree'),
-                    'title' => mt('businessprocess', 'Switch to Tree view'),
-                    'class' => 'icon-sitemap'
-                ],
-                mt('businessprocess', 'Tree')
-            ));
-        }
+        $toggle = Html::tag('div', ['class' => 'view-toggle']);
+        $toggle->add(Html::tag('span', null, mt('businessprocess', 'View')));
+        $toggle->add(Html::tag(
+            'a',
+            [
+                'href'  => $url->with('mode', 'tile'),
+                'title' => mt('businessprocess', 'Switch to Tile view'),
+                'class' => $renderer instanceof TreeRenderer ? '' : 'active'
+            ],
+            Html::tag('i', ['class' => 'icon icon-dashboard'])
+        ));
+        $toggle->add(Html::tag(
+            'a',
+            [
+                'href'  => $url->with('mode', 'tree'),
+                'title' => mt('businessprocess', 'Switch to Tree view'),
+                'class' => $renderer instanceof TreeRenderer ? 'active' : ''
+            ],
+            Html::tag('i', ['class' => 'icon icon-sitemap'])
+        ));
+        $this->add($toggle);
 
         $this->add(Html::tag(
             'a',
