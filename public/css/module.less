@@ -517,21 +517,9 @@ td > a > .badges {
     list-style: none;
     overflow: hidden;
     padding: 0;
-
-    .badges {
-        background-color: transparent;
-        border-radius: 0;
-        display: inline-block;
-        padding: 0 0 0 0.5em;
-        .badge {
-            line-height: 1.25em;
-            font-size: 0.8em;
-            border: 1px solid white;
-        }
-    }
 }
 
-.breadcrumb {
+/*.breadcrumb {
     > .critical            a { background: @colorCritical; }
     > .critical.handled    a { background: @colorCriticalHandled; }
     > .unknown             a { background: @colorUnknown; }
@@ -549,7 +537,7 @@ td > a > .badges {
     > .warning             a:after { border-left-color: @colorWarning; }
     > .warning.handled     a:after { border-left-color: @colorWarningHandled; }
     > .ok                  a:after { border-left-color: @colorOk; }
-}
+}*/
 
 .breadcrumb:after {
     content:'';
@@ -566,13 +554,12 @@ td > a > .badges {
 
 }
 .breadcrumb li a {
-    color: white;
+    color: @icinga-blue;
     margin: 0;
     font-size: 1.2em;
     text-decoration: none;
     padding-left: 2em;
     line-height: 2.5em;
-    background: @icinga-blue;
     position: relative;
     display: block;
     float: left;
@@ -580,8 +567,26 @@ td > a > .badges {
         outline: none;
     }
 }
+.breadcrumb li {
+    border: 1px solid @gray-lighter;
 
-.breadcrumb li a:before, .breadcrumb li a:after {
+    &:first-of-type {
+        border-radius: .25em;
+    }
+
+    &:last-of-type {
+        border-radius: .25em;
+        border: 1px solid @icinga-blue;
+        background: @icinga-blue;
+        padding-right: 1.2em;
+
+        a {
+            color: white;
+        }
+    }
+}
+
+.breadcrumb li:not(:last-of-type) a:before, .breadcrumb li:not(:last-of-type) a:after {
     content: " ";
     display: block;
     width: 0;
@@ -594,14 +599,14 @@ td > a > .badges {
     left: 100%;
 }
 
-.breadcrumb li a:before {
-    border-left: 1.2em solid white;
+.breadcrumb li:not(:last-of-type) a:before {
+    border-left: 1.2em solid @gray-lighter;
     margin-left: 1px;
     z-index: 1;
 }
 
-.breadcrumb li a:after {
-    border-left: 1.2em solid @icinga-blue;
+.breadcrumb li:not(:last-of-type) a:after {
+    border-left: 1.2em solid white;
     z-index: 2;
 }
 
@@ -616,8 +621,8 @@ td > a > .badges {
 
 }
 
-.breadcrumb li:not(:last-child) a:hover { background: @text-color; color: white; }
-.breadcrumb li:not(:last-child) a:hover:after { border-left-color: @text-color; }
+.breadcrumb li:not(:last-child) a:hover { background: @icinga-blue; color: white; }
+.breadcrumb li:not(:last-child) a:hover:after { border-left-color: @icinga-blue; }
 
 .breadcrumb li a:focus {
     text-decoration: underline;

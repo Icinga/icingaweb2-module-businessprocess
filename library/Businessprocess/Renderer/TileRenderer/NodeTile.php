@@ -77,36 +77,30 @@ class NodeTile extends BaseHtmlElement
             $attributes->add('data-node-name', (string) $node);
         }
 
-        $this->addActions();
+        if (! $renderer->isBreadcrumb()) {
+            $this->addDetailsActions();
+
+            if (! $renderer->isLocked()) {
+                $this->addActionLinks();
+            }
+        }
 
         $link = $this->getMainNodeLink();
         $this->add($link);
 
-        if ($node instanceof BpNode) {
-            if ($renderer->isBreadcrumb()) {
-                $link->add($renderer->renderStateBadges($node->getStateSummary()));
-            } else {
-                $this->add(Html::tag(
-                    'p',
-                    ['class' => 'children-count'],
-                    $node->hasChildren()
-                        ? Html::tag(
-                            'span',
-                            null,
-                            sprintf('%u %s', $node->countChildren(), mt('businessprocess', 'Children'))
-                        )
-                        : null
-                ));
-                $this->add($renderer->renderStateBadges($node->getStateSummary()));
-            }
-        }
-
-        if (! $renderer->isBreadcrumb()) {
-            $this->addDetailsActions();
-        }
-
-        if (! $renderer->isLocked()) {
-            $this->addActionLinks();
+        if ($node instanceof BpNode && !$renderer->isBreadcrumb()) {
+            $this->add(Html::tag(
+                'p',
+                ['class' => 'children-count'],
+                $node->hasChildren()
+                    ? Html::tag(
+                        'span',
+                        null,
+                        sprintf('%u %s', $node->countChildren(), mt('businessprocess', 'Children'))
+                    )
+                    : null
+            ));
+            $this->add($renderer->renderStateBadges($node->getStateSummary()));
         }
 
         return parent::render();

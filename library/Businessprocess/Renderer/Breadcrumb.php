@@ -37,11 +37,11 @@ class Breadcrumb extends BaseHtmlElement
                     'href'  => Url::fromPath('businessprocess'),
                     'title' => mt('businessprocess', 'Show Overview')
                 ],
-                Html::tag('i', ['class' => 'icon icon-dashboard'])
+                Html::tag('i', ['class' => 'icon icon-home'])
             )
         ));
         $breadcrumb->add(Html::tag('li')->add(
-            Html::tag('a', ['href' => $bpUrl], $bp->getTitle())
+            Html::tag('a', ['href' => $bpUrl], mt('businessprocess', 'Root'))
         ));
         $path = $renderer->getCurrentPath();
 
@@ -70,7 +70,6 @@ class Breadcrumb extends BaseHtmlElement
         $renderer = clone($renderer);
         $renderer->lock()->setIsBreadcrumb();
         $p = new NodeTile($renderer, (string) $node, $node, $path);
-        $p->getAttributes()->add('class', $renderer->getNodeClasses($node));
         $p->setTag('li');
         return $p;
     }
