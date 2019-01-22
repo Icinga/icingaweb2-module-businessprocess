@@ -21,22 +21,17 @@
             /**
              * Tell Icinga about our event handlers
              */
-            this.module.on('beforerender', this.rememberOpenedBps);
-            this.module.on('rendered',     this.onRendered);
+            this.module.on('rendered', this.onRendered);
 
-            this.module.on('click', 'table.bp.process > tbody > tr:first-child > td > a:last-child', this.processTitleClick);
-            this.module.on('click', 'table.bp > tbody > tr:first-child > th', this.processOperatorClick);
             this.module.on('focus', 'form input, form textarea, form select', this.formElementFocus);
 
-            this.module.on('mouseenter', 'table.bp > tbody > tr > td > a', this.procMouseOver);
-            this.module.on('mouseenter', 'table.bp > tbody > tr > th', this.procMouseOver);
-            this.module.on('mouseenter', 'table.node.missing > tbody > tr > td > span', this.procMouseOver);
-            this.module.on('mouseleave', 'div.bp', this.procMouseOut);
+            this.module.on('click', 'li.process a.toggle', this.processToggleClick);
+            this.module.on('click', 'li.process > div', this.processHeaderClick);
+            this.module.on('end', 'div.tree.sortable, ul.sortable', this.rowDropped);
 
             this.module.on('click', 'div.tiles > div', this.tileClick);
             this.module.on('click', '.dashboard-tile', this.dashboardTileClick);
             this.module.on('end', 'div.tiles.sortable', this.tileDropped);
-            this.module.on('end', 'div.tree.sortable, ul.sortable', this.rowDropped);
 
             this.module.icinga.logger.debug('BP module initialized');
         },
@@ -44,39 +39,40 @@
         onRendered: function (event) {
             var $container = $(event.currentTarget);
             this.fixFullscreen($container);
-            this.fixOpenedBps($container);
+            this.restoreCollapsedBps($container);
             this.highlightFormErrors($container);
             this.hideInactiveFormDescriptions($container);
             this.fixTileLinksOnDashboard($container);
         },
 
-        processTitleClick: function (event) {
+        processToggleClick: function (event) {
             event.stopPropagation();
-            var $el = $(event.currentTarget).closest('table.bp');
-            $el.toggleClass('collapsed');
-        },
 
-        processOperatorClick: function (event) {
-            event.stopPropagation();
-            var $el = $(event.currentTarget).closest('table.bp');
+            var $li = $(event.currentTarget).closest('li.process');
+            $li.toggleClass('collapsed');
 
-            // Click on arrow
-            $el.removeClass('collapsed');
-
-            var children = $el.find('> tbody > tr > td > table.bp.process');
-            if (children.length === 0) {
-                $el.toggleClass('collapsed');
+            var $bpUl = $(event.currentTarget).closest('.content > ul.bp');
+            if (! $bpUl.length || !$bpUl.data('isRootConfig')) {
                 return;
             }
-            if (children.filter('.collapsed').length) {
-                children.removeClass('collapsed');
-            } else {
-                children.each(function(idx, el) {
-                    var $el = $(el);
-                    $el.addClass('collapsed');
-                    $el.find('table.bp.process').addClass('collapsed');
-                });
+
+            var bpName = $bpUl.attr('id');
+            if (typeof this.idCache[bpName] === 'undefined') {
+                this.idCache[bpName] = [];
             }
+
+            var index = this.idCache[bpName].indexOf($li.attr('id'));
+            if ($li.is('.collapsed')) {
+                if (index === -1) {
+                    this.idCache[bpName].push($li.attr('id'));
+                }
+            } else if (index !== -1) {
+                this.idCache[bpName].splice(index, 1);
+            }
+        },
+
+        processHeaderClick: function (event) {
+            this.processToggleClick(event);
         },
 
         hideInactiveFormDescriptions: function($container) {
@@ -171,75 +167,6 @@
             return !loopDetected;
         },
 
-        /**
-         * Add 'hovered' class to hovered title elements
-         *
-         * TODO: Skip on tablets
-         */
-        procMouseOver: function (event) {
-            event.stopPropagation();
-            var $hovered = $(event.currentTarget);
-            var $el = $hovered.closest('table.bp');
-
-            if ($el.is('.operator')) {
-                if (!$hovered.closest('tr').is('tr:first-child')) {
-                    // Skip hovered space between cols
-                    return;
-                }
-            } else {
-               // return;
-            }
-
-            $('table.bp.hovered').not($el.parents('table.bp')).removeClass('hovered'); // not self & parents
-            $el.addClass('hovered');
-            $el.parents('table.bp').addClass('hovered');
-        },
-
-        /**
-         * Remove 'hovered' class from hovered title elements
-         *
-         * TODO: Skip on tablets
-         */
-        procMouseOut: function (event) {
-            $('table.bp.hovered').removeClass('hovered');
-        },
-
-        /**
-         * Handle clicks on operator or title element
-         *
-         * Title shows subelement, operator unfolds all subelements
-         */
-        titleClicked: function (event) {
-            var self = this;
-            event.stopPropagation();
-            event.preventDefault();
-            var $el = $(event.currentTarget),
-                affected = []
-                $container = $el.closest('.container');
-            if ($el.hasClass('operator')) {
-                $affected = $el.closest('table').children('tbody')
-                    .children('tr.children').children('td').children('table');
-
-                // Only if there are child BPs
-                if ($affected.find('th.operator').length < 1) {
-                    $affected = $el.closest('table');
-                }
-            } else {
-                $affected = $el.closest('table');
-            }
-            $affected.each(function (key, el) {
-                var $bptable = $(el).closest('table');
-                $bptable.toggleClass('collapsed');
-                if ($bptable.hasClass('collapsed')) {
-                    $bptable.find('table').addClass('collapsed');
-                }
-            });
-
-            /*$container.data('refreshParams', {
-                opened: self.listOpenedBps($container)
-            });*/
-        },
-
         fixTileLinksOnDashboard: function($container) {
             if ($container.closest('div.dashboard').length) {
                 $container.find('div.tiles').data('baseTarget', '_next');
@@ -267,48 +194,23 @@
             }
         },
 
-        fixOpenedBps: function($container) {
-            var $bpDiv = $container.find('div.bp');
-            var bpName = $bpDiv.attr('id');
-
-            if  (typeof this.idCache[bpName] === 'undefined') {
-                return;
-            }
-            var $procs = $bpDiv.find('table.process');
-
-            $.each(this.idCache[bpName], function(idx, id) {
-                var $el = $('#' + id);
-                $procs = $procs.not($el);
-
-                $el.parents('table.process').each(function (idx, el) {
-                    $procs = $procs.not($(el));
-                });
-            });
-
-            $procs.addClass('collapsed');
-        },
-
-        /**
-         * Get a list of all currently opened BPs.
-         *
-         * Only get the deepest nodes to keep requests as small as possible
-         */
-        rememberOpenedBps: function (event) {
-            var ids = [];
-            var $bpDiv = $(event.currentTarget).find('div.bp');
-            var $bpName = $bpDiv.attr('id');
-
-            $bpDiv.find('table.process')
-                .not('table.process.collapsed')
-                .not('table.process.collapsed table.process')
-                .each(function (key, el) {
-                ids.push($(el).attr('id'));
-            });
-            if (ids.length === 0) {
+        restoreCollapsedBps: function($container) {
+            var $bpUl = $container.find('.content > ul.bp');
+            if (! $bpUl.length || !$bpUl.data('isRootConfig')) {
                 return;
             }
 
-            this.idCache[$bpName] = ids;
+            var bpName = $bpUl.attr('id');
+            if (typeof this.idCache[bpName] === 'undefined') {
+                return;
+            }
+
+            var _this = this;
+            $bpUl.find('li.process')
+                .filter(function () {
+                    return _this.idCache[bpName].indexOf(this.id) !== -1;
+                })
+                .addClass('collapsed');
         },
 
         /** BEGIN Form handling, borrowed from Director **/
