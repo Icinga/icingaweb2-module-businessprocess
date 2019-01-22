@@ -37,35 +37,136 @@ div.bp.sortable > .sortable-ghost {
 
 /* New tree stuff START */
 
-ul.tree {
-    padding: 1em;
+@vertical-tree-item-gap: .5em;
 
-    li.placeholder {
-        // Helps to assist Sortable.js/the browser to properly place items at the top
-        height: 1em;
+ul.bp {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+    .action-link {
+        font-size: 1.3em;
+        line-height: 1;
     }
 
-    ul.sortable {
-        min-height: 1em; // Required to be able to move items back to an otherwise empty list
+    // ghost style
+    &.sortable > li.sortable-ghost {
+        position: relative;
+        overflow: hidden;
+        max-height: 30em;
+        background-color: @gray-lighter;
+        border: .2em dotted @gray-light;
+        border-left-width: 0;
+        border-right-width: 0;
+        mix-blend-mode: hard-light;
+
+        &.process:after {
+            // TODO: Only apply if content overflows?
+            content: " ";
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            height: 50%;
+            background: linear-gradient(transparent, white);
+        }
     }
 
-    > li.process,
-    ul.sortable li {
-        margin-bottom: .2em;
-        padding-left: .2em;
+    // header style
+    li.process > div {
+        padding-bottom: .25em;
+        border-bottom: 1px solid @gray-light;
 
-        &.sortable-ghost {
-            border: .2em dashed @gray-light;
-            border-left-width: 0;
+        > a.toggle {
+            color: @gray;
         }
 
-        a > div {
-            display: inline-block;
+        > span {
+            font-size: 1.25em;
+
+            &.op {
+                padding: .1em .5em;
+                border-radius: .5em;
+                background-color: @gray-light;
+                font-weight: bold;
+                font-size: 1em;
+                color: white;
+            }
         }
     }
 
-    ul {
+    // subprocess style
+    li.process > ul {
+        padding-left: 2em;
         list-style-type: none;
+
+        &.sortable {
+            min-height: 1em; // Required to be able to move items back to an otherwise empty list
+        }
+    }
+
+    // vertical layout
+    > li {
+        padding: @vertical-tree-item-gap 0;
+
+        &.process {
+            padding-bottom: 0;
+
+            > div {
+                margin-bottom: @vertical-tree-item-gap;
+            }
+        }
+    }
+
+    // horizontal layout
+    li.process > div,
+    li:not(.process) {
+        display: flex;
+        align-items: center;
+
+        > * {
+            margin-right: .5em;
+        }
+
+        > a.action-link {
+            margin-left: auto; // Let the first action link move everything to the right
+
+            & + a.action-link {
+                margin-left: 0; // But really only the first one
+            }
+        }
+    }
+
+    // collapse handling
+    li.process {
+        > div {
+            cursor: pointer; // So that users know they can interact
+        }
+
+        // toggle, default
+        > div > a.toggle > i:before {
+            -webkit-transition: -webkit-transform 0.3s;
+            -moz-transition: -moz-transform 0.3s;
+            -o-transition: -o-transform 0.3s;
+            transition: transform 0.3s;
+        }
+
+        // toggle, collapsed
+        &.collapsed > div > a.toggle > i:before {
+            -moz-transform:rotate(-90deg);
+            -ms-transform:rotate(-90deg);
+            -o-transform:rotate(-90deg);
+            -webkit-transform:rotate(-90deg);
+            transform:rotate(-90deg);
+        }
+
+        &.collapsed {
+            margin-bottom: (@vertical-tree-item-gap * 2);
+
+            > ul.bp {
+                display: none;
+            }
+        }
     }
 }
 
