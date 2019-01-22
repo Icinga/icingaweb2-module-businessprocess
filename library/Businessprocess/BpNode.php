@@ -506,13 +506,13 @@ class BpNode extends Node
     {
         switch ($this->operator) {
             case self::OP_AND:
-                return 'and';
+                return 'AND';
                 break;
             case self::OP_OR:
-                return 'or';
+                return 'OR';
                 break;
             case self::OP_NOT:
-                return 'not';
+                return 'NOT';
                 break;
             default:
                 // MIN
