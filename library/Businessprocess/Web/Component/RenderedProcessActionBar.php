@@ -91,9 +91,9 @@ class RenderedProcessActionBar extends ActionBar
                 [
                     'href'  => $url->with('action', 'add'),
                     'title' => mt('businessprocess', 'Add a new business process node'),
-                    'class' => 'icon-plus'
+                    'class' => 'icon-plus button-link'
                 ],
-                mt('businessprocess', 'Add')
+                mt('businessprocess', 'Add Process')
             ));
         }
     }

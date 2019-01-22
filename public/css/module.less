@@ -6,13 +6,35 @@ a:focus {
     }
 }
 
-.action-bar a {
-    font-size: 1.3em;
-    color: @icinga-blue;
-    &:hover::before {
-        text-decoration: none;
+.action-bar {
+    display: flex;
+    align-items: center;
+
+    a {
+        font-size: 1.3em;
+        color: @icinga-blue;
+
+        &:hover::before {
+            text-decoration: none;
+        }
+
+        &:not(:last-child) {
+            margin-right: 1em;
+        }
+
+        &.button-link {
+            color: white;
+            background: @icinga-blue;
+
+            &:active, &:focus {
+                text-decoration: none;
+            }
+
+            &:last-child {
+                margin-left: auto;
+            }
+        }
     }
-    margin-right: 1em;
 }
 
 form a {
