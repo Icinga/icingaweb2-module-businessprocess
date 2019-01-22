@@ -386,7 +386,9 @@ abstract class Node
 
     public function getLink()
     {
-        return Html::tag('a', ['href' => '#'], $this->getAlias());
+        return Html::tag('a', ['href' => '#', 'class' => 'toggle'], Html::tag('i', [
+            'class' => 'icon icon-down-dir'
+        ]));
     }
 
     public function getIcon()

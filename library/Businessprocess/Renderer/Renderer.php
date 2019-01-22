@@ -298,22 +298,6 @@ abstract class Renderer extends HtmlDocument
         return $this->isBreadcrumb;
     }
 
-    public function timeSince($time, $timeOnly = false)
-    {
-        if (! $time) {
-            return HtmlString::create('');
-        }
-
-        return Html::tag(
-            'span',
-            [
-                'class' => ['relative-time', 'time-since'],
-                'title' => DateFormatter::formatDateTime($time)
-            ],
-            DateFormatter::timeSince($time, $timeOnly)
-        );
-    }
-
     protected function createUnboundParent(BpConfig $bp)
     {
         return $bp->getNode('__unbound__');
