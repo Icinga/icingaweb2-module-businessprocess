@@ -27,7 +27,7 @@
 
             this.module.on('click', 'li.process a.toggle', this.processToggleClick);
             this.module.on('click', 'li.process > div', this.processHeaderClick);
-            this.module.on('end', 'div.tree.sortable, ul.sortable', this.rowDropped);
+            this.module.on('end', 'ul.sortable', this.rowDropped);
 
             this.module.on('click', 'div.tiles > div', this.tileClick);
             this.module.on('click', '.dashboard-tile', this.dashboardTileClick);
