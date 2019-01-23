@@ -17,6 +17,7 @@
         $(e.target).find('.sortable').each(function() {
             var $el = $(this);
             var options = {
+                scroll: $el.closest('.container')[0],
                 onMove: function (/**Event*/ event, /**Event*/ originalEvent) {
                     if (typeof this.options['filter'] !== 'undefined' && $(event.related).is(this.options['filter'])) {
                         // Assumes the filtered item is either at the very start or end of the list and prevents the
