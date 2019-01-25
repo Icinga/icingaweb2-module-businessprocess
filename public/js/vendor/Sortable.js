@@ -501,7 +501,7 @@
             scrollSensitivity: 30,
             scrollSpeed: 10,
             bubbleScroll: true,
-            draggable: /[uo]l/i.test(el.nodeName) ? 'li' : '>*',
+            draggable: /[uo]l/i.test(el.nodeName) ? '>li' : '>*',
             swapThreshold: 1, // percentage; 0 <= x <= 1
             invertSwap: false, // invert always
             invertedSwapThreshold: null, // will be set to same as swapThreshold if default
@@ -617,7 +617,6 @@
 
         _onTapStart: function (/** Event|TouchEvent */evt) {
             if (!evt.cancelable) return;
-
             var _this = this,
                 el = this.el,
                 options = this.options,
@@ -808,7 +807,6 @@
 
                 if (options.supportPointer) {
                     _on(ownerDocument, 'pointerup', _this._onDrop);
-                    _on(ownerDocument, 'pointercancel', _this._onDrop);
                 } else {
                     _on(ownerDocument, 'mouseup', _this._onDrop);
                     _on(ownerDocument, 'touchend', _this._onDrop);
@@ -1061,7 +1059,6 @@
                 _off(document, 'mouseup', _this._onDrop);
                 _off(document, 'touchend', _this._onDrop);
                 _off(document, 'touchcancel', _this._onDrop);
-                _off(document, 'pointercancel', _this._onDrop);
 
                 if (dataTransfer) {
                     dataTransfer.effectAllowed = 'move';
@@ -1213,7 +1210,7 @@
                         return completed();
                     }
                 }
-                else if (target && target !== dragEl && (target.parentNode[expando] !== void 0) && target !== el) {
+                else if (target && target !== dragEl && target.parentNode === el) {
                     var direction = 0,
                         targetBeforeFirstSwap,
                         aligned = target.sortableMouseAligned,
@@ -1365,14 +1362,12 @@
             _off(ownerDocument, 'touchend', this._onDrop);
             _off(ownerDocument, 'pointerup', this._onDrop);
             _off(ownerDocument, 'touchcancel', this._onDrop);
-            _off(ownerDocument, 'pointercancel', this._onDrop);
             _off(document, 'selectstart', this);
         },
 
         _onDrop: function (/**Event*/evt) {
             var el = this.el,
                 options = this.options;
-
             awaitingDragStarted = false;
             scrolling = false;
             isCircumstantialInvert = false;
@@ -1696,7 +1691,14 @@
             ctx = ctx || document;
 
             do {
-                if ((selector === '>*' && el.parentNode === ctx) || _matches(el, selector) || (includeCTX && el === ctx)) {
+                if (
+                    selector != null &&
+                    (
+                        selector[0] === '>' && el.parentNode === ctx && _matches(el, selector.substring(1)) ||
+                        _matches(el, selector) ||
+                        (includeCTX && el === ctx)
+                    )
+                ) {
                     return el;
                 }
 
@@ -1718,7 +1720,7 @@
 
     function _globalDragOver(/**Event*/evt) {
         if (evt.dataTransfer) {
-            evt.dataTransfer.dropEffect = 'move';
+            evt.dataTransfer.dropEffect = 'none';
         }
         evt.cancelable && evt.preventDefault();
     }
