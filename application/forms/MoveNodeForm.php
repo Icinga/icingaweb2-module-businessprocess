@@ -154,7 +154,9 @@ class MoveNodeForm extends QuickForm
                 $this->parentNode !== null ? $this->parentNode->getName() : null
             );
         } catch (ModificationError $e) {
-            $this->notifyError($e->getMessage())
+            $this->notifyError($e->getMessage());
+            Icinga::app()->getResponse()
+                ->setHttpResponseCode(400)
                 ->redirectAndExit($this->getSuccessUrl());
         }
 
