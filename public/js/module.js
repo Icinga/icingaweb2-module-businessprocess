@@ -120,6 +120,9 @@
                 $target = $(evt.to);
 
             if (evt.oldIndex !== evt.newIndex || !$target.is($source)) {
+                var $root = $target.closest('.content > ul.bp');
+                $root.addClass('progress');
+
                 var data = {
                     csrfToken: $target.data('csrfToken'),
                     movenode: 'movenode', // That's the submit button..

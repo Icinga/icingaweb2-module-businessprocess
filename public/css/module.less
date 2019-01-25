@@ -103,6 +103,26 @@ ul.bp {
         line-height: 1;
     }
 
+    // cursors!!!1
+    &:not([data-sortable-disabled="true"]) {
+        .movable {
+            cursor: grab;
+
+            &.sortable-chosen {
+                cursor: grabbing;
+            }
+        }
+
+        &.progress .movable {
+            cursor: wait;
+        }
+    }
+    &[data-sortable-disabled="true"] {
+        li.process > div {
+            cursor: pointer;
+        }
+    }
+
     // ghost style
     &.sortable > li.sortable-ghost {
         position: relative;
@@ -193,10 +213,6 @@ ul.bp {
 
     // collapse handling
     li.process {
-        > div {
-            cursor: pointer; // So that users know they can interact
-        }
-
         // toggle, default
         > div > a.toggle > i:before {
             -webkit-transition: -webkit-transform 0.3s;
