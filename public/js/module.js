@@ -121,7 +121,12 @@
 
             if (evt.oldIndex !== evt.newIndex || !$target.is($source)) {
                 var $root = $target.closest('.content > ul.bp');
-                $root.addClass('progress');
+                $root.addClass('progress')
+                    .find('ul.bp')
+                    .add($root)
+                    .each(function() {
+                        $(this).data('sortable').option('disabled', true);
+                    });
 
                 var data = {
                     csrfToken: $target.data('csrfToken'),
