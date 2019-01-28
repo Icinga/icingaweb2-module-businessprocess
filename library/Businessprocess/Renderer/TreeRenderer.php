@@ -5,6 +5,7 @@ namespace Icinga\Module\Businessprocess\Renderer;
 use Icinga\Date\DateFormatter;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
+use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Web\Form\CsrfToken;
 use ipl\Html\BaseHtmlElement;
@@ -185,7 +186,12 @@ class TreeRenderer extends Renderer
             ]),
             'data-csrf-token'               => CsrfToken::generate(),
             'data-action-url'               => $this->getUrl()
-                ->overwriteParams(['node' => (string) $node])
+                ->overwriteParams([
+                    'config'    => $node->getBusinessProcess()->getName(),
+                    'node'      => $node instanceof ImportedNode
+                        ? $node->getNodeName()
+                        : (string) $node
+                ])
                 ->getAbsoluteUrl()
         ]);
         $li->add($ul);

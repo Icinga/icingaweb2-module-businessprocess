@@ -52,8 +52,8 @@ class BpNode extends Node
     {
         $this->bp = $bp;
         $this->name = $object->name;
-        $this->setOperator($object->operator);
-        $this->setChildNames($object->child_names);
+        $this->operator = $object->operator;
+        $this->childNames = $object->child_names;
     }
 
     public function getStateSummary()
@@ -140,12 +140,12 @@ class BpNode extends Node
 
     public function hasChild($name)
     {
-        return in_array($name, $this->childNames);
+        return in_array($name, $this->getChildNames());
     }
 
     public function removeChild($name)
     {
-        if (($key = array_search($name, $this->childNames)) !== false) {
+        if (($key = array_search($name, $this->getChildNames())) !== false) {
             unset($this->childNames[$key]);
 
             if (! empty($this->children)) {
@@ -276,7 +276,7 @@ class BpNode extends Node
 
     public function hasAlias()
     {
-        return $this->alias !== null;
+        return $this->getAlias() !== null;
     }
 
     public function getAlias()
@@ -357,7 +357,7 @@ class BpNode extends Node
 
         $this->setLastStateChange($lastStateChange);
 
-        switch ($this->operator) {
+        switch ($this->getOperator()) {
             case self::OP_AND:
                 $sort_state = max($sort_states);
                 break;
@@ -438,7 +438,8 @@ class BpNode extends Node
 
     public function hasChildren($filter = null)
     {
-        return !empty($this->childNames);
+        $childNames = $this->getChildNames();
+        return !empty($childNames);
     }
 
     public function getChildNames()
@@ -451,10 +452,11 @@ class BpNode extends Node
         if ($this->children === null) {
             $this->children = array();
             if (! $this->bp->getMetadata()->isManuallyOrdered()) {
-                natcasesort($this->childNames);
-                $this->childNames = array_values($this->childNames);
+                $childNames = $this->getChildNames();
+                natcasesort($childNames);
+                $this->childNames = array_values($childNames);
             }
-            foreach ($this->childNames as $name) {
+            foreach ($this->getChildNames() as $name) {
                 $this->children[$name] = $this->bp->getNode($name);
                 $this->children[$name]->addParent($this);
             }
@@ -497,14 +499,14 @@ class BpNode extends Node
 
     protected function assertNumericOperator()
     {
-        if (! is_numeric($this->operator)) {
+        if (! is_numeric($this->getOperator())) {
             throw new ConfigurationError('Got invalid operator: %s', $this->operator);
         }
     }
 
     public function operatorHtml()
     {
-        switch ($this->operator) {
+        switch ($this->getOperator()) {
             case self::OP_AND:
                 return 'AND';
                 break;

@@ -119,24 +119,19 @@ class NodeTile extends BaseHtmlElement
     protected function buildBaseNodeUrl(Node $node)
     {
         $path = $this->path;
-        $name = $this->name; // TODO: ??
         $renderer = $this->renderer;
 
-        $bp = $renderer->getBusinessProcess();
-        $params = array(
-            'config' => $node instanceof ImportedNode ?
-                $node->getConfigName() :
-                $bp->getName()
-        );
-
-        if ($name !== null) {
-            $params['node'] = $name;
-        }
+        $params = [
+            'config'    => $node->getBusinessProcess()->getName(),
+            'node'      => $node instanceof ImportedNode
+                ? $node->getNodeName()
+                : $this->name
+        ];
 
         $url = $renderer->getBaseUrl();
         $p = $url->getParams();
         $p->mergeValues($params);
-        if (! empty($path)) {
+        if (! empty($path) && !$node instanceof ImportedNode) {
             $p->addValues('path', $path);
         }
 
@@ -186,7 +181,7 @@ class NodeTile extends BaseHtmlElement
             $link = Html::tag('a', ['href' => $url, 'data-base-target' => '_next'], $node->getHostname());
         } else {
             $link = Html::tag('a', ['href' => $url], $node->getAlias());
-            if ($node instanceof ImportedNode) {
+            if ($node->getBusinessProcess()->getName() !== $this->renderer->getBusinessProcess()->getName()) {
                 $link->getAttributes()->add('data-base-target', '_next');
             } else {
                 $link->getAttributes()->add('data-base-target', '_self');

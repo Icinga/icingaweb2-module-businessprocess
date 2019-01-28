@@ -2,15 +2,13 @@
 
 namespace Icinga\Module\Businessprocess;
 
-use Icinga\Application\Config;
-use Icinga\Module\Businessprocess\State\MonitoringState;
-use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Exception;
-use Icinga\Web\Url;
-use ipl\Html\Html;
 
-class ImportedNode extends Node
+class ImportedNode extends BpNode
 {
+    /** @var BpConfig */
+    protected $parentBp;
+
     /** @var string */
     protected $configName;
 
@@ -18,38 +16,27 @@ class ImportedNode extends Node
     protected $nodeName;
 
     /** @var BpNode */
-    private $node;
+    protected $importedNode;
 
-    protected $className = 'subtree';
+    /** @var string */
+    protected $className = 'process subtree';
 
+    /** @var string */
     protected $icon = 'download';
 
-    /** @var BpConfig */
-    private $config;
-
-    /**
-     * @inheritdoc
-     */
     public function __construct(BpConfig $bp, $object)
     {
-        $this->bp = $bp;
+        $this->parentBp = $bp;
         $this->configName = $object->configName;
-        $this->name = '@' . $object->configName;
-        if (property_exists($object, 'node')) {
-            $this->nodeName = $object->node;
-            $this->name .= ':' . $object->node;
-        } else {
-            $this->useAllRootNodes();
-        }
+        $this->nodeName = $object->node;
 
-        if (isset($object->state)) {
-            $this->setState($object->state);
-        }
-    }
-
-    public function hasNode()
-    {
-        return $this->nodeName !== null;
+        $importedConfig = $bp->getImportedConfig($this->configName);
+        parent::__construct($importedConfig, (object) [
+                'name'          => '@' . $this->configName . ':' . $this->nodeName,
+                'operator'      => null,
+                'child_names'   => null
+            ]
+        );
     }
 
     /**
@@ -61,75 +48,38 @@ class ImportedNode extends Node
     }
 
     /**
-     * @inheritdoc
+     * @return string
      */
-    public function getState()
+    public function getNodeName()
     {
-        if ($this->state === null) {
-            try {
-                MonitoringState::apply($this->importedConfig());
-            } catch (Exception $e) {
-            }
-
-            $this->state = $this->importedNode()->getState();
-            $this->setMissing(false);
-        }
-
-        return $this->state;
+        return $this->nodeName;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getAlias()
     {
-        return $this->importedNode()->getAlias();
-    }
-
-    public function getUrl()
-    {
-        $params = array(
-            'config'    => $this->getConfigName(),
-            'node' => $this->importedNode()->getName()
-        );
-
-        return Url::fromPath('businessprocess/process/show', $params);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function isMissing()
-    {
-        $this->getState();
-        // Probably doesn't work, as we create a fake node with worse state
-        return $this->missing;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function isInDowntime()
-    {
-        if ($this->downtime === null) {
-            $this->getState();
-            $this->downtime = $this->importedNode()->isInDowntime();
+        if ($this->alias === null) {
+            $this->alias = $this->importedNode()->getAlias();
         }
 
-        return $this->downtime;
+        return $this->alias;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function isAcknowledged()
+    public function getOperator()
     {
-        if ($this->ack === null) {
-            $this->getState();
-            $this->downtime = $this->importedNode()->isAcknowledged();
+        if ($this->operator === null) {
+            $this->operator = $this->importedNode()->getOperator();
         }
 
-        return $this->ack;
+        return $this->operator;
+    }
+
+    public function getChildNames()
+    {
+        if ($this->childNames === null) {
+            $this->childNames = $this->importedNode()->getChildNames();
+        }
+
+        return $this->childNames;
     }
 
     /**
@@ -137,68 +87,15 @@ class ImportedNode extends Node
      */
     protected function importedNode()
     {
-        if ($this->node === null) {
-            $this->node = $this->loadImportedNode();
-        }
-
-        return $this->node;
-    }
-
-    /**
-     * @return BpNode
-     */
-    protected function loadImportedNode()
-    {
-        try {
-            $import = $this->importedConfig();
-
-            return $import->getNode($this->nodeName);
-        } catch (Exception $e) {
-            return $this->createFailedNode($e);
-        }
-    }
-
-    protected function useAllRootNodes()
-    {
-        try {
-            $bp = $this->importedConfig();
-            $this->node = new BpNode($bp, (object) array(
-                'name'        => $this->getName(),
-                'operator'    => '&',
-                'child_names' => $bp->listRootNodes(),
-            ));
-        } catch (Exception $e) {
-            $this->createFailedNode($e);
-        }
-    }
-
-    /**
-     * @return BpConfig
-     */
-    protected function importedConfig()
-    {
-        if ($this->config === null) {
-            $import = $this->storage()->loadProcess($this->configName);
-            if ($this->bp->usesSoftStates()) {
-                $import->useSoftStates();
-            } else {
-                $import->useHardStates();
+        if ($this->importedNode === null) {
+            try {
+                $this->importedNode = $this->bp->getBpNode($this->nodeName);
+            } catch (Exception $e) {
+                return $this->createFailedNode($e);
             }
-
-            $this->config = $import;
         }
 
-        return $this->config;
-    }
-
-    /**
-     * @return LegacyStorage
-     */
-    protected function storage()
-    {
-        return new LegacyStorage(
-            Config::module('businessprocess')->getSection('global')
-        );
+        return $this->importedNode;
     }
 
     /**
@@ -208,11 +105,11 @@ class ImportedNode extends Node
      */
     protected function createFailedNode(Exception $e)
     {
-        $this->bp->addError($e->getMessage());
-        $node = new BpNode($this->importedConfig(), (object) array(
+        $this->parentBp->addError($e->getMessage());
+        $node = new BpNode($this->bp, (object) array(
             'name'        => $this->getName(),
             'operator'    => '&',
-            'child_names' => array()
+            'child_names' => []
         ));
         $node->setState(2);
         $node->setMissing(false)
@@ -221,22 +118,5 @@ class ImportedNode extends Node
             ->setAlias($e->getMessage());
 
         return $node;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getLink()
-    {
-        return Html::tag(
-            'a',
-            [
-                'href'  => Url::fromPath('businessprocess/process/show', [
-                    'config'    => $this->configName,
-                    'node'      => $this->nodeName
-                ])
-            ],
-            $this->getAlias()
-        );
     }
 }

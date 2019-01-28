@@ -2,12 +2,15 @@
 
 namespace Icinga\Module\Businessprocess;
 
+use Exception;
+use LogicException;
+use Icinga\Application\Config;
 use Icinga\Exception\IcingaException;
 use Icinga\Exception\NotFoundError;
 use Icinga\Module\Businessprocess\Exception\NestingError;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
+use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
-use Exception;
 
 class BpConfig
 {
@@ -80,6 +83,13 @@ class BpConfig
      * @var array
      */
     protected $root_nodes = array();
+
+    /**
+     * Imported configs
+     *
+     * @var array
+     */
+    protected $importedConfigs = [];
 
     /**
      * All host names { 'hostA' => true, ... }
@@ -424,7 +434,17 @@ class BpConfig
 
     public function hasNode($name)
     {
-        return array_key_exists($name, $this->nodes);
+        if (array_key_exists($name, $this->nodes)) {
+            return true;
+        } elseif (! empty($this->importedConfigs)) {
+            foreach ($this->importedConfigs as $config) {
+                if ($config->hasNode($name)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public function hasRootNode($name)
@@ -474,7 +494,14 @@ class BpConfig
 
     public function listInvolvedHostNames()
     {
-        return array_keys($this->hosts);
+        $hosts = $this->hosts;
+        if (! empty($this->importedConfigs)) {
+            foreach ($this->importedConfigs as $config) {
+                $hosts += array_flip($config->listInvolvedHostNames());
+            }
+        }
+
+        return array_keys($hosts);
     }
 
     /**
@@ -514,6 +541,18 @@ class BpConfig
 
     public function createImportedNode($config, $name = null)
     {
+        if (! isset($this->importedConfigs[$config])) {
+            $import = $this->storage()->loadProcess($config);
+
+            if ($this->usesSoftStates()) {
+                $import->useSoftStates();
+            } else {
+                $import->useHardStates();
+            }
+
+            $this->importedConfigs[$config] = $import;
+        }
+
         $params = (object) array('configName' => $config);
         if ($name !== null) {
             $params->node = $name;
@@ -522,6 +561,25 @@ class BpConfig
         $node = new ImportedNode($this, $params);
         $this->nodes[$node->getName()] = $node;
         return $node;
+    }
+
+    public function getImportedConfig($name)
+    {
+        if (! isset($this->importedConfigs[$name])) {
+            throw new LogicException("Config $name not imported yet");
+        }
+
+        return $this->importedConfigs[$name];
+    }
+
+    /**
+     * @return LegacyStorage
+     */
+    protected function storage()
+    {
+        return new LegacyStorage(
+            Config::module('businessprocess')->getSection('global')
+        );
     }
 
     /**
@@ -537,6 +595,12 @@ class BpConfig
 
         if (array_key_exists($name, $this->nodes)) {
             return $this->nodes[$name];
+        } elseif (! empty($this->importedConfigs)) {
+            foreach ($this->importedConfigs as $config) {
+                if ($config->hasNode($name)) {
+                    return $config->getNode($name);
+                }
+            }
         }
 
         // Fallback: if it is a service, create an empty one:
