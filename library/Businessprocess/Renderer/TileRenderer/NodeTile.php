@@ -331,7 +331,7 @@ class NodeTile extends BaseHtmlElement
                 'href'  => $renderer->getUrl()->with($params),
                 'title' => mt('businessprocess', 'Delete this node')
             ],
-            Html::tag('i', ['class' => 'icon icon-cancle'])
+            Html::tag('i', ['class' => 'icon icon-cancel'])
         ));
     }
 }
