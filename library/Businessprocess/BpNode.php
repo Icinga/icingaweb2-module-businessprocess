@@ -48,9 +48,8 @@ class BpNode extends Node
 
     protected $className = 'process';
 
-    public function __construct(BpConfig $bp, $object)
+    public function __construct($object)
     {
-        $this->bp = $bp;
         $this->name = $object->name;
         $this->operator = $object->operator;
         $this->childNames = $object->child_names;
@@ -178,7 +177,7 @@ class BpNode extends Node
     {
         if ($this->missing === null) {
             $exists = false;
-            $bp = $this->bp;
+            $bp = $this->getBpConfig();
             $bp->beginLoopDetection($this->name);
             foreach ($this->getChildren() as $child) {
                 if (! $child->isMissing()) {
@@ -299,8 +298,8 @@ class BpNode extends Node
             try {
                 $this->reCalculateState();
             } catch (NestingError $e) {
-                $this->bp->addError(
-                    $this->bp->translate('Nesting error detected: %s'),
+                $this->getBpConfig()->addError(
+                    $this->getBpConfig()->translate('Nesting error detected: %s'),
                     $e->getMessage()
                 );
 
@@ -327,7 +326,7 @@ class BpNode extends Node
      */
     public function reCalculateState()
     {
-        $bp = $this->bp;
+        $bp = $this->getBpConfig();
 
         $sort_states = array();
         $lastStateChange = 0;
@@ -401,7 +400,7 @@ class BpNode extends Node
 
     public function checkForLoops()
     {
-        $bp = $this->bp;
+        $bp = $this->getBpConfig();
         foreach ($this->getChildren() as $child) {
             $bp->beginLoopDetection($this->name);
             if ($child instanceof BpNode) {
@@ -426,7 +425,7 @@ class BpNode extends Node
 
     public function setChildNames($names)
     {
-        if (! $this->bp->getMetadata()->isManuallyOrdered()) {
+        if (! $this->getBpConfig()->getMetadata()->isManuallyOrdered()) {
             natcasesort($names);
             $names = array_values($names);
         }
@@ -451,13 +450,13 @@ class BpNode extends Node
     {
         if ($this->children === null) {
             $this->children = array();
-            if (! $this->bp->getMetadata()->isManuallyOrdered()) {
+            if (! $this->getBpConfig()->getMetadata()->isManuallyOrdered()) {
                 $childNames = $this->getChildNames();
                 natcasesort($childNames);
                 $this->childNames = array_values($childNames);
             }
             foreach ($this->getChildNames() as $name) {
-                $this->children[$name] = $this->bp->getNode($name);
+                $this->children[$name] = $this->getBpConfig()->getNode($name);
                 $this->children[$name]->addParent($this);
             }
         }

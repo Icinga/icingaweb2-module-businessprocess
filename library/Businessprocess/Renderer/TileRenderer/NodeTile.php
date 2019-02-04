@@ -122,7 +122,7 @@ class NodeTile extends BaseHtmlElement
         $renderer = $this->renderer;
 
         $params = [
-            'config'    => $node->getBusinessProcess()->getName(),
+            'config'    => $node->getBpConfig()->getName(),
             'node'      => $node instanceof ImportedNode
                 ? $node->getNodeName()
                 : $this->name
@@ -181,7 +181,7 @@ class NodeTile extends BaseHtmlElement
             $link = Html::tag('a', ['href' => $url, 'data-base-target' => '_next'], $node->getHostname());
         } else {
             $link = Html::tag('a', ['href' => $url], $node->getAlias());
-            if ($node->getBusinessProcess()->getName() !== $this->renderer->getBusinessProcess()->getName()) {
+            if ($node->getBpConfig()->getName() !== $this->renderer->getBusinessProcess()->getName()) {
                 $link->getAttributes()->add('data-base-target', '_next');
             } else {
                 $link->getAttributes()->add('data-base-target', '_self');

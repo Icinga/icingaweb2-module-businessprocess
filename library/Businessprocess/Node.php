@@ -109,7 +109,18 @@ abstract class Node
         99 => 'PENDING'
     );
 
-    abstract public function __construct(BpConfig $bp, $object);
+    abstract public function __construct($object);
+
+    public function setBpConfig(BpConfig $bp)
+    {
+        $this->bp = $bp;
+        return $this;
+    }
+
+    public function getBpConfig()
+    {
+        return $this->bp;
+    }
 
     public function setMissing($missing = true)
     {
@@ -341,7 +352,7 @@ abstract class Node
      */
     public function getPaths()
     {
-        if ($this->bp->hasRootNode($this->getName())) {
+        if ($this->getBpConfig()->hasRootNode($this->getName())) {
             return array(array($this->getName()));
         }
 
@@ -354,14 +365,6 @@ abstract class Node
         }
 
         return $paths;
-    }
-
-    /**
-     * @return BpConfig
-     */
-    public function getBusinessProcess()
-    {
-        return $this->bp;
     }
 
     protected function stateToSortState($state)

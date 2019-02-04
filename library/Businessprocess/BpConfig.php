@@ -32,6 +32,11 @@ class BpConfig
      */
     protected $backend;
 
+    /**
+     * @var LegacyStorage
+     */
+    protected $storage;
+
     /** @var  Metadata */
     protected $metadata;
 
@@ -455,12 +460,12 @@ class BpConfig
     public function createService($host, $service)
     {
         $node = new ServiceNode(
-            $this,
             (object) array(
                 'hostname' => $host,
                 'service'  => $service
             )
         );
+        $node->setBpConfig($this);
         $this->nodes[$host . ';' . $service] = $node;
         $this->hosts[$host] = true;
         return $node;
@@ -468,7 +473,8 @@ class BpConfig
 
     public function createHost($host)
     {
-        $node = new HostNode($this, (object) array('hostname' => $host));
+        $node = new HostNode((object) array('hostname' => $host));
+        $node->setBpConfig($this);
         $this->nodes[$host . ';Hoststatus'] = $node;
         $this->hosts[$host] = true;
         return $node;
@@ -514,11 +520,12 @@ class BpConfig
      */
     public function createBp($name, $operator = '&')
     {
-        $node = new BpNode($this, (object) array(
+        $node = new BpNode((object) array(
             'name'        => $name,
             'operator'    => $operator,
             'child_names' => array(),
         ));
+        $node->setBpConfig($this);
 
         $this->addNode($name, $node);
         return $node;
@@ -541,18 +548,6 @@ class BpConfig
 
     public function createImportedNode($config, $name = null)
     {
-        if (! isset($this->importedConfigs[$config])) {
-            $import = $this->storage()->loadProcess($config);
-
-            if ($this->usesSoftStates()) {
-                $import->useSoftStates();
-            } else {
-                $import->useHardStates();
-            }
-
-            $this->importedConfigs[$config] = $import;
-        }
-
         $params = (object) array('configName' => $config);
         if ($name !== null) {
             $params->node = $name;
@@ -566,7 +561,15 @@ class BpConfig
     public function getImportedConfig($name)
     {
         if (! isset($this->importedConfigs[$name])) {
-            throw new LogicException("Config $name not imported yet");
+            $import = $this->storage()->loadProcess($name);
+
+            if ($this->usesSoftStates()) {
+                $import->useSoftStates();
+            } else {
+                $import->useHardStates();
+            }
+
+            $this->importedConfigs[$name] = $import;
         }
 
         return $this->importedConfigs[$name];
@@ -577,9 +580,13 @@ class BpConfig
      */
     protected function storage()
     {
-        return new LegacyStorage(
-            Config::module('businessprocess')->getSection('global')
-        );
+        if ($this->storage === null) {
+            $this->storage = new LegacyStorage(
+                Config::module('businessprocess')->getSection('global')
+            );
+        }
+
+        return $this->storage;
     }
 
     /**
@@ -632,11 +639,12 @@ class BpConfig
         $this->calculateAllStates();
 
         $names = array_keys($this->getUnboundNodes());
-        $bp = new BpNode($this, (object) array(
+        $bp = new BpNode((object) array(
             'name' => '__unbound__',
             'operator' => '&',
             'child_names' => $names
         ));
+        $bp->setBpConfig($this);
         $bp->setAlias($this->translate('Unbound nodes'));
         return $bp;
     }

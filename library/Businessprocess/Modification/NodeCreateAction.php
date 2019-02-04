@@ -101,7 +101,8 @@ class NodeCreateAction extends NodeAction
         } else {
             $properties['child_names'] = array();
         }
-        $node = new BpNode($config, (object) $properties);
+        $node = new BpNode((object) $properties);
+        $node->setBpConfig($config);
 
         foreach ($this->getProperties() as $key => $val) {
             if ($key === 'parentName') {

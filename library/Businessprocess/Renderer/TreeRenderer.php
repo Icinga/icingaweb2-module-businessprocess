@@ -169,13 +169,13 @@ class TreeRenderer extends Renderer
             $div->add(Html::tag('span', ['class' => 'op'], $node->operatorHtml()));
         }
 
-        if (! $this->isLocked() && $node->getBusinessProcess()->getName() === $this->getBusinessProcess()->getName()) {
+        if (! $this->isLocked() && $node->getBpConfig()->getName() === $this->getBusinessProcess()->getName()) {
             $div->add($this->getActionIcons($bp, $node));
         }
 
         $ul = Html::tag('ul', [
             'class'                         => ['bp', 'sortable'],
-            'data-sortable-disabled'        => $this->isLocked() || $node->getBusinessProcess()->getName() !== $this->getBusinessProcess()->getName() ? 'true' : 'false',
+            'data-sortable-disabled'        => $this->isLocked() || $node->getBpConfig()->getName() !== $this->getBusinessProcess()->getName() ? 'true' : 'false',
             'data-sortable-invert-swap'     => 'true',
             'data-sortable-data-id-attr'    => 'id',
             'data-sortable-draggable'       => '.movable',
@@ -187,7 +187,7 @@ class TreeRenderer extends Renderer
             'data-csrf-token'               => CsrfToken::generate(),
             'data-action-url'               => $this->getUrl()
                 ->overwriteParams([
-                    'config'    => $node->getBusinessProcess()->getName(),
+                    'config'    => $node->getBpConfig()->getName(),
                     'node'      => $node instanceof ImportedNode
                         ? $node->getNodeName()
                         : (string) $node
@@ -222,7 +222,7 @@ class TreeRenderer extends Renderer
         $link->getAttributes()->set('data-base-target', '_next');
         $li->add($link);
 
-        if (! $this->isLocked() && $node->getBusinessProcess()->getName() === $this->getBusinessProcess()->getName()) {
+        if (! $this->isLocked() && $node->getBpConfig()->getName() === $this->getBusinessProcess()->getName()) {
             $li->add($this->getActionIcons($bp, $node));
         }
 

@@ -333,11 +333,12 @@ class LegacyConfigParser
             $childNames[] = $val;
         }
 
-        $node = new BpNode($bp, (object) array(
+        $node = new BpNode((object) array(
             'name'        => $name,
             'operator'    => $op_name,
             'child_names' => $childNames
         ));
+        $node->setBpConfig($bp);
 
         $bp->addNode($name, $node);
     }

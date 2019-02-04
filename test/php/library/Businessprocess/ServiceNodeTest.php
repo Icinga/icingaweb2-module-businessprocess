@@ -47,10 +47,10 @@ class ServiceNodeTest extends BaseTestCase
     protected function pingOnLocalhost()
     {
         $bp = new BpConfig();
-        return new ServiceNode($bp, (object) array(
+        return (new ServiceNode((object) array(
             'hostname' => 'localhost',
             'service'  => 'ping <> pong',
             'state'    => 0,
-        ));
+        )))->setBpConfig($bp);
     }
 }

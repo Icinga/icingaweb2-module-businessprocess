@@ -24,14 +24,13 @@ class ImportedNode extends BpNode
     /** @var string */
     protected $icon = 'download';
 
-    public function __construct(BpConfig $bp, $object)
+    public function __construct(BpConfig $parentBp, $object)
     {
-        $this->parentBp = $bp;
+        $this->parentBp = $parentBp;
         $this->configName = $object->configName;
         $this->nodeName = $object->node;
 
-        $importedConfig = $bp->getImportedConfig($this->configName);
-        parent::__construct($importedConfig, (object) [
+        parent::__construct((object) [
                 'name'          => '@' . $this->configName . ':' . $this->nodeName,
                 'operator'      => null,
                 'child_names'   => null
@@ -53,6 +52,15 @@ class ImportedNode extends BpNode
     public function getNodeName()
     {
         return $this->nodeName;
+    }
+
+    public function getBpConfig()
+    {
+        if ($this->bp === null) {
+            $this->bp = $this->parentBp->getImportedConfig($this->configName);
+        }
+
+        return $this->bp;
     }
 
     public function getAlias()
@@ -89,7 +97,7 @@ class ImportedNode extends BpNode
     {
         if ($this->importedNode === null) {
             try {
-                $this->importedNode = $this->bp->getBpNode($this->nodeName);
+                $this->importedNode = $this->getBpConfig()->getBpNode($this->nodeName);
             } catch (Exception $e) {
                 return $this->createFailedNode($e);
             }
@@ -106,11 +114,12 @@ class ImportedNode extends BpNode
     protected function createFailedNode(Exception $e)
     {
         $this->parentBp->addError($e->getMessage());
-        $node = new BpNode($this->bp, (object) array(
+        $node = new BpNode((object) array(
             'name'        => $this->getName(),
             'operator'    => '&',
             'child_names' => []
         ));
+        $node->setBpConfig($this->getBpConfig());
         $node->setState(2);
         $node->setMissing(false)
             ->setDowntime(false)
