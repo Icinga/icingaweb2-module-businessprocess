@@ -437,13 +437,18 @@ class BpConfig
         return $this->nodes;
     }
 
-    public function hasNode($name)
+    public function hasNode($name, &$usedConfigs = null)
     {
         if (array_key_exists($name, $this->nodes)) {
             return true;
         } elseif (! empty($this->importedConfigs)) {
+            $usedConfigs[$this->getName()] = true;
             foreach ($this->importedConfigs as $config) {
-                if ($config->hasNode($name)) {
+                if (isset($usedConfigs[$config->getName()])) {
+                    continue;
+                }
+
+                if ($config->hasNode($name, $usedConfigs)) {
                     return true;
                 }
             }
@@ -498,12 +503,17 @@ class BpConfig
         return $this;
     }
 
-    public function listInvolvedHostNames()
+    public function listInvolvedHostNames(&$usedConfigs = null)
     {
         $hosts = $this->hosts;
         if (! empty($this->importedConfigs)) {
+            $usedConfigs[$this->getName()] = true;
             foreach ($this->importedConfigs as $config) {
-                $hosts += array_flip($config->listInvolvedHostNames());
+                if (isset($usedConfigs[$config->getName()])) {
+                    continue;
+                }
+
+                $hosts += array_flip($config->listInvolvedHostNames($usedConfigs));
             }
         }
 
@@ -590,11 +600,12 @@ class BpConfig
     }
 
     /**
-     * @param $name
-     * @return Node
-     * @throws Exception
+     * @param   string  $name
+     * @param   array   $usedConfigs
+     * @return  Node
+     * @throws  Exception
      */
-    public function getNode($name)
+    public function getNode($name, &$usedConfigs = null)
     {
         if ($name === '__unbound__') {
             return $this->getUnboundBaseNode();
@@ -603,9 +614,14 @@ class BpConfig
         if (array_key_exists($name, $this->nodes)) {
             return $this->nodes[$name];
         } elseif (! empty($this->importedConfigs)) {
+            $usedConfigs[$this->getName()] = true;
             foreach ($this->importedConfigs as $config) {
-                if ($config->hasNode($name)) {
-                    return $config->getNode($name);
+                if (isset($usedConfigs[$config->getName()])) {
+                    continue;
+                }
+
+                if ($config->hasNode($name, $usedConfigs)) {
+                    return $config->getNode($name, $usedConfigs);
                 }
             }
         }
