@@ -90,9 +90,16 @@ class BpConfig
     protected $root_nodes = array();
 
     /**
+     * Imported nodes
+     *
+     * @var ImportedNode[]
+     */
+    protected $importedNodes = [];
+
+    /**
      * Imported configs
      *
-     * @var array
+     * @var BpConfig[]
      */
     protected $importedConfigs = [];
 
@@ -437,21 +444,10 @@ class BpConfig
         return $this->nodes;
     }
 
-    public function hasNode($name, &$usedConfigs = null)
+    public function hasNode($name)
     {
         if (array_key_exists($name, $this->nodes)) {
             return true;
-        } elseif (! empty($this->importedConfigs)) {
-            $usedConfigs[$this->getName()] = true;
-            foreach ($this->importedConfigs as $config) {
-                if (isset($usedConfigs[$config->getName()])) {
-                    continue;
-                }
-
-                if ($config->hasNode($name, $usedConfigs)) {
-                    return true;
-                }
-            }
         }
 
         return false;
@@ -506,14 +502,14 @@ class BpConfig
     public function listInvolvedHostNames(&$usedConfigs = null)
     {
         $hosts = $this->hosts;
-        if (! empty($this->importedConfigs)) {
+        if (! empty($this->importedNodes)) {
             $usedConfigs[$this->getName()] = true;
-            foreach ($this->importedConfigs as $config) {
-                if (isset($usedConfigs[$config->getName()])) {
+            foreach ($this->importedNodes as $node) {
+                if (isset($usedConfigs[$node->getConfigName()])) {
                     continue;
                 }
 
-                $hosts += array_flip($config->listInvolvedHostNames($usedConfigs));
+                $hosts += array_flip($node->getBpConfig()->listInvolvedHostNames($usedConfigs));
             }
         }
 
@@ -564,6 +560,7 @@ class BpConfig
         }
 
         $node = new ImportedNode($this, $params);
+        $this->importedNodes[$node->getName()] = $node;
         $this->nodes[$node->getName()] = $node;
         return $node;
     }
@@ -585,6 +582,22 @@ class BpConfig
         return $this->importedConfigs[$name];
     }
 
+    public function listInvolvedConfigs(&$usedConfigs = null)
+    {
+        $configs = [];
+        foreach ($this->importedNodes as $node) {
+            $config = $node->getBpConfig();
+            $configs[] = $config;
+
+            if (! isset($usedConfigs[$node->getConfigName()])) {
+                $usedConfigs[$config->getName()] = true;
+                $configs = array_merge($configs, $config->listInvolvedConfigs($usedConfigs));
+            }
+        }
+
+        return $configs;
+    }
+
     /**
      * @return LegacyStorage
      */
@@ -601,11 +614,10 @@ class BpConfig
 
     /**
      * @param   string  $name
-     * @param   array   $usedConfigs
      * @return  Node
      * @throws  Exception
      */
-    public function getNode($name, &$usedConfigs = null)
+    public function getNode($name)
     {
         if ($name === '__unbound__') {
             return $this->getUnboundBaseNode();
@@ -613,17 +625,6 @@ class BpConfig
 
         if (array_key_exists($name, $this->nodes)) {
             return $this->nodes[$name];
-        } elseif (! empty($this->importedConfigs)) {
-            $usedConfigs[$this->getName()] = true;
-            foreach ($this->importedConfigs as $config) {
-                if (isset($usedConfigs[$config->getName()])) {
-                    continue;
-                }
-
-                if ($config->hasNode($name, $usedConfigs)) {
-                    return $config->getNode($name, $usedConfigs);
-                }
-            }
         }
 
         // Fallback: if it is a service, create an empty one:

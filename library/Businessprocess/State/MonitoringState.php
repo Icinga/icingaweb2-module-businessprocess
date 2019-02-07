@@ -93,13 +93,17 @@ class MonitoringState
 
         Benchmark::measure('Retrieved states for ' . count($serviceStatus) . ' services in ' . $config->getName());
 
-        foreach ($serviceStatus as $row) {
-            $this->handleDbRow($row, $config);
+        $configs = $config->listInvolvedConfigs();
+        $configs[] = $config;
+        foreach ($configs as $cfg) {
+            foreach ($serviceStatus as $row) {
+                $this->handleDbRow($row, $cfg);
+            }
+            foreach ($hostStatus as $row) {
+                $this->handleDbRow($row, $cfg);
+            }
         }
 
-        foreach ($hostStatus as $row) {
-            $this->handleDbRow($row, $config);
-        }
         // TODO: Union, single query?
         Benchmark::measure('Got states for business process ' . $config->getName());
 
