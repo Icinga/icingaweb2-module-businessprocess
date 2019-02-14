@@ -44,27 +44,29 @@ a:focus {
         }
 
         a {
-            padding: .25em .5em;
-            border: 1px solid @icinga-blue;
+            display: inline-block;
 
-            i::before {
-                margin-right: 0;
-            }
+            i {
+                padding: .25em .5em;
+                border: 1px solid @icinga-blue;
 
-            &.active {
-                color: white;
-                background-color: @icinga-blue;
-            }
+                &:before {
+                    margin-right: 0;
+                }
 
-            &:first-of-type {
-                border-right-width: 0;
-                border-top-left-radius: .25em;
-                border-bottom-left-radius: .25em;
-            }
-            &:last-of-type {
-                border-left-width: 0;
-                border-top-right-radius: .25em;
-                border-bottom-right-radius: .25em;
+                &.active {
+                    color: white;
+                    background-color: @icinga-blue;
+                }
+
+                &:first-of-type {
+                    border-top-left-radius: .25em;
+                    border-bottom-left-radius: .25em;
+                }
+                &:last-of-type {
+                    border-top-right-radius: .25em;
+                    border-bottom-right-radius: .25em;
+                }
             }
         }
     }

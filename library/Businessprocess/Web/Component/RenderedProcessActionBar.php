@@ -15,27 +15,34 @@ class RenderedProcessActionBar extends ActionBar
     {
         $meta = $config->getMetadata();
 
-        $toggle = Html::tag('div', ['class' => 'view-toggle']);
-        $toggle->add(Html::tag('span', null, mt('businessprocess', 'View')));
-        $toggle->add(Html::tag(
-            'a',
-            [
-                'href'  => $url->with('mode', 'tile'),
-                'title' => mt('businessprocess', 'Switch to Tile view'),
-                'class' => $renderer instanceof TreeRenderer ? '' : 'active'
-            ],
-            Html::tag('i', ['class' => 'icon icon-dashboard'])
-        ));
-        $toggle->add(Html::tag(
-            'a',
-            [
-                'href'  => $url->with('mode', 'tree'),
-                'title' => mt('businessprocess', 'Switch to Tree view'),
-                'class' => $renderer instanceof TreeRenderer ? 'active' : ''
-            ],
-            Html::tag('i', ['class' => 'icon icon-sitemap'])
-        ));
-        $this->add($toggle);
+        if ($renderer instanceof TreeRenderer) {
+            $link = Html::tag(
+                'a',
+                [
+                    'href'  => $url->with('mode', 'tile'),
+                    'title' => mt('businessprocess', 'Switch to Tile view')
+                ]
+            );
+        } else {
+            $link = Html::tag(
+                'a',
+                [
+                    'href'  => $url->with('mode', 'tree'),
+                    'title' => mt('businessprocess', 'Switch to Tree view')
+                ]
+            );
+        }
+
+        $link->add([
+            Html::tag('i', ['class' => 'icon icon-dashboard' . ($renderer instanceof TreeRenderer ? '' : ' active')]),
+            Html::tag('i', ['class' => 'icon icon-sitemap' . ($renderer instanceof TreeRenderer ? ' active' : '')])
+        ]);
+
+        $this->add(
+            Html::tag('div', ['class' => 'view-toggle'])
+                ->add(Html::tag('span', null, mt('businessprocess', 'View')))
+                ->add($link)
+        );
 
         $this->add(Html::tag(
             'a',
