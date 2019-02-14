@@ -143,6 +143,7 @@ class BpConfigForm extends BpConfigBaseForm
                     $this->translate('A process named "%s" already exists'),
                     $name
                 ));
+
                 return;
             }
 

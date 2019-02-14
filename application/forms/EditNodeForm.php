@@ -7,6 +7,7 @@ use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Web\Form\QuickForm;
+use Icinga\Module\Businessprocess\Web\Form\Validator\NoDuplicateChildrenValidator;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 use Icinga\Web\Session\SessionNamespace;
 
@@ -175,21 +176,7 @@ class EditNodeForm extends QuickForm
             'multiOptions'  => $this->enumHostList(),
             'label'         => $this->translate('Host'),
             'description'   => $this->translate('The host for this business process node'),
-            'validators'    => [
-                ['Callback', true, [
-                    'callback'  => function ($value) {
-                        if ($this->hasParentNode() && $this->parent->hasChild($value)) {
-                            $el = $this->getElement('children');
-                            $el->addError(sprintf(
-                                $this->translate('%s is already defined in this process'),
-                                $el->getMultiOptions()[$value]
-                            ));
-                        }
-
-                        return true;
-                    }
-                ]]
-            ]
+            'validators'    => [[new NoDuplicateChildrenValidator($this, $this->bp, $this->parent), true]]
         ));
     }
 
@@ -227,21 +214,7 @@ class EditNodeForm extends QuickForm
             'multiOptions'  => $this->enumServiceList($host),
             'label'         => $this->translate('Service'),
             'description'   => $this->translate('The service for this business process node'),
-            'validators'    => [
-                ['Callback', true, [
-                    'callback'  => function ($value) {
-                        if ($this->hasParentNode() && $this->parent->hasChild($value)) {
-                            $el = $this->getElement('children');
-                            $el->addError(sprintf(
-                                $this->translate('%s is already defined in this process'),
-                                $el->getMultiOptions()[$value]
-                            ));
-                        }
-
-                        return true;
-                    }
-                ]]
-            ]
+            'validators'    => [[new NoDuplicateChildrenValidator($this, $this->bp, $this->parent), true]]
         ));
     }
 
