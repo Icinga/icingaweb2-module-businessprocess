@@ -175,7 +175,9 @@ class TreeRenderer extends Renderer
 
         $ul = Html::tag('ul', [
             'class'                         => ['bp', 'sortable'],
-            'data-sortable-disabled'        => $this->isLocked() || $node->getBpConfig()->getName() !== $this->getBusinessProcess()->getName() ? 'true' : 'false',
+            'data-sortable-disabled'        => (
+                $this->isLocked() || $node->getBpConfig()->getName() !== $this->getBusinessProcess()->getName()
+            ) ? 'true' : 'false',
             'data-sortable-invert-swap'     => 'true',
             'data-sortable-data-id-attr'    => 'id',
             'data-sortable-draggable'       => '.movable',

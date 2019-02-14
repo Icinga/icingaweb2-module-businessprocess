@@ -57,7 +57,7 @@ class MoveNodeForm extends QuickForm
                 'filters'       => ['Null'],
                 'validators'    => [
                     ['Callback', true, [
-                        'callback'  => function($name) {
+                        'callback'  => function ($name) {
                             return empty($name) || $this->bp->hasBpNode($name);
                         },
                         'messages'  => [

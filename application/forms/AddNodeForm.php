@@ -189,7 +189,7 @@ class AddNodeForm extends QuickForm
 
     protected function selectHost()
     {
-        $this->addElement('multiselect','children', [
+        $this->addElement('multiselect', 'children', [
             'label'        => $this->translate('Hosts'),
             'required'     => true,
             'size'         => 8,
@@ -225,7 +225,7 @@ class AddNodeForm extends QuickForm
 
     protected function addServicesElement($host)
     {
-        $this->addElement('multiselect','children', [
+        $this->addElement('multiselect', 'children', [
             'label'        => $this->translate('Services'),
             'required'     => true,
             'size'         => 8,
@@ -260,7 +260,7 @@ class AddNodeForm extends QuickForm
         }
 
         if (($file = $this->getSentValue('file')) || !$this->hasParentNode()) {
-            $this->addElement('multiselect','children', [
+            $this->addElement('multiselect', 'children', [
                 'label'        => $this->translate('Process nodes'),
                 'required'     => true,
                 'size'         => 8,

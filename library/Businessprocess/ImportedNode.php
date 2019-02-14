@@ -31,11 +31,10 @@ class ImportedNode extends BpNode
         $this->nodeName = $object->node;
 
         parent::__construct((object) [
-                'name'          => '@' . $this->configName . ':' . $this->nodeName,
-                'operator'      => null,
-                'child_names'   => null
-            ]
-        );
+            'name'          => '@' . $this->configName . ':' . $this->nodeName,
+            'operator'      => null,
+            'child_names'   => null
+        ]);
     }
 
     /**
