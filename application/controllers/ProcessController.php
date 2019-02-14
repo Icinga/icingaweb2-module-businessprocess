@@ -316,10 +316,8 @@ class ProcessController extends Controller
             ))->add(Html::tag(
                 'a',
                 [
-                    'href' => Url::fromPath(
-                        'businessprocess/process/config',
-                        $this->getRequest()->getUrl()->getParams()->toArray(false)
-                    )
+                    'href' => Url::fromPath('businessprocess/process/config')
+                        ->setParams($this->getRequest()->getUrl()->getParams())
                 ],
                 $this->translate('Store')
             ))->add(Html::tag(
@@ -427,10 +425,8 @@ class ProcessController extends Controller
             ->add(Html::tag('h1', null, $title))
             ->add($this->createConfigActionBar($bp));
 
-        $url = Url::fromPath(
-            'businessprocess/process/show',
-            $this->getRequest()->getUrl()->getParams()->toArray(false)
-        );
+        $url = Url::fromPath('businessprocess/process/show')
+            ->setParams($this->getRequest()->getUrl()->getParams());
         $this->content()->add(
             $this->loadForm('bpConfig')
                 ->setProcessConfig($bp)
