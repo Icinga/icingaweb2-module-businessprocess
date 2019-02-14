@@ -88,12 +88,14 @@ class ProcessController extends Controller
 
         $renderer = $this->prepareRenderer($bp, $node);
 
-        if ($this->params->get('unlocked')) {
-            $renderer->unlock();
-        }
+        if (! $this->showFullscreen) {
+            if ($this->params->get('unlocked')) {
+                $renderer->unlock();
+            }
 
-        if ($bp->isEmpty() && $renderer->isLocked()) {
-            $this->redirectNow($this->url()->with('unlocked', true));
+            if ($bp->isEmpty() && $renderer->isLocked()) {
+                $this->redirectNow($this->url()->with('unlocked', true));
+            }
         }
 
         $this->handleFormatRequest($bp, $node);
