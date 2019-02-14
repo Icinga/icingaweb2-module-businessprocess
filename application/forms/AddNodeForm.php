@@ -4,6 +4,7 @@ namespace Icinga\Module\Businessprocess\Forms;
 
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
+use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Storage\Storage;
 use Icinga\Module\Businessprocess\Web\Form\QuickForm;
@@ -400,7 +401,7 @@ class AddNodeForm extends QuickForm
         }
 
         foreach ($bp->getNodes() as $node) {
-            if ($node instanceof BpNode && ! isset($parents[$node->getName()])) {
+            if (! $node instanceof ImportedNode && $node instanceof BpNode && ! isset($parents[$node->getName()])) {
                 $name = $node->getName();
                 if ($differentFile) {
                     $name = '@' . $file . ':' . $name;
