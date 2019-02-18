@@ -35,7 +35,7 @@ class HostNodeTest extends BaseTestCase
     public function testRendersCorrectLink()
     {
         $this->assertEquals(
-            '<a href="/icingaweb2/monitoring/host/show?host=localhost">'
+            '<a href="/icingaweb2/businessprocess/host/show?host=localhost">'
             . 'localhost</a>',
             $this->localhost()->getLink()->render()
         );
