@@ -38,6 +38,11 @@ abstract class BpConfigBaseForm extends QuickForm
         $meta = $config->getMetadata();
         $auth = Auth::getInstance();
         $meta->set('Owner', $auth->getUser()->getUsername());
+
+        if ($auth->hasPermission('businessprocess/showall')) {
+            return true;
+        }
+
         $prefixes = $auth->getRestrictions('businessprocess/prefix');
         if (! empty($prefixes) && ! $meta->nameIsPrefixedWithOneOf($prefixes)) {
             if (count($prefixes) === 1) {

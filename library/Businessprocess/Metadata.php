@@ -137,15 +137,15 @@ class Metadata
             }
         }
 
+        if ($auth->hasPermission('businessprocess/showall')) {
+            return true;
+        }
+
         $prefixes = $auth->getRestrictions('businessprocess/prefix');
         if (! empty($prefixes)) {
             if (! $this->nameIsPrefixedWithOneOf($prefixes)) {
                 return false;
             }
-        }
-
-        if ($auth->hasPermission('businessprocess/showall')) {
-            return true;
         }
 
         if (! $this->hasRestrictions()) {
