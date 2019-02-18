@@ -7,11 +7,8 @@
 <div class="controls">
     <?= $tabs->showOnlyCloseButton() ?>
 </div>
-<div class="content">
-    <h1><?= $this->escape($this->translate('Access denied')) ?></h1>
-    <p><?php printf(
-        $this->escape($this->translate('Access to service "%s" of host "%s" denied')),
-        $service,
-        $host
-    ) ?></p>
+<div class="content restricted">
+    <h1><?= $this->escape($this->translate('Access Denied')) ?></h1>
+    <p><?= $this->escape(sprintf($this->translate('You are lacking permission to access service "%s" on host "%s"'), $service, $host)) ?></p>
+    <a href="#" class="close-container-control action-link"><?= $this->icon('cancel') ?><?= $this->translate('Hide this message') ?></a>
 </div>
