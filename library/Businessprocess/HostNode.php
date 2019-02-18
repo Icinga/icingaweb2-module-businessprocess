@@ -64,7 +64,7 @@ class HostNode extends MonitoredNode
             $params['backend'] = $this->bp->getBackendName();
         }
 
-        return Url::fromPath('monitoring/host/show', $params);
+        return Url::fromPath('businessprocess/host/show', $params);
     }
 
     public function getLink()

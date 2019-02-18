@@ -1,0 +1,14 @@
+<?php
+/** @var \Icinga\Web\View $this */
+/** @var \Icinga\Web\Widget\Tabs $tabs */
+/** @var string $host */
+/** @var string $service */
+?>
+<div class="controls">
+    <?= $tabs->showOnlyCloseButton() ?>
+</div>
+<div class="content restricted">
+    <h1><?= $this->escape($this->translate('Access Denied')) ?></h1>
+    <p><?= $this->escape(sprintf($this->translate('You are lacking permission to access service "%s" on host "%s"'), $service, $host)) ?></p>
+    <a href="#" class="close-container-control action-link"><?= $this->icon('cancel') ?><?= $this->translate('Hide this message') ?></a>
+</div>
