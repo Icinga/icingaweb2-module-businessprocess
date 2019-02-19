@@ -41,7 +41,7 @@ class Breadcrumb extends BaseHtmlElement
             )
         ));
         $breadcrumb->add(Html::tag('li')->add(
-            Html::tag('a', ['href' => $bpUrl], mt('businessprocess', 'Root'))
+            Html::tag('a', ['href' => $bpUrl], $bp->getTitle())
         ));
         $path = $renderer->getCurrentPath();
 
