@@ -25,15 +25,6 @@ class NodeController extends Controller
         foreach ($this->storage()->listProcessNames() as $configName) {
             $config = $this->storage()->loadProcess($configName);
 
-            // TODO: Fix issues with children, they do not exist unless resolved :-/
-            // This is a workaround:
-            foreach ($config->getRootNodes() as $node) {
-                $node->getState();
-            }
-            foreach ($config->getRootNodes() as $node) {
-                $node->clearState();
-            }
-
             if (! $config->hasNode($name)) {
                 continue;
             }

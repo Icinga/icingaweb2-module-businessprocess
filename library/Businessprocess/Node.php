@@ -50,7 +50,7 @@ abstract class Node
      *
      * @var array
      */
-    protected $parents = array();
+    protected $parents;
 
     /**
      * Node identifier
@@ -286,7 +286,7 @@ abstract class Node
 
     public function hasParents()
     {
-        return count($this->parents) > 0;
+        return count($this->getParents()) > 0;
     }
 
     public function hasParentName($name)
@@ -303,7 +303,7 @@ abstract class Node
     public function removeParent($name)
     {
         $this->parents = array_filter(
-            $this->parents,
+            $this->getParents(),
             function (BpNode $parent) use ($name) {
                 return $parent->getName() !== $name;
             }
@@ -317,6 +317,15 @@ abstract class Node
      */
     public function getParents()
     {
+        if ($this->parents === null) {
+            $this->parents = [];
+            foreach ($this->bp->getBpNodes() as $name => $node) {
+                if ($node->hasChild($this->getName())) {
+                    $this->parents[] = $node;
+                }
+            }
+        }
+
         return $this->parents;
     }
 
@@ -330,7 +339,7 @@ abstract class Node
         }
 
         $paths = array();
-        foreach ($this->parents as $parent) {
+        foreach ($this->getParents() as $parent) {
             foreach ($parent->getPaths() as $path) {
                 $path[] = $this->getName();
                 $paths[] = $path;
