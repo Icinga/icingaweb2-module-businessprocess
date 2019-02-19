@@ -6,6 +6,7 @@ use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
+use Icinga\Module\Businessprocess\MonitoringRestrictions;
 use Icinga\Module\Businessprocess\Storage\Storage;
 use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 use Icinga\Module\Businessprocess\Web\Form\Validator\NoDuplicateChildrenValidator;
@@ -14,6 +15,8 @@ use Icinga\Web\Session\SessionNamespace;
 
 class AddNodeForm extends QuickForm
 {
+    use MonitoringRestrictions;
+
     /** @var MonitoringBackend */
     protected $backend;
 
@@ -329,9 +332,13 @@ class AddNodeForm extends QuickForm
 
     protected function enumHostForServiceList()
     {
-        $names = $this->backend->select()->from('hostStatus', array(
-            'hostname'    => 'host_name',
-        ))->order('host_name')->getQuery()->fetchColumn();
+        $names = $this->backend
+            ->select()
+            ->from('hostStatus', ['hostname' => 'host_name'])
+            ->applyFilter($this->getRestriction('monitoring/filter/objects'))
+            ->order('host_name')
+            ->getQuery()
+            ->fetchColumn();
 
         // fetchPairs doesn't seem to work when using the same column with
         // different aliases twice
@@ -341,9 +348,13 @@ class AddNodeForm extends QuickForm
 
     protected function enumHostList()
     {
-        $names = $this->backend->select()->from('hostStatus', array(
-            'hostname'    => 'host_name',
-        ))->order('host_name')->getQuery()->fetchColumn();
+        $names = $this->backend
+            ->select()
+            ->from('hostStatus', ['hostname' => 'host_name'])
+            ->applyFilter($this->getRestriction('monitoring/filter/objects'))
+            ->order('host_name')
+            ->getQuery()
+            ->fetchColumn();
 
         // fetchPairs doesn't seem to work when using the same column with
         // different aliases twice
@@ -358,12 +369,14 @@ class AddNodeForm extends QuickForm
 
     protected function enumServiceList($host)
     {
-        $query = $this->backend->select()->from(
-            'serviceStatus',
-            array('service' => 'service_description')
-        )->where('host_name', $host);
-        $query->order('service_description');
-        $names = $query->getQuery()->fetchColumn();
+        $names = $this->backend
+            ->select()
+            ->from('serviceStatus', ['service' => 'service_description'])
+            ->where('host_name', $host)
+            ->applyFilter($this->getRestriction('monitoring/filter/objects'))
+            ->order('service_description')
+            ->getQuery()
+            ->fetchColumn();
 
         $services = array();
         foreach ($names as $name) {
@@ -438,39 +451,6 @@ class AddNodeForm extends QuickForm
             $parents[$parent->getName()] = $parent;
             $this->collectAllParents($parent, $parents);
         }
-    }
-
-    protected function fetchObjectList()
-    {
-        $this->objectList = array();
-        $hosts = $this->backend->select()->from('hostStatus', array(
-            'hostname'    => 'host_name',
-            'in_downtime' => 'host_in_downtime',
-            'ack'         => 'host_acknowledged',
-            'state'       => 'host_state'
-        ))->order('host_name')->getQuery()->fetchAll();
-
-        $services = $this->backend->select()->from('serviceStatus', array(
-            'hostname'    => 'host_name',
-            'service'     => 'service_description',
-            'in_downtime' => 'service_in_downtime',
-            'ack'         => 'service_acknowledged',
-            'state'       => 'service_state'
-        ))->order('host_name')->order('service_description')->getQuery()->fetchAll();
-
-        foreach ($hosts as $host) {
-            $this->objectList[$host->hostname] = array(
-                $host->hostname . ';Hoststatus' => 'Host Status'
-            );
-        }
-
-        foreach ($services as $service) {
-            $this->objectList[$service->hostname][
-                $service->hostname . ';' . $service->service
-            ] = $service->service;
-        }
-
-        return $this;
     }
 
     public function onSuccess()
