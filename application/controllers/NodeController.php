@@ -57,5 +57,9 @@ class NodeController extends Controller
                 $content->add($bc);
             }
         }
+
+        if ($content->isEmpty()) {
+            $content->add($this->translate('No impact detected. Is this node part of a business process?'));
+        }
     }
 }
