@@ -3,14 +3,14 @@
 namespace Icinga\Module\Businessprocess\Renderer;
 
 use Icinga\Date\DateFormatter;
-use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
+use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\Node;
+use Icinga\Module\Businessprocess\Web\Component\StateBall;
 use Icinga\Module\Businessprocess\Web\Form\CsrfToken;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
-use ipl\Web\Widget\StateBall;
 
 class TreeRenderer extends Renderer
 {
