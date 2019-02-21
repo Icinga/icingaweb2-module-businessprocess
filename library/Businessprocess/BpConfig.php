@@ -454,6 +454,9 @@ class BpConfig
     {
         if (array_key_exists($name, $this->nodes)) {
             return true;
+        } elseif ($name[0] === '@') {
+            list($configName, $nodeName) = preg_split('~:\s*~', substr($name, 1), 2);
+            return $this->getImportedConfig($configName)->hasNode($nodeName);
         }
 
         return false;
@@ -643,6 +646,11 @@ class BpConfig
 
         if (array_key_exists($name, $this->nodes)) {
             return $this->nodes[$name];
+        }
+
+        if ($name[0] === '@') {
+            list($configName, $nodeName) = preg_split('~:\s*~', substr($name, 1), 2);
+            return $this->getImportedConfig($configName)->getNode($nodeName);
         }
 
         // Fallback: if it is a service, create an empty one:
