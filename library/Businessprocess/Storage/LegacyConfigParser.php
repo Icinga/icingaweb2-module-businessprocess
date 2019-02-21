@@ -298,47 +298,41 @@ class LegacyConfigParser
             // New feature: $minWarn = $m[2];
             $value   = $m[3];
         }
-        $cmps = preg_split('~\s*\\' . $op . '\s*~', $value, -1, PREG_SPLIT_NO_EMPTY);
-        $childNames = array();
 
+        $node = new BpNode((object) array(
+            'name'        => $name,
+            'operator'    => $op_name,
+            'child_names' => []
+        ));
+        $node->setBpConfig($bp);
+
+        $cmps = preg_split('~\s*\\' . $op . '\s*~', $value, -1, PREG_SPLIT_NO_EMPTY);
         foreach ($cmps as $val) {
             if (strpos($val, ';') !== false) {
                 if ($bp->hasNode($val)) {
-                    $childNames[] = $val;
-                    continue;
-                }
-
-                list($host, $service) = preg_split('~;~', $val, 2);
-                if ($service === 'Hoststatus') {
-                    $bp->createHost($host);
+                    $node->addChild($bp->getNode($val));
                 } else {
-                    $bp->createService($host, $service);
+                    list($host, $service) = preg_split('~;~', $val, 2);
+                    if ($service === 'Hoststatus') {
+                        $node->addChild($bp->createHost($host));
+                    } else {
+                        $node->addChild($bp->createService($host, $service));
+                    }
                 }
-            }
-            if ($val[0] === '@') {
+            } elseif ($val[0] === '@') {
                 if (strpos($val, ':') === false) {
                     throw new ConfigurationError(
                         "I'm unable to import full external configs, a node needs to be provided for '%s'",
                         $val
                     );
-                    // TODO: this might work:
-                    // $node = $bp->createImportedNode(substr($val, 1));
                 } else {
                     list($config, $nodeName) = preg_split('~:\s*~', substr($val, 1), 2);
-                    $node = $bp->createImportedNode($config, $nodeName);
+                    $node->addChild($bp->createImportedNode($config, $nodeName));
                 }
-                $val = $node->getName();
+            } else {
+                $node->addChild($bp->getNode($val));
             }
-
-            $childNames[] = $val;
         }
-
-        $node = new BpNode((object) array(
-            'name'        => $name,
-            'operator'    => $op_name,
-            'child_names' => $childNames
-        ));
-        $node->setBpConfig($bp);
 
         $bp->addNode($name, $node);
     }
