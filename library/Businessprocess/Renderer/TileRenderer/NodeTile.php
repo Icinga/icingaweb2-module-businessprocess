@@ -9,6 +9,7 @@ use Icinga\Module\Businessprocess\MonitoredNode;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Renderer\Renderer;
 use Icinga\Module\Businessprocess\ServiceNode;
+use Icinga\Web\Url;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
 
@@ -213,13 +214,27 @@ class NodeTile extends BaseHtmlElement
 
     protected function addActionLinks()
     {
-        $node = $this->node;
-        $renderer = $this->renderer;
-        if ($node instanceof MonitoredNode) {
+        $parent = $this->renderer->getParentNode();
+        if ($parent !== null) {
+            $baseUrl = Url::fromPath('businessprocess/process/show', [
+                'config'    => $parent->getBpConfig()->getName(),
+                'node'      => $parent instanceof ImportedNode
+                    ? $parent->getNodeName()
+                    : $parent->getName(),
+                'unlocked'  => true
+            ]);
+        } else {
+            $baseUrl = Url::fromPath('businessprocess/process/show', [
+                'config'    => $this->node->getBpConfig()->getName(),
+                'unlocked'  => true
+            ]);
+        }
+
+        if ($this->node instanceof MonitoredNode) {
             $this->actions()->add(Html::tag(
                 'a',
                 [
-                    'href'  => $renderer->getUrl()
+                    'href'  => $baseUrl
                         ->with('action', 'simulation')
                         ->with('simulationnode', $this->node->getName()),
                     'title' => mt(
@@ -233,7 +248,7 @@ class NodeTile extends BaseHtmlElement
             $this->actions()->add(Html::tag(
                 'a',
                 [
-                    'href'  => $renderer->getUrl()
+                    'href'  => $baseUrl
                         ->with('action', 'editmonitored')
                         ->with('editmonitorednode', $this->node->getName()),
                     'title' => mt('businessprocess', 'Modify this monitored node')
@@ -248,11 +263,11 @@ class NodeTile extends BaseHtmlElement
             return;
         }
 
-        if ($node instanceof BpNode) {
+        if ($this->node instanceof BpNode) {
             $this->actions()->add(Html::tag(
                 'a',
                 [
-                    'href'  => $renderer->getUrl()
+                    'href'  => $baseUrl
                         ->with('action', 'edit')
                         ->with('editnode', $this->node->getName()),
                     'title' => mt('businessprocess', 'Modify this business process node')
@@ -263,10 +278,16 @@ class NodeTile extends BaseHtmlElement
             $this->actions()->add(Html::tag(
                 'a',
                 [
-                    'href'  => $renderer->getUrl()->with([
-                        'action'    => 'add',
-                        'node'      => $node->getName()
-                    ]),
+                    'href'  => $this->node instanceof ImportedNode
+                        ? $baseUrl->with([
+                            'config'    => $this->node->getConfigName(),
+                            'node'      => $this->node->getNodeName(),
+                            'action'    => 'add'
+                        ])
+                        : $baseUrl->with([
+                            'node'      => $this->node->getName(),
+                            'action'    => 'add'
+                        ]),
                     'title' => mt('businessprocess', 'Add a new sub-node to this business process')
                 ],
                 Html::tag('i', ['class' => 'icon icon-plus'])
@@ -275,13 +296,13 @@ class NodeTile extends BaseHtmlElement
 
         $params = array(
             'action'     => 'delete',
-            'deletenode' => $node->getName(),
+            'deletenode' => $this->node->getName(),
         );
 
         $this->actions()->add(Html::tag(
             'a',
             [
-                'href'  => $renderer->getUrl()->with($params),
+                'href'  => $baseUrl->with($params),
                 'title' => mt('businessprocess', 'Delete this node')
             ],
             Html::tag('i', ['class' => 'icon icon-cancel'])

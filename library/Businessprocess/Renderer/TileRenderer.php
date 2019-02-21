@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Renderer;
 
+use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\Renderer\TileRenderer\NodeTile;
 use Icinga\Module\Businessprocess\Web\Form\CsrfToken;
 use ipl\Html\Html;
@@ -23,12 +24,25 @@ class TileRenderer extends Renderer
                 'data-sortable-data-id-attr'    => 'id',
                 'data-sortable-filter'          => '.addnew',
                 'data-sortable-direction'       => 'horizontal', // Otherwise movement is buggy on small lists
-                'data-csrf-token'               => CsrfToken::generate(),
-                'data-action-url'               => $this->getUrl()->getAbsoluteUrl()
+                'data-csrf-token'               => CsrfToken::generate()
             ]
         );
-        if (! $this->wantsRootNodes()) {
-            $nodesDiv->getAttributes()->add('data-node-name', $this->parent->getName());
+
+        if ($this->wantsRootNodes()) {
+            $nodesDiv->getAttributes()->add('data-action-url', $this->getUrl()->getAbsoluteUrl());
+        } else {
+            $nodeName = $this->parent instanceof ImportedNode
+                ? $this->parent->getNodeName()
+                : $this->parent->getName();
+            $nodesDiv->getAttributes()
+                ->add('data-node-name', $nodeName)
+                ->add('data-action-url', $this->getUrl()
+                    ->without('path')
+                    ->overwriteParams([
+                        'config'    => $this->parent->getBpConfig()->getName(),
+                        'node'      => $nodeName
+                    ])
+                    ->getAbsoluteUrl());
         }
 
         $nodes = $this->getChildNodes();
