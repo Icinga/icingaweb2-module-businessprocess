@@ -585,6 +585,11 @@ class BpConfig
         return $node;
     }
 
+    public function getImportedNodes()
+    {
+        return $this->importedNodes;
+    }
+
     public function getImportedConfig($name)
     {
         if (! isset($this->importedConfigs[$name])) {
