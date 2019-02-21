@@ -359,7 +359,7 @@ class EditNodeForm extends QuickForm
 
         foreach ($this->bp->getNodes() as $node) {
             if ($node instanceof BpNode && ! isset($parents[$node->getName()])) {
-                $list[(string) $node] = (string) $node; // display name?
+                $list[$node->getName()] = $node->getName(); // display name?
             }
         }
 

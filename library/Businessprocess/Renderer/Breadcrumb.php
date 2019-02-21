@@ -69,7 +69,7 @@ class Breadcrumb extends BaseHtmlElement
         // TODO: something more generic than NodeTile?
         $renderer = clone($renderer);
         $renderer->lock()->setIsBreadcrumb();
-        $p = new NodeTile($renderer, (string) $node, $node, $path);
+        $p = new NodeTile($renderer, $node, $path);
         $p->setTag('li');
         return $p;
     }

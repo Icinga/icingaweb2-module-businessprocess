@@ -35,14 +35,13 @@ class TileRenderer extends Renderer
 
         $path = $this->getCurrentPath();
         foreach ($nodes as $name => $node) {
-            $this->add(new NodeTile($this, $name, $node, $path));
+            $this->add(new NodeTile($this, $node, $path));
         }
 
         if ($this->wantsRootNodes()) {
             $unbound = $this->createUnboundParent($bp);
             if ($unbound->hasChildren()) {
-                $name = $unbound->getName();
-                $this->add(new NodeTile($this, $name, $unbound));
+                $this->add(new NodeTile($this, $unbound));
             }
         }
 

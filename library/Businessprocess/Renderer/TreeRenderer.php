@@ -75,7 +75,7 @@ class TreeRenderer extends Renderer
      */
     protected function getId(Node $node, $path)
     {
-        return md5(implode(';', $path) . (string) $node);
+        return md5(implode(';', $path) . $node->getName());
     }
 
     protected function getStateClassNames(Node $node)
@@ -192,7 +192,7 @@ class TreeRenderer extends Renderer
                     'config'    => $node->getBpConfig()->getName(),
                     'node'      => $node instanceof ImportedNode
                         ? $node->getNodeName()
-                        : (string) $node
+                        : $node->getName()
                 ])
                 ->getAbsoluteUrl()
         ]);
@@ -215,7 +215,7 @@ class TreeRenderer extends Renderer
         $li = Html::tag('li', [
             'class'             => 'movable',
             'id'                => $this->getId($node, $path ?: []),
-            'data-node-name'    => (string) $node
+            'data-node-name'    => $node->getName()
         ]);
 
         $li->add($this->getNodeIcons($node, $path));

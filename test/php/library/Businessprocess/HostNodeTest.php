@@ -20,7 +20,7 @@ class HostNodeTest extends BaseTestCase
     {
         $this->assertEquals(
             'localhost;Hoststatus',
-            (string) $this->localhost()
+            $this->localhost()->getName()
         );
     }
 

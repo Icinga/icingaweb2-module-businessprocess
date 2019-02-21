@@ -36,10 +36,9 @@ class NodeTile extends BaseHtmlElement
      * @param Node $node
      * @param null $path
      */
-    public function __construct(Renderer $renderer, $name, Node $node, $path = null)
+    public function __construct(Renderer $renderer, Node $node, $path = null)
     {
         $this->renderer = $renderer;
-        $this->name = $name;
         $this->node = $node;
         $this->path = $path;
     }
@@ -72,9 +71,9 @@ class NodeTile extends BaseHtmlElement
 
         $attributes = $this->getAttributes();
         $attributes->add('class', $renderer->getNodeClasses($node));
-        $attributes->add('id', 'bp-' . (string) $node);
+        $attributes->add('id', 'bp-' . $node->getName());
         if (! $renderer->isLocked()) {
-            $attributes->add('data-node-name', (string) $node);
+            $attributes->add('data-node-name', $node->getName());
         }
 
         if (! $renderer->isBreadcrumb()) {
@@ -260,7 +259,7 @@ class NodeTile extends BaseHtmlElement
                 [
                     'href'  => $renderer->getUrl()
                         ->with('action', 'simulation')
-                        ->with('simulationnode', $this->name),
+                        ->with('simulationnode', $this->node->getName()),
                     'title' => mt(
                         'businessprocess',
                         'Show the business impact of this node by simulating a specific state'
@@ -274,7 +273,7 @@ class NodeTile extends BaseHtmlElement
                 [
                     'href'  => $renderer->getUrl()
                         ->with('action', 'editmonitored')
-                        ->with('editmonitorednode', $node->getName()),
+                        ->with('editmonitorednode', $this->node->getName()),
                     'title' => mt('businessprocess', 'Modify this monitored node')
                 ],
                 Html::tag('i', ['class' => 'icon icon-edit'])
@@ -282,7 +281,7 @@ class NodeTile extends BaseHtmlElement
         }
 
         if (! $this->renderer->getBusinessProcess()->getMetadata()->canModify()
-            || $node->getName() === '__unbound__'
+            || $this->node->getName() === '__unbound__'
         ) {
             return;
         }
@@ -293,7 +292,7 @@ class NodeTile extends BaseHtmlElement
                 [
                     'href'  => $renderer->getUrl()
                         ->with('action', 'edit')
-                        ->with('editnode', $node->getName()),
+                        ->with('editnode', $this->node->getName()),
                     'title' => mt('businessprocess', 'Modify this business process node')
                 ],
                 Html::tag('i', ['class' => 'icon icon-edit'])

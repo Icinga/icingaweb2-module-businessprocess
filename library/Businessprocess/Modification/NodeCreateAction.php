@@ -22,7 +22,7 @@ class NodeCreateAction extends NodeAction
      */
     public function setParent(Node $name)
     {
-        $this->parentName = (string) $name;
+        $this->parentName = $name->getName();
     }
 
     /**

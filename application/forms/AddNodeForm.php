@@ -425,7 +425,7 @@ class AddNodeForm extends QuickForm
                     $name = '@' . $file . ':' . $name;
                 }
 
-                $list[$name] = (string) $node; // display name?
+                $list[$name] = $node->getName(); // display name?
             }
         }
 

@@ -160,7 +160,7 @@ class BpNode extends Node
         $tree = array();
 
         foreach ($this->getProblematicChildren() as $child) {
-            $name = (string) $child;
+            $name = $child->getName();
             $tree[$name] = array(
                 'node'     => $child,
                 'children' => array()
@@ -197,11 +197,11 @@ class BpNode extends Node
 
             foreach ($this->getChildren() as $child) {
                 if ($child->isMissing()) {
-                    $missing[(string) $child] = $child;
+                    $missing[$child->getName()] = $child;
                 }
 
                 foreach ($child->getMissingChildren() as $m) {
-                    $missing[(string) $m] = $m;
+                    $missing[$m->getName()] = $m;
                 }
             }
 
@@ -313,7 +313,7 @@ class BpNode extends Node
 
     public function getHtmlId()
     {
-        return 'businessprocess-' . preg_replace('/[\r\n\t\s]/', '_', (string) $this);
+        return 'businessprocess-' . preg_replace('/[\r\n\t\s]/', '_', $this->getName());
     }
 
     protected function invertSortingState($state)
