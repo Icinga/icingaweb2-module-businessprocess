@@ -343,16 +343,16 @@ abstract class Node
      */
     public function getPaths()
     {
-        if ($this->getBpConfig()->hasRootNode($this->getName())) {
-            return array(array($this->getName()));
-        }
-
-        $paths = array();
+        $paths = [];
         foreach ($this->parents as $parent) {
             foreach ($parent->getPaths() as $path) {
-                $path[] = $this->getName();
+                $path[] = $this->getIdentifier();
                 $paths[] = $path;
             }
+        }
+
+        if (! $this instanceof ImportedNode && $this->getBpConfig()->hasRootNode($this->getName())) {
+            $paths[] = [$this->getIdentifier()];
         }
 
         return $paths;
@@ -406,6 +406,16 @@ abstract class Node
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getIdentifier()
+    {
+        $prefix = '';
+        if ($this->getBpConfig()->isImported()) {
+            $prefix = '@' . $this->getBpConfig()->getName() . ':';
+        }
+
+        return $prefix . $this->getName();
     }
 
     public function __toString()

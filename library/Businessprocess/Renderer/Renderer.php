@@ -194,7 +194,7 @@ abstract class Renderer extends HtmlDocument
     }
 
     /**
-     * @return string|null
+     * @return array
      */
     public function getPath()
     {
@@ -205,7 +205,7 @@ abstract class Renderer extends HtmlDocument
     {
         $path = $this->getPath();
         if ($this->rendersSubNode()) {
-            $path[] = (string) $this->parent;
+            $path[] = $this->parent->getIdentifier();
         }
         return $path;
     }

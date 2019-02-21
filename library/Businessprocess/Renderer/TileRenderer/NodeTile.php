@@ -117,21 +117,12 @@ class NodeTile extends BaseHtmlElement
 
     protected function buildBaseNodeUrl(Node $node)
     {
-        $path = $this->path;
-        $renderer = $this->renderer;
+        $url = $this->renderer->getBaseUrl();
 
-        $params = [
-            'config'    => $node->getBpConfig()->getName(),
-            'node'      => $node instanceof ImportedNode
-                ? $node->getNodeName()
-                : $this->name
-        ];
-
-        $url = $renderer->getBaseUrl();
         $p = $url->getParams();
-        $p->mergeValues($params);
-        if (! empty($path) && !$node instanceof ImportedNode) {
-            $p->addValues('path', $path);
+        $p->set('node', $node->getIdentifier());
+        if (! empty($this->path)) {
+            $p->addValues('path', $this->path);
         }
 
         return $url;
@@ -140,31 +131,6 @@ class NodeTile extends BaseHtmlElement
     protected function makeBpUrl(BpNode $node)
     {
         return $this->buildBaseNodeUrl($node);
-    }
-
-    protected function makeMonitoredNodeUrl(MonitoredNode $node)
-    {
-        $path = $this->path;
-        $name = $this->name; // TODO: ??
-        $renderer = $this->renderer;
-
-        $bp = $renderer->getBusinessProcess();
-        $params = array(
-            'config' => $bp->getName()
-        );
-
-        if ($name !== null) {
-            $params['node'] = $node->getName();
-        }
-
-        $url = $renderer->getBaseUrl();
-        $p = $url->getParams();
-        $p->mergeValues($params);
-        if (! empty($path)) {
-            $p->addValues('path', $path);
-        }
-
-        return $url;
     }
 
     /**
@@ -180,11 +146,7 @@ class NodeTile extends BaseHtmlElement
             $link = Html::tag('a', ['href' => $url, 'data-base-target' => '_next'], $node->getHostname());
         } else {
             $link = Html::tag('a', ['href' => $url], $node->getAlias());
-            if ($node->getBpConfig()->getName() !== $this->renderer->getBusinessProcess()->getName()) {
-                $link->getAttributes()->add('data-base-target', '_next');
-            } else {
-                $link->getAttributes()->add('data-base-target', '_self');
-            }
+            $link->getAttributes()->add('data-base-target', '_self');
         }
 
         return $link;

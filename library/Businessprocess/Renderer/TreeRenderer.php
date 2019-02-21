@@ -198,7 +198,7 @@ class TreeRenderer extends Renderer
         ]);
         $li->add($ul);
 
-        $path[] = (string) $node;
+        $path[] = $node->getIdentifier();
         foreach ($node->getChildren() as $name => $child) {
             if ($child instanceof BpNode) {
                 $ul->add($this->renderNode($bp, $child, $path));

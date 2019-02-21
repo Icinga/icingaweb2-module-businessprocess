@@ -53,6 +53,11 @@ class ImportedNode extends BpNode
         return $this->nodeName;
     }
 
+    public function getIdentifier()
+    {
+        return $this->getName();
+    }
+
     public function getBpConfig()
     {
         if ($this->bp === null) {
