@@ -58,15 +58,28 @@ class RenderedProcessActionBar extends ActionBar
         $hasChanges = $config->hasSimulations() || $config->hasBeenChanged();
 
         if ($renderer->isLocked()) {
-            $this->add(Html::tag(
-                'a',
-                [
-                    'href'  => $url->with('unlocked', true),
-                    'title' => mt('businessprocess', 'Click to unlock editing for this process'),
-                    'class' => 'icon-lock'
-                ],
-                mt('businessprocess', 'Unlock Editing')
-            ));
+            if (! $renderer->wantsRootNodes() && $renderer->getParentNode()->getBpConfig()->isImported()) {
+                $span = Html::tag('span', [
+                    'class' => 'disabled',
+                    'title' => mt(
+                        'businessprocess',
+                        'Imported processes can only be changed in their original configuration'
+                    )
+                ]);
+                $span->add(Html::tag('i', ['class' => 'icon icon-lock']))
+                    ->add(mt('businessprocess', 'Editing Locked'));
+                $this->add($span);
+            } else {
+                $this->add(Html::tag(
+                    'a',
+                    [
+                        'href'  => $url->with('unlocked', true),
+                        'title' => mt('businessprocess', 'Click to unlock editing for this process'),
+                        'class' => 'icon-lock'
+                    ],
+                    mt('businessprocess', 'Unlock Editing')
+                ));
+            }
         } elseif (! $hasChanges) {
             $this->add(Html::tag(
                 'a',

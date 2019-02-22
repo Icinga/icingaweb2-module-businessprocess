@@ -88,7 +88,7 @@ class ProcessController extends Controller
 
         $renderer = $this->prepareRenderer($bp, $node);
 
-        if (! $this->showFullscreen) {
+        if (! $this->showFullscreen && ($node === null || ! $node->getBpConfig()->isImported())) {
             if ($this->params->get('unlocked')) {
                 $renderer->unlock();
             }
