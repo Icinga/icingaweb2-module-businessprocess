@@ -22,6 +22,9 @@ class LegacyConfigParser
     /** @var BpConfig */
     protected $config;
 
+    /** @var array */
+    protected $missingNodes = [];
+
     /**
      * LegacyConfigParser constructor
      *
@@ -77,6 +80,8 @@ class LegacyConfigParser
             $parser->parseLine($line);
         }
 
+        $parser->resolveMissingNodes();
+
         Benchmark::measure('Business process ' . $name . ' loaded');
         return $config;
     }
@@ -99,9 +104,26 @@ class LegacyConfigParser
             $this->parseLine($line);
         }
 
+        $this->resolveMissingNodes();
+
         fclose($fh);
         unset($this->currentLineNumber);
         unset($this->currentFilename);
+    }
+
+    /**
+     * Resolve previously missed business process nodes
+     *
+     * @throws ConfigurationError   In case a referenced process does not exist
+     */
+    protected function resolveMissingNodes()
+    {
+        foreach ($this->missingNodes as $name => $parents) {
+            foreach ($parents as $parent) {
+                /** @var BpNode $parent */
+                $parent->addChild($this->config->getNode($name));
+            }
+        }
     }
 
     public static function readMetadataFromFileHeader($name, $filename)
@@ -329,8 +351,10 @@ class LegacyConfigParser
                     list($config, $nodeName) = preg_split('~:\s*~', substr($val, 1), 2);
                     $node->addChild($bp->createImportedNode($config, $nodeName));
                 }
-            } else {
+            } elseif ($bp->hasNode($val)) {
                 $node->addChild($bp->getNode($val));
+            } else {
+                $this->missingNodes[$val][] = $node;
             }
         }
 
