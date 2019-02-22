@@ -32,7 +32,7 @@ class NodeAddChildrenAction extends NodeAction
         $node = $config->getBpNode($this->getNodeName());
 
         foreach ($this->children as $name) {
-            if (! $config->hasNode($name)) {
+            if (! $config->hasNode($name) || $config->getNode($name)->getBpConfig()->getName() !== $config->getName()) {
                 if (strpos($name, ';') !== false) {
                     list($host, $service) = preg_split('/;/', $name, 2);
 
