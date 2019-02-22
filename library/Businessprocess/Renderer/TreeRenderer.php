@@ -86,16 +86,6 @@ class TreeRenderer extends Renderer
         return $html;
     }
 
-    /**
-     * @param Node $node
-     * @param $path
-     * @return string
-     */
-    protected function getId(Node $node, $path)
-    {
-        return md5(implode(';', $path) . $node->getName());
-    }
-
     protected function getStateClassNames(Node $node)
     {
         $state = strtolower($node->getStateName());

@@ -2,7 +2,6 @@
 
 namespace Icinga\Module\Businessprocess\Renderer;
 
-use Icinga\Date\DateFormatter;
 use Icinga\Exception\ProgrammingError;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
@@ -11,7 +10,6 @@ use Icinga\Module\Businessprocess\Web\Url;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
 use ipl\Html\HtmlDocument;
-use ipl\Html\HtmlString;
 
 abstract class Renderer extends HtmlDocument
 {
@@ -185,6 +183,16 @@ abstract class Renderer extends HtmlDocument
         }
         // TODO: problem?
         return $classes;
+    }
+
+    /**
+     * @param Node $node
+     * @param $path
+     * @return string
+     */
+    public function getId(Node $node, $path)
+    {
+        return md5(implode(';', $path) . $node->getName());
     }
 
     public function setPath(array $path)
