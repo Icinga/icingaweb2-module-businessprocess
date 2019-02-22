@@ -11,6 +11,7 @@ use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Web\Form\CsrfToken;
 use Icinga\Module\Businessprocess\Web\Form\QuickForm;
+use Icinga\Web\Session;
 use Icinga\Web\Session\SessionNamespace;
 
 class MoveNodeForm extends QuickForm
@@ -156,15 +157,25 @@ class MoveNodeForm extends QuickForm
         } catch (ModificationError $e) {
             $this->notifyError($e->getMessage());
             Icinga::app()->getResponse()
-                ->setHttpResponseCode(400)
-                ->redirectAndExit($this->getSuccessUrl());
+                // Web 2's JS forces a content update for non-200s. Our own JS
+                // can't prevent this, hence we're not making this a 400 :(
+                //->setHttpResponseCode(400)
+                ->setHeader('X-Icinga-Container', 'ignore')
+                ->sendResponse();
+            exit;
         }
 
         // Trigger session destruction to make sure it get's stored.
         unset($changes);
 
-        $this->setSuccessMessage($this->translate('Node order updated'));
-        parent::onSuccess();
+        $this->notifySuccess($this->getSuccessMessage($this->translate('Node order updated')));
+
+        $response = $this->getRequest()->getResponse()
+            ->setHeader('X-Icinga-Container', 'ignore');
+
+        Session::getSession()->write();
+        $response->sendResponse();
+        exit;
     }
 
     public function hasBeenSent()

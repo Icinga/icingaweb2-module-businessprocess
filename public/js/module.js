@@ -110,7 +110,12 @@
                     to: evt.newIndex
                 };
 
-                icinga.loader.loadUrl(actionUrl, $source.closest('.container'), data, 'POST');
+                var $container = $source.closest('.container');
+                var req = icinga.loader.loadUrl(actionUrl, $container, data, 'POST');
+                req.complete(function (req, textStatus) {
+                    icinga.loader.loadUrl(
+                        $container.data('icingaUrl'), $container, undefined, undefined, undefined, true);
+                });
             }
         },
 
@@ -139,9 +144,13 @@
                 var actionUrl = icinga.utils.addUrlParams($source.data('actionUrl'), {
                     action: 'move',
                     movenode: $(evt.item).data('nodeName')
-                });
 
-                icinga.loader.loadUrl(actionUrl, $target.closest('.container'), data, 'POST');
+                var $container = $target.closest('.container');
+                var req = icinga.loader.loadUrl(actionUrl, $container, data, 'POST');
+                req.complete(function (req, textStatus) {
+                    icinga.loader.loadUrl(
+                        $container.data('icingaUrl'), $container, undefined, undefined, undefined, true);
+                });
                 event.stopPropagation();
             }
         },

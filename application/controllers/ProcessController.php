@@ -251,22 +251,11 @@ class ProcessController extends Controller
                 ->setSimulation(Simulation::fromSession($this->session()))
                 ->handleRequest();
         } elseif ($action === 'move') {
-            $url = Url::fromPath('businessprocess/process/show', ['config' => $bp->getName()]);
-            if ($this->url()->hasParam('unlocked')) {
-                $url->setParam('unlocked', $this->url()->getParam('unlocked'));
-            }
-            if ($this->url()->hasParam('mode')) {
-                $url->setParam('mode', $this->url()->getParam('mode'));
-            } elseif ($this->url()->hasParam('node')) {
-                $url->setParam('node', $this->url()->getParam('node'));
-            }
-
             $form = $this->loadForm('MoveNode')
                 ->setProcess($bp)
                 ->setParentNode($node)
                 ->setSession($this->session())
                 ->setNode($bp->getNode($this->params->get('movenode')))
-                ->setSuccessUrl($url)
                 ->handleRequest();
         }
 

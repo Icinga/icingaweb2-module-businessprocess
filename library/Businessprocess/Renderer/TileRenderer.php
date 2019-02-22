@@ -29,7 +29,10 @@ class TileRenderer extends Renderer
         );
 
         if ($this->wantsRootNodes()) {
-            $nodesDiv->getAttributes()->add('data-action-url', $this->getUrl()->getAbsoluteUrl());
+            $nodesDiv->getAttributes()->add(
+                'data-action-url',
+                $this->getUrl()->setParams(['config' => $bp->getName()])->getAbsoluteUrl()
+            );
         } else {
             $nodeName = $this->parent instanceof ImportedNode
                 ? $this->parent->getNodeName()
@@ -37,8 +40,7 @@ class TileRenderer extends Renderer
             $nodesDiv->getAttributes()
                 ->add('data-node-name', $nodeName)
                 ->add('data-action-url', $this->getUrl()
-                    ->without('path')
-                    ->overwriteParams([
+                    ->setParams([
                         'config'    => $this->parent->getBpConfig()->getName(),
                         'node'      => $nodeName
                     ])

@@ -21,7 +21,7 @@ class TreeRenderer extends Renderer
     {
         $bp = $this->config;
         $htmlId = $bp->getHtmlId();
-        $this->add(Html::tag(
+        $tree = Html::tag(
             'ul',
             [
                 'id'                            => $htmlId,
@@ -35,12 +35,30 @@ class TreeRenderer extends Renderer
                 ]),
                 'data-sortable-invert-swap'     => 'true',
                 'data-is-root-config'           => $this->wantsRootNodes() ? 'true' : 'false',
-                'data-csrf-token'               => CsrfToken::generate(),
-                'data-action-url'               => $this->getUrl()->getAbsoluteUrl()
+                'data-csrf-token'               => CsrfToken::generate()
             ],
             $this->renderBp($bp)
-        ));
+        );
+        if ($this->wantsRootNodes()) {
+            $tree->getAttributes()->add(
+                'data-action-url',
+                $this->getUrl()->setParams(['config' => $bp->getName()])->getAbsoluteUrl()
+            );
+        } else {
+            $nodeName = $this->parent instanceof ImportedNode
+                ? $this->parent->getNodeName()
+                : $this->parent->getName();
+            $tree->getAttributes()
+                ->add('data-node-name', $nodeName)
+                ->add('data-action-url', $this->getUrl()
+                    ->setParams([
+                        'config'    => $this->parent->getBpConfig()->getName(),
+                        'node'      => $nodeName
+                    ])
+                    ->getAbsoluteUrl());
+        }
 
+        $this->add($tree);
         return parent::render();
     }
 
@@ -188,7 +206,7 @@ class TreeRenderer extends Renderer
             ]),
             'data-csrf-token'               => CsrfToken::generate(),
             'data-action-url'               => $this->getUrl()
-                ->overwriteParams([
+                ->setParams([
                     'config'    => $node->getBpConfig()->getName(),
                     'node'      => $node instanceof ImportedNode
                         ? $node->getNodeName()
