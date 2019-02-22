@@ -97,12 +97,6 @@
                     'movenode=' + $(evt.item).data('nodeName')
                 ].join('&');
 
-                if (! $source.is('.few') && $('.addnew', $source).length === 2) {
-                    // This assumes we're not moving things between different lists
-                    evt.oldIndex -= 1;
-                    evt.newIndex -= 1;
-                }
-
                 var data = {
                     csrfToken: $source.data('csrfToken'),
                     movenode: 'movenode', // That's the submit button..
