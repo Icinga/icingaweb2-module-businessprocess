@@ -136,7 +136,7 @@
                 var data = {
                     csrfToken: $target.data('csrfToken'),
                     movenode: 'movenode', // That's the submit button..
-                    parent: $target.parent('.process').data('nodeName') || '',
+                    parent: $target.closest('.process').data('nodeName') || '',
                     from: evt.oldIndex,
                     to: evt.newIndex
                 };

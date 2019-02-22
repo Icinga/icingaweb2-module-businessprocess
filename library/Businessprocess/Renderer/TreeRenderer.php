@@ -25,7 +25,7 @@ class TreeRenderer extends Renderer
             'ul',
             [
                 'id'                            => $htmlId,
-                'class'                         => ['bp', 'sortable'],
+                'class'                         => ['bp', 'sortable', $this->wantsRootNodes() ? '' : 'process'],
                 'data-sortable-disabled'        => $this->isLocked() ? 'true' : 'false',
                 'data-sortable-data-id-attr'    => 'id',
                 'data-sortable-direction'       => 'vertical',
