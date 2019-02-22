@@ -167,14 +167,14 @@ class TreeRenderer extends Renderer
         $div->add($node->getLink());
         $div->add($this->getNodeIcons($node, $path));
 
-        if ($node instanceof BpNode && $node->hasInfoUrl()) {
-            $div->add($this->createInfoAction($node));
-        }
-
         $div->add(Html::tag('span', null, $node->getAlias()));
 
         if ($node instanceof BpNode) {
             $div->add(Html::tag('span', ['class' => 'op'], $node->operatorHtml()));
+        }
+
+        if ($node instanceof BpNode && $node->hasInfoUrl()) {
+            $div->add($this->createInfoAction($node));
         }
 
         if (! $this->isLocked() && $node->getBpConfig()->getName() === $this->getBusinessProcess()->getName()) {
