@@ -121,7 +121,7 @@ class TreeRenderer extends Renderer
     public function getNodeIcons(Node $node, array $path = null)
     {
         $icons = [];
-        if (empty($path)) {
+        if (empty($path) && $node instanceof BpNode) {
             $icons[] = Html::tag('i', ['class' => 'icon icon-sitemap']);
         } else {
             $icons[] = $node->getIcon();
