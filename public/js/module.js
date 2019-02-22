@@ -91,10 +91,11 @@
             var evt = event.originalEvent;
             if (evt.oldIndex !== evt.newIndex) {
                 var $source = $(evt.from);
-                var actionUrl = icinga.utils.addUrlParams($source.data('actionUrl'), {
-                    action: 'move',
-                    movenode: $(evt.item).data('nodeName')
-                });
+                var actionUrl = [
+                    $source.data('actionUrl'),
+                    'action=move',
+                    'movenode=' + $(evt.item).data('nodeName')
+                ].join('&');
 
                 if (! $source.is('.few') && $('.addnew', $source).length === 2) {
                     // This assumes we're not moving things between different lists
@@ -141,9 +142,11 @@
                     to: evt.newIndex
                 };
 
-                var actionUrl = icinga.utils.addUrlParams($source.data('actionUrl'), {
-                    action: 'move',
-                    movenode: $(evt.item).data('nodeName')
+                var actionUrl = [
+                    $source.data('actionUrl'),
+                    'action=move',
+                    'movenode=' + $(evt.item).data('nodeName')
+                ].join('&');
 
                 var $container = $target.closest('.container');
                 var req = icinga.loader.loadUrl(actionUrl, $container, data, 'POST');
