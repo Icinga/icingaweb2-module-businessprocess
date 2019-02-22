@@ -100,7 +100,7 @@ class RenderedProcessActionBar extends ActionBar
                     'title' => mt('businessprocess', 'Add a new business process node'),
                     'class' => 'icon-plus button-link'
                 ],
-                mt('businessprocess', 'Add Process')
+                mt('businessprocess', 'Add Node')
             ));
         }
     }
