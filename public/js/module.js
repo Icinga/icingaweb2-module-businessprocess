@@ -33,6 +33,9 @@
             this.module.on('click', '.dashboard-tile', this.dashboardTileClick);
             this.module.on('end', 'div.tiles.sortable', this.tileDropped);
 
+            this.module.on('choose', '.sortable', this.suspendAutoRefresh);
+            this.module.on('unchoose', '.sortable', this.resumeAutoRefresh);
+
             this.module.icinga.logger.debug('BP module initialized');
         },
 
@@ -85,6 +88,18 @@
 
         dashboardTileClick: function(event) {
             $(event.currentTarget).find('> .bp-link > a').first().trigger('click');
+        },
+
+        suspendAutoRefresh: function(event) {
+            // TODO: If there is a better approach some time, let me know
+            $(event.originalEvent.from).closest('.container').data('lastUpdate', (new Date()).getTime() + 3600 * 1000);
+            event.stopPropagation();
+        },
+
+        resumeAutoRefresh: function(event) {
+            var $container = $(event.originalEvent.from).closest('.container');
+            $container.data('lastUpdate', (new Date()).getTime() - ($container.data('icingaRefresh') || 10) * 1000);
+            event.stopPropagation();
         },
 
         tileDropped: function(event) {
