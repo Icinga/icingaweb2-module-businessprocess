@@ -55,6 +55,14 @@ class NodeController extends Controller
                             array_pop($path);  // Remove the monitored node
                             $immediateParentName = array_pop($path);  // The directly affected process
                             $importedPath = array_slice($path, $importedNodePos + 1);
+
+                            // We may get multiple native paths. Though, only the right hand of the path
+                            // is what we're interested in. The left part is not what is getting imported.
+                            $antiDuplicator = join('|', $importedPath) . '|' . $immediateParentName;
+                            if (isset($parents[$antiDuplicator])) {
+                                continue;
+                            }
+
                             foreach ($importedNode->getPaths($config) as $targetPath) {
                                 if ($targetPath[count($targetPath) - 1] === $immediateParentName) {
                                     array_pop($targetPath);
@@ -63,12 +71,8 @@ class NodeController extends Controller
                                     $parent = $importedConfig->getNode($immediateParentName);
                                 }
 
-                                $parents[] = [$parent, array_merge($targetPath, $importedPath)];
+                                $parents[$antiDuplicator] = [$parent, array_merge($targetPath, $importedPath)];
                             }
-
-                            // We may get multiple native paths. Though, the right hand of the path is everywhere the
-                            // same and the left hand not of any interest since that's where the import location is.
-                            break;  // So, once we've found a match, we're done here (Otherwise we'll get duplicates)
                         }
                     } while (! empty($nativePaths));
                 }
