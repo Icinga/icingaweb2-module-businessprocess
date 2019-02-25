@@ -262,9 +262,7 @@ class Controller extends ModuleController
     protected function storage()
     {
         if ($this->storage === null) {
-            $this->storage = new LegacyStorage(
-                $this->Config()->getSection('global')
-            );
+            $this->storage = LegacyStorage::getInstance();
         }
 
         return $this->storage;

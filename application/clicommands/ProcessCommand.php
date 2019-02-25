@@ -34,7 +34,7 @@ class ProcessCommand extends Command
 
     public function init()
     {
-        $this->storage = new LegacyStorage($this->Config()->getSection('global'));
+        $this->storage = LegacyStorage::getInstance();
     }
 
     /**

@@ -10,9 +10,7 @@ $section = $this->menuSection(N_('Business Processes'), array(
 ));
 
 try {
-    $storage = new LegacyStorage(
-        $this->getConfig()->getSection('global')
-    );
+    $storage = LegacyStorage::getInstance();
 
     $prio = 0;
     foreach ($storage->listProcessNames() as $name) {

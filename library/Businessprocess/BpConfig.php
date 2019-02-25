@@ -631,9 +631,7 @@ class BpConfig
     protected function storage()
     {
         if ($this->storage === null) {
-            $this->storage = new LegacyStorage(
-                Config::module('businessprocess')->getSection('global')
-            );
+            $this->storage = LegacyStorage::getInstance();
         }
 
         return $this->storage;
