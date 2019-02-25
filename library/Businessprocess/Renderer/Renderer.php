@@ -74,6 +74,17 @@ abstract class Renderer extends HtmlDocument
         return $this->parent !== null;
     }
 
+    public function rendersImportedNode()
+    {
+        return $this->parent !== null && $this->parent->getBpConfig()->getName() !== $this->config->getName();
+    }
+
+    public function setParentNode(BpNode $node)
+    {
+        $this->parent = $node;
+        return $this;
+    }
+
     /**
      * @return BpNode
      */
@@ -213,8 +224,11 @@ abstract class Renderer extends HtmlDocument
     {
         $path = $this->getPath();
         if ($this->rendersSubNode()) {
-            $path[] = $this->parent->getIdentifier();
+            $path[] = $this->rendersImportedNode()
+                ? $this->parent->getIdentifier()
+                : $this->parent->getName();
         }
+
         return $path;
     }
 

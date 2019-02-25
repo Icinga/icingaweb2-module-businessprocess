@@ -339,20 +339,29 @@ abstract class Node
     }
 
     /**
+     * @param BpConfig $rootConfig
+     *
      * @return array
      */
-    public function getPaths()
+    public function getPaths($rootConfig = null)
     {
+        $differentConfig = false;
+        if ($rootConfig === null) {
+            $rootConfig = $this->getBpConfig();
+        } else {
+            $differentConfig = $this->getBpConfig()->getName() !== $rootConfig->getName();
+        }
+
         $paths = [];
         foreach ($this->parents as $parent) {
-            foreach ($parent->getPaths() as $path) {
-                $path[] = $this->getIdentifier();
+            foreach ($parent->getPaths($rootConfig) as $path) {
+                $path[] = $differentConfig ? $this->getIdentifier() : $this->getName();
                 $paths[] = $path;
             }
         }
 
         if (! $this instanceof ImportedNode && $this->getBpConfig()->hasRootNode($this->getName())) {
-            $paths[] = [$this->getIdentifier()];
+            $paths[] = [$differentConfig ? $this->getIdentifier() : $this->getName()];
         }
 
         return $paths;
@@ -410,12 +419,7 @@ abstract class Node
 
     public function getIdentifier()
     {
-        $prefix = '';
-        if ($this->getBpConfig()->isImported()) {
-            $prefix = '@' . $this->getBpConfig()->getName() . ':';
-        }
-
-        return $prefix . $this->getName();
+        return '@' . $this->getBpConfig()->getName() . ':' . $this->getName();
     }
 
     public function __toString()

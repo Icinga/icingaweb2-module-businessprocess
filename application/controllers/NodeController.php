@@ -46,7 +46,7 @@ class NodeController extends Controller
 
                 if ($importedConfig->hasNode($name)) {
                     $node = $importedConfig->getNode($name);
-                    $nativePaths = $node->getPaths();
+                    $nativePaths = $node->getPaths($config);
 
                     do {
                         $path = array_pop($nativePaths);
@@ -55,7 +55,7 @@ class NodeController extends Controller
                             array_pop($path);  // Remove the monitored node
                             $immediateParentName = array_pop($path);  // The directly affected process
                             $importedPath = array_slice($path, $importedNodePos + 1);
-                            foreach ($importedNode->getPaths() as $targetPath) {
+                            foreach ($importedNode->getPaths($config) as $targetPath) {
                                 if ($targetPath[count($targetPath) - 1] === $immediateParentName) {
                                     array_pop($targetPath);
                                     $parent = $importedNode;

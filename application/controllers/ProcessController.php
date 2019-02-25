@@ -88,7 +88,7 @@ class ProcessController extends Controller
 
         $renderer = $this->prepareRenderer($bp, $node);
 
-        if (! $this->showFullscreen && ($node === null || ! $node->getBpConfig()->isImported())) {
+        if (! $this->showFullscreen && ($node === null || ! $renderer->rendersImportedNode())) {
             if ($this->params->get('unlocked')) {
                 $renderer->unlock();
             }
@@ -141,7 +141,7 @@ class ProcessController extends Controller
         if (! ($this->showFullscreen || $this->view->compact)) {
             $controls->add($this->getProcessTabs($bp, $renderer));
         }
-        $controls->add(Breadcrumb::create($renderer));
+        $controls->add(Breadcrumb::create(clone $renderer));
         if (! $this->showFullscreen && ! $this->view->compact) {
             $controls->add(
                 new RenderedProcessActionBar($bp, $renderer, $this->Auth(), $this->url())

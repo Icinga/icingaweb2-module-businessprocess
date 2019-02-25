@@ -46,10 +46,12 @@ class Breadcrumb extends BaseHtmlElement
         $path = $renderer->getCurrentPath();
 
         $parts = array();
-        while ($node = array_pop($path)) {
+        while ($nodeName = array_pop($path)) {
+            $node = $bp->getNode($nodeName);
+            $renderer->setParentNode($node);
             array_unshift(
                 $parts,
-                static::renderNode($bp->getNode($node), $path, $renderer)
+                static::renderNode($node, $path, $renderer)
             );
         }
         $breadcrumb->add($parts);

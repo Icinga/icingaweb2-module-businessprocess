@@ -177,15 +177,14 @@ class TreeRenderer extends Renderer
             $div->add($this->createInfoAction($node));
         }
 
-        if (! $this->isLocked() && $node->getBpConfig()->getName() === $this->getBusinessProcess()->getName()) {
+        $differentConfig = $node->getBpConfig()->getName() !== $this->getBusinessProcess()->getName();
+        if (! $this->isLocked() && !$differentConfig) {
             $div->add($this->getActionIcons($bp, $node));
         }
 
         $ul = Html::tag('ul', [
             'class'                         => ['bp', 'sortable'],
-            'data-sortable-disabled'        => (
-                $this->isLocked() || $node->getBpConfig()->getName() !== $this->getBusinessProcess()->getName()
-            ) ? 'true' : 'false',
+            'data-sortable-disabled'        => ($this->isLocked() || $differentConfig) ? 'true' : 'false',
             'data-sortable-invert-swap'     => 'true',
             'data-sortable-data-id-attr'    => 'id',
             'data-sortable-draggable'       => '.movable',
@@ -206,7 +205,7 @@ class TreeRenderer extends Renderer
         ]);
         $li->add($ul);
 
-        $path[] = $node->getIdentifier();
+        $path[] = $differentConfig ? $node->getIdentifier() : $node->getName();
         foreach ($node->getChildren() as $name => $child) {
             if ($child instanceof BpNode) {
                 $ul->add($this->renderNode($bp, $child, $path));

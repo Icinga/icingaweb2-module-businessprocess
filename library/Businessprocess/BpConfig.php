@@ -89,13 +89,6 @@ class BpConfig
     protected $root_nodes = array();
 
     /**
-     * Whether this configuration has been imported
-     *
-     * @var bool
-     */
-    protected $imported = false;
-
-    /**
      * Imported nodes
      *
      * @var ImportedNode[]
@@ -561,17 +554,6 @@ class BpConfig
         return $missing;
     }
 
-    public function setImported($state = true)
-    {
-        $this->imported = (bool) $state;
-        return $this;
-    }
-
-    public function isImported()
-    {
-        return $this->imported;
-    }
-
     public function createImportedNode($config, $name = null)
     {
         $params = (object) array('configName' => $config);
@@ -594,7 +576,6 @@ class BpConfig
     {
         if (! isset($this->importedConfigs[$name])) {
             $import = $this->storage()->loadProcess($name);
-            $import->setImported();
 
             if ($this->usesSoftStates()) {
                 $import->useSoftStates();

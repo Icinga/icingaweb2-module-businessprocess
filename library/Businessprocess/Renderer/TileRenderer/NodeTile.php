@@ -121,7 +121,12 @@ class NodeTile extends BaseHtmlElement
         $url = $this->renderer->getBaseUrl();
 
         $p = $url->getParams();
-        $p->set('node', $node->getIdentifier());
+        if ($this->renderer->rendersImportedNode()) {
+            $p->set('node', $node->getIdentifier());
+        } else {
+            $p->set('node', $node->getName());
+        }
+
         if (! empty($this->path)) {
             $p->addValues('path', $this->path);
         }

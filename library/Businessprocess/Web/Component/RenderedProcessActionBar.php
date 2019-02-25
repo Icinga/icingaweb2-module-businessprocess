@@ -58,7 +58,7 @@ class RenderedProcessActionBar extends ActionBar
         $hasChanges = $config->hasSimulations() || $config->hasBeenChanged();
 
         if ($renderer->isLocked()) {
-            if (! $renderer->wantsRootNodes() && $renderer->getParentNode()->getBpConfig()->isImported()) {
+            if (! $renderer->wantsRootNodes() && $renderer->rendersImportedNode()) {
                 $span = Html::tag('span', [
                     'class' => 'disabled',
                     'title' => mt(
