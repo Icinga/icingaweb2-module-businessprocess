@@ -94,7 +94,6 @@ class MonitoringState
         Benchmark::measure('Retrieved states for ' . count($serviceStatus) . ' services in ' . $config->getName());
 
         $configs = $config->listInvolvedConfigs();
-        $configs[] = $config;
         foreach ($configs as $cfg) {
             foreach ($serviceStatus as $row) {
                 $this->handleDbRow($row, $cfg);

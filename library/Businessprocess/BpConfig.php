@@ -608,16 +608,17 @@ class BpConfig
         return $this->importedConfigs[$name];
     }
 
-    public function listInvolvedConfigs(&$usedConfigs = null)
+    public function listInvolvedConfigs(&$configs = null)
     {
-        $configs = [];
-        foreach ($this->importedNodes as $node) {
-            $config = $node->getBpConfig();
-            $configs[] = $config;
+        if ($configs === null) {
+            $configs[$this->getName()] = $this;
+        }
 
-            if (! isset($usedConfigs[$node->getConfigName()])) {
-                $usedConfigs[$config->getName()] = true;
-                $configs = array_merge($configs, $config->listInvolvedConfigs($usedConfigs));
+        foreach ($this->importedNodes as $node) {
+            if (! isset($configs[$node->getConfigName()])) {
+                $config = $node->getBpConfig();
+                $configs[$node->getConfigName()] = $config;
+                $config->listInvolvedConfigs($configs);
             }
         }
 
