@@ -624,35 +624,6 @@ td > a > .badges {
         }
     }
 }
-.breadcrumb.with-states li {
-    &.critical          { background: @colorCritical; }
-    &.critical.handled  { background: @colorCriticalHandled; }
-    &.unknown           { background: @colorUnknown; }
-    &.unknown.handled   { background: @colorUnknownHandled; }
-    &.warning           { background: @colorWarning; }
-    &.warning.handled   { background: @colorWarningHandled; }
-    &.ok                { background: @colorOk; }
-
-    &.process-node a    { color: white; }
-}
-.breadcrumb.with-states li:not(:last-of-type) {
-    &.critical          a:after { border-left-color: @colorCritical; }
-    &.critical.handled  a:after { border-left-color: @colorCriticalHandled; }
-    &.unknown           a:after { border-left-color: @colorUnknown; }
-    &.unknown.handled   a:after { border-left-color: @colorUnknownHandled; }
-    &.warning           a:after { border-left-color: @colorWarning; }
-    &.warning.handled   a:after { border-left-color: @colorWarningHandled; }
-    &.ok                a:after { border-left-color: @colorOk; }
-}
-.breadcrumb.with-states li:last-of-type {
-    &.critical          { border-color: @colorCritical; }
-    &.critical.handled  { border-color: @colorCriticalHandled; }
-    &.unknown           { border-color: @colorUnknown; }
-    &.unknown.handled   { border-color: @colorUnknownHandled; }
-    &.warning           { border-color: @colorWarning; }
-    &.warning.handled   { border-color: @colorWarningHandled; }
-    &.ok                { border-color: @colorOk; }
-}
 
 .breadcrumb li:not(:last-of-type) a:before, .breadcrumb li:not(:last-of-type) a:after {
     content: " ";

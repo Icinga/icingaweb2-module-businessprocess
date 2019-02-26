@@ -91,9 +91,7 @@ class NodeController extends Controller
                     ->setPath(array_shift($parentAndPath));
 
                 $bc = Breadcrumb::create($renderer);
-                $bc->getAttributes()
-                    ->set('data-base-target', '_next')
-                    ->add('class', 'with-states');
+                $bc->getAttributes()->set('data-base-target', '_next');
                 $content->add($bc);
             }
         }
