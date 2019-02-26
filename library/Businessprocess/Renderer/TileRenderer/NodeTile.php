@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Renderer\TileRenderer;
 
+use Icinga\Date\DateFormatter;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\HostNode;
 use Icinga\Module\Businessprocess\ImportedNode;
@@ -9,6 +10,7 @@ use Icinga\Module\Businessprocess\MonitoredNode;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Renderer\Renderer;
 use Icinga\Module\Businessprocess\ServiceNode;
+use Icinga\Module\Businessprocess\Web\Component\StateBall;
 use Icinga\Web\Url;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
@@ -86,6 +88,16 @@ class NodeTile extends BaseHtmlElement
         }
 
         $link = $this->getMainNodeLink();
+        if ($renderer->isBreadcrumb()) {
+            $link->prepend((new StateBall(strtolower($node->getStateName())))->addAttributes([
+                'title' => sprintf(
+                    '%s %s',
+                    $node->getStateName(),
+                    DateFormatter::timeSince($node->getLastStateChange())
+                )
+            ]));
+        }
+
         $this->add($link);
 
         if ($node instanceof BpNode && !$renderer->isBreadcrumb()) {

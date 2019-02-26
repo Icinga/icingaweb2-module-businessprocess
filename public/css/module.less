@@ -262,12 +262,12 @@ ul.bp {
 
     li.process > div > .state-ball,
     li:not(.process) > .state-ball {
-        border: .2em solid white;
+        border: .15em solid white;
 
         &.size-s {
-            width: 1.2em;
-            height: 1.2em;
-            line-height: 1.2em;
+            width: 1.15em;
+            height: 1.15em;
+            line-height: 1.15em;
         }
     }
 }
@@ -593,6 +593,17 @@ td > a > .badges {
     float: left;
     &:focus {
         outline: none;
+    }
+
+    > .state-ball {
+        margin-right: .5em;
+        border: .15em solid white;
+
+        &.size-s {
+            width: 1.15em;
+            height: 1.15em;
+            line-height: 1.15em;
+        }
     }
 }
 .breadcrumb li {
