@@ -154,10 +154,11 @@ ul.bp {
 
     // header style
     li.process > div {
-        padding-bottom: .25em;
+        padding: .291666667em 0;
         border-bottom: 1px solid @gray-light;
 
         > a.toggle {
+            min-width: 1.25em; // So that process icons align with their node's icons
             color: @gray;
         }
 
@@ -189,11 +190,16 @@ ul.bp {
     > li {
         padding: @vertical-tree-item-gap 0;
 
+        &:first-child {
+            margin-top: @vertical-tree-item-gap;
+        }
+
         &.process {
             padding-bottom: 0;
 
-            > div {
-                margin-bottom: @vertical-tree-item-gap;
+            &:first-child {
+                margin-top: 0;
+                padding-top: 0;
             }
         }
     }
@@ -203,6 +209,7 @@ ul.bp {
     li:not(.process) {
         display: flex;
         align-items: center;
+        padding-left: .25em;
 
         > * {
             margin-right: .5em;
@@ -242,6 +249,25 @@ ul.bp {
             > ul.bp {
                 display: none;
             }
+        }
+    }
+
+    // hover style
+    li.process:hover > div {
+        background-color: #dae4e6;
+    }
+    li:not(.process):hover {
+        background-color: #dae4e6;
+    }
+
+    li.process > div > .state-ball,
+    li:not(.process) > .state-ball {
+        border: .2em solid white;
+
+        &.size-s {
+            width: 1.2em;
+            height: 1.2em;
+            line-height: 1.2em;
         }
     }
 }
