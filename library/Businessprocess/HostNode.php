@@ -32,11 +32,12 @@ class HostNode extends MonitoredNode
 
     protected $className = 'host';
 
-    public function __construct(BpConfig $bp, $object)
+    protected $icon = 'host';
+
+    public function __construct($object)
     {
         $this->name     = $object->hostname . ';Hoststatus';
         $this->hostname = $object->hostname;
-        $this->bp       = $bp;
         if (isset($object->state)) {
             $this->setState($object->state);
         } else {
@@ -60,8 +61,8 @@ class HostNode extends MonitoredNode
             'host' => $this->getHostname(),
         );
 
-        if ($this->bp->hasBackendName()) {
-            $params['backend'] = $this->bp->getBackendName();
+        if ($this->getBpConfig()->hasBackendName()) {
+            $params['backend'] = $this->getBpConfig()->getBackendName();
         }
 
         return Url::fromPath('businessprocess/host/show', $params);

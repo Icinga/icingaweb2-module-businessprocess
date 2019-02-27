@@ -2,12 +2,14 @@
 
 namespace Icinga\Module\Businessprocess;
 
+use Exception;
+use Icinga\Application\Config;
 use Icinga\Exception\IcingaException;
 use Icinga\Exception\NotFoundError;
 use Icinga\Module\Businessprocess\Exception\NestingError;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
+use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
-use Exception;
 
 class BpConfig
 {
@@ -28,6 +30,11 @@ class BpConfig
      * @var MonitoringBackend
      */
     protected $backend;
+
+    /**
+     * @var LegacyStorage
+     */
+    protected $storage;
 
     /** @var  Metadata */
     protected $metadata;
@@ -80,6 +87,20 @@ class BpConfig
      * @var array
      */
     protected $root_nodes = array();
+
+    /**
+     * Imported nodes
+     *
+     * @var ImportedNode[]
+     */
+    protected $importedNodes = [];
+
+    /**
+     * Imported configs
+     *
+     * @var BpConfig[]
+     */
+    protected $importedConfigs = [];
 
     /**
      * All host names { 'hostA' => true, ... }
@@ -388,14 +409,32 @@ class BpConfig
      */
     public function getRootNodes()
     {
-        ksort($this->root_nodes, SORT_NATURAL | SORT_FLAG_CASE);
+        if ($this->getMetadata()->isManuallyOrdered()) {
+            uasort($this->root_nodes, function (BpNode $a, BpNode $b) {
+                $a = $a->getDisplay();
+                $b = $b->getDisplay();
+                return $a > $b ? 1 : ($a < $b ? -1 : 0);
+            });
+        } else {
+            ksort($this->root_nodes, SORT_NATURAL | SORT_FLAG_CASE);
+        }
+
         return $this->root_nodes;
     }
 
     public function listRootNodes()
     {
         $names = array_keys($this->root_nodes);
-        natcasesort($names);
+        if ($this->getMetadata()->isManuallyOrdered()) {
+            uasort($names, function ($a, $b) {
+                $a = $this->root_nodes[$a]->getDisplay();
+                $b = $this->root_nodes[$b]->getDisplay();
+                return $a > $b ? 1 : ($a < $b ? -1 : 0);
+            });
+        } else {
+            natcasesort($names);
+        }
+
         return $names;
     }
 
@@ -406,7 +445,14 @@ class BpConfig
 
     public function hasNode($name)
     {
-        return array_key_exists($name, $this->nodes);
+        if (array_key_exists($name, $this->nodes)) {
+            return true;
+        } elseif ($name[0] === '@') {
+            list($configName, $nodeName) = preg_split('~:\s*~', substr($name, 1), 2);
+            return $this->getImportedConfig($configName)->hasNode($nodeName);
+        }
+
+        return false;
     }
 
     public function hasRootNode($name)
@@ -417,12 +463,12 @@ class BpConfig
     public function createService($host, $service)
     {
         $node = new ServiceNode(
-            $this,
             (object) array(
                 'hostname' => $host,
                 'service'  => $service
             )
         );
+        $node->setBpConfig($this);
         $this->nodes[$host . ';' . $service] = $node;
         $this->hosts[$host] = true;
         return $node;
@@ -430,7 +476,8 @@ class BpConfig
 
     public function createHost($host)
     {
-        $node = new HostNode($this, (object) array('hostname' => $host));
+        $node = new HostNode((object) array('hostname' => $host));
+        $node->setBpConfig($this);
         $this->nodes[$host . ';Hoststatus'] = $node;
         $this->hosts[$host] = true;
         return $node;
@@ -454,9 +501,21 @@ class BpConfig
         return $this;
     }
 
-    public function listInvolvedHostNames()
+    public function listInvolvedHostNames(&$usedConfigs = null)
     {
-        return array_keys($this->hosts);
+        $hosts = $this->hosts;
+        if (! empty($this->importedNodes)) {
+            $usedConfigs[$this->getName()] = true;
+            foreach ($this->importedNodes as $node) {
+                if (isset($usedConfigs[$node->getConfigName()])) {
+                    continue;
+                }
+
+                $hosts += array_flip($node->getBpConfig()->listInvolvedHostNames($usedConfigs));
+            }
+        }
+
+        return array_keys($hosts);
     }
 
     /**
@@ -469,11 +528,12 @@ class BpConfig
      */
     public function createBp($name, $operator = '&')
     {
-        $node = new BpNode($this, (object) array(
+        $node = new BpNode((object) array(
             'name'        => $name,
             'operator'    => $operator,
             'child_names' => array(),
         ));
+        $node->setBpConfig($this);
 
         $this->addNode($name, $node);
         return $node;
@@ -502,14 +562,66 @@ class BpConfig
         }
 
         $node = new ImportedNode($this, $params);
+        $this->importedNodes[$node->getName()] = $node;
         $this->nodes[$node->getName()] = $node;
         return $node;
     }
 
+    public function getImportedNodes()
+    {
+        return $this->importedNodes;
+    }
+
+    public function getImportedConfig($name)
+    {
+        if (! isset($this->importedConfigs[$name])) {
+            $import = $this->storage()->loadProcess($name);
+
+            if ($this->usesSoftStates()) {
+                $import->useSoftStates();
+            } else {
+                $import->useHardStates();
+            }
+
+            $this->importedConfigs[$name] = $import;
+        }
+
+        return $this->importedConfigs[$name];
+    }
+
+    public function listInvolvedConfigs(&$configs = null)
+    {
+        if ($configs === null) {
+            $configs[$this->getName()] = $this;
+        }
+
+        foreach ($this->importedNodes as $node) {
+            if (! isset($configs[$node->getConfigName()])) {
+                $config = $node->getBpConfig();
+                $configs[$node->getConfigName()] = $config;
+                $config->listInvolvedConfigs($configs);
+            }
+        }
+
+        return $configs;
+    }
+
     /**
-     * @param $name
-     * @return Node
-     * @throws Exception
+     * @return LegacyStorage
+     */
+    protected function storage()
+    {
+        if ($this->storage === null) {
+            $this->storage = LegacyStorage::getInstance();
+        }
+
+        return $this->storage;
+    }
+
+    /**
+     * @param   string  $name
+     * @return  Node
+     * @throws  Exception
      */
     public function getNode($name)
     {
@@ -519,6 +631,11 @@ class BpConfig
 
         if (array_key_exists($name, $this->nodes)) {
             return $this->nodes[$name];
+        }
+
+        if ($name[0] === '@') {
+            list($configName, $nodeName) = preg_split('~:\s*~', substr($name, 1), 2);
+            return $this->getImportedConfig($configName)->getNode($nodeName);
         }
 
         // Fallback: if it is a service, create an empty one:
@@ -550,11 +667,12 @@ class BpConfig
         $this->calculateAllStates();
 
         $names = array_keys($this->getUnboundNodes());
-        $bp = new BpNode($this, (object) array(
+        $bp = new BpNode((object) array(
             'name' => '__unbound__',
             'operator' => '&',
             'child_names' => $names
         ));
+        $bp->setBpConfig($this);
         $bp->setAlias($this->translate('Unbound nodes'));
         return $bp;
     }
@@ -685,7 +803,16 @@ class BpConfig
             $nodes[$name] = $name === $alias ? $name : sprintf('%s (%s)', $alias, $node);
         }
 
-        natcasesort($nodes);
+        if ($this->getMetadata()->isManuallyOrdered()) {
+            uasort($nodes, function ($a, $b) {
+                $a = $this->nodes[$a]->getDisplay();
+                $b = $this->nodes[$b]->getDisplay();
+                return $a > $b ? 1 : ($a < $b ? -1 : 0);
+            });
+        } else {
+            natcasesort($nodes);
+        }
+
         return $nodes;
     }
 

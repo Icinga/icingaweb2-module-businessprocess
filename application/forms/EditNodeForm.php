@@ -126,15 +126,16 @@ class EditNodeForm extends QuickForm
             )
         ));
 
+        $display = $this->getNode()->getDisplay() ?: 1;
         $this->addElement('select', 'display', array(
             'label'        => $this->translate('Visualization'),
             'required'     => true,
             'description'  => $this->translate(
                 'Where to show this process'
             ),
-            'value' => $this->hasParentNode() ? '0' : '1',
+            'value' => $display,
             'multiOptions' => array(
-                '1' => $this->translate('Toplevel Process'),
+                "$display" => $this->translate('Toplevel Process'),
                 '0' => $this->translate('Subprocess only'),
             )
         ));
@@ -358,11 +359,13 @@ class EditNodeForm extends QuickForm
 
         foreach ($this->bp->getNodes() as $node) {
             if ($node instanceof BpNode && ! isset($parents[$node->getName()])) {
-                $list[(string) $node] = (string) $node; // display name?
+                $list[$node->getName()] = $node->getName(); // display name?
             }
         }
 
-        natcasesort($list);
+        if (! $this->bp->getMetadata()->isManuallyOrdered()) {
+            natcasesort($list);
+        }
         return $list;
     }
 

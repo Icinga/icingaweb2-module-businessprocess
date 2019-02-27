@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Renderer\TileRenderer;
 
+use Icinga\Date\DateFormatter;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\HostNode;
 use Icinga\Module\Businessprocess\ImportedNode;
@@ -9,6 +10,8 @@ use Icinga\Module\Businessprocess\MonitoredNode;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Renderer\Renderer;
 use Icinga\Module\Businessprocess\ServiceNode;
+use Icinga\Module\Businessprocess\Web\Component\StateBall;
+use Icinga\Web\Url;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
 
@@ -36,10 +39,9 @@ class NodeTile extends BaseHtmlElement
      * @param Node $node
      * @param null $path
      */
-    public function __construct(Renderer $renderer, $name, Node $node, $path = null)
+    public function __construct(Renderer $renderer, Node $node, $path = null)
     {
         $this->renderer = $renderer;
-        $this->name = $name;
         $this->node = $node;
         $this->path = $path;
     }
@@ -72,38 +74,45 @@ class NodeTile extends BaseHtmlElement
 
         $attributes = $this->getAttributes();
         $attributes->add('class', $renderer->getNodeClasses($node));
-        $attributes->add('id', 'bp-' . (string) $node);
-
-        $this->addActions();
-
-        $link = $this->getMainNodeLink();
-        $this->add($link);
-
-        if ($node instanceof BpNode) {
-            if ($renderer->isBreadcrumb()) {
-                $link->add($renderer->renderStateBadges($node->getStateSummary()));
-            } else {
-                $this->add(Html::tag(
-                    'p',
-                    ['class' => 'children-count'],
-                    $node->hasChildren()
-                        ? Html::tag(
-                            'span',
-                            null,
-                            sprintf('%u %s', $node->countChildren(), mt('businessprocess', 'Children'))
-                        )
-                        : null
-                ));
-                $this->add($renderer->renderStateBadges($node->getStateSummary()));
-            }
+        $attributes->add('id', $renderer->getId($node, $this->path));
+        if (! $renderer->isLocked()) {
+            $attributes->add('data-node-name', $node->getName());
         }
 
         if (! $renderer->isBreadcrumb()) {
             $this->addDetailsActions();
+
+            if (! $renderer->isLocked()) {
+                $this->addActionLinks();
+            }
         }
 
-        if (! $renderer->isLocked()) {
-            $this->addActionLinks();
+        $link = $this->getMainNodeLink();
+        if ($renderer->isBreadcrumb()) {
+            $link->prepend((new StateBall(strtolower($node->getStateName())))->addAttributes([
+                'title' => sprintf(
+                    '%s %s',
+                    $node->getStateName(),
+                    DateFormatter::timeSince($node->getLastStateChange())
+                )
+            ]));
+        }
+
+        $this->add($link);
+
+        if ($node instanceof BpNode && !$renderer->isBreadcrumb()) {
+            $this->add(Html::tag(
+                'p',
+                ['class' => 'children-count'],
+                $node->hasChildren()
+                    ? Html::tag(
+                        'span',
+                        null,
+                        sprintf('%u %s', $node->countChildren(), mt('businessprocess', 'Children'))
+                    )
+                    : null
+            ));
+            $this->add($renderer->renderStateBadges($node->getStateSummary()));
         }
 
         return parent::render();
@@ -121,26 +130,21 @@ class NodeTile extends BaseHtmlElement
 
     protected function buildBaseNodeUrl(Node $node)
     {
-        $path = $this->path;
-        $name = $this->name; // TODO: ??
-        $renderer = $this->renderer;
+        $url = $this->renderer->getBaseUrl();
 
-        $bp = $renderer->getBusinessProcess();
-        $params = array(
-            'config' => $node instanceof ImportedNode ?
-                $node->getConfigName() :
-                $bp->getName()
-        );
-
-        if ($name !== null) {
-            $params['node'] = $name;
+        $p = $url->getParams();
+        if ($node instanceof ImportedNode
+            && $this->renderer->getBusinessProcess()->getName() === $node->getBpConfig()->getName()
+        ) {
+            $p->set('node', $node->getNodeName());
+        } elseif ($this->renderer->rendersImportedNode()) {
+            $p->set('node', $node->getIdentifier());
+        } else {
+            $p->set('node', $node->getName());
         }
 
-        $url = $renderer->getBaseUrl();
-        $p = $url->getParams();
-        $p->mergeValues($params);
-        if (! empty($path)) {
-            $p->addValues('path', $path);
+        if (! empty($this->path)) {
+            $p->addValues('path', $this->path);
         }
 
         return $url;
@@ -149,31 +153,6 @@ class NodeTile extends BaseHtmlElement
     protected function makeBpUrl(BpNode $node)
     {
         return $this->buildBaseNodeUrl($node);
-    }
-
-    protected function makeMonitoredNodeUrl(MonitoredNode $node)
-    {
-        $path = $this->path;
-        $name = $this->name; // TODO: ??
-        $renderer = $this->renderer;
-
-        $bp = $renderer->getBusinessProcess();
-        $params = array(
-            'config' => $bp->getName()
-        );
-
-        if ($name !== null) {
-            $params['node'] = $node->getName();
-        }
-
-        $url = $renderer->getBaseUrl();
-        $p = $url->getParams();
-        $p->mergeValues($params);
-        if (! empty($path)) {
-            $p->addValues('path', $path);
-        }
-
-        return $url;
     }
 
     /**
@@ -189,11 +168,7 @@ class NodeTile extends BaseHtmlElement
             $link = Html::tag('a', ['href' => $url, 'data-base-target' => '_next'], $node->getHostname());
         } else {
             $link = Html::tag('a', ['href' => $url], $node->getAlias());
-            if ($node instanceof ImportedNode) {
-                $link->getAttributes()->add('data-base-target', '_next');
-            } else {
-                $link->getAttributes()->add('data-base-target', '_self');
-            }
+            $link->getAttributes()->add('data-base-target', '_self');
         }
 
         return $link;
@@ -260,15 +235,29 @@ class NodeTile extends BaseHtmlElement
 
     protected function addActionLinks()
     {
-        $node = $this->node;
-        $renderer = $this->renderer;
-        if ($node instanceof MonitoredNode) {
+        $parent = $this->renderer->getParentNode();
+        if ($parent !== null) {
+            $baseUrl = Url::fromPath('businessprocess/process/show', [
+                'config'    => $parent->getBpConfig()->getName(),
+                'node'      => $parent instanceof ImportedNode
+                    ? $parent->getNodeName()
+                    : $parent->getName(),
+                'unlocked'  => true
+            ]);
+        } else {
+            $baseUrl = Url::fromPath('businessprocess/process/show', [
+                'config'    => $this->node->getBpConfig()->getName(),
+                'unlocked'  => true
+            ]);
+        }
+
+        if ($this->node instanceof MonitoredNode) {
             $this->actions()->add(Html::tag(
                 'a',
                 [
-                    'href'  => $renderer->getUrl()
+                    'href'  => $baseUrl
                         ->with('action', 'simulation')
-                        ->with('simulationnode', $this->name),
+                        ->with('simulationnode', $this->node->getName()),
                     'title' => mt(
                         'businessprocess',
                         'Show the business impact of this node by simulating a specific state'
@@ -280,9 +269,9 @@ class NodeTile extends BaseHtmlElement
             $this->actions()->add(Html::tag(
                 'a',
                 [
-                    'href'  => $renderer->getUrl()
+                    'href'  => $baseUrl
                         ->with('action', 'editmonitored')
-                        ->with('editmonitorednode', $node->getName()),
+                        ->with('editmonitorednode', $this->node->getName()),
                     'title' => mt('businessprocess', 'Modify this monitored node')
                 ],
                 Html::tag('i', ['class' => 'icon icon-edit'])
@@ -290,18 +279,18 @@ class NodeTile extends BaseHtmlElement
         }
 
         if (! $this->renderer->getBusinessProcess()->getMetadata()->canModify()
-            || $node->getName() === '__unbound__'
+            || $this->node->getName() === '__unbound__'
         ) {
             return;
         }
 
-        if ($node instanceof BpNode) {
+        if ($this->node instanceof BpNode) {
             $this->actions()->add(Html::tag(
                 'a',
                 [
-                    'href'  => $renderer->getUrl()
+                    'href'  => $baseUrl
                         ->with('action', 'edit')
-                        ->with('editnode', $node->getName()),
+                        ->with('editnode', $this->node->getName()),
                     'title' => mt('businessprocess', 'Modify this business process node')
                 ],
                 Html::tag('i', ['class' => 'icon icon-edit'])
@@ -310,10 +299,16 @@ class NodeTile extends BaseHtmlElement
             $this->actions()->add(Html::tag(
                 'a',
                 [
-                    'href'  => $renderer->getUrl()->with([
-                        'action'    => 'add',
-                        'node'      => $node->getName()
-                    ]),
+                    'href'  => $this->node instanceof ImportedNode
+                        ? $baseUrl->with([
+                            'config'    => $this->node->getConfigName(),
+                            'node'      => $this->node->getNodeName(),
+                            'action'    => 'add'
+                        ])
+                        : $baseUrl->with([
+                            'node'      => $this->node->getName(),
+                            'action'    => 'add'
+                        ]),
                     'title' => mt('businessprocess', 'Add a new sub-node to this business process')
                 ],
                 Html::tag('i', ['class' => 'icon icon-plus'])
@@ -322,13 +317,13 @@ class NodeTile extends BaseHtmlElement
 
         $params = array(
             'action'     => 'delete',
-            'deletenode' => $node->getName(),
+            'deletenode' => $this->node->getName(),
         );
 
         $this->actions()->add(Html::tag(
             'a',
             [
-                'href'  => $renderer->getUrl()->with($params),
+                'href'  => $baseUrl->with($params),
                 'title' => mt('businessprocess', 'Delete this node')
             ],
             Html::tag('i', ['class' => 'icon icon-cancel'])

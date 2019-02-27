@@ -12,8 +12,8 @@ class MinOperatorTest extends BaseTestCase
     {
         $storage = new LegacyStorage($this->emptyConfigSection());
         $expressions = array(
-            'a = 1 of: b',
-            'a = 2 of: b + c + d',
+            'a = 1 of: b;c',
+            'a = 2 of: b;c + c;d + d;e',
         );
         $this->getName();
         foreach ($expressions as $expression) {
@@ -26,9 +26,9 @@ class MinOperatorTest extends BaseTestCase
     public function testTwoOfThreeTimesCriticalAreAtLeastCritical()
     {
         $bp = $this->getBp();
-        $bp->setNodeState('b', 2);
-        $bp->setNodeState('c', 2);
-        $bp->setNodeState('d', 2);
+        $bp->setNodeState('b;c', 2);
+        $bp->setNodeState('c;d', 2);
+        $bp->setNodeState('d;e', 2);
 
         $this->assertEquals(
             'CRITICAL',
@@ -39,9 +39,9 @@ class MinOperatorTest extends BaseTestCase
     public function testTwoOfTwoTimesCriticalAndUnknownAreAtLeastCritical()
     {
         $bp = $this->getBp();
-        $bp->setNodeState('b', 2);
-        $bp->setNodeState('c', 3);
-        $bp->setNodeState('d', 2);
+        $bp->setNodeState('b;c', 2);
+        $bp->setNodeState('c;d', 3);
+        $bp->setNodeState('d;e', 2);
 
         $this->assertEquals(
             'CRITICAL',
@@ -52,9 +52,9 @@ class MinOperatorTest extends BaseTestCase
     public function testTwoOfCriticalAndWarningAndOkAreAtLeastCritical()
     {
         $bp = $this->getBp();
-        $bp->setNodeState('b', 2);
-        $bp->setNodeState('c', 1);
-        $bp->setNodeState('d', 0);
+        $bp->setNodeState('b;c', 2);
+        $bp->setNodeState('c;d', 1);
+        $bp->setNodeState('d;e', 0);
 
         $this->assertEquals(
             'CRITICAL',
@@ -65,9 +65,9 @@ class MinOperatorTest extends BaseTestCase
     public function testTwoOfUnknownAndWarningAndCriticalAreAtLeastCritical()
     {
         $bp = $this->getBp();
-        $bp->setNodeState('b', 2);
-        $bp->setNodeState('c', 1);
-        $bp->setNodeState('d', 3);
+        $bp->setNodeState('b;c', 2);
+        $bp->setNodeState('c;d', 1);
+        $bp->setNodeState('d;e', 3);
 
         $this->assertEquals(
             'CRITICAL',
@@ -78,9 +78,9 @@ class MinOperatorTest extends BaseTestCase
     public function testTwoOfTwoTimesWarningAndUnknownAreAtLeastUnknown()
     {
         $bp = $this->getBp();
-        $bp->setNodeState('b', 3);
-        $bp->setNodeState('c', 1);
-        $bp->setNodeState('d', 1);
+        $bp->setNodeState('b;c', 3);
+        $bp->setNodeState('c;d', 1);
+        $bp->setNodeState('d;e', 1);
 
         $this->assertEquals(
             'UNKNOWN',
@@ -91,9 +91,9 @@ class MinOperatorTest extends BaseTestCase
     public function testTwoOfThreeTimesOkAreAtLeastOk()
     {
         $bp = $this->getBp();
-        $bp->setNodeState('b', 0);
-        $bp->setNodeState('c', 0);
-        $bp->setNodeState('d', 0);
+        $bp->setNodeState('b;c', 0);
+        $bp->setNodeState('c;d', 0);
+        $bp->setNodeState('d;e', 0);
 
         $this->assertEquals(
             'OK',
@@ -114,8 +114,8 @@ class MinOperatorTest extends BaseTestCase
     public function testTenWithOnlyTwoCritical()
     {
         $bp = $this->getBp(10, 8, 0);
-        $bp->setNodeState('b', 2);
-        $bp->setNodeState('c', 2);
+        $bp->setNodeState('b;c', 2);
+        $bp->setNodeState('c;d', 2);
 
         $this->assertEquals(
             'OK',
@@ -126,9 +126,9 @@ class MinOperatorTest extends BaseTestCase
     public function testTenWithThreeCritical()
     {
         $bp = $this->getBp(10, 8, 0);
-        $bp->setNodeState('b', 2);
-        $bp->setNodeState('c', 2);
-        $bp->setNodeState('d', 2);
+        $bp->setNodeState('b;c', 2);
+        $bp->setNodeState('c;d', 2);
+        $bp->setNodeState('d;e', 2);
 
         $this->assertEquals(
             'CRITICAL',
@@ -139,9 +139,9 @@ class MinOperatorTest extends BaseTestCase
     public function testTenWithThreeWarning()
     {
         $bp = $this->getBp(10, 8, 0);
-        $bp->setNodeState('b', 1);
-        $bp->setNodeState('c', 1);
-        $bp->setNodeState('d', 1);
+        $bp->setNodeState('b;c', 1);
+        $bp->setNodeState('c;d', 1);
+        $bp->setNodeState('d;e', 1);
 
         $this->assertEquals(
             'WARNING',
@@ -157,14 +157,13 @@ class MinOperatorTest extends BaseTestCase
         $names = array();
         $a = 97;
         for ($i = 1; $i <= $count; $i++) {
-            $names[] = chr($a + $i);
+            $names[] = chr($a + $i) . ';' . chr($a + $i + 1);
         }
 
         $storage = new LegacyStorage($this->emptyConfigSection());
         $expression = sprintf('a = %d of: %s', $min, join(' + ', $names));
         $bp = $storage->loadFromString('dummy', $expression);
         foreach ($names as $n) {
-            $bp->createBp($n);
             if ($defaultState !== null) {
                 $bp->setNodeState($n, $defaultState);
             }

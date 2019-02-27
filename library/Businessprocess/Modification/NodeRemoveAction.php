@@ -40,12 +40,21 @@ class NodeRemoveAction extends NodeAction
      */
     public function appliesTo(BpConfig $config)
     {
+        $name = $this->getNodeName();
         $parent = $this->getParentName();
         if ($parent === null) {
-            return $config->hasNode($this->getNodeName());
+            if (!$config->hasNode($name)) {
+                $this->error('Toplevel process "%s" not found', $name);
+            }
         } else {
-            return $config->hasNode($this->getNodeName()) && $config->hasNode($this->getParentName());
+            if (! $config->hasNode($parent)) {
+                $this->error('Parent process "%s" missing', $parent);
+            } elseif (! $config->getBpNode($parent)->hasChild($name)) {
+                $this->error('Node "%s" not found in process "%s"', $name, $parent);
+            }
         }
+
+        return true;
     }
 
     /**
@@ -57,7 +66,18 @@ class NodeRemoveAction extends NodeAction
         $name = $this->getNodeName();
         $parentName = $this->getParentName();
         if ($parentName === null) {
+            $oldDisplay = $config->getBpNode($name)->getDisplay();
             $config->removeNode($name);
+            if ($config->getMetadata()->isManuallyOrdered()) {
+                foreach ($config->getRootNodes() as $_ => $node) {
+                    $nodeDisplay = $node->getDisplay();
+                    if ($nodeDisplay > $oldDisplay) {
+                        $node->setDisplay($node->getDisplay() - 1);
+                    } elseif ($nodeDisplay === $oldDisplay) {
+                        break;  // Stop immediately to not make things worse ;)
+                    }
+                }
+            }
         } else {
             $node = $config->getNode($name);
             $parent = $config->getBpNode($parentName);

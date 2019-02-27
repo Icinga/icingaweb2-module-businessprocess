@@ -17,11 +17,11 @@ class NodeAddChildrenAction extends NodeAction
     {
         $name = $this->getNodeName();
 
-        if (! $config->hasNode($name)) {
-            return false;
+        if (! $config->hasBpNode($name)) {
+            $this->error('Process "%s" not found', $name);
         }
 
-        return $config->getNode($name) instanceof BpNode;
+        return true;
     }
 
     /**
@@ -32,7 +32,7 @@ class NodeAddChildrenAction extends NodeAction
         $node = $config->getBpNode($this->getNodeName());
 
         foreach ($this->children as $name) {
-            if (! $config->hasNode($name)) {
+            if (! $config->hasNode($name) || $config->getNode($name)->getBpConfig()->getName() !== $config->getName()) {
                 if (strpos($name, ';') !== false) {
                     list($host, $service) = preg_split('/;/', $name, 2);
 

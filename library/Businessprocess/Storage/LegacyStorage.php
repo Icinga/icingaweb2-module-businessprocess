@@ -9,6 +9,13 @@ use Icinga\Exception\SystemPermissionException;
 
 class LegacyStorage extends Storage
 {
+    /**
+     * All parsed configurations
+     *
+     * @var BpConfig[]
+     */
+    protected $configs = [];
+
     /** @var string */
     protected $configDir;
 
@@ -116,10 +123,14 @@ class LegacyStorage extends Storage
      */
     public function loadProcess($name)
     {
-        return LegacyConfigParser::parseFile(
-            $name,
-            $this->getFilename($name)
-        );
+        if (! isset($this->configs[$name])) {
+            $this->configs[$name] = LegacyConfigParser::parseFile(
+                $name,
+                $this->getFilename($name)
+            );
+        }
+
+        return $this->configs[$name];
     }
 
     /**
@@ -146,6 +157,10 @@ class LegacyStorage extends Storage
      */
     public function loadMetadata($name)
     {
+        if (isset($this->configs[$name])) {
+            return $this->configs[$name]->getMetadata();
+        }
+
         return LegacyConfigParser::readMetadataFromFileHeader(
             $name,
             $this->getFilename($name)

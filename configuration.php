@@ -10,9 +10,7 @@ $section = $this->menuSection(N_('Business Processes'), array(
 ));
 
 try {
-    $storage = new LegacyStorage(
-        $this->getConfig()->getSection('global')
-    );
+    $storage = LegacyStorage::getInstance();
 
     $prio = 0;
     foreach ($storage->listProcessNames() as $name) {
@@ -57,3 +55,9 @@ $this->provideRestriction(
     'businessprocess/prefix',
     $this->translate('Restrict access to configurations with the given prefix')
 );
+
+$this->provideJsFile('vendor/Sortable.js');
+$this->provideJsFile('behavior/sortable.js');
+$this->provideJsFile('vendor/jquery.fn.sortable.js');
+
+$this->provideCssFile('state-ball.less');

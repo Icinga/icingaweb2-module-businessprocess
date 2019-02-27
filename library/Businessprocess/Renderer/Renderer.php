@@ -2,7 +2,6 @@
 
 namespace Icinga\Module\Businessprocess\Renderer;
 
-use Icinga\Date\DateFormatter;
 use Icinga\Exception\ProgrammingError;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
@@ -11,7 +10,6 @@ use Icinga\Module\Businessprocess\Web\Url;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
 use ipl\Html\HtmlDocument;
-use ipl\Html\HtmlString;
 
 abstract class Renderer extends HtmlDocument
 {
@@ -74,6 +72,17 @@ abstract class Renderer extends HtmlDocument
     public function rendersSubNode()
     {
         return $this->parent !== null;
+    }
+
+    public function rendersImportedNode()
+    {
+        return $this->parent !== null && $this->parent->getBpConfig()->getName() !== $this->config->getName();
+    }
+
+    public function setParentNode(BpNode $node)
+    {
+        $this->parent = $node;
+        return $this;
     }
 
     /**
@@ -187,6 +196,16 @@ abstract class Renderer extends HtmlDocument
         return $classes;
     }
 
+    /**
+     * @param Node $node
+     * @param $path
+     * @return string
+     */
+    public function getId(Node $node, $path)
+    {
+        return md5((empty($path) ? '' : implode(';', $path)) . $node->getName());
+    }
+
     public function setPath(array $path)
     {
         $this->path = $path;
@@ -194,7 +213,7 @@ abstract class Renderer extends HtmlDocument
     }
 
     /**
-     * @return string|null
+     * @return array
      */
     public function getPath()
     {
@@ -205,8 +224,11 @@ abstract class Renderer extends HtmlDocument
     {
         $path = $this->getPath();
         if ($this->rendersSubNode()) {
-            $path[] = (string) $this->parent;
+            $path[] = $this->rendersImportedNode()
+                ? $this->parent->getIdentifier()
+                : $this->parent->getName();
         }
+
         return $path;
     }
 
@@ -296,22 +318,6 @@ abstract class Renderer extends HtmlDocument
     public function isBreadcrumb()
     {
         return $this->isBreadcrumb;
-    }
-
-    public function timeSince($time, $timeOnly = false)
-    {
-        if (! $time) {
-            return HtmlString::create('');
-        }
-
-        return Html::tag(
-            'span',
-            [
-                'class' => ['relative-time', 'time-since'],
-                'title' => DateFormatter::formatDateTime($time)
-            ],
-            DateFormatter::timeSince($time, $timeOnly)
-        );
     }
 
     protected function createUnboundParent(BpConfig $bp)

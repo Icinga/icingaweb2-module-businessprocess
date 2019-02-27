@@ -4,6 +4,7 @@ namespace Icinga\Module\Businessprocess\Storage;
 
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
+use Icinga\Module\Businessprocess\ImportedNode;
 
 class LegacyConfigRenderer
 {
@@ -110,6 +111,10 @@ class LegacyConfigRenderer
         $cfg = '';
 
         foreach ($node->getChildBpNodes() as $name => $child) {
+            if ($child instanceof ImportedNode) {
+                continue;
+            }
+
             $cfg .= $this->requireRenderedBpNode($child) . "\n";
         }
 

@@ -22,6 +22,7 @@ class Metadata
         'AddToMenu'     => null,
         'Backend'       => null,
         'Statetype'     => null,
+        'ManualOrder'   => null,
         // 'SLAHosts'      => null
     );
 
@@ -249,6 +250,11 @@ class Metadata
         }
 
         return false;
+    }
+
+    public function isManuallyOrdered()
+    {
+        return $this->get('ManualOrder') === 'yes';
     }
 
     protected function splitCommaSeparated($string)

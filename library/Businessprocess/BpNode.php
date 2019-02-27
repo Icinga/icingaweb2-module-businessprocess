@@ -48,12 +48,11 @@ class BpNode extends Node
 
     protected $className = 'process';
 
-    public function __construct(BpConfig $bp, $object)
+    public function __construct($object)
     {
-        $this->bp = $bp;
         $this->name = $object->name;
-        $this->setOperator($object->operator);
-        $this->setChildNames($object->child_names);
+        $this->operator = $object->operator;
+        $this->childNames = $object->child_names;
     }
 
     public function getStateSummary()
@@ -140,12 +139,12 @@ class BpNode extends Node
 
     public function hasChild($name)
     {
-        return in_array($name, $this->childNames);
+        return in_array($name, $this->getChildNames());
     }
 
     public function removeChild($name)
     {
-        if (($key = array_search($name, $this->childNames)) !== false) {
+        if (($key = array_search($name, $this->getChildNames())) !== false) {
             unset($this->childNames[$key]);
 
             if (! empty($this->children)) {
@@ -161,7 +160,7 @@ class BpNode extends Node
         $tree = array();
 
         foreach ($this->getProblematicChildren() as $child) {
-            $name = (string) $child;
+            $name = $child->getName();
             $tree[$name] = array(
                 'node'     => $child,
                 'children' => array()
@@ -178,7 +177,7 @@ class BpNode extends Node
     {
         if ($this->missing === null) {
             $exists = false;
-            $bp = $this->bp;
+            $bp = $this->getBpConfig();
             $bp->beginLoopDetection($this->name);
             foreach ($this->getChildren() as $child) {
                 if (! $child->isMissing()) {
@@ -198,11 +197,11 @@ class BpNode extends Node
 
             foreach ($this->getChildren() as $child) {
                 if ($child->isMissing()) {
-                    $missing[(string) $child] = $child;
+                    $missing[$child->getName()] = $child;
                 }
 
                 foreach ($child->getMissingChildren() as $m) {
-                    $missing[(string) $m] = $m;
+                    $missing[$m->getName()] = $m;
                 }
             }
 
@@ -276,7 +275,7 @@ class BpNode extends Node
 
     public function hasAlias()
     {
-        return $this->alias !== null;
+        return $this->getAlias() !== null;
     }
 
     public function getAlias()
@@ -299,8 +298,8 @@ class BpNode extends Node
             try {
                 $this->reCalculateState();
             } catch (NestingError $e) {
-                $this->bp->addError(
-                    $this->bp->translate('Nesting error detected: %s'),
+                $this->getBpConfig()->addError(
+                    $this->getBpConfig()->translate('Nesting error detected: %s'),
                     $e->getMessage()
                 );
 
@@ -314,7 +313,7 @@ class BpNode extends Node
 
     public function getHtmlId()
     {
-        return 'businessprocess-' . preg_replace('/[\r\n\t\s]/', '_', (string) $this);
+        return 'businessprocess-' . preg_replace('/[\r\n\t\s]/', '_', $this->getName());
     }
 
     protected function invertSortingState($state)
@@ -327,7 +326,7 @@ class BpNode extends Node
      */
     public function reCalculateState()
     {
-        $bp = $this->bp;
+        $bp = $this->getBpConfig();
 
         $sort_states = array();
         $lastStateChange = 0;
@@ -357,7 +356,7 @@ class BpNode extends Node
 
         $this->setLastStateChange($lastStateChange);
 
-        switch ($this->operator) {
+        switch ($this->getOperator()) {
             case self::OP_AND:
                 $sort_state = max($sort_states);
                 break;
@@ -401,7 +400,7 @@ class BpNode extends Node
 
     public function checkForLoops()
     {
-        $bp = $this->bp;
+        $bp = $this->getBpConfig();
         foreach ($this->getChildren() as $child) {
             $bp->beginLoopDetection($this->name);
             if ($child instanceof BpNode) {
@@ -426,7 +425,11 @@ class BpNode extends Node
 
     public function setChildNames($names)
     {
-        natcasesort($names);
+        if (! $this->getBpConfig()->getMetadata()->isManuallyOrdered()) {
+            natcasesort($names);
+            $names = array_values($names);
+        }
+
         $this->childNames = $names;
         $this->children = null;
         return $this;
@@ -434,7 +437,8 @@ class BpNode extends Node
 
     public function hasChildren($filter = null)
     {
-        return !empty($this->childNames);
+        $childNames = $this->getChildNames();
+        return !empty($childNames);
     }
 
     public function getChildNames()
@@ -446,9 +450,13 @@ class BpNode extends Node
     {
         if ($this->children === null) {
             $this->children = array();
-            natcasesort($this->childNames);
-            foreach ($this->childNames as $name) {
-                $this->children[$name] = $this->bp->getNode($name);
+            if (! $this->getBpConfig()->getMetadata()->isManuallyOrdered()) {
+                $childNames = $this->getChildNames();
+                natcasesort($childNames);
+                $this->childNames = array_values($childNames);
+            }
+            foreach ($this->getChildNames() as $name) {
+                $this->children[$name] = $this->getBpConfig()->getNode($name);
                 $this->children[$name]->addParent($this);
             }
         }
@@ -490,27 +498,33 @@ class BpNode extends Node
 
     protected function assertNumericOperator()
     {
-        if (! is_numeric($this->operator)) {
+        if (! is_numeric($this->getOperator())) {
             throw new ConfigurationError('Got invalid operator: %s', $this->operator);
         }
     }
 
     public function operatorHtml()
     {
-        switch ($this->operator) {
+        switch ($this->getOperator()) {
             case self::OP_AND:
-                return 'and';
+                return 'AND';
                 break;
             case self::OP_OR:
-                return 'or';
+                return 'OR';
                 break;
             case self::OP_NOT:
-                return 'not';
+                return 'NOT';
                 break;
             default:
                 // MIN
                 $this->assertNumericOperator();
                 return 'min:' . $this->operator;
         }
+    }
+
+    public function getIcon()
+    {
+        $this->icon = $this->hasParents() ? 'cubes' : 'sitemap';
+        return parent::getIcon();
     }
 }

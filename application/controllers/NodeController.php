@@ -25,23 +25,70 @@ class NodeController extends Controller
         foreach ($this->storage()->listProcessNames() as $configName) {
             $config = $this->storage()->loadProcess($configName);
 
-            if (! $config->hasNode($name)) {
+            $parents = [];
+            if ($config->hasNode($name)) {
+                foreach ($config->getNode($name)->getPaths() as $path) {
+                    array_pop($path);  // Remove the monitored node
+                    $immediateParentName = array_pop($path);  // The directly affected process
+                    $parents[] = [$config->getNode($immediateParentName), $path];
+                }
+            }
+
+            $askedConfigs = [];
+            foreach ($config->getImportedNodes() as $importedNode) {
+                $importedConfig = $importedNode->getBpConfig();
+
+                if (isset($askedConfigs[$importedConfig->getName()])) {
+                    continue;
+                } else {
+                    $askedConfigs[$importedConfig->getName()] = true;
+                }
+
+                if ($importedConfig->hasNode($name)) {
+                    $node = $importedConfig->getNode($name);
+                    $nativePaths = $node->getPaths($config);
+
+                    do {
+                        $path = array_pop($nativePaths);
+                        $importedNodePos = array_search($importedNode->getIdentifier(), $path, true);
+                        if ($importedNodePos !== false) {
+                            array_pop($path);  // Remove the monitored node
+                            $immediateParentName = array_pop($path);  // The directly affected process
+                            $importedPath = array_slice($path, $importedNodePos + 1);
+
+                            // We may get multiple native paths. Though, only the right hand of the path
+                            // is what we're interested in. The left part is not what is getting imported.
+                            $antiDuplicator = join('|', $importedPath) . '|' . $immediateParentName;
+                            if (isset($parents[$antiDuplicator])) {
+                                continue;
+                            }
+
+                            foreach ($importedNode->getPaths($config) as $targetPath) {
+                                if ($targetPath[count($targetPath) - 1] === $immediateParentName) {
+                                    array_pop($targetPath);
+                                    $parent = $importedNode;
+                                } else {
+                                    $parent = $importedConfig->getNode($immediateParentName);
+                                }
+
+                                $parents[$antiDuplicator] = [$parent, array_merge($targetPath, $importedPath)];
+                            }
+                        }
+                    } while (! empty($nativePaths));
+                }
+            }
+
+            if (empty($parents)) {
                 continue;
             }
 
             MonitoringState::apply($config);
             $config->applySimulation($simulation);
 
-            foreach ($config->getNode($name)->getPaths() as $path) {
-                array_pop($path);
-                $node = array_pop($path);
-                $renderer = new TileRenderer($config, $config->getNode($node));
-                $renderer->setUrl(
-                    Url::fromPath(
-                        'businessprocess/process/show',
-                        array('config' => $configName)
-                    )
-                )->setPath($path);
+            foreach ($parents as $parentAndPath) {
+                $renderer = (new TileRenderer($config, array_shift($parentAndPath)))
+                    ->setUrl(Url::fromPath('businessprocess/process/show', ['config' => $configName]))
+                    ->setPath(array_shift($parentAndPath));
 
                 $bc = Breadcrumb::create($renderer);
                 $bc->getAttributes()->set('data-base-target', '_next');

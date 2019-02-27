@@ -12,12 +12,13 @@ class ServiceNode extends MonitoredNode
 
     protected $className = 'service';
 
-    public function __construct(BpConfig $bp, $object)
+    protected $icon = 'service';
+
+    public function __construct($object)
     {
         $this->name = $object->hostname . ';' . $object->service;
         $this->hostname = $object->hostname;
         $this->service  = $object->service;
-        $this->bp       = $bp;
         if (isset($object->state)) {
             $this->setState($object->state);
         } else {
@@ -47,8 +48,8 @@ class ServiceNode extends MonitoredNode
             'service' => $this->getServiceDescription()
         );
 
-        if ($this->bp->hasBackendName()) {
-            $params['backend'] = $this->bp->getBackendName();
+        if ($this->getBpConfig()->hasBackendName()) {
+            $params['backend'] = $this->getBpConfig()->getBackendName();
         }
 
         return Url::fromPath('businessprocess/service/show', $params);

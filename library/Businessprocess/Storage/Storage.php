@@ -2,12 +2,18 @@
 
 namespace Icinga\Module\Businessprocess\Storage;
 
+use Icinga\Application\Config;
 use Icinga\Data\ConfigObject;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Metadata;
 
 abstract class Storage
 {
+    /**
+     * @var static
+     */
+    protected static $instance;
+
     /**
      * @var ConfigObject
      */
@@ -25,6 +31,15 @@ abstract class Storage
 
     protected function init()
     {
+    }
+
+    public static function getInstance()
+    {
+        if (static::$instance === null) {
+            static::$instance = new static(Config::module('businessprocess')->getSection('global'));
+        }
+
+        return static::$instance;
     }
 
     /**

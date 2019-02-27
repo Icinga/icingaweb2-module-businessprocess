@@ -73,14 +73,20 @@ class ProcessForm extends QuickForm
             )
         ));
 
+        if ($this->node !== null) {
+            $display = $this->node->getDisplay() ?: 1;
+        } else {
+            $display = 1;
+        }
         $this->addElement('select', 'display', array(
             'label'        => $this->translate('Visualization'),
             'required'     => true,
             'description'  => $this->translate(
                 'Where to show this process'
             ),
+            'value' => $display,
             'multiOptions' => array(
-                '1' => $this->translate('Toplevel Process'),
+                "$display" => $this->translate('Toplevel Process'),
                 '0' => $this->translate('Subprocess only'),
             )
         ));
@@ -97,7 +103,6 @@ class ProcessForm extends QuickForm
                 $this->getElement('alias')->setValue($node->getAlias());
             }
             $this->getElement('operator')->setValue($node->getOperator());
-            $this->getElement('display')->setValue($node->getDisplay());
             if ($node->hasInfoUrl()) {
                 $this->getElement('url')->setValue($node->getInfoUrl());
             }

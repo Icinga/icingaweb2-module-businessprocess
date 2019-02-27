@@ -88,12 +88,14 @@ class ProcessController extends Controller
 
         $renderer = $this->prepareRenderer($bp, $node);
 
-        if ($this->params->get('unlocked')) {
-            $renderer->unlock();
-        }
+        if (! $this->showFullscreen && ($node === null || ! $renderer->rendersImportedNode())) {
+            if ($this->params->get('unlocked')) {
+                $renderer->unlock();
+            }
 
-        if ($bp->isEmpty() && $renderer->isLocked()) {
-            $this->redirectNow($this->url()->with('unlocked', true));
+            if ($bp->isEmpty() && $renderer->isLocked()) {
+                $this->redirectNow($this->url()->with('unlocked', true));
+            }
         }
 
         $this->handleFormatRequest($bp, $node);
@@ -137,11 +139,10 @@ class ProcessController extends Controller
 
         if (! ($this->showFullscreen || $this->view->compact)) {
             $controls->add($this->getProcessTabs($bp, $renderer));
+            $controls->getAttributes()->add('class', 'separated');
         }
-        if (! $this->view->compact) {
-            $controls->add(Html::tag('h1')->setContent($this->view->title));
-        }
-        $controls->add(Breadcrumb::create($renderer));
+
+        $controls->add(Breadcrumb::create(clone $renderer));
         if (! $this->showFullscreen && ! $this->view->compact) {
             $controls->add(
                 new RenderedProcessActionBar($bp, $renderer, $this->Auth(), $this->url())
@@ -249,6 +250,13 @@ class ProcessController extends Controller
                 ->setSuccessUrl(Url::fromRequest()->without('action'))
                 ->setNode($bp->getNode($this->params->get('simulationnode')))
                 ->setSimulation(Simulation::fromSession($this->session()))
+                ->handleRequest();
+        } elseif ($action === 'move') {
+            $form = $this->loadForm('MoveNode')
+                ->setProcess($bp)
+                ->setParentNode($node)
+                ->setSession($this->session())
+                ->setNode($bp->getNode($this->params->get('movenode')))
                 ->handleRequest();
         }
 

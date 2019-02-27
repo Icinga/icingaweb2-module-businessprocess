@@ -20,7 +20,7 @@ class HostNodeTest extends BaseTestCase
     {
         $this->assertEquals(
             'localhost;Hoststatus',
-            (string) $this->localhost()
+            $this->localhost()->getName()
         );
     }
 
@@ -57,9 +57,9 @@ class HostNodeTest extends BaseTestCase
     protected function localhost()
     {
         $bp = new BpConfig();
-        return new HostNode($bp, (object) array(
+        return (new HostNode((object) array(
             'hostname' => 'localhost',
             'state'    => 0,
-        ));
+        )))->setBpConfig($bp);
     }
 }

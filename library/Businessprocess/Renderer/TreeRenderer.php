@@ -2,9 +2,13 @@
 
 namespace Icinga\Module\Businessprocess\Renderer;
 
-use Icinga\Module\Businessprocess\BpNode;
+use Icinga\Date\DateFormatter;
 use Icinga\Module\Businessprocess\BpConfig;
+use Icinga\Module\Businessprocess\BpNode;
+use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\Node;
+use Icinga\Module\Businessprocess\Web\Component\StateBall;
+use Icinga\Module\Businessprocess\Web\Form\CsrfToken;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
 
@@ -16,15 +20,45 @@ class TreeRenderer extends Renderer
     public function render()
     {
         $bp = $this->config;
-        $this->add(Html::tag(
-            'div',
+        $htmlId = $bp->getHtmlId();
+        $tree = Html::tag(
+            'ul',
             [
-                'id'    => $bp->getHtmlId(),
-                'class' => 'bp'
+                'id'                            => $htmlId,
+                'class'                         => ['bp', 'sortable', $this->wantsRootNodes() ? '' : 'process'],
+                'data-sortable-disabled'        => $this->isLocked() ? 'true' : 'false',
+                'data-sortable-data-id-attr'    => 'id',
+                'data-sortable-direction'       => 'vertical',
+                'data-sortable-group'           => json_encode([
+                    'name'  => $this->wantsRootNodes() ? 'root' : $htmlId,
+                    'put'   => 'function:rowPutAllowed'
+                ]),
+                'data-sortable-invert-swap'     => 'true',
+                'data-is-root-config'           => $this->wantsRootNodes() ? 'true' : 'false',
+                'data-csrf-token'               => CsrfToken::generate()
             ],
             $this->renderBp($bp)
-        ));
+        );
+        if ($this->wantsRootNodes()) {
+            $tree->getAttributes()->add(
+                'data-action-url',
+                $this->getUrl()->setParams(['config' => $bp->getName()])->getAbsoluteUrl()
+            );
+        } else {
+            $nodeName = $this->parent instanceof ImportedNode
+                ? $this->parent->getNodeName()
+                : $this->parent->getName();
+            $tree->getAttributes()
+                ->add('data-node-name', $nodeName)
+                ->add('data-action-url', $this->getUrl()
+                    ->setParams([
+                        'config'    => $this->parent->getBpConfig()->getName(),
+                        'node'      => $nodeName
+                    ])
+                    ->getAbsoluteUrl());
+        }
 
+        $this->add($tree);
         return parent::render();
     }
 
@@ -42,20 +76,14 @@ class TreeRenderer extends Renderer
         }
 
         foreach ($nodes as $name => $node) {
-            $html[] = $this->renderNode($bp, $node);
+            if ($node instanceof BpNode) {
+                $html[] = $this->renderNode($bp, $node);
+            } else {
+                $html[] = $this->renderChild($bp, $node);
+            }
         }
 
         return $html;
-    }
-
-    /**
-     * @param Node $node
-     * @param $path
-     * @return string
-     */
-    protected function getId(Node $node, $path)
-    {
-        return md5(implode(';', $path) . (string) $node);
     }
 
     protected function getStateClassNames(Node $node)
@@ -77,11 +105,24 @@ class TreeRenderer extends Renderer
 
     /**
      * @param Node $node
+     * @param array $path
      * @return BaseHtmlElement[]
      */
-    public function getNodeIcons(Node $node)
+    public function getNodeIcons(Node $node, array $path = null)
     {
-        $icons = array();
+        $icons = [];
+        if (empty($path) && $node instanceof BpNode) {
+            $icons[] = Html::tag('i', ['class' => 'icon icon-sitemap']);
+        } else {
+            $icons[] = $node->getIcon();
+        }
+        $icons[] = (new StateBall(strtolower($node->getStateName())))->addAttributes([
+            'title' => sprintf(
+                '%s %s',
+                $node->getStateName(),
+                DateFormatter::timeSince($node->getLastStateChange())
+            )
+        ]);
         if ($node->isInDowntime()) {
             $icons[] = Html::tag('i', ['class' => 'icon icon-moon']);
         }
@@ -100,17 +141,16 @@ class TreeRenderer extends Renderer
      */
     public function renderNode(BpConfig $bp, Node $node, $path = array())
     {
-        $table = Html::tag(
-            'table',
+        $htmlId = $this->getId($node, $path);
+        $li = Html::tag(
+            'li',
             [
-                'id' => $this->getId($node, $path),
-                'class' => array(
-                    'bp',
-                    $node->getObjectClassName()
-                )
+                'id'                => $htmlId,
+                'class'             => ['bp', 'movable', $node->getObjectClassName()],
+                'data-node-name'    => $node->getName()
             ]
         );
-        $attributes = $table->getAttributes();
+        $attributes = $li->getAttributes();
         $attributes->add('class', $this->getStateClassNames($node));
         if ($node->isHandled()) {
             $attributes->add('class', 'handled');
@@ -121,78 +161,88 @@ class TreeRenderer extends Renderer
             $attributes->add('class', 'node');
         }
 
-        $tbody = Html::tag('tbody');
-        $table->add($tbody);
-        $tr =  Html::tag('tr');
-        $tbody->add($tr);
+        $div = Html::tag('div');
+        $li->add($div);
+
+        $div->add($node->getLink());
+        $div->add($this->getNodeIcons($node, $path));
+
+        $div->add(Html::tag('span', null, $node->getAlias()));
 
         if ($node instanceof BpNode) {
-            $tr->add(Html::tag(
-                'th',
-                ['rowspan' => $node->countChildren() + 1 + ($this->isLocked() ? 0 : 1)],
-                Html::tag('span', ['class' => 'op'], $node->operatorHtml())
-            ));
+            $div->add(Html::tag('span', ['class' => 'op'], $node->operatorHtml()));
         }
-        $td = Html::tag('td');
-        $tr->add($td);
 
         if ($node instanceof BpNode && $node->hasInfoUrl()) {
-            $td->add($this->createInfoAction($node));
+            $div->add($this->createInfoAction($node));
         }
 
-        if (! $this->isLocked()) {
-            $td->add($this->getActionIcons($bp, $node));
+        $differentConfig = $node->getBpConfig()->getName() !== $this->getBusinessProcess()->getName();
+        if (! $this->isLocked() && !$differentConfig) {
+            $div->add($this->getActionIcons($bp, $node));
         }
+
+        $ul = Html::tag('ul', [
+            'class'                         => ['bp', 'sortable'],
+            'data-sortable-disabled'        => ($this->isLocked() || $differentConfig) ? 'true' : 'false',
+            'data-sortable-invert-swap'     => 'true',
+            'data-sortable-data-id-attr'    => 'id',
+            'data-sortable-draggable'       => '.movable',
+            'data-sortable-direction'       => 'vertical',
+            'data-sortable-group'           => json_encode([
+                'name'  => $htmlId, // Unique, so that the function below is the only deciding factor
+                'put'   => 'function:rowPutAllowed'
+            ]),
+            'data-csrf-token'               => CsrfToken::generate(),
+            'data-action-url'               => $this->getUrl()
+                ->setParams([
+                    'config'    => $node->getBpConfig()->getName(),
+                    'node'      => $node instanceof ImportedNode
+                        ? $node->getNodeName()
+                        : $node->getName()
+                ])
+                ->getAbsoluteUrl()
+        ]);
+        $li->add($ul);
+
+        $path[] = $differentConfig ? $node->getIdentifier() : $node->getName();
+        foreach ($node->getChildren() as $name => $child) {
+            if ($child instanceof BpNode) {
+                $ul->add($this->renderNode($bp, $child, $path));
+            } else {
+                $ul->add($this->renderChild($bp, $child, $path));
+            }
+        }
+
+        return $li;
+    }
+
+    protected function renderChild($bp, Node $node, $path = null)
+    {
+        $li = Html::tag('li', [
+            'class'             => 'movable',
+            'id'                => $this->getId($node, $path ?: []),
+            'data-node-name'    => $node->getName()
+        ]);
+
+        $li->add($this->getNodeIcons($node, $path));
 
         $link = $node->getLink();
         $link->getAttributes()->set('data-base-target', '_next');
-        $link->add($this->getNodeIcons($node));
+        $li->add($link);
 
-        if ($node->hasChildren()) {
-            $link->add($this->renderStateBadges($node->getStateSummary()));
+        if (! $this->isLocked() && $node->getBpConfig()->getName() === $this->getBusinessProcess()->getName()) {
+            $li->add($this->getActionIcons($bp, $node));
         }
 
-        if ($time = $node->getLastStateChange()) {
-            $since = $this->timeSince($time)->prepend(
-                sprintf(' (%s ', $node->getStateName())
-            )->add(')');
-            $link->add($since);
-        }
-
-        $td->add($link);
-
-        foreach ($node->getChildren() as $name => $child) {
-            $tbody->add(Html::tag(
-                'tr',
-                null,
-                Html::tag(
-                    'td',
-                    null,
-                    $this->renderNode($bp, $child, $this->getCurrentPath())
-                )
-            ));
-        }
-
-        if (! $this->isLocked() && $node instanceof BpNode && $bp->getMetadata()->canModify()) {
-            $tbody->add(Html::tag(
-                'tr',
-                null,
-                Html::tag(
-                    'td',
-                    null,
-                    $this->renderAddNewNode($node)
-                )
-            ));
-        }
-
-        return $table;
+        return $li;
     }
 
     protected function getActionIcons(BpConfig $bp, Node $node)
     {
         if ($node instanceof BpNode) {
             if ($bp->getMetadata()->canModify()) {
-                return $this->createEditAction($bp, $node);
+                return [$this->createEditAction($bp, $node), $this->renderAddNewNode($node)];
             } else {
                 return '';
             }
@@ -204,7 +254,7 @@ class TreeRenderer extends Renderer
     protected function createEditAction(BpConfig $bp, BpNode $node)
     {
         return $this->actionIcon(
-            'wrench',
+            'edit',
             $this->getUrl()->with(array(
                 'action'   => 'edit',
                 'editnode' => $node->getName()
@@ -243,7 +293,7 @@ class TreeRenderer extends Renderer
             [
                 'href'  => $url,
                 'title' => $title,
-                'style' => 'float: right'
+                'class' => 'action-link'
             ],
             Html::tag('i', ['class' => 'icon icon-' . $icon])
         );
@@ -251,16 +301,12 @@ class TreeRenderer extends Renderer
 
     protected function renderAddNewNode($parent)
     {
-        return Html::tag(
-            'a',
-            [
-                'href'  => $this->getUrl()
-                    ->with('action', 'add')
-                    ->with('node', $parent->getName()),
-                'title' => mt('businessprocess', 'Add a new business process node'),
-                'class' => 'addnew icon-plus'
-            ],
-            mt('businessprocess', 'Add')
+        return $this->actionIcon(
+            'plus',
+            $this->getUrl()
+                ->with('action', 'add')
+                ->with('node', $parent->getName()),
+            mt('businessprocess', 'Add a new business process node')
         );
     }
 }

@@ -50,7 +50,7 @@ abstract class Node
      *
      * @var array
      */
-    protected $parents;
+    protected $parents = array();
 
     /**
      * Node identifier
@@ -84,6 +84,13 @@ abstract class Node
     protected $duration;
 
     /**
+     * This node's icon
+     *
+     * @var string
+     */
+    protected $icon;
+
+    /**
      * Last state change, unix timestamp
      *
      * @var int
@@ -102,7 +109,18 @@ abstract class Node
         99 => 'PENDING'
     );
 
-    abstract public function __construct(BpConfig $bp, $object);
+    abstract public function __construct($object);
+
+    public function setBpConfig(BpConfig $bp)
+    {
+        $this->bp = $bp;
+        return $this;
+    }
+
+    public function getBpConfig()
+    {
+        return $this->bp;
+    }
 
     public function setMissing($missing = true)
     {
@@ -286,7 +304,7 @@ abstract class Node
 
     public function hasParents()
     {
-        return count($this->getParents()) > 0;
+        return count($this->parents) > 0;
     }
 
     public function hasParentName($name)
@@ -303,7 +321,7 @@ abstract class Node
     public function removeParent($name)
     {
         $this->parents = array_filter(
-            $this->getParents(),
+            $this->parents,
             function (BpNode $parent) use ($name) {
                 return $parent->getName() !== $name;
             }
@@ -317,33 +335,33 @@ abstract class Node
      */
     public function getParents()
     {
-        if ($this->parents === null) {
-            $this->parents = [];
-            foreach ($this->bp->getBpNodes() as $name => $node) {
-                if ($node->hasChild($this->getName())) {
-                    $this->parents[] = $node;
-                }
-            }
-        }
-
         return $this->parents;
     }
 
     /**
+     * @param BpConfig $rootConfig
+     *
      * @return array
      */
-    public function getPaths()
+    public function getPaths($rootConfig = null)
     {
-        if ($this->bp->hasRootNode($this->getName())) {
-            return array(array($this->getName()));
+        $differentConfig = false;
+        if ($rootConfig === null) {
+            $rootConfig = $this->getBpConfig();
+        } else {
+            $differentConfig = $this->getBpConfig()->getName() !== $rootConfig->getName();
         }
 
-        $paths = array();
-        foreach ($this->getParents() as $parent) {
-            foreach ($parent->getPaths() as $path) {
-                $path[] = $this->getName();
+        $paths = [];
+        foreach ($this->parents as $parent) {
+            foreach ($parent->getPaths($rootConfig) as $path) {
+                $path[] = $differentConfig ? $this->getIdentifier() : $this->getName();
                 $paths[] = $path;
             }
+        }
+
+        if (! $this instanceof ImportedNode && $this->getBpConfig()->hasRootNode($this->getName())) {
+            $paths[] = [$differentConfig ? $this->getIdentifier() : $this->getName()];
         }
 
         return $paths;
@@ -379,7 +397,14 @@ abstract class Node
 
     public function getLink()
     {
-        return Html::tag('a', ['href' => '#'], $this->getAlias());
+        return Html::tag('a', ['href' => '#', 'class' => 'toggle'], Html::tag('i', [
+            'class' => 'icon icon-down-dir'
+        ]));
+    }
+
+    public function getIcon()
+    {
+        return Html::tag('i', ['class' => 'icon icon-' . ($this->icon ?: 'attention-circled')]);
     }
 
     public function operatorHtml()
@@ -390,6 +415,11 @@ abstract class Node
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getIdentifier()
+    {
+        return '@' . $this->getBpConfig()->getName() . ':' . $this->getName();
     }
 
     public function __toString()

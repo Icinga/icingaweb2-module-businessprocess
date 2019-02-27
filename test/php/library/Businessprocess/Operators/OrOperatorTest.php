@@ -12,8 +12,8 @@ class OrOperatorTest extends BaseTestCase
     {
         $storage = new LegacyStorage($this->emptyConfigSection());
         $expressions = array(
-            'a = b',
-            'a = b | c | d',
+            'a = b;c',
+            'a = b;c | c;d | d;e',
         );
 
         foreach ($expressions as $expression) {
@@ -27,9 +27,9 @@ class OrOperatorTest extends BaseTestCase
     public function testThreeTimesCriticalIsCritical()
     {
         $bp = $this->getBp();
-        $bp->setNodeState('b', 2);
-        $bp->setNodeState('c', 2);
-        $bp->setNodeState('d', 2);
+        $bp->setNodeState('b;c', 2);
+        $bp->setNodeState('c;d', 2);
+        $bp->setNodeState('d;e', 2);
 
         $this->assertEquals(
             'CRITICAL',
@@ -40,9 +40,9 @@ class OrOperatorTest extends BaseTestCase
     public function testTwoTimesCriticalOrUnknownIsUnknown()
     {
         $bp = $this->getBp();
-        $bp->setNodeState('b', 2);
-        $bp->setNodeState('c', 3);
-        $bp->setNodeState('d', 2);
+        $bp->setNodeState('b;c', 2);
+        $bp->setNodeState('c;d', 3);
+        $bp->setNodeState('d;e', 2);
 
         $this->assertEquals(
             'UNKNOWN',
@@ -53,9 +53,9 @@ class OrOperatorTest extends BaseTestCase
     public function testCriticalOrWarningOrOkIsOk()
     {
         $bp = $this->getBp();
-        $bp->setNodeState('b', 2);
-        $bp->setNodeState('c', 1);
-        $bp->setNodeState('d', 0);
+        $bp->setNodeState('b;c', 2);
+        $bp->setNodeState('c;d', 1);
+        $bp->setNodeState('d;e', 0);
 
         $this->assertEquals(
             'OK',
@@ -66,9 +66,9 @@ class OrOperatorTest extends BaseTestCase
     public function testUnknownOrWarningOrCriticalIsWarning()
     {
         $bp = $this->getBp();
-        $bp->setNodeState('b', 2);
-        $bp->setNodeState('c', 1);
-        $bp->setNodeState('d', 3);
+        $bp->setNodeState('b;c', 2);
+        $bp->setNodeState('c;d', 1);
+        $bp->setNodeState('d;e', 3);
 
         $this->assertEquals(
             'WARNING',
@@ -79,9 +79,9 @@ class OrOperatorTest extends BaseTestCase
     public function testTwoTimesWarningAndOkIsOk()
     {
         $bp = $this->getBp();
-        $bp->setNodeState('b', 0);
-        $bp->setNodeState('c', 1);
-        $bp->setNodeState('d', 1);
+        $bp->setNodeState('b;c', 0);
+        $bp->setNodeState('c;d', 1);
+        $bp->setNodeState('d;e', 1);
 
         $this->assertEquals(
             'OK',
@@ -92,9 +92,9 @@ class OrOperatorTest extends BaseTestCase
     public function testThreeTimesWarningIsWarning()
     {
         $bp = $this->getBp();
-        $bp->setNodeState('b', 1);
-        $bp->setNodeState('c', 1);
-        $bp->setNodeState('d', 1);
+        $bp->setNodeState('b;c', 1);
+        $bp->setNodeState('c;d', 1);
+        $bp->setNodeState('d;e', 1);
 
         $this->assertEquals(
             'WARNING',
@@ -108,11 +108,8 @@ class OrOperatorTest extends BaseTestCase
     protected function getBp()
     {
         $storage = new LegacyStorage($this->emptyConfigSection());
-        $expression = 'a = b | c | d';
+        $expression = 'a = b;c | c;d | d;e';
         $bp = $storage->loadFromString('dummy', $expression);
-        $bp->createBp('b');
-        $bp->createBp('c');
-        $bp->createBp('d');
 
         return $bp;
     }

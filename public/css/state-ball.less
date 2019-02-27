@@ -1,0 +1,58 @@
+.state-ball {
+  border-radius: 50%;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+
+  &.state-critical,
+  &.state-down {
+    background-color: @color-critical;
+  }
+
+  &.state-unknown {
+    background-color: @color-unknown;
+  }
+
+  &.state-warning {
+    background-color: @color-warning;
+  }
+
+  &.state-ok,
+  &.state-up {
+    background-color: @color-ok;
+  }
+
+  &.state-pending {
+    background-color: @color-pending;
+  }
+
+  &.size-xs {
+    line-height: 0.75em;
+    height: 0.75em;
+    width: 0.75em;
+  }
+
+  &.size-s {
+    line-height: 1em;
+    height: 1em;
+    width: 1em;
+  }
+
+  &.size-m {
+    line-height: 2em;
+    height: 2em;
+    width: 2em;
+  }
+
+  &.size-l {
+    line-height: 2.5em;
+    height: 2.5em;
+    width: 2.5em;
+  }
+
+  > i {
+    color: white;
+    font-style: normal;
+    text-transform: uppercase;
+  }
+}

@@ -37,7 +37,7 @@ class Breadcrumb extends BaseHtmlElement
                     'href'  => Url::fromPath('businessprocess'),
                     'title' => mt('businessprocess', 'Show Overview')
                 ],
-                Html::tag('i', ['class' => 'icon icon-dashboard'])
+                Html::tag('i', ['class' => 'icon icon-home'])
             )
         ));
         $breadcrumb->add(Html::tag('li')->add(
@@ -46,10 +46,12 @@ class Breadcrumb extends BaseHtmlElement
         $path = $renderer->getCurrentPath();
 
         $parts = array();
-        while ($node = array_pop($path)) {
+        while ($nodeName = array_pop($path)) {
+            $node = $bp->getNode($nodeName);
+            $renderer->setParentNode($node);
             array_unshift(
                 $parts,
-                static::renderNode($bp->getNode($node), $path, $renderer)
+                static::renderNode($node, $path, $renderer)
             );
         }
         $breadcrumb->add($parts);
@@ -69,8 +71,7 @@ class Breadcrumb extends BaseHtmlElement
         // TODO: something more generic than NodeTile?
         $renderer = clone($renderer);
         $renderer->lock()->setIsBreadcrumb();
-        $p = new NodeTile($renderer, (string) $node, $node, $path);
-        $p->getAttributes()->add('class', $renderer->getNodeClasses($node));
+        $p = new NodeTile($renderer, $node, $path);
         $p->setTag('li');
         return $p;
     }

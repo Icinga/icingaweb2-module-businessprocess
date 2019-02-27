@@ -16,26 +16,33 @@ class RenderedProcessActionBar extends ActionBar
         $meta = $config->getMetadata();
 
         if ($renderer instanceof TreeRenderer) {
-            $this->add(Html::tag(
+            $link = Html::tag(
                 'a',
                 [
                     'href'  => $url->with('mode', 'tile'),
-                    'title' => mt('businessprocess', 'Switch to Tile view'),
-                    'class' => 'icon-dashboard'
-                ],
-                mt('businessprocess', 'Tiles')
-            ));
+                    'title' => mt('businessprocess', 'Switch to Tile view')
+                ]
+            );
         } else {
-            $this->add(Html::tag(
+            $link = Html::tag(
                 'a',
                 [
                     'href'  => $url->with('mode', 'tree'),
-                    'title' => mt('businessprocess', 'Switch to Tree view'),
-                    'class' => 'icon-sitemap'
-                ],
-                mt('businessprocess', 'Tree')
-            ));
+                    'title' => mt('businessprocess', 'Switch to Tree view')
+                ]
+            );
         }
+
+        $link->add([
+            Html::tag('i', ['class' => 'icon icon-dashboard' . ($renderer instanceof TreeRenderer ? '' : ' active')]),
+            Html::tag('i', ['class' => 'icon icon-sitemap' . ($renderer instanceof TreeRenderer ? ' active' : '')])
+        ]);
+
+        $this->add(
+            Html::tag('div', ['class' => 'view-toggle'])
+                ->add(Html::tag('span', null, mt('businessprocess', 'View')))
+                ->add($link)
+        );
 
         $this->add(Html::tag(
             'a',
@@ -51,15 +58,28 @@ class RenderedProcessActionBar extends ActionBar
         $hasChanges = $config->hasSimulations() || $config->hasBeenChanged();
 
         if ($renderer->isLocked()) {
-            $this->add(Html::tag(
-                'a',
-                [
-                    'href'  => $url->with('unlocked', true),
-                    'title' => mt('businessprocess', 'Click to unlock editing for this process'),
-                    'class' => 'icon-lock'
-                ],
-                mt('businessprocess', 'Editing locked')
-            ));
+            if (! $renderer->wantsRootNodes() && $renderer->rendersImportedNode()) {
+                $span = Html::tag('span', [
+                    'class' => 'disabled',
+                    'title' => mt(
+                        'businessprocess',
+                        'Imported processes can only be changed in their original configuration'
+                    )
+                ]);
+                $span->add(Html::tag('i', ['class' => 'icon icon-lock']))
+                    ->add(mt('businessprocess', 'Editing Locked'));
+                $this->add($span);
+            } else {
+                $this->add(Html::tag(
+                    'a',
+                    [
+                        'href'  => $url->with('unlocked', true),
+                        'title' => mt('businessprocess', 'Click to unlock editing for this process'),
+                        'class' => 'icon-lock'
+                    ],
+                    mt('businessprocess', 'Unlock Editing')
+                ));
+            }
         } elseif (! $hasChanges) {
             $this->add(Html::tag(
                 'a',
@@ -68,7 +88,7 @@ class RenderedProcessActionBar extends ActionBar
                     'title' => mt('businessprocess', 'Click to lock editing for this process'),
                     'class' => 'icon-lock-open'
                 ],
-                mt('businessprocess', 'Editing unlocked')
+                mt('businessprocess', 'Lock Editing')
             ));
         }
 
@@ -91,9 +111,9 @@ class RenderedProcessActionBar extends ActionBar
                 [
                     'href'  => $url->with('action', 'add'),
                     'title' => mt('businessprocess', 'Add a new business process node'),
-                    'class' => 'icon-plus'
+                    'class' => 'icon-plus button-link'
                 ],
-                mt('businessprocess', 'Add')
+                mt('businessprocess', 'Add Node')
             ));
         }
     }

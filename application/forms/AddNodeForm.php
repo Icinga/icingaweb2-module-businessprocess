@@ -122,15 +122,20 @@ class AddNodeForm extends QuickForm
             )
         ));
 
+        $display = 1;
+        if ($this->bp->getMetadata()->isManuallyOrdered() && !$this->bp->isEmpty()) {
+            $rootNodes = $this->bp->getRootNodes();
+            $display = end($rootNodes)->getDisplay() + 1;
+        }
         $this->addElement('select', 'display', array(
             'label'        => $this->translate('Visualization'),
             'required'     => true,
             'description'  => $this->translate(
                 'Where to show this process'
             ),
-            'value' => $this->hasParentNode() ? '0' : '1',
+            'value' => $this->hasParentNode() ? '0' : "$display",
             'multiOptions' => array(
-                '1' => $this->translate('Toplevel Process'),
+                "$display" => $this->translate('Toplevel Process'),
                 '0' => $this->translate('Subprocess only'),
             )
         ));
@@ -184,7 +189,7 @@ class AddNodeForm extends QuickForm
 
     protected function selectHost()
     {
-        $this->addElement('multiselect','children', [
+        $this->addElement('multiselect', 'children', [
             'label'        => $this->translate('Hosts'),
             'required'     => true,
             'size'         => 8,
@@ -220,7 +225,7 @@ class AddNodeForm extends QuickForm
 
     protected function addServicesElement($host)
     {
-        $this->addElement('multiselect','children', [
+        $this->addElement('multiselect', 'children', [
             'label'        => $this->translate('Services'),
             'required'     => true,
             'size'         => 8,
@@ -255,7 +260,7 @@ class AddNodeForm extends QuickForm
         }
 
         if (($file = $this->getSentValue('file')) || !$this->hasParentNode()) {
-            $this->addElement('multiselect','children', [
+            $this->addElement('multiselect', 'children', [
                 'label'        => $this->translate('Process nodes'),
                 'required'     => true,
                 'size'         => 8,
@@ -420,11 +425,13 @@ class AddNodeForm extends QuickForm
                     $name = '@' . $file . ':' . $name;
                 }
 
-                $list[$name] = (string) $node; // display name?
+                $list[$name] = $node->getName(); // display name?
             }
         }
 
-        natcasesort($list);
+        if (! $this->bp->getMetadata()->isManuallyOrdered()) {
+            natcasesort($list);
+        }
         return $list;
     }
 

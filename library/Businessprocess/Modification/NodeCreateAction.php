@@ -22,7 +22,7 @@ class NodeCreateAction extends NodeAction
      */
     public function setParent(Node $name)
     {
-        $this->parentName = (string) $name;
+        $this->parentName = $name->getName();
     }
 
     /**
@@ -72,7 +72,17 @@ class NodeCreateAction extends NodeAction
      */
     public function appliesTo(BpConfig $config)
     {
-        return ! $config->hasNode($this->getNodeName());
+        $name = $this->getNodeName();
+        if ($config->hasNode($name)) {
+            $this->error('A node with name "%s" already exists', $name);
+        }
+
+        $parent = $this->getParentName();
+        if ($parent !== null && !$config->hasBpNode($parent)) {
+            $this->error('Parent process "%s" missing', $parent);
+        }
+
+        return true;
     }
 
     /**
@@ -91,7 +101,8 @@ class NodeCreateAction extends NodeAction
         } else {
             $properties['child_names'] = array();
         }
-        $node = new BpNode($config, (object) $properties);
+        $node = new BpNode((object) $properties);
+        $node->setBpConfig($config);
 
         foreach ($this->getProperties() as $key => $val) {
             if ($key === 'parentName') {
@@ -100,6 +111,15 @@ class NodeCreateAction extends NodeAction
             }
             $func = 'set' . ucfirst($key);
             $node->$func($val);
+        }
+
+        if ($node->getDisplay() > 1) {
+            $i = $node->getDisplay();
+            foreach ($config->getRootNodes() as $_ => $rootNode) {
+                if ($rootNode->getDisplay() >= $node->getDisplay()) {
+                    $rootNode->setDisplay(++$i);
+                }
+            }
         }
 
         $config->addNode($name, $node);
