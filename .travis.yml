@@ -20,7 +20,7 @@ cache:
     - vendor
 
 env:
-  - ICINGAWEB_VERSION=2.5.1
+  - ICINGAWEB_VERSION=2.6.2
   - IPL_VERSION=0.1.1
 
 before_script:
@@ -28,4 +28,4 @@ before_script:
 
 script:
   - php vendor/phpcs.phar
-  - phpunit --testdox || phpunit --verbose
+  - php vendor/phpunit.phar --testdox || php vendor/phpunit.phar --verbose
