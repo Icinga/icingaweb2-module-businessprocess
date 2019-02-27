@@ -5,6 +5,7 @@ namespace Icinga\Module\Businessprocess\Renderer;
 use Icinga\Exception\ProgrammingError;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
+use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Web\Url;
 use ipl\Html\BaseHtmlElement;
@@ -194,6 +195,36 @@ abstract class Renderer extends HtmlDocument
         }
         // TODO: problem?
         return $classes;
+    }
+
+    /**
+     * Return the url to the given node's source configuration
+     *
+     * @param   BpNode  $node
+     *
+     * @return  Url
+     */
+    public function getSourceUrl(BpNode $node)
+    {
+        if ($node instanceof ImportedNode) {
+            $name = $node->getNodeName();
+            $paths = $node->getBpConfig()->getBpNode($name)->getPaths();
+        } else {
+            $name = $node->getName();
+            $paths = $node->getPaths();
+        }
+
+        $url = $this->getUrl()->setParams([
+            'config'    => $node->getBpConfig()->getName(),
+            'node'      => $name
+        ]);
+        // This depends on the fact that the node's root path is the last element in $paths
+        $url->getParams()->addValues('path', array_slice(array_pop($paths), 0, -1));
+        if (! $this->isLocked()) {
+            $url->getParams()->add('unlocked', true);
+        }
+
+        return $url;
     }
 
     /**

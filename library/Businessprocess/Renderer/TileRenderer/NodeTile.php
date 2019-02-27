@@ -197,6 +197,20 @@ class NodeTile extends BaseHtmlElement
                 ],
                 Html::tag('i', ['class' => 'icon icon-sitemap'])
             ));
+            if ($node->getBpConfig()->getName() !== $this->renderer->getBusinessProcess()->getName()) {
+                $this->actions()->add(Html::tag(
+                    'a',
+                    [
+                        'data-base-target'  => '_next',
+                        'href'              => $this->renderer->getSourceUrl($node)->getAbsoluteUrl(),
+                        'title'             => mt(
+                            'businessprocess',
+                            'Show this process as part of its original configuration'
+                        )
+                    ],
+                    Html::tag('i', ['class' => 'icon icon-forward'])
+                ));
+            }
 
             $url = $node->getInfoUrl();
 
