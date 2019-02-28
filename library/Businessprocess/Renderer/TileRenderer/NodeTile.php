@@ -311,19 +311,15 @@ class NodeTile extends BaseHtmlElement
                 Html::tag('i', ['class' => 'icon icon-edit'])
             ));
 
+            $addUrl = $baseUrl->with([
+                'node'      => $this->node->getName(),
+                'action'    => 'add'
+            ]);
+            $addUrl->getParams()->addValues('path', $this->path);
             $this->actions()->add(Html::tag(
                 'a',
                 [
-                    'href'  => $this->node instanceof ImportedNode
-                        ? $baseUrl->with([
-                            'config'    => $this->node->getConfigName(),
-                            'node'      => $this->node->getNodeName(),
-                            'action'    => 'add'
-                        ])
-                        : $baseUrl->with([
-                            'node'      => $this->node->getName(),
-                            'action'    => 'add'
-                        ]),
+                    'href'  => $addUrl,
                     'title' => mt('businessprocess', 'Add a new sub-node to this business process')
                 ],
                 Html::tag('i', ['class' => 'icon icon-plus'])
