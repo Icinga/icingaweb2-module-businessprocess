@@ -15,7 +15,7 @@ highlighted, as they are links pointing to either the root level when clicking
 on the *Configuration Node* itself or to the corresponding *Business Process Node*.
 
 All but the last section, showing your current position in the tree. Even if
-not being highlighted, it is still a link an can be clicked in case you neeed
+not being highlighted, it is still a link an can be clicked in case you need
 so.
 
 In case you're showing some related details in a split-screen view of *Icinga
@@ -53,11 +53,11 @@ feature.
 
 When clicking `Unlock`, additional actions are shown. One of them is immediately
 shown next to the `Unlock` link and reads `Config`. It allows you to reach Configuration
-settings for the your currently loaded *Business Process Configutation*:
+settings for the your currently loaded *Business Process Configuration*:
 
 ![Unlocked config](screenshot/12_web-components_breadcrumb/1204_unlocked_config.png)
 
-But there is more. When unlocked, all nodes provide links allowing to modify or
+But there is more. When unlocked, all nodes provide links allowing you to modify or
 to delete them. Host/Service Nodes now allow you to simulate a specific state.
 
 Other main actions
