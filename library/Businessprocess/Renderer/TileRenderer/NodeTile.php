@@ -293,6 +293,7 @@ class NodeTile extends BaseHtmlElement
         }
 
         if (! $this->renderer->getBusinessProcess()->getMetadata()->canModify()
+            || $this->node->getBpConfig()->getName() !== $this->renderer->getBusinessProcess()->getName()
             || $this->node->getName() === '__unbound__'
         ) {
             return;
