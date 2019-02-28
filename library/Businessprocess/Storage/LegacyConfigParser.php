@@ -301,7 +301,7 @@ class LegacyConfigParser
         }
 
         $op = '&';
-        if (preg_match_all('~([\|\+&\!])~', $value, $m)) {
+        if (preg_match_all('~(?<!\\\\)([\|\+&\!])~', $value, $m)) {
             $op = implode('', $m[1]);
             for ($i = 1; $i < strlen($op); $i++) {
                 if ($op[$i] !== $op[$i - 1]) {
@@ -328,8 +328,9 @@ class LegacyConfigParser
         ));
         $node->setBpConfig($bp);
 
-        $cmps = preg_split('~\s*\\' . $op . '\s*~', $value, -1, PREG_SPLIT_NO_EMPTY);
+        $cmps = preg_split('~\s*(?<!\\\\)\\' . $op . '\s*~', $value, -1, PREG_SPLIT_NO_EMPTY);
         foreach ($cmps as $val) {
+            $val = preg_replace('~(\\\\([\|\+&\!]))~', '$2', $val);
             if (strpos($val, ';') !== false) {
                 if ($bp->hasNode($val)) {
                     $node->addChild($bp->getNode($val));

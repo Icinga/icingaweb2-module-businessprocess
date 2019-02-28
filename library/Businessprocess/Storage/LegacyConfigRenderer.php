@@ -184,7 +184,9 @@ class LegacyConfigRenderer
     {
         $op = static::renderOperator($node);
         $children = $node->getChildNames();
-        $str = implode(' ' . $op . ' ', $children);
+        $str = implode(' ' . $op . ' ', array_map(function ($val) {
+            return preg_replace('~([\|\+&\!])~', '\\\\$1', $val);
+        }, $children));
 
         if ((count($children) < 2) && $op !== '&') {
             return $op . ' ' . $str;
