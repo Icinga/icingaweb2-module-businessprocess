@@ -222,7 +222,7 @@ class NodeTile extends BaseHtmlElement
                         'class' => 'node-info',
                         'title' => sprintf('%s: %s', mt('businessprocess', 'More information'), $url)
                     ],
-                    Html::tag('i', ['class' => 'icon icon-circled'])
+                    Html::tag('i', ['class' => 'icon icon-info-circled'])
                 );
                 if (preg_match('#^http(?:s)?://#', $url)) {
                     $link->addAttributes(['target' => '_blank']);

@@ -291,7 +291,7 @@ class TreeRenderer extends Renderer
             'help',
             $url,
             sprintf('%s: %s', mt('businessprocess', 'More information'), $url)
-        );
+        )->addAttributes(['target' => '_blank']);
     }
 
     protected function actionIcon($icon, $url, $title)
