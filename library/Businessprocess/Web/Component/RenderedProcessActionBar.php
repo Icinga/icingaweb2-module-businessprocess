@@ -92,17 +92,32 @@ class RenderedProcessActionBar extends ActionBar
             ));
         }
 
-        if ($renderer->wantsRootNodes() && (($hasChanges || (! $renderer->isLocked())) && $meta->canModify())) {
-            $this->add(Html::tag(
-                'a',
-                [
-                    'data-base-target' => '_next',
-                    'href'  => Url::fromPath('businessprocess/process/config', $this->currentProcessParams($url)),
-                    'title' => mt('businessprocess', 'Modify this process'),
-                    'class' => 'icon-wrench'
-                ],
-                mt('businessprocess', 'Config')
-            ));
+        if (($hasChanges || ! $renderer->isLocked()) && $meta->canModify()) {
+            if ($renderer->wantsRootNodes()) {
+                $this->add(Html::tag(
+                    'a',
+                    [
+                        'data-base-target' => '_next',
+                        'href'  => Url::fromPath('businessprocess/process/config', $this->currentProcessParams($url)),
+                        'title' => mt('businessprocess', 'Modify this process'),
+                        'class' => 'icon-wrench'
+                    ],
+                    mt('businessprocess', 'Config')
+                ));
+            } else {
+                $this->add(Html::tag(
+                    'a',
+                    [
+                        'href'  => $url->with([
+                            'action'    => 'edit',
+                            'editnode'  => $url->getParam('node')
+                        ])->getAbsoluteUrl(),
+                        'title' => mt('businessprocess', 'Modify this process'),
+                        'class' => 'icon-wrench'
+                    ],
+                    mt('businessprocess', 'Config')
+                ));
+            }
         }
 
         if (($hasChanges || (! $renderer->isLocked())) && $meta->canModify()) {
