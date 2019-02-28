@@ -147,7 +147,9 @@ class TreeRenderer extends Renderer
             [
                 'id'                => $htmlId,
                 'class'             => ['bp', 'movable', $node->getObjectClassName()],
-                'data-node-name'    => $node->getName()
+                'data-node-name'    => $node instanceof ImportedNode
+                    ? $node->getNodeName()
+                    : $node->getName()
             ]
         );
         $attributes = $li->getAttributes();
