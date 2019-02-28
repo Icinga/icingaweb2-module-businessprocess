@@ -147,7 +147,9 @@ class TreeRenderer extends Renderer
             [
                 'id'                => $htmlId,
                 'class'             => ['bp', 'movable', $node->getObjectClassName()],
-                'data-node-name'    => $node->getName()
+                'data-node-name'    => $node instanceof ImportedNode
+                    ? $node->getNodeName()
+                    : $node->getName()
             ]
         );
         $attributes = $li->getAttributes();
@@ -180,6 +182,12 @@ class TreeRenderer extends Renderer
         $differentConfig = $node->getBpConfig()->getName() !== $this->getBusinessProcess()->getName();
         if (! $this->isLocked() && !$differentConfig) {
             $div->add($this->getActionIcons($bp, $node));
+        } elseif ($differentConfig) {
+            $div->add($this->actionIcon(
+                'forward',
+                $this->getSourceUrl($node)->addParams(['mode' => 'tree'])->getAbsoluteUrl(),
+                mt('businessprocess', 'Show this process as part of its original configuration')
+            )->addAttributes(['data-base-target' => '_next']));
         }
 
         $ul = Html::tag('ul', [

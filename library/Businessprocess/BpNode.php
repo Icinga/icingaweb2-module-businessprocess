@@ -116,8 +116,10 @@ class BpNode extends Node
                 $name
             );
         }
+
         $this->children[$name] = $node;
         $this->childNames[] = $name;
+        $this->reorderChildren();
         $node->addParent($this);
         return $this;
     }
@@ -425,13 +427,9 @@ class BpNode extends Node
 
     public function setChildNames($names)
     {
-        if (! $this->getBpConfig()->getMetadata()->isManuallyOrdered()) {
-            natcasesort($names);
-            $names = array_values($names);
-        }
-
         $this->childNames = $names;
         $this->children = null;
+        $this->reorderChildren();
         return $this;
     }
 
@@ -449,12 +447,8 @@ class BpNode extends Node
     public function getChildren($filter = null)
     {
         if ($this->children === null) {
-            $this->children = array();
-            if (! $this->getBpConfig()->getMetadata()->isManuallyOrdered()) {
-                $childNames = $this->getChildNames();
-                natcasesort($childNames);
-                $this->childNames = array_values($childNames);
-            }
+            $this->children = [];
+            $this->reorderChildren();
             foreach ($this->getChildNames() as $name) {
                 $this->children[$name] = $this->getBpConfig()->getNode($name);
                 $this->children[$name]->addParent($this);
@@ -462,6 +456,29 @@ class BpNode extends Node
         }
 
         return $this->children;
+    }
+
+    /**
+     * Reorder this node's children, in case manual order is not applied
+     */
+    protected function reorderChildren()
+    {
+        if ($this->getBpConfig()->getMetadata()->isManuallyOrdered()) {
+            return;
+        }
+
+        $childNames = $this->getChildNames();
+        natcasesort($childNames);
+        $this->childNames = array_values($childNames);
+
+        if (! empty($this->children)) {
+            $children = [];
+            foreach ($this->childNames as $name) {
+                $children[$name] = $this->children[$name];
+            }
+
+            $this->children = $children;
+        }
     }
 
     /**
