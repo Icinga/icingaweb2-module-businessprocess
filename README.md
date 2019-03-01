@@ -29,6 +29,7 @@ Documentation
 * [Installation](doc/01-Installation.md)
 * [Getting Started](doc/02-Getting-Started.md)
 * [Create your first process node](doc/03-Create-your-first-process-node.md)
+* [Importing Processes](doc/04-Importing-Processes.md)
 
 ### Web Components
 * [Breadcrumb](doc/12-Web-Components-Breadcrumb.md)
