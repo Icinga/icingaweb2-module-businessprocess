@@ -106,11 +106,8 @@
             var evt = event.originalEvent;
             if (evt.oldIndex !== evt.newIndex) {
                 var $source = $(evt.from);
-                var actionUrl = [
-                    $source.data('actionUrl'),
-                    'action=move',
-                    'movenode=' + $(evt.item).data('nodeName')
-                ].join('&');
+                $source.addClass('progress')
+                    .data('sortable').option('disabled', true);
 
                 var data = {
                     csrfToken: $source.data('csrfToken'),
@@ -119,6 +116,12 @@
                     from: evt.oldIndex,
                     to: evt.newIndex
                 };
+
+                var actionUrl = [
+                    $source.data('actionUrl'),
+                    'action=move',
+                    'movenode=' + $(evt.item).data('nodeName')
+                ].join('&');
 
                 var $container = $source.closest('.container');
                 var req = icinga.loader.loadUrl(actionUrl, $container, data, 'POST');

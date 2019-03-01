@@ -479,6 +479,19 @@ td > a > .badges {
     }
 }
 
+.tiles.sortable:not([data-sortable-disabled="true"]) {
+    > div {
+        cursor: grab;
+
+        &.sortable-chosen {
+            cursor: grabbing;
+        }
+    }
+
+    &.progress > div {
+        cursor: wait;
+    }
+}
 
 .tiles > div.parent::before {
     content: '&';
