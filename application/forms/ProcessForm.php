@@ -84,7 +84,6 @@ class ProcessForm extends QuickForm
             'description'  => $this->translate(
                 'Where to show this process'
             ),
-            'value' => $display,
             'multiOptions' => array(
                 "$display" => $this->translate('Toplevel Process'),
                 '0' => $this->translate('Subprocess only'),
@@ -103,6 +102,7 @@ class ProcessForm extends QuickForm
                 $this->getElement('alias')->setValue($node->getAlias());
             }
             $this->getElement('operator')->setValue($node->getOperator());
+            $this->getElement('display')->setValue($node->getDisplay());
             if ($node->hasInfoUrl()) {
                 $this->getElement('url')->setValue($node->getInfoUrl());
             }
