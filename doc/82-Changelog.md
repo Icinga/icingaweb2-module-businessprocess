@@ -8,6 +8,10 @@
 * You can find issues and feature requests related to this release on our
   [roadmap](https://github.com/Icinga/icingaweb2-module-businessprocess/milestone/6?closed=1)
 
+### New Dependency
+
+* The module now depends on the [Icinga PHP Library (ipl)](https://github.com/Icinga/icingaweb2-module-ipl)
+
 ### New Features
 
 * Nodes can now be reordered by using Drag'n'Drop
