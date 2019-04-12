@@ -37,6 +37,8 @@ abstract class Node
         self::ICINGA_WARNING  => 2,
         self::ICINGA_OK       => 0,
     );
+       
+    protected $stateOverwrite = array();
 
     /**
      * Main business process object
@@ -164,6 +166,26 @@ abstract class Node
         $this->missing = false;
         return $this;
     }
+    
+    protected function setStateOverwrite($state,$overWriteState) {
+        $this->stateOverwrite[(int) $state] = (int) $overWriteState;
+    }
+    
+    public function setStatesOverwrite($statesOverwriteString) {
+        
+        $overwrites = explode(',', $statesOverwriteString);
+        
+        foreach($overwrites as $overwriteState) {
+            if(strpos($overwriteState, '-') !== false) {
+                list($key, $value) = explode('-', $overwriteState);
+                $this->setStateOverwrite($key,$value);
+            }
+        }
+    }
+    
+    public function getStatesOverwrite() {
+        return $this->stateOverwrite;
+    }
 
     /**
      * Forget my state
@@ -202,7 +224,7 @@ abstract class Node
     {
         return $this->stateNames;
     }
-
+ 
     public function getState()
     {
         if ($this->state === null) {
@@ -213,7 +235,25 @@ abstract class Node
                 )
             );
         }
-
+      
+        if(isset($this->stateOverwrite[$this->state])) {
+            return $this->stateOverwrite[$this->state];
+        } else {
+            return $this->state;
+        }
+    }
+    
+    public function getRealState() 
+    {
+        if ($this->state === null) {
+            throw new ProgrammingError(
+                sprintf(
+                    'Node %s is unable to retrieve it\'s state',
+                    $this->name
+                    )
+                );
+        }
+        
         return $this->state;
     }
 
@@ -298,6 +338,11 @@ abstract class Node
     }
 
     public function getAlias()
+    {
+        return $this->name;
+    }
+    
+    public function getShortName()
     {
         return $this->name;
     }

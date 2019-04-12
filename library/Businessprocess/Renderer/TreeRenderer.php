@@ -131,6 +131,47 @@ class TreeRenderer extends Renderer
         }
         return $icons;
     }
+    
+    public function getNodeRealState(Node $node) {
+        
+        $realState = [];               
+        $realState[] = Html::tag('i', ['class' => 'icon icon-flash']);
+        $realState[] = (new StateBall(strtolower($node->getStateName($node->getRealState()))))->addAttributes([
+            'title' => sprintf(
+                '%s',
+                $node->getStateName($node->getRealState())
+                )
+        ]);
+        
+        return $realState;
+    }
+    
+    public function getNodeStateOverwrite(Node $node) {
+        
+        $statesOverrights = [];
+        
+        $states = $node->getStatesOverwrite();
+        
+        foreach ($states as $originalState => $overwriteState) {
+                        
+            $statesOverrights[]=  (new StateBall(strtolower($node->getStateName($originalState))))->addAttributes([
+                'title' => sprintf(
+                    '%s',
+                    $node->getStateName($originalState)
+                    )
+            ]);
+            $statesOverrights[] = Html::tag('i', ['class' => 'icon icon-right-small']);
+            $statesOverrights[] = (new StateBall(strtolower($node->getStateName($overwriteState))))->addAttributes([
+                'title' => sprintf(
+                    '%s',
+                    $node->getStateName($overwriteState)
+                    ),
+                'class' => 'last'
+            ]);
+        }
+        
+        return $statesOverrights;
+    }
 
     /**
      * @param BpConfig $bp
@@ -238,11 +279,25 @@ class TreeRenderer extends Renderer
         $link = $node->getLink();
         $link->getAttributes()->set('data-base-target', '_next');
         $li->add($link);
-
-        if (! $this->isLocked() && $node->getBpConfig()->getName() === $this->getBusinessProcess()->getName()) {
-            $li->add($this->getActionIcons($bp, $node));
+        
+        if($node->getRealState() != $node->getState()) {
+            $li->add($this->getNodeRealState($node));
+        }
+        
+        $leftAlign = Html::tag('div', [
+            'class'             => 'left-side',
+        ]);
+        
+        if(!empty($node->getStatesOverwrite())) {
+            $leftAlign->add($this->getNodeStateOverwrite($node));
         }
 
+        if (! $this->isLocked() && $node->getBpConfig()->getName() === $this->getBusinessProcess()->getName()) {
+            $leftAlign->add($this->getActionIcons($bp, $node));
+        }
+        
+        $li->add($leftAlign);
+        
         return $li;
     }
 

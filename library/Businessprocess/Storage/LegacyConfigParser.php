@@ -335,11 +335,21 @@ class LegacyConfigParser
                 if ($bp->hasNode($val)) {
                     $node->addChild($bp->getNode($val));
                 } else {
-                    list($host, $service) = preg_split('~;~', $val, 2);
+                    $statesOverwrite = '';
+                    
+                    if(strpos($val, ':') !== false) {
+                        list($host, $service, $statesOverwrite) = preg_split('~[;:]~', $val, 3);
+                    } else {
+                        list($host, $service) = preg_split('~;~', $val, 2);
+                        
+                        if ($service !== 'Hoststatus') {
+                            $val .= ':'. $statesOverwrite;
+                        }
+                    }                   
                     if ($service === 'Hoststatus') {
                         $node->addChild($bp->createHost($host));
                     } else {
-                        $node->addChild($bp->createService($host, $service));
+                        $node->addChild($bp->createService($host, $service, $statesOverwrite));
                     }
                 }
             } elseif ($val[0] === '@') {

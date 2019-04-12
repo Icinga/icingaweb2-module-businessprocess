@@ -40,7 +40,7 @@ class NoDuplicateChildrenValidator extends Zend_Validate_Abstract
         if ($this->parent === null) {
             $found = $this->bp->hasRootNode($value);
         } else {
-            $found = $this->parent->hasChild($value);
+            $found = $this->parent->hasMatchingChild($value);
         }
 
         if (! $found) {

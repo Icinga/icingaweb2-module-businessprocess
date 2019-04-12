@@ -117,25 +117,30 @@ class MonitoringState
         } else {
             $key .= ';Hoststatus';
         }
-
-        // We fetch more states than we need, so skip unknown ones
-        if (! $config->hasNode($key)) {
-            return;
-        }
-
-        $node = $config->getNode($key);
-
-        if ($row->state !== null) {
-            $node->setState($row->state)->setMissing(false);
-        }
-        if ($row->last_state_change !== null) {
-            $node->setLastStateChange($row->last_state_change);
-        }
-        if ((int) $row->in_downtime === 1) {
-            $node->setDowntime(true);
-        }
-        if ((int) $row->ack === 1) {
-            $node->setAck(true);
-        }
+        
+        $nodesNames = $config->getMatchingNodeNams($key);
+        
+        foreach($nodesNames as $nodeName) {
+            
+            // We fetch more states than we need, so skip unknown ones
+            if (! $config->hasNode($nodeName)) {
+                return;
+            }
+        
+            $node = $config->getNode($nodeName);
+        
+            if ($row->state !== null) {
+                $node->setState($row->state)->setMissing(false);
+            }
+            if ($row->last_state_change !== null) {
+                $node->setLastStateChange($row->last_state_change);
+            }
+            if ((int) $row->in_downtime === 1) {
+                $node->setDowntime(true);
+            }
+            if ((int) $row->ack === 1) {
+                $node->setAck(true);
+            }
+        }       
     }
 }

@@ -15,10 +15,11 @@ class ServiceNode extends MonitoredNode
     protected $icon = 'service';
 
     public function __construct($object)
-    {
-        $this->name = $object->hostname . ';' . $object->service;
+    {        
+        $this->name = $object->hostname . ';' . $object->service. ':'. $object->statesOverwrite;
         $this->hostname = $object->hostname;
         $this->service  = $object->service;
+        $this->setStatesOverwrite($object->statesOverwrite);
         if (isset($object->state)) {
             $this->setState($object->state);
         } else {
@@ -39,6 +40,11 @@ class ServiceNode extends MonitoredNode
     public function getAlias()
     {
         return $this->hostname . ': ' . $this->service;
+    }
+    
+    public function getShortName()
+    {
+        return $this->hostname . ';' . $this->service;
     }
 
     public function getUrl()

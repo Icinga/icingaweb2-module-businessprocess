@@ -207,6 +207,7 @@ class AddNodeForm extends QuickForm
         $this->addHostElement();
         if ($host = $this->getSentValue('host')) {
             $this->addServicesElement($host);
+            $this->addServiceOverwriteElements();
         } else {
             $this->setSubmitLabel($this->translate('Next'));
         }
@@ -251,6 +252,21 @@ class AddNodeForm extends QuickForm
                 'Choose a different configuration file to import its processes'
             )
         ]);
+    }
+    
+    protected function addServiceOverwriteElements() {
+                
+        foreach($this->enumServiceStateList() as $state => $stateName) {
+            
+            if($state == 0) {
+                continue;
+            }           
+            $this->addElement('select', $stateName, array(
+                'label'        => $stateName,
+                'ignore'       => true,
+                'multiOptions' => $this->optionalEnum($this->enumServiceStateList()),
+            ));                 
+        }       
     }
 
     protected function selectProcess()
@@ -390,6 +406,37 @@ class AddNodeForm extends QuickForm
 
         return $services;
     }
+    
+    protected function enumServiceStateList() {
+        
+        $serviceStateList = array(
+            0 => $this->translate('OK'),
+            1 => $this->translate('WARNING'),
+            2 => $this->translate('CRITICAL'),
+            3 => $this->translate('UNKNOWN'),
+            99 => $this->translate('PENDING'),
+        );
+        
+        return $serviceStateList;
+    }
+    
+    protected function statesToString() {
+        
+        $stateString = '';
+        
+        foreach($this->enumServiceStateList() as $state => $stateName) {
+            
+            if($this->getValue($stateName) != null) {
+                
+                if($stateString != '') {
+                    $stateString .= ',';
+                }
+                $stateString .= $state. '-'. $this->getValue($stateName);
+            }
+        }
+        
+        return $stateString;
+    }
 
     protected function hasProcesses()
     {
@@ -464,8 +511,14 @@ class AddNodeForm extends QuickForm
     {
         $changes = ProcessChanges::construct($this->bp, $this->session);
         switch ($this->getValue('node_type')) {
-            case 'host':
             case 'service':
+                $services = array();
+                foreach ($this->getValue('children') as $service) {
+                    $services[] = $service. ':'. $this->statesToString();
+                }
+                $changes->addChildrenToNode($services, $this->parent);
+                break;
+            case 'host':
             case 'process':
                 if ($this->hasParentNode()) {
                     $changes->addChildrenToNode($this->getValue('children'), $this->parent);
