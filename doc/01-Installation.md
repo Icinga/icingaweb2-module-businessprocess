@@ -38,7 +38,6 @@ It will be immediately ready for use:
 ICINGAWEB_MODULEPATH="/usr/share/icingaweb2/modules"
 REPO_URL="https://github.com/Icinga/icingaweb2-module-businessprocess"
 TARGET_DIR="${ICINGAWEB_MODULEPATH}/businessprocess"
-MODULE_VERSION="2.2.0"
 git clone "${REPO_URL}" "${TARGET_DIR}"
 ```
 
