@@ -21,7 +21,7 @@ You might want to use a script as follows for this task:
 ICINGAWEB_MODULEPATH="/usr/share/icingaweb2/modules"
 REPO_URL="https://github.com/Icinga/icingaweb2-module-businessprocess"
 TARGET_DIR="${ICINGAWEB_MODULEPATH}/businessprocess"
-MODULE_VERSION="2.2.0"
+MODULE_VERSION="v2.2.0"
 URL="${REPO_URL}/archive/v${MODULE_VERSION}.tar.gz"
 install -d -m 0755 "${TARGET_DIR}"
 wget -q -O - "$URL" | tar xfz - -C "${TARGET_DIR}" --strip-components 1
@@ -38,7 +38,7 @@ It will be immediately ready for use:
 ICINGAWEB_MODULEPATH="/usr/share/icingaweb2/modules"
 REPO_URL="https://github.com/Icinga/icingaweb2-module-businessprocess"
 TARGET_DIR="${ICINGAWEB_MODULEPATH}/businessprocess"
-MODULE_VERSION="2.2.0"
+MODULE_VERSION="v2.2.0"
 git clone "${REPO_URL}" "${TARGET_DIR}"
 ```
 
