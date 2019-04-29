@@ -97,11 +97,11 @@ class BpUploadForm extends BpConfigBaseForm
 
             if ($config->hasErrors()) {
                 foreach ($config->getErrors() as $error) {
-                    $this->addError($error);
+                    $this->addError("%s",$error);
                 }
             }
         } catch (Exception $e) {
-            $this->addError($e->getMessage());
+            $this->addError("%s",$e->getMessage());
             return null;
         }
 
@@ -166,7 +166,7 @@ class BpUploadForm extends BpConfigBaseForm
                 unlink($tmpfile);
             } else {
                 foreach ($el->file->getMessages() as $error) {
-                    $this->addError($error);
+                    $this->addError("%s",$error);
                 }
             }
         }
@@ -180,10 +180,10 @@ class BpUploadForm extends BpConfigBaseForm
         $name = $config->getName();
 
         if ($this->storage->hasProcess($name)) {
-            $this->addError(sprintf(
+            $this->addError(
                 $this->translate('A process named "%s" already exists'),
                 $name
-            ));
+            );
 
             return;
         }

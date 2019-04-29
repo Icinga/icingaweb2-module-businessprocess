@@ -46,15 +46,15 @@ abstract class BpConfigBaseForm extends QuickForm
         $prefixes = $auth->getRestrictions('businessprocess/prefix');
         if (! empty($prefixes) && ! $meta->nameIsPrefixedWithOneOf($prefixes)) {
             if (count($prefixes) === 1) {
-                $this->getElement('name')->addError(sprintf(
+                $this->getElement('name')->addError(
                     $this->translate('Please prefix the name with "%s"'),
                     current($prefixes)
-                ));
+                );
             } else {
-                $this->getElement('name')->addError(sprintf(
+                $this->getElement('name')->addError(
                     $this->translate('Please prefix the name with one of "%s"'),
                     implode('", "', $prefixes)
-                ));
+                );
             }
 
             return false;
