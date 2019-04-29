@@ -639,7 +639,7 @@ class BpConfig
         }
 
         // Fallback: if it is a service, create an empty one:
-        $this->warn(sprintf('The node "%s" doesn\'t exist', $name));
+        $this->warn('The node "%s" doesn\'t exist', $name);
         $pos = strpos($name, ';');
         if ($pos !== false) {
             $host = substr($name, 0, $pos);
@@ -729,10 +729,8 @@ class BpConfig
     {
         if (array_key_exists($name, $this->nodes)) {
             $this->warn(
-                sprintf(
-                    mt('businessprocess', 'Node "%s" has been defined twice'),
-                    $name
-                )
+                mt('businessprocess', 'Node "%s" has been defined twice'),
+                $name
             );
         }
 
