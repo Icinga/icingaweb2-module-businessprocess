@@ -366,9 +366,9 @@ abstract class QuickForm extends QuickBaseForm
         );
 
         if ($el = $this->getElement($elementName)) {
-            $el->addError("%s",$msg);
+            $el->addError("%s", $msg);
         } else {
-            $this->addError("%s",$msg);
+            $this->addError("%s", $msg);
         }
     }
 
