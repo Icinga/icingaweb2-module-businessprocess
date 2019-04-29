@@ -97,11 +97,11 @@ class BpUploadForm extends BpConfigBaseForm
 
             if ($config->hasErrors()) {
                 foreach ($config->getErrors() as $error) {
-                    $this->addError("%s",$error);
+                    $this->addError("%s", $error);
                 }
             }
         } catch (Exception $e) {
-            $this->addError("%s",$e->getMessage());
+            $this->addError("%s", $e->getMessage());
             return null;
         }
 
@@ -166,7 +166,7 @@ class BpUploadForm extends BpConfigBaseForm
                 unlink($tmpfile);
             } else {
                 foreach ($el->file->getMessages() as $error) {
-                    $this->addError("%s",$error);
+                    $this->addError("%s", $error);
                 }
             }
         }
