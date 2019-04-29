@@ -117,7 +117,7 @@ class ImportedNode extends BpNode
      */
     protected function createFailedNode(Exception $e)
     {
-        $this->parentBp->addError("%s",$e->getMessage());
+        $this->parentBp->addError("%s", $e->getMessage());
         $node = new BpNode((object) array(
             'name'        => $this->getName(),
             'operator'    => '&',
