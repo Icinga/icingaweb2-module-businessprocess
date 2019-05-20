@@ -19,7 +19,12 @@ class ServiceNode extends MonitoredNode
 
     public function __construct($object)
     {
-        $this->name = $object->hostname . ';' . $object->service;
+        if (isset($object->statesOverride)) {
+            $this->name = $object->hostname . ';' . $object->service . ':' . $object->statesOverride;
+            $this->setStatesOverride($object->statesOverride);
+        } else {
+            $this->name = $object->hostname . ';' . $object->service;
+        }
         $this->hostname = $object->hostname;
         $this->service  = $object->service;
         if (isset($object->state)) {
@@ -66,6 +71,11 @@ class ServiceNode extends MonitoredNode
     public function getAlias()
     {
         return $this->getHostAlias() . ': ' . $this->alias;
+    }
+    
+    public function getShortName()
+    {
+        return $this->hostname . ';' . $this->service;
     }
 
     public function getUrl()

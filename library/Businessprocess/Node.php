@@ -46,6 +46,8 @@ abstract class Node
         self::NODE_EMPTY      => 0
     );
 
+    protected $stateOverride = [];
+
     /** @var string Alias of the node */
     protected $alias;
 
@@ -197,6 +199,28 @@ abstract class Node
         return $this;
     }
 
+    protected function setStateOverride($state, $oveRrideState)
+    {
+        $this->stateOverride[(int) $state] = (int) $oveRrideState;
+    }
+
+    public function setStatesOverride($statesOverrideString)
+    {
+        $overrides = explode(',', $statesOverrideString);
+
+        foreach ($overrides as $overrideState) {
+            if (strpos($overrideState, '-') !== false) {
+                list($key, $value) = explode('-', $overrideState);
+                $this->setStateOverride($key, $value);
+            }
+        }
+    }
+
+    public function getStatesOverride()
+    {
+        return $this->stateOverride;
+    }
+
     /**
      * Forget my state
      *
@@ -236,6 +260,24 @@ abstract class Node
     }
 
     public function getState()
+    {
+        if ($this->state === null) {
+            throw new ProgrammingError(
+                sprintf(
+                    'Node %s is unable to retrieve it\'s state',
+                    $this->name
+                )
+            );
+        }
+
+        if (isset($this->stateOverride[$this->state])) {
+            return $this->stateOverride[$this->state];
+        } else {
+            return $this->state;
+        }
+    }
+
+    public function getRealState()
     {
         if ($this->state === null) {
             throw new ProgrammingError(
@@ -362,6 +404,11 @@ abstract class Node
         $this->alias = $alias;
 
         return $this;
+    }
+
+    public function getShortName()
+    {
+        return $this->name;
     }
 
     public function hasParents()

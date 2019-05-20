@@ -460,16 +460,21 @@ class BpConfig
         return array_key_exists($name, $this->root_nodes);
     }
 
-    public function createService($host, $service)
+    public function createService($host, $service, $statesOverride = null)
     {
         $node = new ServiceNode(
             (object) array(
                 'hostname' => $host,
-                'service'  => $service
+                'service'  => $service,
+                'statesOverride'=> $statesOverride
             )
         );
         $node->setBpConfig($this);
-        $this->nodes[$host . ';' . $service] = $node;
+        if (isset($statesOverride)) {
+            $this->nodes[$host . ';' . $service . ':' . $statesOverride] = $node;
+        } else {
+            $this->nodes[$host . ';' . $service] = $node;
+        }
         $this->hosts[$host] = true;
         return $node;
     }
@@ -655,6 +660,19 @@ class BpConfig
         throw new Exception(
             sprintf('The node "%s" doesn\'t exist', $name)
         );
+    }
+
+    public function getMatchingNodeNams($name)
+    {
+        $matching = [];
+
+        foreach ($this->nodes as $nodeName => $node) {
+            if ($name === $node->getShortName()) {
+                $matching[] = $nodeName;
+            }
+        }
+
+        return $matching;
     }
 
     /**

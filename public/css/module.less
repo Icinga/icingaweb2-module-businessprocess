@@ -214,12 +214,12 @@ ul.bp {
             margin-right: .5em;
         }
 
-        > a.action-link {
-            margin-left: auto; // Let the first action link move everything to the right
+        a.action-link {
+        	margin-left: 20px;
+        }
 
-            & + a.action-link {
-                margin-left: 0; // But really only the first one
-            }
+        > .left-side {
+            margin-left: auto; // Left alligned Icons
         }
     }
 
@@ -260,13 +260,18 @@ ul.bp {
     }
 
     li.process > div > .state-ball,
-    li:not(.process) > .state-ball {
+    li:not(.process) > .state-ball,
+    div.left-side > .state-ball {
         border: .15em solid white;
 
         &.size-s {
             width: 7em/6em;
             height: 7em/6em;
             line-height: 7em/6em;
+
+        	&.last {
+        		margin-right: 10px;
+        	}
         }
     }
 }
@@ -414,6 +419,14 @@ td > a > .badges {
         margin: 0.5em;
         text-align: center;
         font-size: 0.5em;
+    }
+
+	.state-ball {
+		position: absolute;
+		right: 0px;
+		bottom: 0px;
+		margin: 5px 5px 5px 5px;
+		border: 1px solid white;
     }
 
     > a {
@@ -947,6 +960,39 @@ form dt label {
         text-decoration: underline;
         cursor: pointer;
     }
+}
+
+fieldset.collapsed {
+    dd, dt, ul, div {
+      display: none;
+    }
+  }
+
+fieldset {
+    margin-top: 15px;
+    padding: 0 0 1.5em 0;
+    border: none;
+
+    legend {
+        margin: 0em 0 0.5em 0;
+        font-size: 1em;
+        box-shadow: 0 3px 4px -4px rgba(0,0,0,0.2);
+        font-weight: bold;
+        width: 100%;
+        padding-left: 0.5em;
+        line-height: 2em;
+        user-select: none;
+
+        &:hover {
+            border-color: @text-color;
+        }
+    }
+        dd, dt, ul, div {
+            display: none;
+        }
+
+        margin-bottom: 0.2em;
+        padding-bottom: 0;
 }
 
 form fieldset {

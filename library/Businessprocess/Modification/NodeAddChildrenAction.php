@@ -34,12 +34,17 @@ class NodeAddChildrenAction extends NodeAction
         foreach ($this->children as $name) {
             if (! $config->hasNode($name) || $config->getNode($name)->getBpConfig()->getName() !== $config->getName()) {
                 if (strpos($name, ';') !== false) {
-                    list($host, $service) = preg_split('/;/', $name, 2);
-
-                    if ($service === 'Hoststatus') {
-                        $config->createHost($host);
+                    if (strpos($name, ':') !== false) {
+                        list($host, $service, $statesOverride) = preg_split('~[;:]~', $name, 3);
+                        $config->createService($host, $service, $statesOverride);
                     } else {
-                        $config->createService($host, $service);
+                        list($host, $service) = preg_split('/;/', $name, 2);
+
+                        if ($service === 'Hoststatus') {
+                            $config->createHost($host);
+                        } else {
+                            $config->createService($host, $service);
+                        }
                     }
                 } elseif ($name[0] === '@' && strpos($name, ':') !== false) {
                     list($configName, $nodeName) = preg_split('~:\s*~', substr($name, 1), 2);

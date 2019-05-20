@@ -335,11 +335,17 @@ class LegacyConfigParser
                 if ($bp->hasNode($val)) {
                     $node->addChild($bp->getNode($val));
                 } else {
-                    list($host, $service) = preg_split('~;~', $val, 2);
-                    if ($service === 'Hoststatus') {
-                        $node->addChild($bp->createHost($host));
+                    if (strpos($val, ':') !== false) {
+                        list($host, $service, $statesOverride) = preg_split('~[;:]~', $val, 3);
+                        $node->addChild($bp->createService($host, $service, $statesOverride));
                     } else {
-                        $node->addChild($bp->createService($host, $service));
+                        list($host, $service) = preg_split('~;~', $val, 2);
+
+                        if ($service === 'Hoststatus') {
+                            $node->addChild($bp->createHost($host));
+                        } else {
+                            $node->addChild($bp->createService($host, $service));
+                        }
                     }
                 }
             } elseif ($val[0] === '@') {

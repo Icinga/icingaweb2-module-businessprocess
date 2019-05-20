@@ -142,6 +142,11 @@ class BpNode extends Node
         return in_array($name, $this->getChildNames());
     }
 
+    public function hasMatchingChild($name)
+    {
+        return in_array($name, $this->getChildShortNames());
+    }
+
     public function removeChild($name)
     {
         if (($key = array_search($name, $this->getChildNames())) !== false) {
@@ -497,6 +502,20 @@ class BpNode extends Node
 
         return $this->children;
     }
+
+    protected function getChildShortNames()
+    {
+        $ChidrenShortNames = array();
+
+        foreach ($this->getChildren() as $child) {
+            $name = $child->getShortName();
+            array_push($ChidrenShortNames, $name);
+        }
+
+        return $ChidrenShortNames;
+    }
+
+
 
     /**
      * Reorder this node's children, in case manual order is not applied
