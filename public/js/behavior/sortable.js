@@ -28,12 +28,12 @@
             };
 
             $.each($el.data(), function (i, v) {
-                if (i.length > 8 && i.startsWith('sortable')) {
+                if (i.length > 8 && i.substring(0, 8) === 'sortable') {
                     options[i.charAt(8).toLowerCase() + i.substr(9)] = v;
                 }
             });
 
-            if (typeof options.group !== 'undefined' && typeof options.group.put === 'string' && options.group.put.startsWith('function:')) {
+            if (typeof options.group !== 'undefined' && typeof options.group.put === 'string' && options.group.put.substring(0, 9) === 'function:') {
                 var module = icinga.module($el.closest('.icinga-module').data('icingaModule'));
                 options.group.put = module.object[options.group.put.substr(9)];
             }
