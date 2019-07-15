@@ -125,7 +125,7 @@
 
                 var $container = $source.closest('.container');
                 var req = icinga.loader.loadUrl(actionUrl, $container, data, 'POST');
-                req.complete(function (req, textStatus) {
+                req.always(function() {
                     icinga.loader.loadUrl(
                         $container.data('icingaUrl'), $container, undefined, undefined, undefined, true);
                 });
@@ -162,7 +162,7 @@
 
                 var $container = $target.closest('.container');
                 var req = icinga.loader.loadUrl(actionUrl, $container, data, 'POST');
-                req.complete(function (req, textStatus) {
+                req.always(function() {
                     icinga.loader.loadUrl(
                         $container.data('icingaUrl'), $container, undefined, undefined, undefined, true);
                 });
