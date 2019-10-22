@@ -3,7 +3,7 @@ Project History
 
 The Business Process module is based on the ideas of the Nagios(tm) [Business
 Process AddOn](http://bp-addon.monitoringexchange.org/) written by Bernd
-Strößenreuther. We always loved it's simplicity, and while it looks pretty
+Strößenreuther. We always loved its simplicity, and while it looks pretty
 oldschool right now there are still many shops happily using it in production.
 
 ![BpAddOn Overview](screenshot/81_history/8101_bpaddon-overview.png)
