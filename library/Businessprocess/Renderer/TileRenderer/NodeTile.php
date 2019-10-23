@@ -324,20 +324,20 @@ class NodeTile extends BaseHtmlElement
             }
         }
 
-       if ($this->renderer->getBusinessProcess()->getMetadata()->canModify()) {
-           $params = array(
-               'action'     => 'delete',
-               'deletenode' => $this->node->getName(),
-           );
+        if ($this->renderer->getBusinessProcess()->getMetadata()->canModify()) {
+            $params = array(
+                'action'     => 'delete',
+                'deletenode' => $this->node->getName(),
+            );
 
-           $this->actions()->add(Html::tag(
-               'a',
-               [
-                   'href'  => $baseUrl->with($params),
-                   'title' => mt('businessprocess', 'Delete this node')
-               ],
-               Html::tag('i', ['class' => 'icon icon-cancel'])
-           ));
-       }
+            $this->actions()->add(Html::tag(
+                'a',
+                [
+                    'href'  => $baseUrl->with($params),
+                    'title' => mt('businessprocess', 'Delete this node')
+                ],
+                Html::tag('i', ['class' => 'icon icon-cancel'])
+            ));
+        }
     }
 }
