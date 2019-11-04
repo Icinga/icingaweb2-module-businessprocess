@@ -195,6 +195,8 @@ class BpUploadForm extends BpConfigBaseForm
         $this->storage->storeProcess($config);
         Notification::success(sprintf('Process %s has been stored', $name));
 
+        $this->getSuccessUrl()->setParam('config', $name);
+
         parent::onSuccess();
     }
 }
