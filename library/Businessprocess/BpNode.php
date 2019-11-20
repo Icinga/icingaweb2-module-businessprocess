@@ -175,6 +175,38 @@ class BpNode extends Node
         return $tree;
     }
 
+    /**
+     * Get the problem nodes as tree reduced to the nodes which have the same state as the business process
+     *
+     * @param bool $rootCause Reduce nodes to the nodes which are responsible for the state of the business process
+     *
+     * @return array
+     */
+    public function getProblemTreeBlame($rootCause = false)
+    {
+        $tree = [];
+        $nodeState = $this->getState();
+
+        if ($nodeState !== 0) {
+            foreach ($this->getChildren() as $child) {
+                $childState = $rootCause ? $child->getSortingState() : $child->getState();
+                if (($rootCause ? $this->getSortingState() : $nodeState) === $childState) {
+                    $name = $child->getName();
+                    $tree[$name] = [
+                        'children' => [],
+                        'node'     => $child
+                    ];
+                    if ($child instanceof BpNode) {
+                        $tree[$name]['children'] = $child->getProblemTreeBlame($rootCause);
+                    }
+                }
+            }
+        }
+
+        return $tree;
+    }
+
+
     public function isMissing()
     {
         if ($this->missing === null) {

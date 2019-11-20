@@ -75,6 +75,12 @@ class ProcessCommand extends Command
      *   --state-type <type>     Define which state type to look at. Could be
      *                           either soft or hard, overrides an eventually
      *                           configured default
+     *   --blame                 Show problem details as a tree reduced to the
+     *                           nodes which have the same state as the business
+     *                           process
+     *   --root-cause            Used in combination with --blame. Only shows
+     *                           the path of the nodes which are responsible for
+     *                           the state of the business process
      */
     public function checkAction()
     {
@@ -109,6 +115,12 @@ class ProcessCommand extends Command
         printf("Business Process %s: %s\n", $node->getStateName(), $node->getAlias());
         if ($this->params->shift('details')) {
             echo $this->renderProblemTree($node->getProblemTree(), $this->params->shift('colors'));
+        }
+        if ($this->params->shift('blame')) {
+            echo $this->renderProblemTree(
+                $node->getProblemTreeBlame($this->params->shift('root-cause')),
+                $this->params->shift('colors')
+            );
         }
 
         exit($node->getState());
