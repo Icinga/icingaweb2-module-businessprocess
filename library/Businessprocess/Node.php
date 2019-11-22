@@ -22,6 +22,12 @@ abstract class Node
     const ICINGA_UNREACHABLE = 2;
     const ICINGA_PENDING     = 99;
 
+    /** @var bool Whether to treat acknowledged hosts/services always as UP/OK */
+    protected static $ackIsOk = false;
+
+    /** @var bool Whether to treat hosts/services in downtime always as UP/OK */
+    protected static $downtimeIsOk = false;
+
     protected $sortStateToStateMap = array(
         4 => self::ICINGA_CRITICAL,
         3 => self::ICINGA_UNKNOWN,
@@ -110,6 +116,26 @@ abstract class Node
     );
 
     abstract public function __construct($object);
+
+    /**
+     * Set whether to treat acknowledged hosts/services always as UP/OK
+     *
+     * @param bool $ackIsOk
+     */
+    public static function setAckIsOk($ackIsOk = true)
+    {
+        self::$ackIsOk = $ackIsOk;
+    }
+
+    /**
+     * Set whether to treat hosts/services in downtime always as UP/OK
+     *
+     * @param bool $downtimeIsOk
+     */
+    public static function setDowntimeIsOk($downtimeIsOk = true)
+    {
+        self::$downtimeIsOk = $downtimeIsOk;
+    }
 
     public function setBpConfig(BpConfig $bp)
     {
@@ -219,13 +245,24 @@ abstract class Node
 
     public function getSortingState()
     {
-        $sort = $this->stateToSortState($this->getState());
+        $state = $this->getState();
+
+        if (self::$ackIsOk && $this->isAcknowledged()) {
+            $state = self::ICINGA_OK;
+        }
+
+        if (self::$downtimeIsOk && $this->isInDowntime()) {
+            $state = self::ICINGA_OK;
+        }
+
+        $sort = $this->stateToSortState($state);
         $sort = ($sort << self::SHIFT_FLAGS)
                + ($this->isInDowntime() ? self::FLAG_DOWNTIME : 0)
                + ($this->isAcknowledged() ? self::FLAG_ACK : 0);
         if (! ($sort & (self::FLAG_DOWNTIME | self::FLAG_ACK))) {
             $sort |= self::FLAG_NONE;
         }
+
         return $sort;
     }
 
