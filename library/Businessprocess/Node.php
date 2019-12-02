@@ -44,6 +44,9 @@ abstract class Node
         self::ICINGA_OK       => 0,
     );
 
+    /** @var string Alias of the node */
+    protected $alias;
+
     /**
      * Main business process object
      *
@@ -331,12 +334,31 @@ abstract class Node
 
     public function hasAlias()
     {
-        return false;
+        return $this->alias !== null;
     }
 
+    /**
+     * Get the alias of the node
+     *
+     * @return string
+     */
     public function getAlias()
     {
-        return $this->name;
+        return $this->alias;
+    }
+
+    /**
+     * Set the alias of the node
+     *
+     * @param string $alias
+     *
+     * @return $this
+     */
+    public function setAlias($alias)
+    {
+        $this->alias = $alias;
+
+        return $this;
     }
 
     public function hasParents()

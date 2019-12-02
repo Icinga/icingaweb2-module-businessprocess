@@ -162,10 +162,8 @@ class NodeTile extends BaseHtmlElement
     {
         $node = $this->node;
         $url = $this->getMainNodeUrl($node);
-        if ($node instanceof ServiceNode) {
+        if ($node instanceof MonitoredNode) {
             $link = Html::tag('a', ['href' => $url, 'data-base-target' => '_next'], $node->getAlias());
-        } elseif ($node instanceof HostNode) {
-            $link = Html::tag('a', ['href' => $url, 'data-base-target' => '_next'], $node->getHostname());
         } else {
             $link = Html::tag('a', ['href' => $url], $node->getAlias());
             $link->getAttributes()->add('data-base-target', '_self');

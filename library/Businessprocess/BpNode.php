@@ -21,7 +21,6 @@ class BpNode extends Node
 
     /** @var array */
     protected $childNames = array();
-    protected $alias;
     protected $counters;
     protected $missing = null;
     protected $missingChildren;
@@ -307,20 +306,9 @@ class BpNode extends Node
         return $this->info_command;
     }
 
-    public function hasAlias()
-    {
-        return $this->getAlias() !== null;
-    }
-
     public function getAlias()
     {
         return $this->alias ? preg_replace('~_~', ' ', $this->alias) : $this->name;
-    }
-
-    public function setAlias($name)
-    {
-        $this->alias = $name;
-        return $this;
     }
 
     /**

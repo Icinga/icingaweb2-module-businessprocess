@@ -45,11 +45,6 @@ class HostNode extends MonitoredNode
         }
     }
 
-    public function getAlias()
-    {
-        return $this->getHostname();
-    }
-
     public function getHostname()
     {
         return $this->hostname;
@@ -66,10 +61,5 @@ class HostNode extends MonitoredNode
         }
 
         return Url::fromPath('businessprocess/host/show', $params);
-    }
-
-    public function getLink()
-    {
-        return Html::tag('a', ['href' => $this->getUrl()], $this->hostname);
     }
 }

@@ -8,6 +8,9 @@ class ServiceNode extends MonitoredNode
 {
     protected $hostname;
 
+    /** @var string Alias of the host */
+    protected $hostAlias;
+
     protected $service;
 
     protected $className = 'service';
@@ -31,6 +34,30 @@ class ServiceNode extends MonitoredNode
         return $this->hostname;
     }
 
+    /**
+     * Get the host alias
+     *
+     * @return string
+     */
+    public function getHostAlias()
+    {
+        return $this->hostAlias;
+    }
+
+    /**
+     * Set the host alias
+     *
+     * @param string $hostAlias
+     *
+     * @return $this
+     */
+    public function setHostAlias($hostAlias)
+    {
+        $this->hostAlias = $hostAlias;
+
+        return $this;
+    }
+
     public function getServiceDescription()
     {
         return $this->service;
@@ -38,7 +65,7 @@ class ServiceNode extends MonitoredNode
 
     public function getAlias()
     {
-        return $this->hostname . ': ' . $this->service;
+        return $this->getHostAlias() . ': ' . $this->alias;
     }
 
     public function getUrl()

@@ -6,6 +6,7 @@ use Exception;
 use Icinga\Application\Benchmark;
 use Icinga\Data\Filter\Filter;
 use Icinga\Module\Businessprocess\BpConfig;
+use Icinga\Module\Businessprocess\ServiceNode;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 
 class MonitoringState
@@ -74,7 +75,8 @@ class MonitoringState
             'last_state_change' => $hostStateChangeColumn,
             'in_downtime'       => 'host_in_downtime',
             'ack'               => 'host_acknowledged',
-            'state'             => $hostStateColumn
+            'state'             => $hostStateColumn,
+            'display_name'      => 'host_display_name'
         ))->applyFilter($hostFilter)->getQuery()->fetchAll();
 
         Benchmark::measure('Retrieved states for ' . count($hostStatus) . ' hosts in ' . $config->getName());
@@ -88,7 +90,9 @@ class MonitoringState
             'last_state_change' => $serviceStateChangeColumn,
             'in_downtime'       => 'service_in_downtime',
             'ack'               => 'service_acknowledged',
-            'state'             => $serviceStateColumn
+            'state'             => $serviceStateColumn,
+            'display_name'      => 'service_display_name',
+            'host_display_name' => 'host_display_name'
         ))->applyFilter($hostFilter)->getQuery()->fetchAll();
 
         Benchmark::measure('Retrieved states for ' . count($serviceStatus) . ' services in ' . $config->getName());
@@ -136,6 +140,12 @@ class MonitoringState
         }
         if ((int) $row->ack === 1) {
             $node->setAck(true);
+        }
+
+        $node->setAlias($row->display_name);
+
+        if ($node instanceof ServiceNode) {
+            $node->setHostAlias($row->host_display_name);
         }
     }
 }

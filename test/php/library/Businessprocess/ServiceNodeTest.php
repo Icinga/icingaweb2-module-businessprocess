@@ -51,6 +51,6 @@ class ServiceNodeTest extends BaseTestCase
             'hostname' => 'localhost',
             'service'  => 'ping <> pong',
             'state'    => 0,
-        )))->setBpConfig($bp);
+        )))->setBpConfig($bp)->setHostAlias('localhost')->setAlias('ping <> pong');
     }
 }
