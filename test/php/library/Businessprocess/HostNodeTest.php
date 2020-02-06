@@ -60,6 +60,6 @@ class HostNodeTest extends BaseTestCase
         return (new HostNode((object) array(
             'hostname' => 'localhost',
             'state'    => 0,
-        )))->setBpConfig($bp);
+        )))->setBpConfig($bp)->setAlias('localhost');
     }
 }

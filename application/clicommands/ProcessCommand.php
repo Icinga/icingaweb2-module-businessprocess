@@ -60,6 +60,17 @@ class ProcessCommand extends Command
         }
     }
 
+    protected function listConfigNames($withTitle)
+    {
+        foreach ($this->storage->listProcesses() as $key => $title) {
+            if ($withTitle) {
+                echo $title . "\n";
+            } else {
+                echo $key . "\n";
+            }
+        }
+    }
+
     /**
      * Check a specific process
      *
@@ -75,6 +86,16 @@ class ProcessCommand extends Command
      *   --state-type <type>     Define which state type to look at. Could be
      *                           either soft or hard, overrides an eventually
      *                           configured default
+     *   --blame                 Show problem details as a tree reduced to the
+     *                           nodes which have the same state as the business
+     *                           process
+     *   --root-cause            Used in combination with --blame. Only shows
+     *                           the path of the nodes which are responsible for
+     *                           the state of the business process
+     *   --downtime-is-ok        Treat hosts/services in downtime always as
+     *                           UP/OK.
+     *   --ack-is-ok             Treat acknowledged hosts/services always as
+     *                           UP/OK.
      */
     public function checkAction()
     {
@@ -106,23 +127,26 @@ class ProcessCommand extends Command
             exit(3);
         }
 
+        if ($this->params->shift('ack-is-ok')) {
+            Node::setAckIsOk();
+        }
+
+        if ($this->params->shift('downtime-is-ok')) {
+            Node::setDowntimeIsOk();
+        }
+
         printf("Business Process %s: %s\n", $node->getStateName(), $node->getAlias());
         if ($this->params->shift('details')) {
             echo $this->renderProblemTree($node->getProblemTree(), $this->params->shift('colors'));
         }
+        if ($this->params->shift('blame')) {
+            echo $this->renderProblemTree(
+                $node->getProblemTreeBlame($this->params->shift('root-cause')),
+                $this->params->shift('colors')
+            );
+        }
 
         exit($node->getState());
-    }
-
-    protected function listConfigNames($withTitle)
-    {
-        foreach ($this->storage->listProcesses() as $key => $title) {
-            if ($withTitle) {
-                echo $title . "\n";
-            } else {
-                echo $key . "\n";
-            }
-        }
     }
 
     protected function listBpNames(BpConfig $config)
