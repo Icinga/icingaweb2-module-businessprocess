@@ -265,7 +265,8 @@ class TreeRenderer extends Renderer
             'edit',
             $this->getUrl()->with(array(
                 'action'   => 'edit',
-                'editnode' => $node->getName()
+                'editnode' => $node->getName(),
+                'node'     => $node->getName()
             )),
             mt('businessprocess', 'Modify this node')
         );
