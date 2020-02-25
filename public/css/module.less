@@ -676,6 +676,10 @@ td > a > .badges {
         .transition(border-color 2s 1s linear !important);
         border-color: @gray-light !important;
     }
+    .breadcrumb li:not(:last-of-type) a:hover {
+        background-color: transparent !important;
+        color: @icinga-blue;
+    }
 }
 
 .tabs > .dropdown-nav-item > ul {
@@ -688,8 +692,8 @@ td > a > .badges {
 }
 
 .breadcrumb li:not(:last-child) a:hover { background: @icinga-blue; color: white; }
-.breadcrumb li:not(:last-child) a:hover:after { border-left-color: @icinga-blue !important; }
-.breadcrumb li:last-child:hover, .breadcrumb li:last-child a:hover { background: @icinga-blue; border-color: @icinga-blue !important; }
+.breadcrumb li:not(:last-child) a:hover:after { border-left-color: @icinga-blue; }
+.breadcrumb li:last-child:hover, .breadcrumb li:last-child a:hover { background: @icinga-blue; border-color: @icinga-blue; }
 
 .breadcrumb li a:focus {
     text-decoration: underline;
