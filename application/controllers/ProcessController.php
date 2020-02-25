@@ -110,7 +110,7 @@ class ProcessController extends Controller
                 $missing = array_slice($missing, 0, 10);
                 $missing[] = '...';
             }
-            $bp->addError(sprintf('There are %d missing nodes: %s', $count, implode(', ', $missing)));
+            $bp->addError('There are %d missing nodes: %s', $count, implode(', ', $missing));
         }
         $this->content()->add($this->showHints($bp));
         $this->content()->add($this->showWarnings($bp));
