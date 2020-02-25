@@ -214,7 +214,8 @@ abstract class Renderer extends HtmlDocument
             $paths = $node->getPaths();
         }
 
-        $url = $this->getUrl()->setParams([
+        $url = clone $this->getUrl();
+        $url->setParams([
             'config'    => $node->getBpConfig()->getName(),
             'node'      => $name
         ]);

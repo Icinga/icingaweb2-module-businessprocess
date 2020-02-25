@@ -42,7 +42,7 @@ class TreeRenderer extends Renderer
         if ($this->wantsRootNodes()) {
             $tree->getAttributes()->add(
                 'data-action-url',
-                $this->getUrl()->setParams(['config' => $bp->getName()])->getAbsoluteUrl()
+                $this->getUrl()->with(['config' => $bp->getName()])->getAbsoluteUrl()
             );
         } else {
             $nodeName = $this->parent instanceof ImportedNode
@@ -51,7 +51,7 @@ class TreeRenderer extends Renderer
             $tree->getAttributes()
                 ->add('data-node-name', $nodeName)
                 ->add('data-action-url', $this->getUrl()
-                    ->setParams([
+                    ->with([
                         'config'    => $this->parent->getBpConfig()->getName(),
                         'node'      => $nodeName
                     ])
@@ -203,7 +203,7 @@ class TreeRenderer extends Renderer
             ]),
             'data-csrf-token'               => CsrfToken::generate(),
             'data-action-url'               => $this->getUrl()
-                ->setParams([
+                ->with([
                     'config'    => $node->getBpConfig()->getName(),
                     'node'      => $node instanceof ImportedNode
                         ? $node->getNodeName()
