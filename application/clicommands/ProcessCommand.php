@@ -2,6 +2,8 @@
 
 namespace Icinga\Module\Businessprocess\Clicommands;
 
+use Exception;
+use Icinga\Application\Logger;
 use Icinga\Cli\Command;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
@@ -116,14 +118,17 @@ class ProcessCommand extends Command
         }
 
         /** @var BpNode $node */
-        $node = $bp->getNode($this->params->shift());
-        MonitoringState::apply($bp);
-        if ($bp->hasErrors()) {
-            printf(
-                "Checking Business Process %s failed: %s\n",
-                $node->getAlias(),
-                implode("\n", $bp->getErrors())
-            );
+        try {
+            $node = $bp->getNode($this->params->shift());
+            MonitoringState::apply($bp);
+            if ($bp->hasErrors()) {
+                Logger::error("Checking Business Process %s failed: %s\n");
+
+                exit(3);
+            }
+        } catch (Exception $err) {
+            Logger::error("Checking Business Process failed: " . $err->getMessage());
+
             exit(3);
         }
 
