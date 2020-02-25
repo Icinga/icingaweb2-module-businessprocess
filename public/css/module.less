@@ -661,6 +661,23 @@ td > a > .badges {
     z-index: 2;
 }
 
+&.impact {
+    .breadcrumb li:not(:last-of-type) a:after {
+        .transition(border-left-color 2s 1s linear !important);
+        border-left-color: @gray-lighter !important;
+    }
+
+    .breadcrumb li:not(:last-of-type) a:before {
+        .transition(border-left-color 2s 1s linear !important);
+        border-left-color: @gray-light !important;
+    }
+
+    .breadcrumb li:not(:last-of-type) {
+        .transition(border-color 2s 1s linear !important);
+        border-color: @gray-light !important;
+    }
+}
+
 .tabs > .dropdown-nav-item > ul {
     z-index: 100;
 }
