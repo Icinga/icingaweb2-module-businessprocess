@@ -286,52 +286,52 @@ class NodeTile extends BaseHtmlElement
             ));
         }
 
-        if (! $this->renderer->getBusinessProcess()->getMetadata()->canModify()
-            || $this->node->getBpConfig()->getName() !== $this->renderer->getBusinessProcess()->getName()
-            || $this->node->getName() === '__unbound__'
+        if ($this->renderer->getBusinessProcess()->getMetadata()->canModify()
+            && $this->node->getBpConfig()->getName() === $this->renderer->getBusinessProcess()->getName()
+            && $this->node->getName() !== '__unbound__'
         ) {
-            return;
+            if ($this->node instanceof BpNode) {
+                $this->actions()->add(Html::tag(
+                    'a',
+                    [
+                        'href'  => $baseUrl
+                            ->with('action', 'edit')
+                            ->with('editnode', $this->node->getName()),
+                        'title' => mt('businessprocess', 'Modify this business process node')
+                    ],
+                    Html::tag('i', ['class' => 'icon icon-edit'])
+                ));
+
+                $addUrl = $baseUrl->with([
+                    'node'      => $this->node->getName(),
+                    'action'    => 'add'
+                ]);
+                $addUrl->getParams()->addValues('path', $this->path);
+                $this->actions()->add(Html::tag(
+                    'a',
+                    [
+                        'href'  => $addUrl,
+                        'title' => mt('businessprocess', 'Add a new sub-node to this business process')
+                    ],
+                    Html::tag('i', ['class' => 'icon icon-plus'])
+                ));
+            }
         }
 
-        if ($this->node instanceof BpNode) {
+        if ($this->renderer->getBusinessProcess()->getMetadata()->canModify()) {
+            $params = array(
+                'action'     => 'delete',
+                'deletenode' => $this->node->getName(),
+            );
+
             $this->actions()->add(Html::tag(
                 'a',
                 [
-                    'href'  => $baseUrl
-                        ->with('action', 'edit')
-                        ->with('editnode', $this->node->getName()),
-                    'title' => mt('businessprocess', 'Modify this business process node')
+                    'href'  => $baseUrl->with($params),
+                    'title' => mt('businessprocess', 'Delete this node')
                 ],
-                Html::tag('i', ['class' => 'icon icon-edit'])
-            ));
-
-            $addUrl = $baseUrl->with([
-                'node'      => $this->node->getName(),
-                'action'    => 'add'
-            ]);
-            $addUrl->getParams()->addValues('path', $this->path);
-            $this->actions()->add(Html::tag(
-                'a',
-                [
-                    'href'  => $addUrl,
-                    'title' => mt('businessprocess', 'Add a new sub-node to this business process')
-                ],
-                Html::tag('i', ['class' => 'icon icon-plus'])
+                Html::tag('i', ['class' => 'icon icon-cancel'])
             ));
         }
-
-        $params = array(
-            'action'     => 'delete',
-            'deletenode' => $this->node->getName(),
-        );
-
-        $this->actions()->add(Html::tag(
-            'a',
-            [
-                'href'  => $baseUrl->with($params),
-                'title' => mt('businessprocess', 'Delete this node')
-            ],
-            Html::tag('i', ['class' => 'icon icon-cancel'])
-        ));
     }
 }
