@@ -85,19 +85,29 @@ class NodeTile extends BaseHtmlElement
                 $this->addActionLinks();
             }
         }
+        if (! $node instanceof ImportedNode || ! $node->isMissing()) {
+            $link = $this->getMainNodeLink();
+            if ($renderer->isBreadcrumb()) {
+                $link->prepend((new StateBall(strtolower($node->getStateName())))->addAttributes([
+                    'title' => sprintf(
+                        '%s %s',
+                        $node->getStateName(),
+                        DateFormatter::timeSince($node->getLastStateChange())
+                    )
+                ]));
+            }
 
-        $link = $this->getMainNodeLink();
-        if ($renderer->isBreadcrumb()) {
-            $link->prepend((new StateBall(strtolower($node->getStateName())))->addAttributes([
-                'title' => sprintf(
-                    '%s %s',
-                    $node->getStateName(),
-                    DateFormatter::timeSince($node->getLastStateChange())
+            $this->add($link);
+        } else {
+            $this->add(Html::tag(
+                'a',
+                Html::tag(
+                    'span',
+                    ['style' => 'font-size: 75%'],
+                    sprintf('Trying to access a missing business process node "%s"', $node->getNodeName())
                 )
-            ]));
+            ));
         }
-
-        $this->add($link);
 
         if ($node instanceof BpNode && !$renderer->isBreadcrumb()) {
             $this->add(Html::tag(
@@ -191,19 +201,21 @@ class NodeTile extends BaseHtmlElement
                 ],
                 Html::tag('i', ['class' => 'icon icon-sitemap'])
             ));
-            if ($node->getBpConfig()->getName() !== $this->renderer->getBusinessProcess()->getName()) {
-                $this->actions()->add(Html::tag(
-                    'a',
-                    [
-                        'data-base-target'  => '_next',
-                        'href'              => $this->renderer->getSourceUrl($node)->getAbsoluteUrl(),
-                        'title'             => mt(
-                            'businessprocess',
-                            'Show this process as part of its original configuration'
-                        )
-                    ],
-                    Html::tag('i', ['class' => 'icon icon-forward'])
-                ));
+            if ($node instanceof ImportedNode) {
+                if (! $node->isMissing()) {
+                    $this->actions()->add(Html::tag(
+                        'a',
+                        [
+                            'data-base-target'  => '_next',
+                            'href'              => $this->renderer->getSourceUrl($node)->getAbsoluteUrl(),
+                            'title'             => mt(
+                                'businessprocess',
+                                'Show this process as part of its original configuration'
+                            )
+                        ],
+                        Html::tag('i', ['class' => 'icon icon-forward'])
+                    ));
+                }
             }
 
             $url = $node->getInfoUrl();
