@@ -101,12 +101,18 @@ class ProcessCommand extends Command
      */
     public function checkAction()
     {
-        $name = $this->params->get('config');
-        if ($name === null) {
-            $name = $this->getFirstProcessName();
-        }
+        try {
+            $name = $this->params->get('config');
+            if ($name === null) {
+                $name = $this->getFirstProcessName();
+            }
 
-        $bp = $this->storage->loadProcess($name);
+            $bp = $this->storage->loadProcess($name);
+        } catch (Exception $err) {
+            Logger::error("Can't access configuration '%s': %s", $name, $err->getMessage());
+
+            exit(3);
+        }
 
         if (null !== ($stateType = $this->params->get('state-type'))) {
             if ($stateType === 'soft') {
@@ -122,12 +128,12 @@ class ProcessCommand extends Command
             $node = $bp->getNode($this->params->shift());
             MonitoringState::apply($bp);
             if ($bp->hasErrors()) {
-                Logger::error("Checking Business Process %s failed: %s\n");
+                Logger::error("Checking Business Process '%s' failed: %s\n", $name, $bp->getErrors());
 
                 exit(3);
             }
         } catch (Exception $err) {
-            Logger::error("Checking Business Process failed: " . $err->getMessage());
+            Logger::error("Checking Business Process '%s' failed: %s", $name, $err->getMessage());
 
             exit(3);
         }
