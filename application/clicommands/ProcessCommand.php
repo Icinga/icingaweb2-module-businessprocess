@@ -2,6 +2,8 @@
 
 namespace Icinga\Module\Businessprocess\Clicommands;
 
+use Exception;
+use Icinga\Application\Logger;
 use Icinga\Cli\Command;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
@@ -99,12 +101,18 @@ class ProcessCommand extends Command
      */
     public function checkAction()
     {
-        $name = $this->params->get('config');
-        if ($name === null) {
-            $name = $this->getFirstProcessName();
-        }
+        try {
+            $name = $this->params->get('config');
+            if ($name === null) {
+                $name = $this->getFirstProcessName();
+            }
 
-        $bp = $this->storage->loadProcess($name);
+            $bp = $this->storage->loadProcess($name);
+        } catch (Exception $err) {
+            Logger::error("Can't access configuration '%s': %s", $name, $err->getMessage());
+
+            exit(3);
+        }
 
         if (null !== ($stateType = $this->params->get('state-type'))) {
             if ($stateType === 'soft') {
@@ -116,14 +124,17 @@ class ProcessCommand extends Command
         }
 
         /** @var BpNode $node */
-        $node = $bp->getNode($this->params->shift());
-        MonitoringState::apply($bp);
-        if ($bp->hasErrors()) {
-            printf(
-                "Checking Business Process %s failed: %s\n",
-                $node->getAlias(),
-                implode("\n", $bp->getErrors())
-            );
+        try {
+            $node = $bp->getNode($this->params->shift());
+            MonitoringState::apply($bp);
+            if ($bp->hasErrors()) {
+                Logger::error("Checking Business Process '%s' failed: %s\n", $name, $bp->getErrors());
+
+                exit(3);
+            }
+        } catch (Exception $err) {
+            Logger::error("Checking Business Process '%s' failed: %s", $name, $err->getMessage());
+
             exit(3);
         }
 
