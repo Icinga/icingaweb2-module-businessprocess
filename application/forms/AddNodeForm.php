@@ -452,7 +452,7 @@ class AddNodeForm extends QuickForm
      * @param   BpNode      $node
      * @param   BpNode[]    $parents
      */
-    protected function collectAllParents(BpNode $node, array & $parents)
+    protected function collectAllParents(BpNode $node, array &$parents)
     {
         foreach ($node->getParents() as $parent) {
             $parents[$parent->getName()] = $parent;
