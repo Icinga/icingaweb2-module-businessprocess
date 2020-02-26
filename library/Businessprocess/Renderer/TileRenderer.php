@@ -19,7 +19,7 @@ class TileRenderer extends Renderer
             'div',
             [
                 'class'                         => ['sortable', 'tiles', $this->howMany()],
-                'data-base-target'              => '_next',
+                'data-base-target'              => '_self',
                 'data-sortable-disabled'        => $this->isLocked() ? 'true' : 'false',
                 'data-sortable-data-id-attr'    => 'id',
                 'data-sortable-direction'       => 'horizontal', // Otherwise movement is buggy on small lists

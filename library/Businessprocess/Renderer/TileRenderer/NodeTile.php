@@ -59,8 +59,7 @@ class NodeTile extends BaseHtmlElement
         $this->actions = Html::tag(
             'div',
             [
-                'class'            => 'actions',
-                'data-base-target' => '_self'
+                'class' => 'actions'
             ]
         );
 
@@ -166,7 +165,6 @@ class NodeTile extends BaseHtmlElement
             $link = Html::tag('a', ['href' => $url, 'data-base-target' => '_next'], $node->getAlias());
         } else {
             $link = Html::tag('a', ['href' => $url], $node->getAlias());
-            $link->getAttributes()->add('data-base-target', '_self');
         }
 
         return $link;
@@ -181,7 +179,6 @@ class NodeTile extends BaseHtmlElement
             $this->actions()->add(Html::tag(
                 'a',
                 [
-                    'data-base-target' => '_self',
                     'href'  => $url->with('mode', 'tile'),
                     'title' => mt('businessprocess', 'Show tiles for this subtree')
                 ],
@@ -189,7 +186,6 @@ class NodeTile extends BaseHtmlElement
             ))->add(Html::tag(
                 'a',
                 [
-                    'data-base-target' => '_next',
                     'href'  => $url->with('mode', 'tree'),
                     'title' => mt('businessprocess', 'Show this subtree as a tree')
                 ],
