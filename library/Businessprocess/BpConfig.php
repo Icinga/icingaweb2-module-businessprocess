@@ -915,7 +915,9 @@ class BpConfig
     {
         $args = func_get_args();
         array_shift($args);
-        $msg = vsprintf($msg, $args);
+        if (! empty($args)) {
+            $msg = vsprintf($msg, $args);
+        }
         if ($this->throwErrors) {
             throw new IcingaException($msg);
         }
