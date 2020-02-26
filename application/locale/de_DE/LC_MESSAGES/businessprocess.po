@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Businessprocess Module (2.2.0)\n"
 "Report-Msgid-Bugs-To: dev@icinga.com\n"
 "POT-Creation-Date: 2019-03-01 10:32+0000\n"
-"PO-Revision-Date: 2019-03-01 12:34+0100\n"
+"PO-Revision-Date: 2020-02-26 11:57+0100\n"
 "Last-Translator: Johannes Meyer <johannes.meyer@icinga.com>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
@@ -97,7 +97,7 @@ msgstr "Knoten hinzufügen"
 #: ../../../../library/Businessprocess/Web/Component/RenderedProcessActionBar.php:128
 #: ../../../../library/Businessprocess/Renderer/TreeRenderer.php:317
 msgid "Add a new business process node"
-msgstr "Neuen Business-Prozess hinzufügen"
+msgstr "Neuen Geschäfts-Prozess hinzufügen"
 
 #: ../../../../application/forms/AddNodeForm.php:50
 msgid "Add a new root node"
@@ -105,7 +105,7 @@ msgstr "Neuen Wurzelknoten hinzufügen"
 
 #: ../../../../library/Businessprocess/Renderer/TileRenderer/NodeTile.php:323
 msgid "Add a new sub-node to this business process"
-msgstr "Neuen Knoten zu diesem Business-Prozess hinzufügen"
+msgstr "Neuen Knoten zu diesem Geschäfts-Prozess hinzufügen"
 
 #: ../../../../application/forms/AddNodeForm.php:45
 #, php-format
@@ -153,35 +153,35 @@ msgstr "Backend"
 #: ../../../../library/Businessprocess/ProvidedHook/Monitoring/ServiceActions.php:15
 #: ../../../../library/Businessprocess/ProvidedHook/Monitoring/HostActions.php:12
 msgid "Business Impact"
-msgstr "Business Impact"
+msgstr "Prozess-Auswirkung"
 
 #: ../../../../application/controllers/NodeController.php:22
 #, php-format
 msgid "Business Impact (%s)"
-msgstr "Business Impact (%s)"
+msgstr "Prozess-Auswirkung (%s)"
 
 #: ../../../../application/controllers/ProcessController.php:496
 #: ../../../../library/Businessprocess/Web/Controller.php:133
 #: ../../../../library/Businessprocess/Web/Controller.php:144
 msgid "Business Process"
-msgstr "Business-Prozess"
+msgstr "Geschäfts-Prozess"
 
 #: ../../../../application/controllers/ProcessController.php:87
 #, php-format
 msgid "Business Process \"%s\""
-msgstr "Business-Prozess \"%s\""
+msgstr "Geschäfts-Prozess \"%s\""
 
 #: ../../../../application/controllers/IndexController.php:15
 msgid "Business Process Overview"
-msgstr "Business-Prozessübersicht"
+msgstr "Geschäfts-Prozessübersicht"
 
 #: ../../../../configuration.php:6
 msgid "Business Processes"
-msgstr "Business-Prozesse"
+msgstr "Geschäfts-Prozesse"
 
 #: ../../../../application/forms/BpUploadForm.php:64
 msgid "Business process source code"
-msgstr "Business-Prozess Quellcode"
+msgstr "Geschäfts-Prozess Quellcode"
 
 # Braucht nicht übersetzt zu werden. Wird vom monitoring Modul bereitgestellt.
 #: ../../../../library/Businessprocess/MonitoringRestrictions.php:46
@@ -225,11 +225,11 @@ msgstr "Erstelle"
 
 #: ../../../../application/controllers/ProcessController.php:41
 msgid "Create a new Business Process"
-msgstr "Neuen Business-Prozess erstellen"
+msgstr "Neuen Geschäfts-Prozess erstellen"
 
 #: ../../../../library/Businessprocess/Web/Component/Dashboard.php:57
 msgid "Create a new Business Process configuration"
-msgstr "Erstelle eine neue Business-Prozesskonfiguration"
+msgstr "Erstelle eine neue Geschäfts-Prozesskonfiguration"
 
 #: ../../../../application/forms/SimulationForm.php:30
 msgid "Current simulation"
@@ -318,7 +318,7 @@ msgid ""
 "From here you can reach all your defined Business Process configurations, "
 "create new or modify existing ones"
 msgstr ""
-"Von hier kannst du alle definierten Business-Prozesskonfigurationen "
+"Von hier kannst du alle definierten Geschäfts-Prozesskonfigurationen "
 "erreichen, neue erstellen oder bestehende bearbeiten"
 
 #: ../../../../library/Businessprocess/Web/Component/RenderedProcessActionBar.php:55
@@ -347,7 +347,7 @@ msgstr "Hosts"
 
 #: ../../../../application/forms/AddNodeForm.php:199
 msgid "Hosts that should be part of this business process node"
-msgstr "Hosts welche Teil dieses Business-Prozesses sein sollen"
+msgstr "Hosts welche Teil dieses Geschäfts-Prozesses sein sollen"
 
 #: ../../../../application/forms/BpConfigForm.php:16
 #: ../../../../application/forms/ProcessForm.php:35
@@ -455,7 +455,7 @@ msgstr "Bearbeite die Simulation für %s"
 
 #: ../../../../library/Businessprocess/Renderer/TileRenderer/NodeTile.php:309
 msgid "Modify this business process node"
-msgstr "Bearbeite diesen Business-Prozessknoten"
+msgstr "Bearbeite diesen Geschäfts-Prozessknoten"
 
 #: ../../../../library/Businessprocess/Renderer/TileRenderer/NodeTile.php:289
 msgid "Modify this monitored node"
@@ -510,16 +510,16 @@ msgstr "Nein"
 
 #: ../../../../library/Businessprocess/Web/Component/Dashboard.php:79
 msgid "No Business Process has been defined for you"
-msgstr "Es wurde noch kein Business-Prozess für dich definiert"
+msgstr "Es wurde noch kein Geschäfts-Prozess für dich definiert"
 
 #: ../../../../library/Businessprocess/BpConfig.php:875
 #, php-format
 msgid "No business process nodes for \"%s\" have been defined yet"
-msgstr "Es wurden noch keine Business-Prozess Knoten für \"%s\" definiert"
+msgstr "Es wurden noch keine Geschäfts-Prozess Knoten für \"%s\" definiert"
 
 #: ../../../../application/controllers/NodeController.php:100
 msgid "No impact detected. Is this node part of a business process?"
-msgstr "Kein Impact festgestellt. Ist dieser Knoten Teil eines Prozesses?"
+msgstr "Keine Auswirkung festgestellt. Ist dieser Knoten Teil eines Prozesses?"
 
 #: ../../../../application/forms/MoveNodeForm.php:65
 msgid "No process found with name %value%"
@@ -537,7 +537,7 @@ msgstr "Der Knoten \"%s\" wurde doppelt definiert"
 
 #: ../../../../application/controllers/NodeController.php:19
 msgid "Node Impact"
-msgstr "Impact des Knotens"
+msgstr "Auswirkung des Knotens"
 
 #: ../../../../application/forms/MoveNodeForm.php:171
 msgid "Node order updated"
@@ -602,7 +602,7 @@ msgstr "Services"
 
 #: ../../../../application/forms/AddNodeForm.php:235
 msgid "Services that should be part of this business process node"
-msgstr "Services welche Teil dieses Business-Prozesses sein sollen"
+msgstr "Services welche Teil dieses Geschäfts-Prozesses sein sollen"
 
 #: ../../../../library/Businessprocess/Renderer/Breadcrumb.php:38
 msgid "Show Overview"
@@ -619,8 +619,8 @@ msgstr "Quellcode anzeigen"
 #: ../../../../library/Businessprocess/Renderer/TileRenderer/NodeTile.php:277
 msgid "Show the business impact of this node by simulating a specific state"
 msgstr ""
-"Zeige den Business Impact dieses Knoten durch Simulation eines gewünschten "
-"Zustandes"
+"Zeige die Prozess-Auswirkung dieses Knotens durch Simulation eines "
+"gewünschten Zustandes"
 
 #: ../../../../library/Businessprocess/Renderer/TreeRenderer.php:189
 #: ../../../../library/Businessprocess/Renderer/TileRenderer/NodeTile.php:208
@@ -691,7 +691,7 @@ msgstr "Zum Vollbildmodus wechseln"
 
 #: ../../../../application/forms/EditNodeForm.php:182
 msgid "The host for this business process node"
-msgstr "Der Host für diesen Business-Prozess Knoten"
+msgstr "Der Host für diesen Geschäfts-Prozess Knoten"
 
 #: ../../../../application/forms/AddNodeForm.php:180
 msgid "The node type you want to add"
@@ -699,7 +699,7 @@ msgstr "Der gewünschte Knotentyp"
 
 #: ../../../../application/forms/EditNodeForm.php:220
 msgid "The service for this business process node"
-msgstr "Der Service für diesen Business-Prozess Knoten"
+msgstr "Der Service für diesen Geschäfts-Prozess Knoten"
 
 #: ../../../../application/forms/BpConfigForm.php:34
 #: ../../../../application/forms/ProcessForm.php:38
@@ -723,7 +723,7 @@ msgstr "Dieser Prozess zeigt %d simulierte Zustände."
 #: ../../../../application/forms/AddNodeForm.php:138
 #: ../../../../application/forms/EditNodeForm.php:138
 msgid "Toplevel Process"
-msgstr "Toplevel-Prozess"
+msgstr "Prozess der ersten Ebene"
 
 #: ../../../../application/forms/ProcessForm.php:96
 #: ../../../../application/forms/AddNodeForm.php:146
@@ -742,7 +742,7 @@ msgstr "Prozess entsperren"
 #: ../../../../application/forms/DeleteNodeForm.php:49
 #, php-format
 msgid "Unsure? Show business impact of \"%s\""
-msgstr "Nicht sicher? Zeige den Business Impact von \"%s\""
+msgstr "Nicht sicher? Zeige die Auswirkung von \"%s\""
 
 #: ../../../../application/controllers/ProcessController.php:510
 #: ../../../../library/Businessprocess/Web/Component/Dashboard.php:65
@@ -751,11 +751,11 @@ msgstr "Hochladen"
 
 #: ../../../../application/controllers/ProcessController.php:62
 msgid "Upload a Business Process Config file"
-msgstr "Lade eine Business-Prozess Konfigurationsdatei hoch"
+msgstr "Lade eine Geschäfts-Prozess Konfigurationsdatei hoch"
 
 #: ../../../../library/Businessprocess/Web/Component/Dashboard.php:66
 msgid "Upload an existing Business Process configuration"
-msgstr "Lade eine existierende Business-Prozess Konfigurationsdatei hoch"
+msgstr "Lade eine existierende Geschäfts-Prozess Konfigurationsdatei hoch"
 
 #: ../../../../application/forms/BpConfigForm.php:73
 msgid "Use HARD states"
@@ -801,7 +801,7 @@ msgstr "Darstellung"
 
 #: ../../../../library/Businessprocess/Web/Component/Dashboard.php:42
 msgid "Welcome to your Business Process Overview"
-msgstr "Willkommen zur Übersicht deiner Business-Prozesse"
+msgstr "Willkommen zur Übersicht deiner Geschäfts-Prozesse"
 
 #: ../../../../application/forms/DeleteNodeForm.php:145
 msgid "Well, maybe next time"
