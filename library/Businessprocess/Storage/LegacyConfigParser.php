@@ -140,7 +140,7 @@ class LegacyConfigParser
         return $metadata;
     }
 
-    public static function readMetadataFromString($name, & $string)
+    public static function readMetadataFromString($name, &$string)
     {
         $metadata = new Metadata($name);
 
@@ -201,7 +201,7 @@ class LegacyConfigParser
      * @param $line
      * @param BpConfig $bp
      */
-    protected function parseDisplay(& $line, BpConfig $bp)
+    protected function parseDisplay(&$line, BpConfig $bp)
     {
         list($display, $name, $desc) = preg_split('~\s*;\s*~', substr($line, 8), 3);
         $bp->getBpNode($name)->setAlias($desc)->setDisplay($display);
@@ -214,26 +214,26 @@ class LegacyConfigParser
      * @param $line
      * @param BpConfig $bp
      */
-    protected function parseExternalInfo(& $line, BpConfig $bp)
+    protected function parseExternalInfo(&$line, BpConfig $bp)
     {
         list($name, $script) = preg_split('~\s*;\s*~', substr($line, 14), 2);
         $bp->getBpNode($name)->setInfoCommand($script);
     }
 
-    protected function parseExtraInfo(& $line, BpConfig $bp)
+    protected function parseExtraInfo(&$line, BpConfig $bp)
     {
         // TODO: Not yet
         // list($name, $script) = preg_split('~\s*;\s*~', substr($line, 14), 2);
         // $this->getNode($name)->setExtraInfo($script);
     }
 
-    protected function parseInfoUrl(& $line, BpConfig $bp)
+    protected function parseInfoUrl(&$line, BpConfig $bp)
     {
         list($name, $url) = preg_split('~\s*;\s*~', substr($line, 9), 2);
         $bp->getBpNode($name)->setInfoUrl($url);
     }
 
-    protected function parseExtraLine(& $line, $typeLength, BpConfig $bp)
+    protected function parseExtraLine(&$line, $typeLength, BpConfig $bp)
     {
         $type = substr($line, 0, $typeLength);
         if (substr($type, 0, 7) === 'display') {
@@ -270,7 +270,7 @@ class LegacyConfigParser
      *
      * @throws ConfigurationError
      */
-    protected function parseLine(& $line)
+    protected function parseLine(&$line)
     {
         $bp = $this->config;
         $line = trim($line);
