@@ -421,6 +421,8 @@ abstract class Node
 
         if (! $this instanceof ImportedNode && $this->getBpConfig()->hasRootNode($this->getName())) {
             $paths[] = [$differentConfig ? $this->getIdentifier() : $this->getName()];
+        } elseif (! $this->hasParents()) {
+            $paths[] = ['__unbound__', $differentConfig ? $this->getIdentifier() : $this->getName()];
         }
 
         return $paths;
