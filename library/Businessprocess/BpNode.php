@@ -11,6 +11,7 @@ class BpNode extends Node
     const OP_AND = '&';
     const OP_OR  = '|';
     const OP_NOT  = '!';
+
     protected $operator = '&';
     protected $url;
     protected $info_command;
@@ -72,9 +73,6 @@ class BpNode extends Node
                     $state = $child->getStateName();
                     $this->counters[$state]++;
                 }
-            }
-            if (! $this->hasChildren()) {
-                $this->counters['MISSING']++;
             }
         }
         return $this->counters;
