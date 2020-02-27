@@ -118,8 +118,6 @@ abstract class Node
         99 => 'PENDING'
     );
 
-    abstract public function __construct($object);
-
     /**
      * Set whether to treat acknowledged hosts/services always as UP/OK
      *
