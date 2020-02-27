@@ -21,6 +21,7 @@ abstract class Node
     const ICINGA_DOWN        = 1;
     const ICINGA_UNREACHABLE = 2;
     const ICINGA_PENDING     = 99;
+    const NODE_EMPTY         = 128;
 
     /** @var bool Whether to treat acknowledged hosts/services always as UP/OK */
     protected static $ackIsOk = false;
@@ -42,6 +43,7 @@ abstract class Node
         self::ICINGA_CRITICAL => 4,
         self::ICINGA_WARNING  => 2,
         self::ICINGA_OK       => 0,
+        self::NODE_EMPTY      => 0
     );
 
     /** @var string Alias of the node */
@@ -115,7 +117,8 @@ abstract class Node
         'WARNING',
         'CRITICAL',
         'UNKNOWN',
-        99 => 'PENDING'
+        99 => 'PENDING',
+        128 => 'EMPTY'
     );
 
     /**
