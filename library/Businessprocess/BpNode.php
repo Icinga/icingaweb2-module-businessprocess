@@ -216,7 +216,7 @@ class BpNode extends Node
                 }
             }
             $bp->endLoopDetection($this->name);
-            $this->missing = ! $exists;
+            $this->missing = ! $exists && ! empty($this->getChildren());
         }
         return $this->missing;
     }
