@@ -353,7 +353,7 @@ class BpNode extends Node
 
         if (!$this->hasChildren()) {
             // TODO: delegate this to operators, should mostly fail
-            $this->setState(self::ICINGA_UNKNOWN);
+            $this->setState(self::NODE_EMPTY);
             $this->setMissing();
             return $this;
         }
