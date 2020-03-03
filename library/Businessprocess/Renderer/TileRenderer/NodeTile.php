@@ -85,7 +85,7 @@ class NodeTile extends BaseHtmlElement
                 $this->addActionLinks();
             }
         }
-        if (! $node instanceof ImportedNode || ! $node->isMissing()) {
+        if (! $node instanceof ImportedNode || $node->getBpConfig()->hasNode($node->getName())) {
             $link = $this->getMainNodeLink();
             if ($renderer->isBreadcrumb()) {
                 $link->prepend((new StateBall(strtolower($node->getStateName())))->addAttributes([
@@ -202,7 +202,7 @@ class NodeTile extends BaseHtmlElement
                 Html::tag('i', ['class' => 'icon icon-sitemap'])
             ));
             if ($node instanceof ImportedNode) {
-                if (! $node->isMissing()) {
+                if ($node->getBpConfig()->hasNode($node->getName())) {
                     $this->actions()->add(Html::tag(
                         'a',
                         [

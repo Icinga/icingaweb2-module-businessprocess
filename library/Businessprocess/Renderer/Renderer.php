@@ -6,6 +6,7 @@ use Icinga\Exception\ProgrammingError;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\ImportedNode;
+use Icinga\Module\Businessprocess\MonitoredNode;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Web\Url;
 use ipl\Html\BaseHtmlElement;
@@ -176,9 +177,13 @@ abstract class Renderer extends HtmlDocument
         if ($node->isMissing()) {
             $classes = array('missing');
         } else {
-            $classes = array(
-                strtolower($node->getStateName())
-            );
+            if ($node->isEmpty() && ! $node instanceof MonitoredNode) {
+                $classes = array('empty');
+            } else {
+                $classes = array(
+                    strtolower($node->getStateName())
+                );
+            }
             if ($node->hasMissingChildren()) {
                 $classes[] = 'missing-children';
             }
