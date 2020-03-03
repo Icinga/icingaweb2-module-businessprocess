@@ -374,7 +374,7 @@ class BpNode extends Node
         $sort_states = array();
         $lastStateChange = 0;
 
-        if (!$this->hasChildren()) {
+        if ($this->isEmpty()) {
             // TODO: delegate this to operators, should mostly fail
             $this->setState(self::NODE_EMPTY);
             return $this;
