@@ -110,6 +110,8 @@ abstract class Node
 
     protected $missing = false;
 
+    protected $empty = false;
+
     protected $className = 'unknown';
 
     protected $stateNames = array(

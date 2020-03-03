@@ -24,6 +24,7 @@ class BpNode extends Node
     protected $childNames = array();
     protected $counters;
     protected $missing = null;
+    protected $empty = null;
     protected $missingChildren;
 
     protected static $emptyStateSummary = array(
@@ -221,6 +222,28 @@ class BpNode extends Node
         return $this->missing;
     }
 
+    public function isEmpty()
+    {
+        $bp = $this->getBpConfig();
+        $empty = true;
+        if ($this->countChildren()) {
+            $bp->beginLoopDetection($this->name);
+            foreach ($this->getChildren() as $child) {
+                if ($child instanceof MonitoredNode) {
+                    $empty = false;
+                    break;
+                } elseif (!$child->isEmpty()) {
+                    $empty = false;
+                }
+            }
+            $bp->endLoopDetection($this->name);
+        }
+        $this->empty = $empty;
+
+        return $this->empty;
+    }
+
+
     public function getMissingChildren()
     {
         if ($this->missingChildren === null) {
@@ -354,7 +377,6 @@ class BpNode extends Node
         if (!$this->hasChildren()) {
             // TODO: delegate this to operators, should mostly fail
             $this->setState(self::NODE_EMPTY);
-            $this->setMissing();
             return $this;
         }
 
