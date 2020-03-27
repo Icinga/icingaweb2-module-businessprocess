@@ -1,3 +1,4 @@
+Module: businessprocess
 Name: Businessprocess
 Version: 2.2.0
 Depends: monitoring (>= 2.4.1), ipl (>= 0.1.1)
