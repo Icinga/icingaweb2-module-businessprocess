@@ -82,7 +82,7 @@ class DeleteNodeForm extends QuickForm
      * @param MonitoringBackend $backend
      * @return $this
      */
-    public function setBackend(MonitoringBackend $backend)
+    public function setBackend($backend)
     {
         $this->backend = $backend;
         return $this;

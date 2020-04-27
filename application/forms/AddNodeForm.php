@@ -5,6 +5,8 @@ namespace Icinga\Module\Businessprocess\Forms;
 use Icinga\Data\Filter\Filter;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
+use Icinga\Module\Businessprocess\Common\IcingadbDatabase;
+use Icinga\Module\Businessprocess\Common\EnumList;
 use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\MonitoringRestrictions;
@@ -17,6 +19,8 @@ use Icinga\Web\Session\SessionNamespace;
 class AddNodeForm extends QuickForm
 {
     use MonitoringRestrictions;
+
+    use EnumList;
 
     /** @var MonitoringBackend */
     protected $backend;
@@ -36,6 +40,9 @@ class AddNodeForm extends QuickForm
 
     /** @var SessionNamespace */
     protected $session;
+
+    /** @var  string $backendName */
+    protected $backendName;
 
     public function setup()
     {
@@ -401,10 +408,10 @@ class AddNodeForm extends QuickForm
     }
 
     /**
-     * @param MonitoringBackend $backend
+     * @param MonitoringBackend|IcingadbDatabase $backend
      * @return $this
      */
-    public function setBackend(MonitoringBackend $backend)
+    public function setBackend($backend)
     {
         $this->backend = $backend;
         return $this;
@@ -427,6 +434,7 @@ class AddNodeForm extends QuickForm
     public function setProcess(BpConfig $process)
     {
         $this->bp = $process;
+        $this->backendName = $process->getBackendName();
         $this->setBackend($process->getBackend());
         return $this;
     }

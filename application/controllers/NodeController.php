@@ -5,6 +5,7 @@ namespace Icinga\Module\Businessprocess\Controllers;
 use Icinga\Module\Businessprocess\Renderer\Breadcrumb;
 use Icinga\Module\Businessprocess\Renderer\TileRenderer;
 use Icinga\Module\Businessprocess\Simulation;
+use Icinga\Module\Businessprocess\State\IcingaDbState;
 use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Web\Controller;
 use Icinga\Module\Businessprocess\Web\Url;
@@ -81,8 +82,12 @@ class NodeController extends Controller
             if (empty($parents)) {
                 continue;
             }
-
-            MonitoringState::apply($config);
+            if ($config->getBackendName() === '_icingadb') {
+                IcingaDbState::apply($config);
+            }
+            else {
+                MonitoringState::apply($config);
+            }
             $config->applySimulation($simulation);
 
             foreach ($parents as $parentAndPath) {

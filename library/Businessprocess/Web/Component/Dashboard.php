@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess\Web\Component;
 
 use Icinga\Authentication\Auth;
+use Icinga\Module\Businessprocess\State\IcingaDbState;
 use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Storage\Storage;
 use ipl\Html\BaseHtmlElement;
@@ -91,7 +92,12 @@ class Dashboard extends BaseHtmlElement
             }
 
             $bp = $storage->loadProcess($name);
-            MonitoringState::apply($bp);
+            if ($bp->getBackendName() === '_icingadb') {
+                IcingaDbState::apply($bp);
+            }
+            else {
+                MonitoringState::apply($bp);
+            }
 
             $this->add(new BpDashboardTile(
                 $bp,

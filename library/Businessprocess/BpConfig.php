@@ -6,6 +6,7 @@ use Exception;
 use Icinga\Application\Config;
 use Icinga\Exception\IcingaException;
 use Icinga\Exception\NotFoundError;
+use Icinga\Module\Businessprocess\Common\IcingadbDatabase;
 use Icinga\Module\Businessprocess\Exception\NestingError;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
@@ -13,6 +14,8 @@ use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 
 class BpConfig
 {
+    use IcingadbDatabase;
+
     const SOFT_STATE = 0;
 
     const HARD_STATE = 1;
@@ -25,9 +28,7 @@ class BpConfig
     protected $backendName;
 
     /**
-     * Monitoring backend to retrieve states from
-     *
-     * @var MonitoringBackend
+     * Backend to retrieve states from
      */
     protected $backend;
 
@@ -281,7 +282,7 @@ class BpConfig
         return $this->getMetadata()->has('Backend');
     }
 
-    public function setBackend(MonitoringBackend $backend)
+    public function setBackend($backend)
     {
         $this->backend = $backend;
         return $this;
@@ -290,9 +291,14 @@ class BpConfig
     public function getBackend()
     {
         if ($this->backend === null) {
-            $this->backend = MonitoringBackend::instance(
-                $this->getBackendName()
-            );
+            if ($this->getBackendName() === '_icingadb') {
+                $this->backend = $this->getDb();
+            }
+            else {
+                $this->backend = MonitoringBackend::instance(
+                    $this->getBackendName()
+                );
+            }
         }
 
         return $this->backend;
