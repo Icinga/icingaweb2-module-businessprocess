@@ -84,15 +84,13 @@ class ProcessController extends Controller
 
         if ($bp->getBackendName() === '_icingadb') {
             IcingaDbState::apply($bp);
-        }
-        else {
+        } else {
             MonitoringState::apply($bp);
         }
 
         $this->handleSimulations($bp);
 
         $this->setTitle($this->translate('Business Process "%s"'), $bp->getTitle());
-
 
         $renderer = $this->prepareRenderer($bp, $node);
 
@@ -177,6 +175,7 @@ class ProcessController extends Controller
             }
             $renderer->setUrl($this->url())
                 ->setPath($this->params->getValues('path'));
+
             $this->renderer = $renderer;
         }
 

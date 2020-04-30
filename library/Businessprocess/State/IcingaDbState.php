@@ -11,10 +11,6 @@ use Icinga\Module\Businessprocess\ServiceNode;
 use Icinga\Module\Icingadb\Model\Host;
 use Icinga\Module\Icingadb\Model\Service;
 
-ini_set("xdebug.var_display_max_children", -1);
-ini_set("xdebug.var_display_max_data", -1);
-ini_set("xdebug.var_display_max_depth", -1);
-
 class IcingaDbState extends IcingaDbBackend
 {
     /** @var BpConfig */
@@ -54,57 +50,62 @@ class IcingaDbState extends IcingaDbBackend
     {
         $config = $this->config;
 
-        Benchmark::measure('Retrieving states for business process ' . $config->getName());
-        $backend = $this->backend;
+        Benchmark::measure('Retrieving states for business process ' . $config->getName());;
 
         $hosts = $config->listInvolvedHostNames();
         if (empty($hosts)) {
             return $this;
         }
 
-        $queryHost = Host::on($backend)->with('state');
+        $queryHost = Host::on($this->backend)->with('state');
+
         $queryHost->getSelectBase()
             ->where(['host.name IN (?)' => $hosts]);
 
-        $columns = $queryHost->assembleSelect()->getColumns();
-        $resetHostCols = [];
-        foreach ($columns as $column)
-        {
-            $tmpKey = str_replace('.','_',$column);
-            $resetHostCols[] = $tmpKey;
-        }
+//        $resetHostCols = [];
+//        foreach ($columns as $column) {
+//            $tmpKey = str_replace('.', '_', $column);
+//            $resetHostCols[] = $tmpKey;
+//        }
         $this->applyMonitoringRestriction($queryHost);
 
 //        /** @var Host $host */
-        $hostList = $queryHost->assembleSelect();
-        $hostList = $backend->select($hostList)->fetchAll();
-
-        foreach ($hostList as $idx => $hst)
-        {
-            $hst = get_object_vars($hst);
-            $hostColVals = array_values($hst);
-            $hst = array_combine($resetHostCols, $hostColVals);
-            $hostList[$idx] = $hst;
-            if($hst['host_state_state_type'] === 'hard') {
-                $hostStateCol = 'host_state_hard_state';
-            } else {
-                $hostStateCol = 'host_state_soft_state';
-            }
+//        $hostList = $queryHost->assembleSelect();
+//        $hostList = $backend->select($hostList)->fetchAll();
+//
+//        foreach ($hostList as $idx => $hst) {
+//            $hst = get_object_vars($hst);
+//            $hostColVals = array_values($hst);
+//            $hst = array_combine($resetHostCols, $hostColVals);
+//            $hostList[$idx] = $hst;
+//            if ($hst['host_state_state_type'] === 'hard') {
+//                $hostStateCol = 'host_state_hard_state';
+//            } else {
+//                $hostStateCol = 'host_state_soft_state';
+//            }
+//        }
+        if ($this->config->usesHardStates()) {
+            $stateCol = 'state.hard_state';
+        } else {
+            $stateCol = 'state.soft_state';
         }
 
         $hostStatusCols = array(
-            'hostname'          => 'host_name',
-            'last_state_change' => 'host_state_last_state_change',
-            'in_downtime'       => 'host_state_in_downtime',
-            'ack'               => 'host_state_is_acknowledged',
-            'state'             => $hostStateCol,
-            'display_name'      =>'host_display_name'
+            'hostname'          => 'host.name',
+            'last_state_change' => 'state.last_state_change',
+            'in_downtime'       => 'state.in_downtime',
+            'ack'               => 'state.is_acknowledged',
+            'state'             => $stateCol,
+            'display_name'      =>'host.display_name'
         );
-        $hostStatus = $this->selectArrayCols($hostList,$hostStatusCols);
+
+        $queryHost = $queryHost->columns($hostStatusCols)->assembleSelect();
+
+        $hostStatus = $this->backend->select($queryHost)->fetchAll();
 
         Benchmark::measure('Retrieved states for ' . count($hostStatus) . ' hosts in ' . $config->getName());
 
-        $queryService = Service::on($backend)->with([
+        $queryService = Service::on($this->backend)->with([
             'state',
             'host',
             'host.state'
@@ -112,43 +113,22 @@ class IcingaDbState extends IcingaDbBackend
         $queryService->getSelectBase()
             ->where(['service_host.name IN (?)' => $hosts]);
 
-        $columns = $queryService->assembleSelect()->getColumns();
-        $resetServiceCols = [];
-        foreach ($columns as $column)
-        {
-            $tmpKey = str_replace('.','_',$column);
-            $resetServiceCols[] = $tmpKey;
-        }
         $this->applyMonitoringRestriction($queryService);
 
-        $serviceList = $queryService->assembleSelect();
-
-        $serviceList = $backend->select($serviceList)->fetchAll();
-
-        foreach ($serviceList as $idx => $srvc)
-        {
-            $srvc = get_object_vars($srvc);
-            $serviceColVals = array_values($srvc);
-            $srvc = array_combine($resetServiceCols, $serviceColVals);
-            $serviceList[$idx] = $srvc;
-            if($srvc['service_state_state_type'] === 'hard') {
-                $serviceStateCol = 'service_state_hard_state';
-            } else {
-                $serviceStateCol = 'service_state_soft_state';
-            }
-        }
-
         $serviceStatusCols = array(
-            'hostname'          => 'service_host_name',
-            'service'           => 'service_name',
-            'last_state_change' => 'service_state_last_state_change',
-            'in_downtime'       => 'service_state_in_downtime',
-            'ack'               => 'service_host_state_is_acknowledged',
-            'state'             => $serviceStateCol,
-            'display_name'      => 'service_display_name',
-            'host_display_name' => 'service_host_display_name'
+            'hostname'          => 'host.name',
+            'service'           => 'service.name',
+            'last_state_change' => 'state.last_state_change',
+            'in_downtime'       => 'state.in_downtime',
+            'ack'               => 'host.state.is_acknowledged',
+            'state'             => $stateCol,
+            'display_name'      => 'service.display_name',
+            'host_display_name' => 'host.display_name'
         );
-        $serviceStatus = $this->selectArrayCols($serviceList,$serviceStatusCols);
+
+        $queryService = $queryService->columns($serviceStatusCols)->assembleSelect();
+
+        $serviceStatus = $this->backend->select($queryService)->fetchAll();
 
         Benchmark::measure('Retrieved states for ' . count($serviceStatus) . ' services in ' . $config->getName());
 
@@ -169,22 +149,6 @@ class IcingaDbState extends IcingaDbBackend
         Benchmark::measure('Got states for business process ' . $config->getName());
 
         return $this;
-    }
-
-    protected function selectArrayCols ($array, $cols)
-    {
-        $selectArrayCols = [];
-        foreach ($array as $idx => $subArray)
-        {
-            $tmpArray = [];
-            foreach ($cols as $colKey => $colVal)
-            {
-                $tmpArray[$colKey] = $subArray[$colVal];
-            }
-            $selectArrayCols[$idx] = (object) $tmpArray;
-        }
-
-        return $selectArrayCols;
     }
 
     protected function handleDbRow($row, BpConfig $config)

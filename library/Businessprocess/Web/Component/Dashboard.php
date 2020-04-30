@@ -94,8 +94,7 @@ class Dashboard extends BaseHtmlElement
             $bp = $storage->loadProcess($name);
             if ($bp->getBackendName() === '_icingadb') {
                 IcingaDbState::apply($bp);
-            }
-            else {
+            } else {
                 MonitoringState::apply($bp);
             }
 

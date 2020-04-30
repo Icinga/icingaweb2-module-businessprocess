@@ -29,6 +29,8 @@ class BpConfig
 
     /**
      * Backend to retrieve states from
+     *
+     * @var MonitoringBackend|IcingadbDatabase
      */
     protected $backend;
 
@@ -293,8 +295,7 @@ class BpConfig
         if ($this->backend === null) {
             if ($this->getBackendName() === '_icingadb') {
                 $this->backend = $this->getDb();
-            }
-            else {
+            } else {
                 $this->backend = MonitoringBackend::instance(
                     $this->getBackendName()
                 );

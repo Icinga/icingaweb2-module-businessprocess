@@ -5,28 +5,28 @@ namespace Icinga\Module\Businessprocess;
 use Icinga\Module\Businessprocess\Common\IcingadbDatabase;
 use Icinga\Module\Icingadb\Model\Host;
 use Icinga\Module\Icingadb\Model\Service;
+use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 use ipl\Orm\Compat\FilterProcessor;
 use ipl\Orm\Query;
 
 class IcingaDbBackend
 {
-    use MonitoringRestrictions;
-
     use IcingadbDatabase;
 
     /** @var BpConfig */
     protected $config;
 
-    protected $backend;
+    /** @var IcingadbDatabase */
+    protected $conn;
+
     public function __construct()
     {
-        $this->backend = $this->getDb();
+        $this->conn = $this->getDb();
     }
 
     public function fetchHosts()
     {
-
-        $hosts = Host::on($this->getDb())
+        $hosts = Host::on($this->conn)
             ->orderBy('host.name');
 
         $this->applyMonitoringRestriction($hosts);
@@ -36,18 +36,14 @@ class IcingaDbBackend
 
     public function fetchServices($host)
     {
-        $query = Service::on($this->backend)
+        $services = Service::on($this->conn)
             ->with('host');
 
-        $query->getSelectBase()
+        $services->getSelectBase()
             ->where(['service_host.name = ?' => $host])
             ->orderBy('service.name');
 
-        $this->applyMonitoringRestriction($query);
-        
-        $queryServices = $query->assembleSelect();
-        $services = $this->backend->select($queryServices)->fetchAll();
-        var_dump($services);
+        $this->applyMonitoringRestriction($services);
 
         return $services;
     }
@@ -66,13 +62,13 @@ class IcingaDbBackend
         }
     }
 
-    protected function applyMonitoringRestriction(Query $query)
+    public static function applyMonitoringRestriction(Query $query)
     {
-        FilterProcessor::apply(
-            $this->getRestriction('monitoring/filter/objects'),
+        $restriction = FilterProcessor::apply(
+            MonitoringRestrictions::getRestriction('monitoring/filter/objects'),
             $query
         );
 
-        return $this;
+        return $restriction;
     }
 }

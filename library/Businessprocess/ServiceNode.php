@@ -76,7 +76,12 @@ class ServiceNode extends MonitoredNode
         );
 
         if ($this->getBpConfig()->hasBackendName()) {
-            $params['backend'] = $this->getBpConfig()->getBackendName();
+            $backendName = $this->getBpConfig()->getBackendName();
+            if ($backendName === '_icingadb') {
+                $params['icingadb'] = 1;
+            } else {
+                $params['backend'] = $this->getBpConfig()->getBackendName();
+            }
         }
 
         return Url::fromPath('businessprocess/service/show', $params);

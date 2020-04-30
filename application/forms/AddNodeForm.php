@@ -9,7 +9,6 @@ use Icinga\Module\Businessprocess\Common\IcingadbDatabase;
 use Icinga\Module\Businessprocess\Common\EnumList;
 use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
-use Icinga\Module\Businessprocess\MonitoringRestrictions;
 use Icinga\Module\Businessprocess\Storage\Storage;
 use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 use Icinga\Module\Businessprocess\Web\Form\Validator\NoDuplicateChildrenValidator;
@@ -18,11 +17,9 @@ use Icinga\Web\Session\SessionNamespace;
 
 class AddNodeForm extends QuickForm
 {
-    use MonitoringRestrictions;
-
     use EnumList;
 
-    /** @var MonitoringBackend */
+    /** @var MonitoringBackend|IcingadbDatabase */
     protected $backend;
 
     /** @var Storage */

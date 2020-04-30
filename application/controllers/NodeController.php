@@ -84,8 +84,7 @@ class NodeController extends Controller
             }
             if ($config->getBackendName() === '_icingadb') {
                 IcingaDbState::apply($config);
-            }
-            else {
+            } else {
                 MonitoringState::apply($config);
             }
             $config->applySimulation($simulation);

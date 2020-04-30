@@ -7,7 +7,6 @@ use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Common\IcingadbDatabase;
 use Icinga\Module\Businessprocess\Common\EnumList;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
-use Icinga\Module\Businessprocess\MonitoringRestrictions;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 use Icinga\Module\Businessprocess\Web\Form\Validator\NoDuplicateChildrenValidator;
@@ -16,13 +15,12 @@ use Icinga\Web\Session\SessionNamespace;
 
 class EditNodeForm extends QuickForm
 {
-    use MonitoringRestrictions;
-
     use EnumList;
 
-    /** @var MonitoringBackend */
+    /** @var MonitoringBackend|IcingadbDatabase */
     protected $backend;
 
+    /** @var string $backendName */
     protected $backendName;
 
     /** @var BpConfig */
