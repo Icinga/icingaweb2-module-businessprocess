@@ -62,28 +62,8 @@ class IcingaDbState extends IcingaDbBackend
         $queryHost->getSelectBase()
             ->where(['host.name IN (?)' => $hosts]);
 
-//        $resetHostCols = [];
-//        foreach ($columns as $column) {
-//            $tmpKey = str_replace('.', '_', $column);
-//            $resetHostCols[] = $tmpKey;
-//        }
         $this->applyMonitoringRestriction($queryHost);
 
-//        /** @var Host $host */
-//        $hostList = $queryHost->assembleSelect();
-//        $hostList = $backend->select($hostList)->fetchAll();
-//
-//        foreach ($hostList as $idx => $hst) {
-//            $hst = get_object_vars($hst);
-//            $hostColVals = array_values($hst);
-//            $hst = array_combine($resetHostCols, $hostColVals);
-//            $hostList[$idx] = $hst;
-//            if ($hst['host_state_state_type'] === 'hard') {
-//                $hostStateCol = 'host_state_hard_state';
-//            } else {
-//                $hostStateCol = 'host_state_soft_state';
-//            }
-//        }
         if ($this->config->usesHardStates()) {
             $stateCol = 'state.hard_state';
         } else {
