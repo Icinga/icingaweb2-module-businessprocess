@@ -50,7 +50,7 @@ class IcingaDbState extends IcingaDbBackend
     {
         $config = $this->config;
 
-        Benchmark::measure('Retrieving states for business process ' . $config->getName());;
+        Benchmark::measure('Retrieving states for business process ' . $config->getName());
 
         $hosts = $config->listInvolvedHostNames();
         if (empty($hosts)) {
