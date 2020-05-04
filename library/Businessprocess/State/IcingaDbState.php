@@ -65,7 +65,7 @@ class IcingaDbState extends IcingaDbBackend
         $queryHost->getSelectBase()
             ->where(['host.name IN (?)' => $hosts]);
 
-        $this->applyMonitoringRestriction($queryHost);
+        IcingaDbBackend::applyMonitoringRestriction($queryHost);
 
         if ($this->config->usesHardStates()) {
             $stateCol = 'state.hard_state';
@@ -96,7 +96,7 @@ class IcingaDbState extends IcingaDbBackend
         $queryService->getSelectBase()
             ->where(['service_host.name IN (?)' => $hosts]);
 
-        $this->applyMonitoringRestriction($queryService);
+        IcingaDbBackend::applyMonitoringRestriction($queryService);
 
         $serviceStatusCols = array(
             'hostname'          => 'host.name',

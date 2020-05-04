@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess\Common;
 
 use Icinga\Module\Businessprocess\IcingaDbBackend;
+use Icinga\Module\Businessprocess\MonitoringRestrictions;
 
 trait EnumList
 {
@@ -14,7 +15,7 @@ trait EnumList
             $names = $this->backend
                 ->select()
                 ->from('hostStatus', ['hostname' => 'host_name'])
-                ->applyFilter($this->getRestriction('monitoring/filter/objects'))
+                ->applyFilter(MonitoringRestrictions::getRestriction('monitoring/filter/objects'))
                 ->order('host_name')
                 ->getQuery()
                 ->fetchColumn();
@@ -38,7 +39,7 @@ trait EnumList
             $names = $this->backend
                 ->select()
                 ->from('hostStatus', ['hostname' => 'host_name'])
-                ->applyFilter($this->getRestriction('monitoring/filter/objects'))
+                ->applyFilter(MonitoringRestrictions::getRestriction('monitoring/filter/objects'))
                 ->order('host_name')
                 ->getQuery()
                 ->fetchColumn();
@@ -64,7 +65,7 @@ trait EnumList
                 ->select()
                 ->from('serviceStatus', ['service' => 'service_description'])
                 ->where('host_name', $host)
-                ->applyFilter($this->getRestriction('monitoring/filter/objects'))
+                ->applyFilter(MonitoringRestrictions::getRestriction('monitoring/filter/objects'))
                 ->order('service_description')
                 ->getQuery()
                 ->fetchColumn();

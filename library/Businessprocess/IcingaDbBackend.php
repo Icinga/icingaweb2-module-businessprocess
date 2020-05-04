@@ -29,7 +29,7 @@ class IcingaDbBackend
         $hosts = Host::on($this->conn)
             ->orderBy('host.name');
 
-        $this->applyMonitoringRestriction($hosts);
+        self::applyMonitoringRestriction($hosts);
 
         return $hosts;
     }
@@ -43,7 +43,7 @@ class IcingaDbBackend
             ->where(['service_host.name = ?' => $host])
             ->orderBy('service.name');
 
-        $this->applyMonitoringRestriction($services);
+        self::applyMonitoringRestriction($services);
 
         return $services;
     }
