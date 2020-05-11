@@ -44,5 +44,3 @@ Documentation
 
 ### The Project
 * [Project History](doc/81-History.md)
-* [Changelog](doc/82-Changelog.md)
-* [Contributing](doc/84-Contributing.md)
