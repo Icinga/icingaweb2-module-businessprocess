@@ -26,11 +26,11 @@ Documentation
 -------------
 
 ### Basics
-* [Installation](doc/01-Installation.md)
-* [Getting Started](doc/02-Getting-Started.md)
-* [Create your first process node](doc/03-Create-your-first-process-node.md)
-* [Importing Processes](doc/04-Importing-Processes.md)
-* [Customize Node Order](doc/05-Customize-Node-Order.md)
+* [Installation](doc/02-Installation.md)
+* [Getting Started](doc/03-Getting-Started.md)
+* [Create your first process node](doc/04-Create-your-first-process-node.md)
+* [Importing Processes](doc/05-Importing-Processes.md)
+* [Customize Node Order](doc/06-Customize-Node-Order.md)
 
 ### Web Components
 * [Breadcrumb](doc/12-Web-Components-Breadcrumb.md)

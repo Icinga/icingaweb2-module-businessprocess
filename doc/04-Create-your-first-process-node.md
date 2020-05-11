@@ -5,7 +5,7 @@ A *Business Process Node* consists of a *name*, *title*, an *operator* and one o
 more child nodes. It can be a Root Node, child node of other Business Process
 Nodes - or both.
 
-![Empty Config](screenshot/03_first-root-node/0301_empty-config.png)
+![Empty Config](screenshot/04_first-root-node/0301_empty-config.png)
 
 Configuring our first node
 --------------------------
@@ -13,7 +13,7 @@ Configuring our first node
 To create our first *Business Process Node* we click the *Add* button. This
 leads to the related configuration form:
 
-![Add new Node](screenshot/03_first-root-node/0302_add-new-node.png)
+![Add new Node](screenshot/04_first-root-node/0302_add-new-node.png)
 
 First setting is the *Node name*, an identifier that must be unique throughout
 all Nodes that are going to be defined. This identifier will be used in every
@@ -25,14 +25,14 @@ Check*.
 As uniqueness sometimes leads to not-so-beautiful names, you are additionally
 allowed to specify a title. This is what the frontend is going to show:
 
-![Node Title](screenshot/03_first-root-node/0303_node-title.png)
+![Node Title](screenshot/04_first-root-node/0303_node-title.png)
 
 ### Choose an operator
 
 Every Business Process requires an *Operator*. This operator defines it's
 behaviour, this specifies how it's very own state is going to be calculated:
 
-![Operator](screenshot/03_first-root-node/0304_operator.png)
+![Operator](screenshot/04_first-root-node/0304_operator.png)
 
 ### Specify where to display
 
@@ -41,7 +41,7 @@ to create a new *root node*. We could alternatively also create a sub process.
 As we are currently not adding it to another Node, this would lead to an *Unbound
 Node* that could be linked later on.
 
-![Node Display](screenshot/03_first-root-node/0305_display.png)
+![Node Display](screenshot/04_first-root-node/0305_display.png)
 
 ### Provide an optional Info URL
 
@@ -51,7 +51,7 @@ hints telling what should happen if outage occurs. You might not want to do so
 for every single Node, but it might come in handy for your most important (top
 level?) nodes:
 
-![Node Info Url](screenshot/03_first-root-node/0306_info-url.png)
+![Node Info Url](screenshot/04_first-root-node/0306_info-url.png)
 
 That's it, your are ready to submit the form.
 
@@ -60,7 +60,7 @@ That's it, your are ready to submit the form.
 You are now shown your first Business Process Node. A red bar reminds you that
 your pending changes have not been stored yet:
 
-![First Node created](screenshot/03_first-root-node/0307_first-node-created.png)
+![First Node created](screenshot/04_first-root-node/0307_first-node-created.png)
 
 You could now *Store the Configuration* or move on with adding additional nodes
 to complete your configuration.
