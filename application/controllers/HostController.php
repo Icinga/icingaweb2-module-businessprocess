@@ -3,10 +3,8 @@
 namespace Icinga\Module\Businessprocess\Controllers;
 
 use Icinga\Module\Businessprocess\Common\IcingadbDatabase;
-//use Icinga\Module\Businessprocess\Web\Controller;
 use Icinga\Module\Businessprocess\IcingaDbBackend;
 use Icinga\Module\Icingadb\Model\Host;
-use Icinga\Module\Monitoring\Backend;
 use Icinga\Module\Monitoring\Controller;
 use Icinga\Web\Url;
 
@@ -16,10 +14,11 @@ class HostController extends Controller
 
     public function showAction()
     {
-        $hostName = $this->params->get('host');
-        $icingadb = $this->params->get('icingadb');
+        $icingadb = $this->params->shift('icingadb');
 
         if ($icingadb) {
+            $hostName = $this->params->shift('host');
+
             $host = Host::on($this->getDb());
             $host->getSelectBase()
                 ->where(['host.name = ?' => $hostName]);
@@ -33,6 +32,8 @@ class HostController extends Controller
                 $this->redirectNow(Url::fromPath('icingadb/host')->setParams($this->params));
             }
         } else {
+            $hostName = $this->params->get('host');
+
             $query = $this->backend->select()
                 ->from('hoststatus', array('host_name'))
                 ->where('host_name', $hostName);

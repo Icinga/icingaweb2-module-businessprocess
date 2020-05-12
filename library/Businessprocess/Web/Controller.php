@@ -3,10 +3,6 @@
 namespace Icinga\Module\Businessprocess\Web;
 
 use Icinga\Application\Icinga;
-use Icinga\Data\Filter\Filter;
-use Icinga\Data\Filterable;
-use Icinga\Exception\ConfigurationError;
-use Icinga\Exception\QueryException;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
@@ -16,14 +12,10 @@ use Icinga\Module\Businessprocess\Web\Component\Controls;
 use Icinga\Module\Businessprocess\Web\Component\Content;
 use Icinga\Module\Businessprocess\Web\Component\Tabs;
 use Icinga\Module\Businessprocess\Web\Form\FormLoader;
-use Icinga\Module\Icingadb\Compat\MonitoringRestrictions;
-use Icinga\Module\Icingadb\Compat\UrlMigrator;
 use Icinga\Web\Controller as ModuleController;
 use Icinga\Web\Notification;
 use Icinga\Web\View;
 use ipl\Html\Html;
-use ipl\Orm\Compat\FilterProcessor;
-use ipl\Orm\Query;
 
 class Controller extends ModuleController
 {
@@ -274,88 +266,5 @@ class Controller extends ModuleController
         }
 
         return $this->storage;
-    }
-
-    /**
-     * Apply a restriction of the authenticated on the given filterable
-     *
-     * @param   string      $name       Name of the restriction
-     * @param   Filterable  $filterable Filterable to restrict
-     *
-     * @return  Filterable  The filterable having the restriction applied
-     */
-    protected function applyRestriction($name, Filterable $filterable)
-    {
-        $filterable->applyFilter($this->getRestriction($name));
-        return $filterable;
-    }
-
-    /**
-     * Get a restriction of the authenticated
-     *
-     * @param   string $name        Name of the restriction
-     *
-     * @return  Filter              Filter object
-     * @throws  ConfigurationError  If the restriction contains invalid filter columns
-     */
-    protected function getRestriction($name)
-    {
-        $restriction = Filter::matchAny();
-        $restriction->setAllowedFilterColumns(array(
-            'host_name',
-            'hostgroup_name',
-            'instance_name',
-            'service_description',
-            'servicegroup_name',
-            function ($c) {
-                return preg_match('/^_(?:host|service)_/i', $c);
-            }
-        ));
-        foreach ($this->getRestrictions($name) as $filter) {
-            if ($filter === '*') {
-                return Filter::matchAll();
-            }
-            try {
-                $restriction->addFilter(Filter::fromQueryString($filter));
-            } catch (QueryException $e) {
-                throw new ConfigurationError(
-                    $this->translate(
-                        'Cannot apply restriction %s using the filter %s. You can only use the following columns: %s'
-                    ),
-                    $name,
-                    $filter,
-                    implode(', ', array(
-                        'instance_name',
-                        'host_name',
-                        'hostgroup_name',
-                        'service_description',
-                        'servicegroup_name',
-                        '_(host|service)_<customvar-name>'
-                    )),
-                    $e
-                );
-            }
-        }
-
-        if ($restriction->isEmpty()) {
-            return Filter::matchAll();
-        }
-
-        return $restriction;
-    }
-
-    public function applyMonitoringRestriction(Query $query, $queryTransformer = null)
-    {
-        if ($queryTransformer === null || UrlMigrator::hasQueryTransformer($queryTransformer)) {
-            $restriction = UrlMigrator::transformFilter(
-                MonitoringRestrictions::getRestriction('monitoring/filter/objects'),
-                $queryTransformer
-            );
-            if ($restriction) {
-                FilterProcessor::apply($restriction, $query);
-            }
-        }
-
-        return $this;
     }
 }

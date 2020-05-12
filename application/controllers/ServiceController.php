@@ -5,7 +5,6 @@ namespace Icinga\Module\Businessprocess\Controllers;
 use Icinga\Module\Businessprocess\Common\IcingadbDatabase;
 use Icinga\Module\Businessprocess\IcingaDbBackend;
 use Icinga\Module\Icingadb\Model\Service;
-use Icinga\Module\Monitoring\Backend;
 use Icinga\Module\Monitoring\Controller;
 use Icinga\Web\Url;
 
@@ -15,11 +14,12 @@ class ServiceController extends Controller
 
     public function showAction()
     {
-        $hostName = $this->params->get('host');
-        $serviceName = $this->params->get('service');
-        $icingadb = $this->params->get('icingadb');
+        $icingadb = $this->params->shift('icingadb');
 
         if ($icingadb) {
+            $hostName = $this->params->shift('host');
+            $serviceName = $this->params->shift('service');
+
             $service = Service::on($this->getDb())->with('host');
             $service->getSelectBase()
                 ->where(['service_host.name = ?' => $hostName, 'service.name = ?' => $serviceName]);
@@ -35,6 +35,9 @@ class ServiceController extends Controller
                 $this->redirectNow(Url::fromPath('icingadb/service')->setParams($this->params));
             }
         } else {
+            $hostName = $this->params->get('host');
+            $serviceName = $this->params->get('service');
+            
             $query = $this->backend->select()
                 ->from('servicestatus', array('service_description'))
                 ->where('host_name', $hostName)

@@ -29,6 +29,7 @@ class IcingaDbState extends IcingaDbBackend
     {
         $self = new static($config);
         $self->retrieveStatesFromBackend();
+
         return $config;
     }
 
@@ -51,7 +52,7 @@ class IcingaDbState extends IcingaDbBackend
         $config = $this->config;
 
         Benchmark::measure(sprintf(
-            'Retrieving states for business process %s',
+            'Retrieving states for business process %s using Icinga DB backend',
             $config->getName()
         ));
 
@@ -73,14 +74,14 @@ class IcingaDbState extends IcingaDbBackend
             $stateCol = 'state.soft_state';
         }
 
-        $hostStatusCols = array(
+        $hostStatusCols = [
             'hostname'          => 'host.name',
             'last_state_change' => 'state.last_state_change',
             'in_downtime'       => 'state.in_downtime',
             'ack'               => 'state.is_acknowledged',
             'state'             => $stateCol,
             'display_name'      =>'host.display_name'
-        );
+        ];
 
         $queryHost = $queryHost->columns($hostStatusCols)->assembleSelect();
 
@@ -98,7 +99,7 @@ class IcingaDbState extends IcingaDbBackend
 
         IcingaDbBackend::applyMonitoringRestriction($queryService);
 
-        $serviceStatusCols = array(
+        $serviceStatusCols = [
             'hostname'          => 'host.name',
             'service'           => 'service.name',
             'last_state_change' => 'state.last_state_change',
@@ -107,7 +108,7 @@ class IcingaDbState extends IcingaDbBackend
             'state'             => $stateCol,
             'display_name'      => 'service.display_name',
             'host_display_name' => 'host.display_name'
-        );
+        ];
 
         $queryService = $queryService->columns($serviceStatusCols)->assembleSelect();
 
@@ -128,7 +129,6 @@ class IcingaDbState extends IcingaDbBackend
             }
         }
 
-        // TODO: Union, single query?
         Benchmark::measure('Got states for business process ' . $config->getName());
 
         return $this;
