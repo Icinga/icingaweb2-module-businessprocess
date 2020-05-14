@@ -9,7 +9,7 @@ be shown on every screen:
 
 A click on *Dismiss* immediately throws away all unstored changes. A click on
 *Store* brings you to the configuration form. You have seen this before, once
-you created your [very first configuration](02-Getting-Started.md):
+you created your [very first configuration](03-Getting-Started.md):
 
 ![Store Config](screenshot/21_store-config/2102_Store-Config.png)
 

@@ -54,11 +54,11 @@ icingacli module enable businessprocess
 
 Or go to your Icinga Web 2 frontend, choose `Configuration` -&gt; `Modules`...
 
-![Choose Configuration - Modules](screenshot/01_installation/101_menu-configuration-modules.png)
+![Choose Configuration - Modules](screenshot/02_installation/101_menu-configuration-modules.png)
 
 ...choose the `businessprocess` module and `enable` it:
 
-![Enable the module](screenshot/01_installation/102_enable-module.png)
+![Enable the module](screenshot/02_installation/102_enable-module.png)
 
 It might afterwards be necessary to refresh your web browser to be sure that
 newly provided styling is loaded.
@@ -66,4 +66,4 @@ newly provided styling is loaded.
 Create your first Business Process definition
 ---------------------------------------------
 
-That's it, *Business Process* is now ready for use. Please read more on [how to get started](02-Getting-Started.md).
+That's it, *Business Process* is now ready for use. Please read more on [how to get started](03-Getting-Started.md).
