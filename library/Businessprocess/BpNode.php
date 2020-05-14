@@ -11,6 +11,7 @@ class BpNode extends Node
     const OP_AND = '&';
     const OP_OR  = '|';
     const OP_NOT  = '!';
+
     protected $operator = '&';
     protected $url;
     protected $info_command;
@@ -23,6 +24,7 @@ class BpNode extends Node
     protected $childNames = array();
     protected $counters;
     protected $missing = null;
+    protected $empty = null;
     protected $missingChildren;
 
     protected static $emptyStateSummary = array(
@@ -72,9 +74,6 @@ class BpNode extends Node
                     $state = $child->getStateName();
                     $this->counters[$state]++;
                 }
-            }
-            if (! $this->hasChildren()) {
-                $this->counters['MISSING']++;
             }
         }
         return $this->counters;
@@ -218,10 +217,32 @@ class BpNode extends Node
                 }
             }
             $bp->endLoopDetection($this->name);
-            $this->missing = ! $exists;
+            $this->missing = ! $exists && ! empty($this->getChildren());
         }
         return $this->missing;
     }
+
+    public function isEmpty()
+    {
+        $bp = $this->getBpConfig();
+        $empty = true;
+        if ($this->countChildren()) {
+            $bp->beginLoopDetection($this->name);
+            foreach ($this->getChildren() as $child) {
+                if ($child instanceof MonitoredNode) {
+                    $empty = false;
+                    break;
+                } elseif (!$child->isEmpty()) {
+                    $empty = false;
+                }
+            }
+            $bp->endLoopDetection($this->name);
+        }
+        $this->empty = $empty;
+
+        return $this->empty;
+    }
+
 
     public function getMissingChildren()
     {
@@ -353,10 +374,9 @@ class BpNode extends Node
         $sort_states = array();
         $lastStateChange = 0;
 
-        if (!$this->hasChildren()) {
+        if ($this->isEmpty()) {
             // TODO: delegate this to operators, should mostly fail
-            $this->setState(self::ICINGA_UNKNOWN);
-            $this->setMissing();
+            $this->setState(self::NODE_EMPTY);
             return $this;
         }
 
