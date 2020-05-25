@@ -148,18 +148,20 @@ class IcingaDbState extends IcingaDbBackend
             return;
         }
 
+        // Since we are fetching the values directly using assembleSelect instead of using ORM,
+        // the following changes for 'last_state_change', 'in_downtime' and 'ack' is required
         $node = $config->getNode($key);
 
         if ($row->state !== null) {
             $node->setState($row->state)->setMissing(false);
         }
         if ($row->last_state_change !== null) {
-            $node->setLastStateChange($row->last_state_change);
+            $node->setLastStateChange($row->last_state_change/1000);
         }
-        if ((int) $row->in_downtime === 1) {
+        if ($row->in_downtime === 'y') {
             $node->setDowntime(true);
         }
-        if ((int) $row->ack === 1) {
+        if ($row->ack !== 'n') {
             $node->setAck(true);
         }
 
