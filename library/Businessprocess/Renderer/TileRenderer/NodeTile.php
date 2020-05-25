@@ -88,10 +88,14 @@ class NodeTile extends BaseHtmlElement
         if (! $node instanceof ImportedNode || $node->getBpConfig()->hasNode($node->getName())) {
             $link = $this->getMainNodeLink();
             if ($renderer->isBreadcrumb()) {
-                $link->prepend((new StateBall(strtolower($node->getStateName())))->addAttributes([
+                $state = strtolower($node->getStateName());
+                if ($node->isHandled()) {
+                    $state = $state . '-handled';
+                }
+                $link->prepend((new StateBall($state))->addAttributes([
                     'title' => sprintf(
                         '%s %s',
-                        $node->getStateName(),
+                        $state,
                         DateFormatter::timeSince($node->getLastStateChange())
                     )
                 ]));
