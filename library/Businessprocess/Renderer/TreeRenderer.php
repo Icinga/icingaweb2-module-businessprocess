@@ -116,10 +116,14 @@ class TreeRenderer extends Renderer
         } else {
             $icons[] = $node->getIcon();
         }
-        $icons[] = (new StateBall(strtolower($node->getStateName())))->addAttributes([
+        $state = strtolower($node->getStateName());
+        if ($node->isHandled()) {
+            $state = $state . '-handled';
+        }
+        $icons[] = (new StateBall($state))->addAttributes([
             'title' => sprintf(
                 '%s %s',
-                $node->getStateName(),
+                $state,
                 DateFormatter::timeSince($node->getLastStateChange())
             )
         ]);
