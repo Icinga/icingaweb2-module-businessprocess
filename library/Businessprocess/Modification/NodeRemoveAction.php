@@ -62,7 +62,6 @@ class NodeRemoveAction extends NodeAction
      */
     public function applyTo(BpConfig $config)
     {
-        $config->calculateAllStates();
         $name = $this->getNodeName();
         $parentName = $this->getParentName();
         if ($parentName === null) {
@@ -81,7 +80,6 @@ class NodeRemoveAction extends NodeAction
         } else {
             $node = $config->getNode($name);
             $parent = $config->getBpNode($parentName);
-            $parent->getState();
             $parent->removeChild($name);
             $node->removeParent($parentName);
             if (! $node->hasParents()) {
