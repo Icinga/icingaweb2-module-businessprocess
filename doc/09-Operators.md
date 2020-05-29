@@ -9,7 +9,7 @@ The `AND` operator selects the **WORST** state of its child nodes:
 
 ![And Operator](screenshot/09_operators/0901_and-operator.png)
 
-## AND <a id="or-operator">
+## OR <a id="or-operator">
 
 The `OR` operator selects the **BEST** state of its child nodes:
 
