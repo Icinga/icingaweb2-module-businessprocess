@@ -36,8 +36,6 @@ class EditNodeForm extends QuickForm
 
     protected $host;
 
-    protected $statesOverride = [];
-
     /** @var SessionNamespace */
     protected $session;
 
@@ -45,8 +43,7 @@ class EditNodeForm extends QuickForm
     {
         $this->host = substr($this->getNode()->getName(), 0, strpos($this->getNode()->getName(), ';'));
         if ($this->isService()) {
-            $this->service = $this->getNode()->getShortName();
-            $this->statesOverride = $this->getNode()->getStatesOverride();
+            $this->service = substr($this->getNode()->getName(), strpos($this->getNode()->getName(), ';') + 1);
         }
 
         $view = $this->getView();
@@ -159,6 +156,7 @@ class EditNodeForm extends QuickForm
         if ($this->hasParentNode()) {
             $this->addElement('hidden', 'node_type', [
                 'disabled'      => true,
+                'ignore'        => true,
                 'decorators'    => ['ViewHelper'],
                 'value'         => $monitoredNodeType
             ]);
@@ -194,14 +192,14 @@ class EditNodeForm extends QuickForm
         if ($this->getSentValue('hosts') === null) {
             $this->addServicesElement($this->host);
             $this->addServiceOverrideCheckbox();
-            if (!empty($this->statesOverride) || $this->getSentValue('service_override') === '1') {
-                $this->addServiceOverrideElements();
+            if (! empty($this->node->getStateOverrides()) || $this->getSentValue('service_override') === '1') {
+                $this->addServiceOverrideElement();
             }
         } elseif ($host = $this->getSentValue('hosts')) {
             $this->addServicesElement($host);
             $this->addServiceOverrideCheckbox();
             if ($this->getSentValue('service_override') === '1') {
-                $this->addServiceOverrideElements();
+                $this->addServiceOverrideElement();
             }
         } else {
             $this->setSubmitLabel($this->translate('Next'));
@@ -225,23 +223,11 @@ class EditNodeForm extends QuickForm
     {
         $this->addElement('select', 'children', array(
             'required'      => true,
-            'value'         => $this->service,
+            'value'         => $this->getNode()->getName(),
             'multiOptions'  => $this->enumServiceList($host),
             'label'         => $this->translate('Service'),
             'description'   => $this->translate('The service for this business process node'),
-            'validators'    => [
-                ['Callback', true, [
-                    'callback'  => function ($value) {
-                        if ($this->node->getShortName() === $value) {
-                            return true;
-                        }
-                        return ! $this->parent->hasMatchingChild($value);
-                    },
-                    'messages'  => [
-                        'callbackValue' => $this->translate('%value% is already defined in this process')
-                    ]
-                ]]
-            ]
+            'validators'    => [[new NoDuplicateChildrenValidator($this, $this->bp, $this->parent), true]]
         ));
     }
 
@@ -250,30 +236,19 @@ class EditNodeForm extends QuickForm
         $this->addElement('checkbox', 'service_override', [
             'ignore'        => true,
             'class'         => 'autosubmit',
-            'value'         => ! empty($this->statesOverride) ? '1' : null,
+            'value'         => ! empty($this->node->getStateOverrides()),
             'label'         => $this->translate('Override Service State'),
             'description'   => $this->translate('Enable service state overrides')
         ]);
     }
 
-    protected function addServiceOverrideElements()
+    protected function addServiceOverrideElement()
     {
-        $elements = [];
-        foreach ($this->enumServiceStateList() as $state => $stateName) {
-            if ($state == 0) {
-                continue;
-            }
-            $this->addElement('select', $stateName, [
-                'label'        => $this->translate($stateName),
-                'value'        => isset($this->statesOverride[$state]) ? $this->statesOverride[$state] : null,
-                'ignore'       => true,
-                'multiOptions' => $this->optionalEnum($this->enumServiceStateList()),
-            ]);
-            $elements[] = $stateName;
-        }
-
-        $this->addSimpleDisplayGroup($elements, 'override_group', [
-            'legend' => $this->translate('State Overrides')
+        $this->addElement('stateOverrides', 'stateOverrides', [
+            'required'  => true,
+            'states'    => $this->enumServiceStateList(),
+            'value'     => $this->node->getStateOverrides(),
+            'label'     => $this->translate('State Overrides')
         ]);
     }
 
@@ -409,21 +384,6 @@ class EditNodeForm extends QuickForm
         return $serviceStateList;
     }
 
-    protected function statesToString()
-    {
-        $stateString = null;
-        foreach ($this->enumServiceStateList() as $state => $stateName) {
-            if ($this->getValue($stateName) !== null && $this->getValue($stateName) !== '') {
-                if ($stateString !== null) {
-                    $stateString .= ',';
-                }
-                $stateString .= $state . '-' . $this->getValue($stateName);
-            }
-        }
-
-        return $stateString;
-    }
-
     protected function hasProcesses()
     {
         return count($this->enumProcesses()) > 0;
@@ -489,14 +449,10 @@ class EditNodeForm extends QuickForm
 
         switch ($this->getValue('node_type')) {
             case 'service':
-                if ($this->statesToString() !== null) {
-                    $changes->addChildrenToNode(
-                        $this->getValue('children') . ':' . $this->statesToString(),
-                        $this->parent
-                    );
-                } else {
-                    $changes->addChildrenToNode($this->getValue('children'), $this->parent);
-                }
+                $properties = $this->getValues();
+                unset($properties['children']);
+                $services = [$this->getValue('children') => $properties];
+                $changes->addChildrenToNode($services, $this->parent);
                 break;
             case 'host':
             case 'process':

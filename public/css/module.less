@@ -962,37 +962,27 @@ form dt label {
     }
 }
 
-fieldset.collapsed {
-    dd, dt, ul, div {
-      display: none;
-    }
-  }
+#stateOverrides-element {
+    display: inline-table;
+    table-layout: fixed;
+    border-spacing: .5em;
+    padding: 0;
 
-fieldset {
-    margin-top: 15px;
-    padding: 0 0 1.5em 0;
-    border: none;
+    label {
+        display: table-row;
 
-    legend {
-        margin: 0em 0 0.5em 0;
-        font-size: 1em;
-        box-shadow: 0 3px 4px -4px rgba(0,0,0,0.2);
-        font-weight: bold;
-        width: 100%;
-        padding-left: 0.5em;
-        line-height: 2em;
-        user-select: none;
-
-        &:hover {
-            border-color: @text-color;
-        }
-    }
-        dd, dt, ul, div {
-            display: none;
+        span, select {
+            display: table-cell;
         }
 
-        margin-bottom: 0.2em;
-        padding-bottom: 0;
+        span {
+            width: 10em;
+        }
+
+        select {
+            width: 26em;
+        }
+    }
 }
 
 form fieldset {

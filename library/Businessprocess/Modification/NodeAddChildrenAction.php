@@ -31,19 +31,26 @@ class NodeAddChildrenAction extends NodeAction
     {
         $node = $config->getBpNode($this->getNodeName());
 
-        foreach ($this->children as $name) {
+        foreach ($this->children as $name => $properties) {
+            if (is_int($name)) {
+                // TODO: This may be removed once host nodes also have properties
+                $name = $properties;
+            }
+
             if (! $config->hasNode($name) || $config->getNode($name)->getBpConfig()->getName() !== $config->getName()) {
                 if (strpos($name, ';') !== false) {
-                    if (strpos($name, ':') !== false) {
-                        list($host, $service, $statesOverride) = preg_split('~[;:]~', $name, 3);
-                        $config->createService($host, $service, $statesOverride);
-                    } else {
-                        list($host, $service) = preg_split('/;/', $name, 2);
+                    list($host, $service) = preg_split('/;/', $name, 2);
 
-                        if ($service === 'Hoststatus') {
-                            $config->createHost($host);
-                        } else {
-                            $config->createService($host, $service);
+                    if ($service === 'Hoststatus') {
+                        $child = $config->createHost($host);
+                    } else {
+                        $child = $config->createService($host, $service);
+                    }
+
+                    if (is_array($properties) && !empty($properties)) {
+                        foreach ($properties as $key => $value) {
+                            $func = 'set' . ucfirst($key);
+                            $child->$func($value);
                         }
                     }
                 } elseif ($name[0] === '@' && strpos($name, ':') !== false) {

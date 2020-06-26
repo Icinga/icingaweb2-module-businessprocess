@@ -46,7 +46,7 @@ abstract class Node
         self::NODE_EMPTY      => 0
     );
 
-    protected $stateOverride = [];
+    protected $stateOverrides = [];
 
     /** @var string Alias of the node */
     protected $alias;
@@ -199,26 +199,16 @@ abstract class Node
         return $this;
     }
 
-    protected function setStateOverride($state, $oveRrideState)
+    public function setStateOverrides(array $overrides)
     {
-        $this->stateOverride[(int) $state] = (int) $oveRrideState;
+        $this->stateOverrides = $overrides;
+
+        return $this;
     }
 
-    public function setStatesOverride($statesOverrideString)
+    public function getStateOverrides()
     {
-        $overrides = explode(',', $statesOverrideString);
-
-        foreach ($overrides as $overrideState) {
-            if (strpos($overrideState, '-') !== false) {
-                list($key, $value) = explode('-', $overrideState);
-                $this->setStateOverride($key, $value);
-            }
-        }
-    }
-
-    public function getStatesOverride()
-    {
-        return $this->stateOverride;
+        return $this->stateOverrides;
     }
 
     /**
@@ -270,8 +260,8 @@ abstract class Node
             );
         }
 
-        if (isset($this->stateOverride[$this->state])) {
-            return $this->stateOverride[$this->state];
+        if (isset($this->stateOverrides[$this->state])) {
+            return $this->stateOverrides[$this->state];
         } else {
             return $this->state;
         }
@@ -404,11 +394,6 @@ abstract class Node
         $this->alias = $alias;
 
         return $this;
-    }
-
-    public function getShortName()
-    {
-        return $this->name;
     }
 
     public function hasParents()

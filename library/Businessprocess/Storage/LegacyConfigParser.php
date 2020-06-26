@@ -233,6 +233,24 @@ class LegacyConfigParser
         $bp->getBpNode($name)->setInfoUrl($url);
     }
 
+    protected function parseStateOverrides(&$line, BpConfig $bp)
+    {
+        // state_overrides <bp-node>!<child>|n-n[,n-n]!<child>|n-n[,n-n]
+        $segments = preg_split('~\s*!\s*~', substr($line, 16));
+        $node = $bp->getNode(array_shift($segments));
+        foreach ($segments as $overrideDef) {
+            list($childName, $overrides) = preg_split('~\s*\|\s*~', $overrideDef, 2);
+
+            $stateOverrides = [];
+            foreach (preg_split('~\s*,\s*~', $overrides) as $override) {
+                list($from, $to) = preg_split('~\s*-\s*~', $override, 2);
+                $stateOverrides[(int) $from] = (int) $to;
+            }
+
+            $node->getChildByName($childName)->setStateOverrides($stateOverrides);
+        }
+    }
+
     protected function parseExtraLine(&$line, $typeLength, BpConfig $bp)
     {
         $type = substr($line, 0, $typeLength);
@@ -250,6 +268,9 @@ class LegacyConfigParser
                 break;
             case 'info_url':
                 $this->parseInfoUrl($line, $bp);
+                break;
+            case 'state_overrides':
+                $this->parseStateOverrides($line, $bp);
                 break;
             case 'template':
                 // compat, ignoring for now
@@ -282,9 +303,9 @@ class LegacyConfigParser
             return;
         }
 
-        // Space found in the first 14 cols? Might be a line with extra information
+        // Space found in the first 16 cols? Might be a line with extra information
         $pos = strpos($line, ' ');
-        if ($pos !== false && $pos < 14) {
+        if ($pos !== false && $pos < 16) {
             if ($this->parseExtraLine($line, $pos, $bp)) {
                 return;
             }
@@ -335,17 +356,11 @@ class LegacyConfigParser
                 if ($bp->hasNode($val)) {
                     $node->addChild($bp->getNode($val));
                 } else {
-                    if (strpos($val, ':') !== false) {
-                        list($host, $service, $statesOverride) = preg_split('~[;:]~', $val, 3);
-                        $node->addChild($bp->createService($host, $service, $statesOverride));
+                    list($host, $service) = preg_split('~;~', $val, 2);
+                    if ($service === 'Hoststatus') {
+                        $node->addChild($bp->createHost($host));
                     } else {
-                        list($host, $service) = preg_split('~;~', $val, 2);
-
-                        if ($service === 'Hoststatus') {
-                            $node->addChild($bp->createHost($host));
-                        } else {
-                            $node->addChild($bp->createService($host, $service));
-                        }
+                        $node->addChild($bp->createService($host, $service));
                     }
                 }
             } elseif ($val[0] === '@') {

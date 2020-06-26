@@ -43,7 +43,7 @@ class NoDuplicateChildrenValidator extends Zend_Validate_Abstract
         } elseif ($this->form instanceof EditNodeForm && $this->form->getNode()->getName() === $value) {
             $found = false;
         } else {
-            $found = $this->parent->hasMatchingChild($value);
+            $found = $this->parent->hasChild($value);
         }
 
         if (! $found) {

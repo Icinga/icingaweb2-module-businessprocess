@@ -210,7 +210,7 @@ class AddNodeForm extends QuickForm
             $this->addServiceOverrideCheckbox();
 
             if ($this->getSentValue('service_override') === '1') {
-                $this->addServiceOverrideElements();
+                $this->addServiceOverrideElement();
             }
         } else {
             $this->setSubmitLabel($this->translate('Next'));
@@ -268,23 +268,12 @@ class AddNodeForm extends QuickForm
         ]);
     }
 
-    protected function addServiceOverrideElements()
+    protected function addServiceOverrideElement()
     {
-        $elements = [];
-        foreach ($this->enumServiceStateList() as $state => $stateName) {
-            if ($state === 0) {
-                continue;
-            }
-            $this->addElement('select', $stateName, [
-                'label'        => $this->translate($stateName),
-                'ignore'       => true,
-                'multiOptions' => $this->optionalEnum($this->enumServiceStateList()),
-            ]);
-            $elements[] = $stateName;
-        }
-
-        $this->addSimpleDisplayGroup($elements, 'override_group', [
-            'legend' => $this->translate('State Overrides')
+        $this->addElement('stateOverrides', 'stateOverrides', [
+            'required'  => true,
+            'label'     => $this->translate('State Overrides'),
+            'states'    => $this->enumServiceStateList()
         ]);
     }
 
@@ -439,21 +428,6 @@ class AddNodeForm extends QuickForm
         return $serviceStateList;
     }
 
-    protected function statesToString()
-    {
-        $stateString = null;
-        foreach ($this->enumServiceStateList() as $state => $stateName) {
-            if ($this->getValue($stateName) !== null && $this->getValue($stateName) !== '') {
-                if ($stateString !== null) {
-                    $stateString .= ',';
-                }
-                $stateString .= $state . '-' . $this->getValue($stateName);
-            }
-        }
-
-        return $stateString;
-    }
-
     protected function hasProcesses()
     {
         return count($this->enumProcesses()) > 0;
@@ -528,15 +502,15 @@ class AddNodeForm extends QuickForm
         $changes = ProcessChanges::construct($this->bp, $this->session);
         switch ($this->getValue('node_type')) {
             case 'service':
-                if ($this->statesToString() !== null) {
-                    $services = [];
-                    foreach ($this->getValue('children') as $service) {
-                        $services[] = $service . ':' . $this->statesToString();
-                    }
-                    $changes->addChildrenToNode($services, $this->parent);
-                } else {
-                    $changes->addChildrenToNode($this->getValue('children'), $this->parent);
+                $properties = $this->getValues();
+                unset($properties['children']);
+
+                $services = [];
+                foreach ($this->getValue('children') as $service) {
+                    $services[$service] = $properties;
                 }
+
+                $changes->addChildrenToNode($services, $this->parent);
                 break;
             case 'host':
             case 'process':

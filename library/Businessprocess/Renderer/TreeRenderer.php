@@ -154,7 +154,7 @@ class TreeRenderer extends Renderer
     {
         $statesOverrights = [];
 
-        $states = $node->getStatesOverride();
+        $states = $node->getStateOverrides();
         foreach ($states as $originalState => $overrideState) {
             $statesOverrights[] = (new StateBall(strtolower($node->getStateName($originalState))))->addAttributes([
                 'title' => sprintf(
@@ -290,7 +290,7 @@ class TreeRenderer extends Renderer
             'class' => 'left-side',
         ]);
 
-        if (!empty($node->getStatesOverride())) {
+        if (! empty($node->getStateOverrides())) {
             $leftAlign->add($this->getNodeStateOverride($node));
         }
 
