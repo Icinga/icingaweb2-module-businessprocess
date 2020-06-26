@@ -144,10 +144,10 @@ abstract class NodeAction
      */
     public static function unSerialize($string)
     {
-        $object = json_decode($string);
-        $action = self::create($object->actionName, $object->nodeName);
+        $object = json_decode($string, JSON_FORCE_OBJECT);
+        $action = self::create($object['actionName'], $object['nodeName']);
 
-        foreach ($object->properties as $key => $val) {
+        foreach ($object['properties'] as $key => $val) {
             $func = 'set' . ucfirst($key);
             $action->$func($val);
         }
