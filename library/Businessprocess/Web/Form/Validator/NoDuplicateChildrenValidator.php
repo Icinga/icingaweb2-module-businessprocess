@@ -4,6 +4,7 @@ namespace Icinga\Module\Businessprocess\Web\Form\Validator;
 
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
+use Icinga\Module\Businessprocess\Forms\EditNodeForm;
 use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 use Zend_Validate_Abstract;
 
@@ -39,6 +40,8 @@ class NoDuplicateChildrenValidator extends Zend_Validate_Abstract
     {
         if ($this->parent === null) {
             $found = $this->bp->hasRootNode($value);
+        } elseif ($this->form instanceof EditNodeForm && $this->form->getNode()->getName() === $value) {
+            $found = false;
         } else {
             $found = $this->parent->hasChild($value);
         }
