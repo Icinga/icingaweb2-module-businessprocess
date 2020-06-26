@@ -136,43 +136,25 @@ class TreeRenderer extends Renderer
         return $icons;
     }
 
-    public function getNodeRealState(Node $node)
+    public function getOverriddenState(Node $node)
     {
-        $realState = [];
-        $realState[] = Html::tag('i', ['class' => 'icon icon-flash']);
-        $realState[] = (new StateBall(strtolower($node->getStateName($node->getRealState()))))->addAttributes([
+        $overriddenState = Html::tag('div', ['class' => 'overridden-state']);
+        $overriddenState->add((new StateBall(strtolower($node->getStateName($node->getRealState()))))->addAttributes([
             'title' => sprintf(
                 '%s',
                 $node->getStateName($node->getRealState())
             )
-        ]);
+        ]));
+        $overriddenState->add(Html::tag('i', ['class' => 'icon icon-right-small']));
+        $overriddenState->add((new StateBall(strtolower($node->getStateName())))->addAttributes([
+            'title' => sprintf(
+                '%s',
+                $node->getStateName()
+            ),
+            'class' => 'last'
+        ]));
 
-        return $realState;
-    }
-
-    public function getNodeStateOverride(Node $node)
-    {
-        $statesOverrights = [];
-
-        $states = $node->getStateOverrides();
-        foreach ($states as $originalState => $overrideState) {
-            $statesOverrights[] = (new StateBall(strtolower($node->getStateName($originalState))))->addAttributes([
-                'title' => sprintf(
-                    '%s',
-                    $node->getStateName($originalState)
-                )
-            ]);
-            $statesOverrights[] = Html::tag('i', ['class' => 'icon icon-right-small']);
-            $statesOverrights[] = (new StateBall(strtolower($node->getStateName($overrideState))))->addAttributes([
-                'title' => sprintf(
-                    '%s',
-                    $node->getStateName($overrideState)
-                ),
-                'class' => 'last'
-            ]);
-        }
-
-        return $statesOverrights;
+        return $overriddenState;
     }
 
     /**
@@ -283,22 +265,12 @@ class TreeRenderer extends Renderer
         $li->add($link);
 
         if ($node->getRealState() !== $node->getState()) {
-            $li->add($this->getNodeRealState($node));
-        }
-
-        $leftAlign = Html::tag('div', [
-            'class' => 'left-side',
-        ]);
-
-        if (! empty($node->getStateOverrides())) {
-            $leftAlign->add($this->getNodeStateOverride($node));
+            $li->add($this->getOverriddenState($node));
         }
 
         if (! $this->isLocked() && $node->getBpConfig()->getName() === $this->getBusinessProcess()->getName()) {
-            $leftAlign->add($this->getActionIcons($bp, $node));
+            $li->add($this->getActionIcons($bp, $node));
         }
-
-        $li->add($leftAlign);
 
         return $li;
     }

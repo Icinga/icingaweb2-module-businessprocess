@@ -214,12 +214,17 @@ ul.bp {
             margin-right: .5em;
         }
 
-        a.action-link {
-        	margin-left: 20px;
+        > :not(.overridden-state) + a.action-link {
+            margin-left: auto; // Let the first action link move everything to the right
+
+            & + a.action-link {
+                margin-left: 0; // But really only the first one
+            }
         }
 
-        > .left-side {
-            margin-left: auto; // Left alligned Icons
+        .overridden-state {
+            margin-left: auto;
+            margin-right: 1em;
         }
     }
 
@@ -260,18 +265,13 @@ ul.bp {
     }
 
     li.process > div > .state-ball,
-    li:not(.process) > .state-ball,
-    div.left-side > .state-ball {
+    li:not(.process) > .state-ball {
         border: .15em solid white;
 
         &.size-s {
             width: 7em/6em;
             height: 7em/6em;
             line-height: 7em/6em;
-
-        	&.last {
-        		margin-right: 10px;
-        	}
         }
     }
 }
@@ -421,12 +421,13 @@ td > a > .badges {
         font-size: 0.5em;
     }
 
-	.state-ball {
-		position: absolute;
-		right: 0px;
-		bottom: 0px;
-		margin: 5px 5px 5px 5px;
-		border: 1px solid white;
+    .overridden-state {
+        font-size: .75em;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        margin: .5em;
+        border: 1px solid white;
     }
 
     > a {
