@@ -31,27 +31,15 @@ class NodeAddChildrenAction extends NodeAction
     {
         $node = $config->getBpNode($this->getNodeName());
 
-        foreach ($this->children as $name => $properties) {
-            if (is_int($name)) {
-                // TODO: This may be removed once host nodes also have properties
-                $name = $properties;
-            }
-
+        foreach ($this->children as $name) {
             if (! $config->hasNode($name) || $config->getNode($name)->getBpConfig()->getName() !== $config->getName()) {
                 if (strpos($name, ';') !== false) {
                     list($host, $service) = preg_split('/;/', $name, 2);
 
                     if ($service === 'Hoststatus') {
-                        $child = $config->createHost($host);
+                        $config->createHost($host);
                     } else {
-                        $child = $config->createService($host, $service);
-                    }
-
-                    if (is_array($properties) && !empty($properties)) {
-                        foreach ($properties as $key => $value) {
-                            $func = 'set' . ucfirst($key);
-                            $child->$func($value);
-                        }
+                        $config->createService($host, $service);
                     }
                 } elseif ($name[0] === '@' && strpos($name, ':') !== false) {
                     list($configName, $nodeName) = preg_split('~:\s*~', substr($name, 1), 2);

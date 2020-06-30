@@ -156,7 +156,6 @@ class EditNodeForm extends QuickForm
         if ($this->hasParentNode()) {
             $this->addElement('hidden', 'node_type', [
                 'disabled'      => true,
-                'ignore'        => true,
                 'decorators'    => ['ViewHelper'],
                 'value'         => $monitoredNodeType
             ]);
@@ -192,7 +191,7 @@ class EditNodeForm extends QuickForm
         if ($this->getSentValue('hosts') === null) {
             $this->addServicesElement($this->host);
             $this->addServiceOverrideCheckbox();
-            if (! empty($this->node->getStateOverrides()) || $this->getSentValue('service_override') === '1') {
+            if ($this->getElement('service_override')->isChecked() || $this->getSentValue('service_override') === '1') {
                 $this->addServiceOverrideElement();
             }
         } elseif ($host = $this->getSentValue('hosts')) {
@@ -236,7 +235,7 @@ class EditNodeForm extends QuickForm
         $this->addElement('checkbox', 'service_override', [
             'ignore'        => true,
             'class'         => 'autosubmit',
-            'value'         => ! empty($this->node->getStateOverrides()),
+            'value'         => ! empty($this->parent->getStateOverrides($this->node->getName())),
             'label'         => $this->translate('Override Service State'),
             'description'   => $this->translate('Enable service state overrides')
         ]);
@@ -247,7 +246,7 @@ class EditNodeForm extends QuickForm
         $this->addElement('stateOverrides', 'stateOverrides', [
             'required'  => true,
             'states'    => $this->enumServiceStateList(),
-            'value'     => $this->node->getStateOverrides(),
+            'value'     => $this->parent->getStateOverrides($this->node->getName()),
             'label'     => $this->translate('State Overrides')
         ]);
     }
@@ -449,11 +448,18 @@ class EditNodeForm extends QuickForm
 
         switch ($this->getValue('node_type')) {
             case 'service':
-                $properties = $this->getValues();
-                unset($properties['children']);
-                $services = [$this->getValue('children') => $properties];
-                $changes->addChildrenToNode($services, $this->parent);
-                break;
+                $stateOverrides = $this->getValue('stateOverrides') ?: [];
+                if (! empty($stateOverrides)) {
+                    $stateOverrides = array_merge(
+                        $this->parent->getStateOverrides(),
+                        [$this->getValue('children') => $stateOverrides]
+                    );
+                } else {
+                    $stateOverrides = $this->parent->getStateOverrides();
+                    unset($stateOverrides[$this->getValue('children')]);
+                }
+
+                $changes->modifyNode($this->parent, ['stateOverrides' => $stateOverrides]);
             case 'host':
             case 'process':
                 $changes->addChildrenToNode($this->getValue('children'), $this->parent);

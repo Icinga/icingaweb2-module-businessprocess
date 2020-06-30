@@ -247,7 +247,7 @@ class LegacyConfigParser
                 $stateOverrides[(int) $from] = (int) $to;
             }
 
-            $node->getChildByName($childName)->setStateOverrides($stateOverrides);
+            $node->setStateOverrides($stateOverrides, $childName);
         }
     }
 

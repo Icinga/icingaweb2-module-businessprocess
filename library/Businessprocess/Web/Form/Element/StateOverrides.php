@@ -41,9 +41,12 @@ class StateOverrides extends FormElement
     public function setValue($value)
     {
         $cleanedValue = [];
-        foreach ($value as $from => $to) {
-            if ((int) $from !== (int) $to) {
-                $cleanedValue[$from] = $to;
+
+        if (! empty($value)) {
+            foreach ($value as $from => $to) {
+                if ((int) $from !== (int) $to) {
+                    $cleanedValue[$from] = $to;
+                }
             }
         }
 

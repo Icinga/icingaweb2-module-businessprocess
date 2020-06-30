@@ -218,14 +218,14 @@ class LegacyConfigRenderer
     public static function renderStateOverrides(BpNode $node)
     {
         $stateOverrides = '';
-        foreach ($node->getChildren() as $child) {
+        foreach ($node->getStateOverrides() as $childName => $overrideRules) {
             $overrides = [];
-            foreach ($child->getStateOverrides() as $from => $to) {
+            foreach ($overrideRules as $from => $to) {
                 $overrides[] = sprintf('%d-%d', $from, $to);
             }
 
             if (! empty($overrides)) {
-                $stateOverrides .= '!' . $child->getName() . '|' . join(',', $overrides);
+                $stateOverrides .= '!' . $childName . '|' . join(',', $overrides);
             }
         }
 

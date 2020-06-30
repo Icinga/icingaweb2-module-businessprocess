@@ -113,12 +113,14 @@ class NodeTile extends BaseHtmlElement
             ));
         }
 
-        if ($node instanceof ServiceNode && $node->getRealState() !== $node->getState()) {
-            $this->add((new StateBall(strtolower($node->getStateName($node->getRealState()))))->addAttributes([
+        if ($this->renderer->rendersSubNode()
+            && $this->renderer->getParentNode()->getChildState($node) !== $node->getState()
+        ) {
+            $this->add((new StateBall(strtolower($node->getStateName())))->addAttributes([
                 'class' => 'overridden-state',
                 'title' => sprintf(
                     '%s',
-                    $node->getStateName($node->getRealState())
+                    $node->getStateName()
                 )
             ]));
         }

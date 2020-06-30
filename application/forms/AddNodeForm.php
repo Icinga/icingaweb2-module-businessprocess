@@ -502,16 +502,17 @@ class AddNodeForm extends QuickForm
         $changes = ProcessChanges::construct($this->bp, $this->session);
         switch ($this->getValue('node_type')) {
             case 'service':
-                $properties = $this->getValues();
-                unset($properties['children']);
+                $stateOverrides = $this->getValue('stateOverrides');
+                if (! empty($stateOverrides)) {
+                    $services = [];
+                    foreach ($this->getValue('children') as $service) {
+                        $services[$service] = $stateOverrides;
+                    }
 
-                $services = [];
-                foreach ($this->getValue('children') as $service) {
-                    $services[$service] = $properties;
+                    $changes->modifyNode($this->parent, [
+                        'stateOverrides' => array_merge($this->parent->getStateOverrides(), $services)
+                    ]);
                 }
-
-                $changes->addChildrenToNode($services, $this->parent);
-                break;
             case 'host':
             case 'process':
                 if ($this->hasParentNode()) {

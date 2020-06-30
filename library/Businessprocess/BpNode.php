@@ -26,6 +26,7 @@ class BpNode extends Node
     protected $missing = null;
     protected $empty = null;
     protected $missingChildren;
+    protected $stateOverrides = [];
 
     protected static $emptyStateSummary = array(
         'OK'          => 0,
@@ -71,7 +72,7 @@ class BpNode extends Node
                 } elseif ($child->isMissing()) {
                     $this->counters['MISSING']++;
                 } else {
-                    $state = $child->getStateName();
+                    $state = $child->getStateName($this->getChildState($child));
                     $this->counters[$state]++;
                 }
             }
@@ -127,9 +128,13 @@ class BpNode extends Node
         $problems = array();
 
         foreach ($this->getChildren() as $child) {
-            if ($child->isProblem()
-                || ($child instanceof BpNode && $child->hasProblems())
-            ) {
+            if (isset($this->stateOverrides[$child->getName()])) {
+                $problem = $this->getChildState($child) > 0;
+            } else {
+                $problem = $child->isProblem() || ($child instanceof BpNode && $child->hasProblems());
+            }
+
+            if ($problem) {
                 $problems[] = $child;
             }
         }
@@ -187,7 +192,8 @@ class BpNode extends Node
 
         if ($nodeState !== 0) {
             foreach ($this->getChildren() as $child) {
-                $childState = $rootCause ? $child->getSortingState() : $child->getState();
+                $childState = $this->getChildState($child);
+                $childState = $rootCause ? $child->getSortingState($childState) : $childState;
                 if (($rootCause ? $this->getSortingState() : $nodeState) === $childState) {
                     $name = $child->getName();
                     $tree[$name] = [
@@ -327,6 +333,31 @@ class BpNode extends Node
         return $this->info_command;
     }
 
+    public function setStateOverrides(array $overrides, $name = null)
+    {
+        if ($name === null) {
+            $this->stateOverrides = $overrides;
+        } else {
+            $this->stateOverrides[$name] = $overrides;
+        }
+
+        return $this;
+    }
+
+    public function getStateOverrides($name = null)
+    {
+        $overrides = null;
+        if ($name !== null) {
+            if (isset($this->stateOverrides[$name])) {
+                $overrides = $this->stateOverrides[$name];
+            }
+        } else {
+            $overrides = $this->stateOverrides;
+        }
+
+        return $overrides;
+    }
+
     public function getAlias()
     {
         return $this->alias ? preg_replace('~_~', ' ', $this->alias) : $this->name;
@@ -352,6 +383,27 @@ class BpNode extends Node
         }
 
         return $this->state;
+    }
+
+    /**
+     * Get the given child's state, possibly adjusted by override rules
+     *
+     * @param Node|string $child
+     * @return int
+     */
+    public function getChildState($child)
+    {
+        if (! $child instanceof Node) {
+            $child = $this->getChildByName($child);
+        }
+
+        $childName = $child->getName();
+        $childState = $child->getState();
+        if (! isset($this->stateOverrides[$childName][$childState])) {
+            return $childState;
+        }
+
+        return $this->stateOverrides[$childName][$childState];
     }
 
     public function getHtmlId()
@@ -391,7 +443,7 @@ class BpNode extends Node
 
                 $child->setMissing();
             }
-            $sort_states[] = $child->getSortingState();
+            $sort_states[] = $child->getSortingState($this->getChildState($child));
             $lastStateChange = max($lastStateChange, $child->getLastStateChange());
             $bp->endLoopDetection($this->name);
         }

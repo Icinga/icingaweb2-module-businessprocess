@@ -46,8 +46,6 @@ abstract class Node
         self::NODE_EMPTY      => 0
     );
 
-    protected $stateOverrides = [];
-
     /** @var string Alias of the node */
     protected $alias;
 
@@ -199,18 +197,6 @@ abstract class Node
         return $this;
     }
 
-    public function setStateOverrides(array $overrides)
-    {
-        $this->stateOverrides = $overrides;
-
-        return $this;
-    }
-
-    public function getStateOverrides()
-    {
-        return $this->stateOverrides;
-    }
-
     /**
      * Forget my state
      *
@@ -260,30 +246,14 @@ abstract class Node
             );
         }
 
-        if (isset($this->stateOverrides[$this->state])) {
-            return $this->stateOverrides[$this->state];
-        } else {
-            return $this->state;
-        }
-    }
-
-    public function getRealState()
-    {
-        if ($this->state === null) {
-            throw new ProgrammingError(
-                sprintf(
-                    'Node %s is unable to retrieve it\'s state',
-                    $this->name
-                )
-            );
-        }
-
         return $this->state;
     }
 
-    public function getSortingState()
+    public function getSortingState($state = null)
     {
-        $state = $this->getState();
+        if ($state === null) {
+            $state = $this->getState();
+        }
 
         if (self::$ackIsOk && $this->isAcknowledged()) {
             $state = self::ICINGA_OK;
