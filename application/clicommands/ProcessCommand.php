@@ -167,21 +167,22 @@ class ProcessCommand extends Command
         }
     }
 
-    protected function renderProblemTree($tree, $useColors = false, $depth = 0)
+    protected function renderProblemTree($tree, $useColors = false, $depth = 0, BpNode $parent = null)
     {
         $output = '';
 
         foreach ($tree as $name => $subtree) {
             /** @var Node $node */
             $node = $subtree['node'];
+            $state = $parent !== null ? $parent->getChildState($node) : $node->getState();
 
             if ($node instanceof HostNode) {
-                $colors = $this->hostColors[$node->getState()];
+                $colors = $this->hostColors[$state];
             } else {
-                $colors = $this->serviceColors[$node->getState()];
+                $colors = $this->serviceColors[$state];
             }
 
-            $state = sprintf('[%s]', $node->getStateName());
+            $state = sprintf('[%s]', $node->getStateName($state));
             if ($useColors) {
                 $state = $this->screen->colorize($state, $colors[0], $colors[1]);
             }
@@ -193,7 +194,10 @@ class ProcessCommand extends Command
                 $state,
                 $node->getAlias()
             );
-            $output .= $this->renderProblemTree($subtree['children'], $useColors, $depth + 1);
+
+            if ($node instanceof BpNode) {
+                $output .= $this->renderProblemTree($subtree['children'], $useColors, $depth + 1, $node);
+            }
         }
 
         return $output;

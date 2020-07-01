@@ -79,7 +79,7 @@ class TreeRenderer extends Renderer
             if ($node instanceof BpNode) {
                 $html[] = $this->renderNode($bp, $node);
             } else {
-                $html[] = $this->renderChild($bp, $node);
+                $html[] = $this->renderChild($bp, $this->parent, $node);
             }
         }
 
@@ -106,9 +106,10 @@ class TreeRenderer extends Renderer
     /**
      * @param Node $node
      * @param array $path
+     * @param BpNode $parent
      * @return BaseHtmlElement[]
      */
-    public function getNodeIcons(Node $node, array $path = null)
+    public function getNodeIcons(Node $node, array $path = null, BpNode $parent = null)
     {
         $icons = [];
         if (empty($path) && $node instanceof BpNode) {
@@ -116,7 +117,7 @@ class TreeRenderer extends Renderer
         } else {
             $icons[] = $node->getIcon();
         }
-        $state = strtolower($node->getStateName());
+        $state = strtolower($node->getStateName($parent !== null ? $parent->getChildState($node) : null));
         if ($node->isHandled()) {
             $state = $state . '-handled';
         }
@@ -134,6 +135,27 @@ class TreeRenderer extends Renderer
             $icons[] = Html::tag('i', ['class' => 'icon icon-ok']);
         }
         return $icons;
+    }
+
+    public function getOverriddenState($fakeState, Node $node)
+    {
+        $overriddenState = Html::tag('div', ['class' => 'overridden-state']);
+        $overriddenState->add((new StateBall(strtolower($node->getStateName())))->addAttributes([
+            'title' => sprintf(
+                '%s',
+                $node->getStateName()
+            )
+        ]));
+        $overriddenState->add(Html::tag('i', ['class' => 'icon icon-right-small']));
+        $overriddenState->add((new StateBall(strtolower($node->getStateName($fakeState))))->addAttributes([
+            'title' => sprintf(
+                '%s',
+                $node->getStateName($fakeState)
+            ),
+            'class' => 'last'
+        ]));
+
+        return $overriddenState;
     }
 
     /**
@@ -222,14 +244,14 @@ class TreeRenderer extends Renderer
             if ($child instanceof BpNode) {
                 $ul->add($this->renderNode($bp, $child, $path));
             } else {
-                $ul->add($this->renderChild($bp, $child, $path));
+                $ul->add($this->renderChild($bp, $node, $child, $path));
             }
         }
 
         return $li;
     }
 
-    protected function renderChild($bp, Node $node, $path = null)
+    protected function renderChild($bp, BpNode $parent, Node $node, $path = null)
     {
         $li = Html::tag('li', [
             'class'             => 'movable',
@@ -237,11 +259,15 @@ class TreeRenderer extends Renderer
             'data-node-name'    => $node->getName()
         ]);
 
-        $li->add($this->getNodeIcons($node, $path));
+        $li->add($this->getNodeIcons($node, $path, $parent));
 
         $link = $node->getLink();
         $link->getAttributes()->set('data-base-target', '_next');
         $li->add($link);
+
+        if (($overriddenState = $parent->getChildState($node)) !== $node->getState()) {
+            $li->add($this->getOverriddenState($overriddenState, $node));
+        }
 
         if (! $this->isLocked() && $node->getBpConfig()->getName() === $this->getBusinessProcess()->getName()) {
             $li->add($this->getActionIcons($bp, $node));

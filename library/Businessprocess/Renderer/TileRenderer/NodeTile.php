@@ -113,6 +113,18 @@ class NodeTile extends BaseHtmlElement
             ));
         }
 
+        if ($this->renderer->rendersSubNode()
+            && $this->renderer->getParentNode()->getChildState($node) !== $node->getState()
+        ) {
+            $this->add((new StateBall(strtolower($node->getStateName())))->addAttributes([
+                'class' => 'overridden-state',
+                'title' => sprintf(
+                    '%s',
+                    $node->getStateName()
+                )
+            ]));
+        }
+
         if ($node instanceof BpNode && !$renderer->isBreadcrumb()) {
             $this->add(Html::tag(
                 'p',

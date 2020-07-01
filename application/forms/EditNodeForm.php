@@ -182,6 +182,14 @@ class EditNodeForm extends QuickForm
             'description'   => $this->translate('The host for this business process node'),
             'validators'    => [[new NoDuplicateChildrenValidator($this, $this->bp, $this->parent), true]]
         ));
+
+        $this->addHostOverrideCheckbox();
+        $hostOverrideSent = $this->getSentValue('host_override');
+        if ($hostOverrideSent === '1'
+            || ($hostOverrideSent === null && $this->getElement('host_override')->isChecked())
+        ) {
+            $this->addHostOverrideElement();
+        }
     }
 
     protected function selectService()
@@ -190,8 +198,16 @@ class EditNodeForm extends QuickForm
 
         if ($this->getSentValue('hosts') === null) {
             $this->addServicesElement($this->host);
+            $this->addServiceOverrideCheckbox();
+            if ($this->getElement('service_override')->isChecked() || $this->getSentValue('service_override') === '1') {
+                $this->addServiceOverrideElement();
+            }
         } elseif ($host = $this->getSentValue('hosts')) {
             $this->addServicesElement($host);
+            $this->addServiceOverrideCheckbox();
+            if ($this->getSentValue('service_override') === '1') {
+                $this->addServiceOverrideElement();
+            }
         } else {
             $this->setSubmitLabel($this->translate('Next'));
         }
@@ -210,6 +226,27 @@ class EditNodeForm extends QuickForm
         $this->getElement('hosts')->setValue($this->host);
     }
 
+    protected function addHostOverrideCheckbox()
+    {
+        $this->addElement('checkbox', 'host_override', [
+            'ignore'        => true,
+            'class'         => 'autosubmit',
+            'value'         => ! empty($this->parent->getStateOverrides($this->node->getName())),
+            'label'         => $this->translate('Override Host State'),
+            'description'   => $this->translate('Enable host state overrides')
+        ]);
+    }
+
+    protected function addHostOverrideElement()
+    {
+        $this->addElement('stateOverrides', 'stateOverrides', [
+            'required'  => true,
+            'states'    => $this->enumHostStateList(),
+            'value'     => $this->parent->getStateOverrides($this->node->getName()),
+            'label'     => $this->translate('State Overrides')
+        ]);
+    }
+
     protected function addServicesElement($host)
     {
         $this->addElement('select', 'children', array(
@@ -220,6 +257,27 @@ class EditNodeForm extends QuickForm
             'description'   => $this->translate('The service for this business process node'),
             'validators'    => [[new NoDuplicateChildrenValidator($this, $this->bp, $this->parent), true]]
         ));
+    }
+
+    protected function addServiceOverrideCheckbox()
+    {
+        $this->addElement('checkbox', 'service_override', [
+            'ignore'        => true,
+            'class'         => 'autosubmit',
+            'value'         => ! empty($this->parent->getStateOverrides($this->node->getName())),
+            'label'         => $this->translate('Override Service State'),
+            'description'   => $this->translate('Enable service state overrides')
+        ]);
+    }
+
+    protected function addServiceOverrideElement()
+    {
+        $this->addElement('stateOverrides', 'stateOverrides', [
+            'required'  => true,
+            'states'    => $this->enumServiceStateList(),
+            'value'     => $this->parent->getStateOverrides($this->node->getName()),
+            'label'     => $this->translate('State Overrides')
+        ]);
     }
 
     protected function selectProcess()
@@ -322,6 +380,17 @@ class EditNodeForm extends QuickForm
         return $res;
     }
 
+    protected function enumHostStateList()
+    {
+        $hostStateList = [
+            0 => $this->translate('UP'),
+            1 => $this->translate('DOWN'),
+            99 => $this->translate('PENDING')
+        ];
+
+        return $hostStateList;
+    }
+
     protected function enumServiceList($host)
     {
         $names = $this->backend
@@ -339,6 +408,19 @@ class EditNodeForm extends QuickForm
         }
 
         return $services;
+    }
+
+    protected function enumServiceStateList()
+    {
+        $serviceStateList = [
+            0 => $this->translate('OK'),
+            1 => $this->translate('WARNING'),
+            2 => $this->translate('CRITICAL'),
+            3 => $this->translate('UNKNOWN'),
+            99 => $this->translate('PENDING'),
+        ];
+
+        return $serviceStateList;
     }
 
     protected function hasProcesses()
@@ -407,6 +489,19 @@ class EditNodeForm extends QuickForm
         switch ($this->getValue('node_type')) {
             case 'host':
             case 'service':
+                $stateOverrides = $this->getValue('stateOverrides') ?: [];
+                if (! empty($stateOverrides)) {
+                    $stateOverrides = array_merge(
+                        $this->parent->getStateOverrides(),
+                        [$this->getValue('children') => $stateOverrides]
+                    );
+                } else {
+                    $stateOverrides = $this->parent->getStateOverrides();
+                    unset($stateOverrides[$this->getValue('children')]);
+                }
+
+                $changes->modifyNode($this->parent, ['stateOverrides' => $stateOverrides]);
+                // Fallthrough
             case 'process':
                 $changes->addChildrenToNode($this->getValue('children'), $this->parent);
                 break;

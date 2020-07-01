@@ -158,6 +158,7 @@ class LegacyConfigRenderer
     public static function renderSingleBpNode(BpNode $node)
     {
         return static::renderExpression($node)
+            . static::renderStateOverrides($node)
             . static::renderDisplay($node)
             . static::renderInfoUrl($node);
     }
@@ -212,6 +213,27 @@ class LegacyConfigRenderer
         } else {
             return '';
         }
+    }
+
+    public static function renderStateOverrides(BpNode $node)
+    {
+        $stateOverrides = '';
+        foreach ($node->getStateOverrides() as $childName => $overrideRules) {
+            $overrides = [];
+            foreach ($overrideRules as $from => $to) {
+                $overrides[] = sprintf('%d-%d', $from, $to);
+            }
+
+            if (! empty($overrides)) {
+                $stateOverrides .= '!' . $childName . '|' . join(',', $overrides);
+            }
+        }
+
+        if (! $stateOverrides) {
+            return '';
+        }
+
+        return 'state_overrides ' . $node->getName() . $stateOverrides . "\n";
     }
 
     /**

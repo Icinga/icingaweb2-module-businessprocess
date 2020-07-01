@@ -249,9 +249,11 @@ abstract class Node
         return $this->state;
     }
 
-    public function getSortingState()
+    public function getSortingState($state = null)
     {
-        $state = $this->getState();
+        if ($state === null) {
+            $state = $this->getState();
+        }
 
         if (self::$ackIsOk && $this->isAcknowledged()) {
             $state = self::ICINGA_OK;

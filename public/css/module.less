@@ -214,12 +214,17 @@ ul.bp {
             margin-right: .5em;
         }
 
-        > a.action-link {
+        > :not(.overridden-state) + a.action-link {
             margin-left: auto; // Let the first action link move everything to the right
 
             & + a.action-link {
                 margin-left: 0; // But really only the first one
             }
+        }
+
+        .overridden-state {
+            margin-left: auto;
+            margin-right: 1em;
         }
     }
 
@@ -414,6 +419,15 @@ td > a > .badges {
         margin: 0.5em;
         text-align: center;
         font-size: 0.5em;
+    }
+
+    .overridden-state {
+        font-size: .75em;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        margin: .5em;
+        border: 1px solid white;
     }
 
     > a {
@@ -946,6 +960,29 @@ form dt label {
     &:hover {
         text-decoration: underline;
         cursor: pointer;
+    }
+}
+
+#stateOverrides-element {
+    display: inline-table;
+    table-layout: fixed;
+    border-spacing: .5em;
+    padding: 0;
+
+    label {
+        display: table-row;
+
+        span, select {
+            display: table-cell;
+        }
+
+        span {
+            width: 10em;
+        }
+
+        select {
+            width: 26em;
+        }
     }
 }
 

@@ -180,9 +180,9 @@ abstract class Renderer extends HtmlDocument
             if ($node->isEmpty() && ! $node instanceof MonitoredNode) {
                 $classes = array('empty');
             } else {
-                $classes = array(
-                    strtolower($node->getStateName())
-                );
+                $classes = [strtolower($node->getStateName(
+                    $this->parent !== null ? $this->parent->getChildState($node) : null
+                ))];
             }
             if ($node->hasMissingChildren()) {
                 $classes[] = 'missing-children';
