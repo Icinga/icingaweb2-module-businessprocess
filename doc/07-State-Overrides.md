@@ -2,7 +2,7 @@
 
 Business processes utilize their children's states to calculate their own state.
 While you can influence this with [operators](09-Operators.md), it's also possible
-to override individual states. (Currently this applies only to service nodes.)
+to override individual states. (This applies to host and service nodes.)
 
 ## Configuring Overrides
 

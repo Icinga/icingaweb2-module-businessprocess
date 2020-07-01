@@ -200,6 +200,11 @@ class AddNodeForm extends QuickForm
             ),
             'validators'    => [[new NoDuplicateChildrenValidator($this, $this->bp, $this->parent), true]]
         ]);
+
+        $this->addHostOverrideCheckbox();
+        if ($this->getSentValue('host_override') === '1') {
+            $this->addHostOverrideElement();
+        }
     }
 
     protected function selectService()
@@ -255,6 +260,25 @@ class AddNodeForm extends QuickForm
             'description'   => $this->translate(
                 'Choose a different configuration file to import its processes'
             )
+        ]);
+    }
+
+    protected function addHostOverrideCheckbox()
+    {
+        $this->addElement('checkbox', 'host_override', [
+            'ignore'        => true,
+            'class'         => 'autosubmit',
+            'label'         => $this->translate('Override Host State'),
+            'description'   => $this->translate('Enable host state overrides')
+        ]);
+    }
+
+    protected function addHostOverrideElement()
+    {
+        $this->addElement('stateOverrides', 'stateOverrides', [
+            'required'  => true,
+            'label'     => $this->translate('State Overrides'),
+            'states'    => $this->enumHostStateList()
         ]);
     }
 
@@ -396,6 +420,17 @@ class AddNodeForm extends QuickForm
         return $res;
     }
 
+    protected function enumHostStateList()
+    {
+        $hostStateList = [
+            0 => $this->translate('UP'),
+            1 => $this->translate('DOWN'),
+            99 => $this->translate('PENDING')
+        ];
+
+        return $hostStateList;
+    }
+
     protected function enumServiceList($host)
     {
         $names = $this->backend
@@ -501,19 +536,21 @@ class AddNodeForm extends QuickForm
     {
         $changes = ProcessChanges::construct($this->bp, $this->session);
         switch ($this->getValue('node_type')) {
+            case 'host':
             case 'service':
                 $stateOverrides = $this->getValue('stateOverrides');
                 if (! empty($stateOverrides)) {
-                    $services = [];
+                    $childOverrides = [];
                     foreach ($this->getValue('children') as $service) {
-                        $services[$service] = $stateOverrides;
+                        $childOverrides[$service] = $stateOverrides;
                     }
 
                     $changes->modifyNode($this->parent, [
-                        'stateOverrides' => array_merge($this->parent->getStateOverrides(), $services)
+                        'stateOverrides' => array_merge($this->parent->getStateOverrides(), $childOverrides)
                     ]);
                 }
-            case 'host':
+
+                // Fallthrough
             case 'process':
                 if ($this->hasParentNode()) {
                     $changes->addChildrenToNode($this->getValue('children'), $this->parent);
