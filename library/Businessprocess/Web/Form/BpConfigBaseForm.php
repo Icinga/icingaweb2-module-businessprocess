@@ -18,7 +18,9 @@ abstract class BpConfigBaseForm extends QuickForm
     protected function listAvailableBackends()
     {
         $keys = array_keys(Config::module('monitoring', 'backends')->toArray());
-        return array_combine($keys, $keys);
+        $keys = array_combine($keys, $keys);
+        $keys['_icingadb'] = 'Icinga DB';
+        return $keys;
     }
 
     public function setStorage(LegacyStorage $storage)

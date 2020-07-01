@@ -4,8 +4,9 @@ namespace Icinga\Module\Businessprocess\Forms;
 
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
+use Icinga\Module\Businessprocess\Common\IcingadbDatabase;
+use Icinga\Module\Businessprocess\Common\EnumList;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
-use Icinga\Module\Businessprocess\MonitoringRestrictions;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 use Icinga\Module\Businessprocess\Web\Form\Validator\NoDuplicateChildrenValidator;
@@ -14,10 +15,13 @@ use Icinga\Web\Session\SessionNamespace;
 
 class EditNodeForm extends QuickForm
 {
-    use MonitoringRestrictions;
+    use EnumList;
 
-    /** @var MonitoringBackend */
+    /** @var MonitoringBackend|IcingadbDatabase */
     protected $backend;
+
+    /** @var string $backendName */
+    protected $backendName;
 
     /** @var BpConfig */
     protected $bp;
@@ -237,10 +241,10 @@ class EditNodeForm extends QuickForm
     }
 
     /**
-     * @param MonitoringBackend $backend
+     * @param MonitoringBackend|IcingadbDatabase $backend
      * @return $this
      */
-    public function setBackend(MonitoringBackend $backend)
+    public function setBackend($backend)
     {
         $this->backend = $backend;
         return $this;
@@ -253,6 +257,7 @@ class EditNodeForm extends QuickForm
     public function setProcess(BpConfig $process)
     {
         $this->bp = $process;
+        $this->backendName = $process->getBackendName();
         $this->setBackend($process->getBackend());
         return $this;
     }
@@ -283,62 +288,6 @@ class EditNodeForm extends QuickForm
     {
         $this->session = $session;
         return $this;
-    }
-
-    protected function enumHostForServiceList()
-    {
-        $names = $this->backend
-            ->select()
-            ->from('hostStatus', ['hostname' => 'host_name'])
-            ->applyFilter($this->getRestriction('monitoring/filter/objects'))
-            ->order('host_name')
-            ->getQuery()
-            ->fetchColumn();
-
-        // fetchPairs doesn't seem to work when using the same column with
-        // different aliases twice
-
-        return array_combine((array) $names, (array) $names);
-    }
-
-    protected function enumHostList()
-    {
-        $names = $this->backend
-            ->select()
-            ->from('hostStatus', ['hostname' => 'host_name'])
-            ->applyFilter($this->getRestriction('monitoring/filter/objects'))
-            ->order('host_name')
-            ->getQuery()
-            ->fetchColumn();
-
-        // fetchPairs doesn't seem to work when using the same column with
-        // different aliases twice
-        $res = array();
-        $suffix = ';Hoststatus';
-        foreach ($names as $name) {
-            $res[$name . $suffix] = $name;
-        }
-
-        return $res;
-    }
-
-    protected function enumServiceList($host)
-    {
-        $names = $this->backend
-            ->select()
-            ->from('serviceStatus', ['service' => 'service_description'])
-            ->where('host_name', $host)
-            ->applyFilter($this->getRestriction('monitoring/filter/objects'))
-            ->order('service_description')
-            ->getQuery()
-            ->fetchColumn();
-
-        $services = array();
-        foreach ($names as $name) {
-            $services[$host . ';' . $name] = $name;
-        }
-
-        return $services;
     }
 
     protected function hasProcesses()

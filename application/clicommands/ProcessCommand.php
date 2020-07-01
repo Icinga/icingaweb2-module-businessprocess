@@ -9,6 +9,7 @@ use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\HostNode;
 use Icinga\Module\Businessprocess\Node;
+use Icinga\Module\Businessprocess\State\IcingaDbState;
 use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 
@@ -126,7 +127,11 @@ class ProcessCommand extends Command
         /** @var BpNode $node */
         try {
             $node = $bp->getNode($this->params->shift());
-            MonitoringState::apply($bp);
+            if ($bp->getBackendName() === '_icingadb') {
+                IcingaDbState::apply($bp);
+            } else {
+                MonitoringState::apply($bp);
+            }
             if ($bp->hasErrors()) {
                 Logger::error("Checking Business Process '%s' failed: %s\n", $name, $bp->getErrors());
 

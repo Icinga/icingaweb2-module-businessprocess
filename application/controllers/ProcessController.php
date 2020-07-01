@@ -11,6 +11,7 @@ use Icinga\Module\Businessprocess\Renderer\Renderer;
 use Icinga\Module\Businessprocess\Renderer\TileRenderer;
 use Icinga\Module\Businessprocess\Renderer\TreeRenderer;
 use Icinga\Module\Businessprocess\Simulation;
+use Icinga\Module\Businessprocess\State\IcingaDbState;
 use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Storage\ConfigDiff;
 use Icinga\Module\Businessprocess\Storage\LegacyConfigRenderer;
@@ -81,7 +82,12 @@ class ProcessController extends Controller
         $bp = $this->loadModifiedBpConfig();
         $node = $this->getNode($bp);
 
-        MonitoringState::apply($bp);
+        if ($bp->getBackendName() === '_icingadb') {
+            IcingaDbState::apply($bp);
+        } else {
+            MonitoringState::apply($bp);
+        }
+
         $this->handleSimulations($bp);
 
         $this->setTitle($this->translate('Business Process "%s"'), $bp->getTitle());

@@ -7,7 +7,7 @@ use Icinga\Data\Filter\Filter;
 use Icinga\Exception\ConfigurationError;
 use Icinga\Exception\QueryException;
 
-trait MonitoringRestrictions
+class MonitoringRestrictions
 {
     /**
      * Return a filter for the given restriction
@@ -17,7 +17,7 @@ trait MonitoringRestrictions
      * @return  Filter|null         Filter object or null if the authenticated user is not restricted
      * @throws  ConfigurationError  If the restriction contains invalid filter columns
      */
-    protected function getRestriction($name)
+    public static function getRestriction($name)
     {
         // Borrowed from Icinga\Module\Monitoring\Controller
         $restriction = Filter::matchAny();
