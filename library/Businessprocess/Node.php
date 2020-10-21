@@ -512,7 +512,7 @@ abstract class Node
             'name'  => $this->getAlias(),
             'state' => $this->getStateName(),
             'since' => $this->getLastStateChange(),
-            'in_downtime' => $this->isInDowntime() ? self::FLAG_DOWNTIME : 0
+            'in_downtime' => $this->isInDowntime() ? 1 : 0
         ];
 
         if ($parent !== null) {
