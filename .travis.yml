@@ -1,3 +1,6 @@
+arch:
+  - amd64
+  - ppc64le
 language: php
 php:
   - '5.4'
