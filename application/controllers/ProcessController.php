@@ -562,7 +562,7 @@ class ProcessController extends Controller
             case 'csv':
                 $csv = fopen('php://temp', 'w');
 
-                fputcsv($csv, ['Path', 'Name', 'State', 'Since']);
+                fputcsv($csv, ['Path', 'Name', 'State', 'Since', 'In_Downtime']);
 
                 foreach ($node !== null ? $node->toArray(null, true) : $bp->toArray(true) as $node) {
                     $data = [$node['path'], $node['name']];
@@ -573,6 +573,10 @@ class ProcessController extends Controller
 
                     if (isset($node['since'])) {
                         $data[] = DateFormatter::formatDateTime($node['since']);
+                    }
+                    
+                    if (isset($node['in_downtime'])) {
+                        $data[] = $node['in_downtime'];
                     }
 
                     fputcsv($csv, $data);
