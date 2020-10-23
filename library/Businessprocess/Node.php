@@ -511,7 +511,8 @@ abstract class Node
         $data = [
             'name'  => $this->getAlias(),
             'state' => $this->getStateName(),
-            'since' => $this->getLastStateChange()
+            'since' => $this->getLastStateChange(),
+            'in_downtime' => $this->isInDowntime() ? true : false
         ];
 
         if ($parent !== null) {
