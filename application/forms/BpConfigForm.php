@@ -88,6 +88,27 @@ class BpConfigForm extends BpConfigBaseForm
             )
         ));
 
+        $this->addElement('text', 'AllowedUsers', array(
+            'label'       => $this->translate('Allowed Users'),
+            'description' => $this->translate(
+                'Allowed Users (comma-separated)'
+            ),
+        ));
+
+        $this->addElement('text', 'AllowedGroups', array(
+            'label'       => $this->translate('Allowed Groups'),
+            'description' => $this->translate(
+                'Allowed Groups (comma-separated)'
+            ),
+        ));
+
+        $this->addElement('text', 'AllowedRoles', array(
+            'label'       => $this->translate('Allowed Roles'),
+            'description' => $this->translate(
+                'Allowed Roles (comma-separated)'
+            ),
+        ));
+
         if ($this->config === null) {
             $this->setSubmitLabel(
                 $this->translate('Add')
