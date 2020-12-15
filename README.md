@@ -31,6 +31,7 @@ Documentation
 * [Customize Node Order](doc/06-Customize-Node-Order.md)
 * [State Overrides](doc/07-State-Overrides.md)
 * [Operators](doc/09-Operators.md)
+* [Controlling Access](doc/31-Permissions.md)
 
 ### Web Components
 * [Breadcrumb](doc/12-Web-Components-Breadcrumb.md)
