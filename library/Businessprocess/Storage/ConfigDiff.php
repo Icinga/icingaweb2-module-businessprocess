@@ -2,12 +2,9 @@
 
 namespace Icinga\Module\Businessprocess\Storage;
 
-use Diff;
-use Diff_Renderer_Html_Inline;
-use Diff_Renderer_Html_SideBySide;
-use Diff_Renderer_Text_Context;
-use Diff_Renderer_Text_Unified;
 use ipl\Html\ValidHtml;
+use Jfcherng\Diff\Differ;
+use Jfcherng\Diff\Factory\RendererFactory;
 
 class ConfigDiff implements ValidHtml
 {
@@ -20,8 +17,6 @@ class ConfigDiff implements ValidHtml
 
     protected function __construct($a, $b)
     {
-        $this->requireVendorLib('Diff.php');
-
         if (empty($a)) {
             $this->a = array();
         } else {
@@ -39,7 +34,7 @@ class ConfigDiff implements ValidHtml
             // 'ignoreWhitespace' => true,
             // 'ignoreCase' => true,
         );
-        $this->diff = new Diff($this->a, $this->b, $options);
+        $this->diff = new Differ($this->a, $this->b, $options);
     }
 
     /**
@@ -52,35 +47,26 @@ class ConfigDiff implements ValidHtml
 
     public function renderHtmlSideBySide()
     {
-        $this->requireVendorLib('Diff/Renderer/Html/SideBySide.php');
-        $renderer = new Diff_Renderer_Html_SideBySide;
-        return $this->diff->render($renderer);
+        $renderer = RendererFactory::make('SideBySide');
+        return $renderer->render($this->diff);
     }
 
     public function renderHtmlInline()
     {
-        $this->requireVendorLib('Diff/Renderer/Html/Inline.php');
-        $renderer = new Diff_Renderer_Html_Inline;
-        return $this->diff->render($renderer);
+        $renderer = RendererFactory::make('Inline');
+        return $renderer->render($this->diff);
     }
 
     public function renderTextContext()
     {
-        $this->requireVendorLib('Diff/Renderer/Text/Context.php');
-        $renderer = new Diff_Renderer_Text_Context;
-        return $this->diff->render($renderer);
+        $renderer = RendererFactory::make('Context');
+        return $renderer->render($this->diff);
     }
 
     public function renderTextUnified()
     {
-        $this->requireVendorLib('Diff/Renderer/Text/Unified.php');
-        $renderer = new Diff_Renderer_Text_Unified;
-        return $this->diff->render($renderer);
-    }
-
-    protected function requireVendorLib($file)
-    {
-        require_once dirname(dirname(__DIR__)) . '/vendor/php-diff/lib/' . $file;
+        $renderer = RendererFactory::make('Unified');
+        return $renderer->render($this->diff);
     }
 
     public static function create($a, $b)
