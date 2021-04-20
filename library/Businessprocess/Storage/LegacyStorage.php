@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess\Storage;
 
 use DirectoryIterator;
+use Icinga\Application\Hook\AuditHook;
 use Icinga\Application\Icinga;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Exception\SystemPermissionException;
@@ -138,6 +139,7 @@ class LegacyStorage extends Storage
      */
     public function storeProcess(BpConfig $process)
     {
+        AuditHook::logActivity('businessprocess/store', "Business Process \"{$process->getName()}\" stored");
         file_put_contents(
             $this->getFilename($process->getName()),
             LegacyConfigRenderer::renderConfig($process)
@@ -149,6 +151,7 @@ class LegacyStorage extends Storage
      */
     public function deleteProcess($name)
     {
+        AuditHook::logActivity('businessprocess/delete', "Business Process \"{$name}\" deleted");
         return @unlink($this->getFilename($name));
     }
 
