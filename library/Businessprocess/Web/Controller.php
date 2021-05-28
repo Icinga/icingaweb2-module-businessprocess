@@ -32,6 +32,9 @@ class Controller extends ModuleController
     private $storage;
 
     /** @var bool */
+    protected $showCompact;
+
+    /** @var bool */
     protected $showFullscreen;
 
     /** @var Url */
@@ -49,7 +52,7 @@ class Controller extends ModuleController
         $this->view->showFullscreen
             = $this->showFullscreen
             = (bool) $this->_helper->layout()->showFullscreen;
-
+        $this->showCompact = $this->view->compact;
         $this->setViewScript('default');
     }
 
