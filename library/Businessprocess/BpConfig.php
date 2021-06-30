@@ -15,6 +15,8 @@ use ipl\Sql\Connection as IcingaDbConnection;
 
 class BpConfig
 {
+    use Sort;
+
     const SOFT_STATE = 0;
 
     const HARD_STATE = 1;
@@ -400,7 +402,7 @@ class BpConfig
      */
     public function getChildren()
     {
-        return $this->getRootNodes();
+        return $this->sort($this->getRootNodes());
     }
 
     /**

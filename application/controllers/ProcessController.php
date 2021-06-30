@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Controllers;
 
+use GuzzleHttp\Psr7\ServerRequest;
 use Icinga\Application\Modules\Module;
 use Icinga\Date\DateFormatter;
 use Icinga\Module\Businessprocess\BpConfig;
@@ -23,11 +24,13 @@ use Icinga\Module\Businessprocess\Web\Component\Tabs;
 use Icinga\Module\Businessprocess\Web\Controller;
 use Icinga\Util\Json;
 use Icinga\Web\Notification;
+use Icinga\Web\Session;
 use Icinga\Web\Url;
 use Icinga\Web\Widget\Tabextension\DashboardAction;
 use Icinga\Web\Widget\Tabextension\OutputFormat;
 use ipl\Html\Html;
 use ipl\Html\HtmlString;
+use ipl\Web\Control\SortControl;
 
 class ProcessController extends Controller
 {
@@ -108,9 +111,14 @@ class ProcessController extends Controller
             }
         }
 
+        $sortControl = $this->createSortControl($bp, $node);
+
         $this->handleFormatRequest($bp, $node);
 
         $this->prepareControls($bp, $renderer);
+        if ($sortControl !== null) {
+            $this->controls()->add($sortControl);
+        }
 
         $this->tabs()->extend(new OutputFormat());
 
@@ -128,6 +136,56 @@ class ProcessController extends Controller
         $this->content()->add($renderer);
         $this->loadActionForm($bp, $node);
         $this->setDynamicAutorefresh();
+    }
+
+    /**
+     * If the business process is not sorted manually, creates the sort control and applies the sort specification
+     *
+     * @param BpConfig  $bp
+     * @param Node|null $node
+     *
+     * @return SortControl|null
+     */
+    protected function createSortControl(BpConfig $bp, Node $node = null)
+    {
+        if ($bp->getMetadata()->isManuallyOrdered()) {
+            return null;
+        }
+
+        $url = \ipl\Web\Url::fromRequest();
+        $sortControl = (new SortControl($url))
+            ->setColumns([
+                'display_name' => $this->translate('Name'),
+                'state desc'   => $this->translate('State')
+            ])
+            ->setDefault('display_name asc');
+
+        $default = Session::getSession()->get('businessprocess.sort', 'display_name asc');
+        $sortControl->setDefault($default);
+
+        $sortControl->setMethod('POST');
+        $sortControl->on(SortControl::ON_SUCCESS, function (SortControl $sortControl) use ($url) {
+            $sortParam = $sortControl->getSortParam();
+            // IPL does not yet have a form UID.
+            // So if the request has no value for the sort parameter, consider it not sent.
+            if (array_key_exists($sortParam, (array) $sortControl->getRequest()->getParsedBody())) {
+                // SortControl is not method independent as it always uses the URL to get the sort parameter value.
+                // So let's put it in the url here.
+                $url->setParam($sortParam, $sortControl->getValue($sortParam));
+                $sort = $sortControl->getSort();
+                Session::getSession()->set('businessprocess.sort', $sort);
+                $this->redirectNow(Url::fromRequest()->with($sortParam, $sort));
+            }
+        });
+        $sortControl->handleRequest(ServerRequest::fromGlobals());
+
+        $sort = $sortControl->getSort();
+        $bp->setSort($sort);
+        if ($node !== null) {
+            $node->setSort($sort);
+        }
+
+        return $sortControl;
     }
 
     protected function prepareControls($bp, $renderer)
@@ -584,7 +642,7 @@ class ProcessController extends Controller
                     if (isset($node['since'])) {
                         $data[] = DateFormatter::formatDateTime($node['since']);
                     }
-                    
+
                     if (isset($node['in_downtime'])) {
                         $data[] = $node['in_downtime'];
                     }

@@ -7,6 +7,8 @@ use ipl\Html\Html;
 
 abstract class Node
 {
+    use Sort;
+
     const FLAG_DOWNTIME = 1;
     const FLAG_ACK      = 2;
     const FLAG_MISSING  = 4;

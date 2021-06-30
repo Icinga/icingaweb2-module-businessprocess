@@ -570,7 +570,7 @@ class BpNode extends Node
             }
         }
 
-        return $this->children;
+        return $this->sort($this->children);
     }
 
     /**
