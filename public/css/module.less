@@ -11,6 +11,7 @@ a:focus {
     align-items: center;
     font-size: 1.3em;
     color: @icinga-blue;
+    float: left;
 
     > a {
         &:hover::before {
@@ -980,3 +981,14 @@ textarea.smaller {
     max-width: 60em;
 }
 /** END of custom font styling **/
+
+.sort-control {
+    display: inline-flex;
+    float: right;
+
+    select {
+        min-width: 0;
+        max-width: 16em;
+        width: 8em;
+    }
+}
