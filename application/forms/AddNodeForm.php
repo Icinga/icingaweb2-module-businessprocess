@@ -117,6 +117,7 @@ class AddNodeForm extends QuickForm
                 '&' => $this->translate('AND'),
                 '|' => $this->translate('OR'),
                 '!' => $this->translate('NOT'),
+                '%' => $this->translate('DEGRADED'),
                 '1' => $this->translate('MIN 1'),
                 '2' => $this->translate('MIN 2'),
                 '3' => $this->translate('MIN 3'),

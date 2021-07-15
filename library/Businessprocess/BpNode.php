@@ -11,6 +11,7 @@ class BpNode extends Node
     const OP_AND = '&';
     const OP_OR  = '|';
     const OP_NOT  = '!';
+    const OP_DEGRADED  = '%';
 
     protected $operator = '&';
     protected $url;
@@ -289,6 +290,7 @@ class BpNode extends Node
             case self::OP_AND:
             case self::OP_OR:
             case self::OP_NOT:
+            case self::OP_DEGRADED:
                 return;
             default:
                 if (is_numeric($operator)) {
@@ -460,6 +462,15 @@ class BpNode extends Node
             case self::OP_OR:
                 $sort_state = min($sort_states);
                 break;
+            case self::OP_DEGRADED:
+                $maxState = max($sort_states);
+                $flags = $maxState & 0xf;
+
+                $maxIcingaState = $this->sortStateTostate($maxState);
+                $warningState = ($this->stateToSortState(self::ICINGA_WARNING) << self::SHIFT_FLAGS) + $flags;
+
+                $sort_state = ($maxIcingaState === self::ICINGA_CRITICAL) ? $warningState : $maxState;
+                break;
             default:
                 // MIN:
                 $sort_state = 3 << self::SHIFT_FLAGS;
@@ -623,6 +634,9 @@ class BpNode extends Node
                 break;
             case self::OP_NOT:
                 return 'NOT';
+                break;
+            case self::OP_DEGRADED:
+                return 'DEG';
                 break;
             default:
                 // MIN
