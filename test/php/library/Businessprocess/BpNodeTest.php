@@ -12,6 +12,8 @@ class BpNodeTest extends BaseTestCase
      */
     public function testThrowsNestingErrorWhenCheckedForLoops()
     {
+        $this->expectException(\Icinga\Module\Businessprocess\Exception\NestingError::class);
+
         /** @var BpNode $bpNode */
         $bpNode = $this->makeLoop()->getNode('d');
         $bpNode->checkForLoops();
@@ -23,6 +25,9 @@ class BpNodeTest extends BaseTestCase
      */
     public function testNestingErrorReportsFullLoop()
     {
+        $this->expectException(\Icinga\Module\Businessprocess\Exception\NestingError::class);
+        $this->expectExceptionMessage('d -> a -> b -> c -> a');
+
         /** @var BpNode $bpNode */
         $bpNode = $this->makeLoop()->getNode('d');
         $bpNode->checkForLoops();
