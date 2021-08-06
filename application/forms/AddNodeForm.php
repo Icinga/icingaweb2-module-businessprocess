@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Forms;
 
+use Icinga\Data\Filter\Filter;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\ImportedNode;
@@ -64,6 +65,12 @@ class AddNodeForm extends QuickForm
                 break;
             case 'new-process':
                 $this->addNewProcess();
+                break;
+            case 'hosts_from_filter':
+                $this->selectHostsFromFilter();
+                break;
+            case 'services_from_filter':
+                $this->selectServicesFromFilter();
                 break;
             case null:
                 $this->setSubmitLabel($this->translate('Next'));
@@ -157,6 +164,8 @@ class AddNodeForm extends QuickForm
         if ($this->hasParentNode()) {
             $types['host'] = $this->translate('Host');
             $types['service'] = $this->translate('Service');
+            $types['hosts_from_filter'] = $this->translate('Hosts from filter');
+            $types['services_from_filter'] = $this->translate('Services from filter');
         } elseif (! $this->hasProcesses()) {
             $this->addElement('hidden', 'node_type', array(
                 'ignore'     => true,
@@ -248,6 +257,53 @@ class AddNodeForm extends QuickForm
         ]);
     }
 
+    protected function addFilteredHostsElement($filter)
+    {
+        $this->addElement('submit', 'refresh', [
+            'label'        => $this->translate('Refresh'),
+            'class'        => 'refresh-filter'
+        ]);
+        $this->addElement('multiselect', 'children', [
+            'label'        => $this->translate('Hosts'),
+            'required'     => true,
+            'size'         => 8,
+            'style'        => 'width: 25em',
+            'multiOptions' => $this->enumHostListByFilter($filter),
+            'description'  => $this->translate(
+                'Hosts that should be part of this business process node'
+            ),
+            'validators'    => [[new NoDuplicateChildrenValidator($this, $this->bp, $this->parent), true]]
+        ]);
+    }
+
+    protected function addFilteredServicesElement($filter)
+    {
+        $this->addElement('submit', 'refresh', [
+            'label'        => $this->translate('Refresh'),
+            'class'        => 'refresh-filter'
+        ]);
+        $this->addElement('multiselect', 'children', [
+            'label'        => $this->translate('Services'),
+            'required'     => true,
+            'size'         => 8,
+            'style'        => 'width: 25em',
+            'multiOptions' => $this->enumServiceListByFilter($filter),
+            'description'  => $this->translate(
+                'Services that should be part of this business process node'
+            ),
+            'validators'    => [[new NoDuplicateChildrenValidator($this, $this->bp, $this->parent), true]]
+        ]);
+    }
+
+    protected function addFilterElement()
+    {
+        $this->addElement('text', 'filter', array(
+            'label'        => $this->translate('Filter'),
+            'required'     => true,
+            'ignore'       => true
+        ));
+    }
+
     protected function addFileElement()
     {
         $this->addElement('select', 'file', [
@@ -299,6 +355,26 @@ class AddNodeForm extends QuickForm
             'label'     => $this->translate('State Overrides'),
             'states'    => $this->enumServiceStateList()
         ]);
+    }
+
+    protected function selectHostsFromFilter()
+    {
+        $this->addFilterElement();
+        if ($filter = $this->getSentValue('filter')) {
+            $this->addFilteredHostsElement($filter);
+        } else {
+            $this->setSubmitLabel($this->translate('Next'));
+        }
+    }
+
+    protected function selectServicesFromFilter()
+    {
+        $this->addFilterElement();
+        if ($filter = $this->getSentValue('filter')) {
+            $this->addFilteredServicesElement($filter);
+        } else {
+            $this->setSubmitLabel($this->translate('Next'));
+        }
     }
 
     protected function selectProcess()
@@ -463,6 +539,47 @@ class AddNodeForm extends QuickForm
         return $serviceStateList;
     }
 
+    protected function enumHostListByFilter($filter)
+    {
+        $names = $this->backend
+            ->select()
+            ->from('hostStatus', ['hostname' => 'host_name'])
+            ->applyFilter(Filter::fromQueryString($filter))
+            ->applyFilter($this->getRestriction('monitoring/filter/objects'))
+            ->order('host_name')
+            ->getQuery()
+            ->fetchColumn();
+
+        // fetchPairs doesn't seem to work when using the same column with
+        // different aliases twice
+        $res = array();
+        $suffix = ';Hoststatus';
+        foreach ($names as $name) {
+            $res[$name . $suffix] = $name;
+        }
+
+        return $res;
+    }
+
+    protected function enumServiceListByFilter($filter)
+    {
+        $objects = $this->backend
+            ->select()
+            ->from('serviceStatus', ['host' => 'host_name', 'service' => 'service_description'])
+            ->applyFilter(Filter::fromQueryString($filter))
+            ->applyFilter($this->getRestriction('monitoring/filter/objects'))
+            ->order('service_description')
+            ->getQuery()
+            ->fetchAll();
+
+        $services = array();
+        foreach ($objects as $object) {
+            $services[$object->host . ';' . $object->service] = $object->host . ':' . $object->service;
+        }
+
+        return $services;
+    }
+
     protected function hasProcesses()
     {
         return count($this->enumProcesses()) > 0;
@@ -552,6 +669,8 @@ class AddNodeForm extends QuickForm
 
                 // Fallthrough
             case 'process':
+            case 'hosts_from_filter':
+            case 'services_from_filter':
                 if ($this->hasParentNode()) {
                     $changes->addChildrenToNode($this->getValue('children'), $this->parent);
                 } else {
