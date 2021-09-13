@@ -1,0 +1,60 @@
+.state-badge {
+  .rounded-corners();
+  color: @text-color-on-icinga-blue;
+  display: inline-block;
+  font-size: .8em;
+  min-width: 2em;
+  padding: .25em;
+  text-align: center;
+  border: 1px solid black;
+
+  &.state-critical {
+    background-color: @color-critical
+  }
+
+  &.state-critical.handled {
+    background-color: @color-critical-handled
+  }
+
+  &.state-down {
+    background-color: @color-down
+  }
+
+  &.state-down.handled {
+    background-color: @color-down-handled
+  }
+
+  &.state-ok {
+    background-color: @color-ok
+  }
+
+  &.state-pending {
+    background-color: @color-pending
+  }
+
+  &.state-unknown {
+    background-color: @color-unknown
+  }
+
+  &.state-unknown.handled {
+    background-color: @color-unknown-handled
+  }
+
+  &.state-up {
+    background-color: @color-up
+  }
+
+  &.state-warning {
+    background-color: @color-warning
+  }
+
+  &.state-warning.handled {
+    background-color: @color-warning-handled
+  }
+}
+
+a .state-badge {
+  &:hover {
+    filter: brightness(80%);
+  }
+}

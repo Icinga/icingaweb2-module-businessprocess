@@ -59,3 +59,6 @@ $this->provideRestriction(
 $this->provideJsFile('vendor/Sortable.js');
 $this->provideJsFile('behavior/sortable.js');
 $this->provideJsFile('vendor/jquery.fn.sortable.js');
+
+$this->provideCssFile('state-badge.less');
+$this->provideCssFile('state-badges.less');

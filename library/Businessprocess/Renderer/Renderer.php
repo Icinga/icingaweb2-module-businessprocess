@@ -9,6 +9,7 @@ use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\MonitoredNode;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Web\Url;
+use Icinga\Module\Businessprocess\Widget\StateBadge;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
 use ipl\Html\HtmlDocument;
@@ -135,34 +136,39 @@ abstract class Renderer extends HtmlDocument
      * @param $summary
      * @return BaseHtmlElement
      */
-    public function renderStateBadges($summary)
+    public function renderStateBadges($summary, $totalChildren)
     {
         $elements = [];
 
-        foreach ($summary as $state => $cnt) {
-            if ($cnt === 0
-                || $state === 'OK'
-                || $state === 'UP'
-            ) {
-                continue;
-            }
-
-            $elements[] = Html::tag(
-                'span',
-                [
-                    'class' => [
-                        'badge',
-                        'badge-' . strtolower($state)
-                    ],
-                    // TODO: We should translate this in this module
-                    'title' => mt('monitoring', $state)
+        $itemCount = Html::tag(
+            'span',
+            [
+                'class' => [
+                    'item-count',
                 ],
-                $cnt
-            );
-        }
+                'title' => sprintf('%u %s', $totalChildren, mtp(
+                    'businessprocess',
+                    'Child',
+                    'Children',
+                    $totalChildren,
+                    'businessprocess.nodes'
+                ))
+            ],
+            $totalChildren
+        );
+
+        $elements[] = array_filter([
+            $this->createBadgeGroup($summary, 'CRITICAL'),
+            $this->createBadgeGroup($summary, 'UNKNOWN'),
+            $this->createBadgeGroup($summary, 'WARNING'),
+            $this->createBadge($summary, 'OK'),
+            $this->createBadge($summary, 'MISSING'),
+            $this->createBadge($summary, 'PENDING')
+        ]);
 
         if (!empty($elements)) {
-            $container = Html::tag('div', ['class' => 'badges']);
+            $container = Html::tag('ul', ['class' => 'state-badges']);
+            $container->add($itemCount);
             foreach ($elements as $element) {
                 $container->add($element);
             }
@@ -170,6 +176,33 @@ abstract class Renderer extends HtmlDocument
             return $container;
         }
         return null;
+    }
+
+    protected function createBadge($summary, $state)
+    {
+        if ($summary[$state] !== 0) {
+            return Html::tag('li', new StateBadge($summary[$state], $state));
+        }
+
+        return null;
+    }
+
+    protected function createBadgeGroup($summary, $state)
+    {
+        $content = [];
+        if ($summary[$state] !== 0) {
+            $content[] = Html::tag('li', new StateBadge($summary[$state], $state));
+        }
+
+        if ($summary[$state . '-HANDLED'] !== 0) {
+            $content[] = Html::tag('li', new StateBadge($summary[$state . '-HANDLED'], $state, true));
+        }
+
+        if (empty($content)) {
+            return null;
+        }
+
+        return Html::tag('li', Html::tag('ul', $content));
     }
 
     public function getNodeClasses(Node $node)

@@ -1,0 +1,27 @@
+.state-badges() {
+  &.state-badges {
+    padding: 0;
+
+    ul {
+      padding: 0;
+    }
+
+    li {
+      display: inline-block;
+    }
+
+    li > ul > li:first-child:not(:last-child) .state-badge {
+      border-bottom-right-radius: 0;
+      border-top-right-radius: 0;
+    }
+
+    li > ul > li:last-child:not(:first-child) .state-badge {
+      border-bottom-left-radius: 0;
+      border-top-left-radius: 0;
+    }
+
+    > li:not(:last-child) {
+      margin-right: .25em;
+    }
+  }
+}

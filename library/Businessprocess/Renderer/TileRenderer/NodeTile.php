@@ -129,24 +129,7 @@ class NodeTile extends BaseHtmlElement
         }
 
         if ($node instanceof BpNode && !$renderer->isBreadcrumb()) {
-            $this->add(Html::tag(
-                'p',
-                ['class' => 'children-count'],
-                $node->hasChildren()
-                    ? Html::tag(
-                        'span',
-                        null,
-                        sprintf('%u %s', $node->countChildren(), mtp(
-                            'businessprocess',
-                            'Child',
-                            'Children',
-                            $node->countChildren(),
-                            'businessprocess.nodes'
-                        ))
-                    )
-                    : null
-            ));
-            $this->add($renderer->renderStateBadges($node->getStateSummary()));
+            $this->add($renderer->renderStateBadges($node->getStateSummary(), $node->countChildren()));
         }
 
         return parent::render();
