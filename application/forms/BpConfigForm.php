@@ -167,7 +167,7 @@ class BpConfigForm extends BpConfigBaseForm
         }
         $meta = $config->getMetadata();
         foreach ($this->getValues() as $key => $value) {
-            if ($value === null || $value === '') {
+            if ($key !== 'Backend' && ($value === null || $value === '')) {
                 continue;
             }
             if ($meta->hasKey($key)) {
