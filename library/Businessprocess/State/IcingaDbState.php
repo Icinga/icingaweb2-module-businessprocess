@@ -12,7 +12,7 @@ use Icinga\Module\Icingadb\Common\Auth;
 use Icinga\Module\Icingadb\Model\Host;
 use Icinga\Module\Icingadb\Model\Service;
 
-class IcingaDbState extends IcingaDbBackend
+class IcingaDbState
 {
     use Auth;
 
@@ -70,66 +70,35 @@ class IcingaDbState extends IcingaDbBackend
         $queryHost->getSelectBase()
             ->where(['host.name IN (?)' => $hosts]);
 
+        $hostObject = $queryHost->getModel()->getTableName();
+
         IcingaDbBackend::applyIcingaDbRestrictions($queryHost);
 
-        if ($this->config->usesHardStates()) {
-            $stateCol = 'state.hard_state';
-        } else {
-            $stateCol = 'state.soft_state';
-        }
-
-        $hostStatusCols = [
-            'hostname'          => 'host.name',
-            'last_state_change' => 'state.last_state_change',
-            'in_downtime'       => 'state.in_downtime',
-            'ack'               => 'state.is_acknowledged',
-            'state'             => $stateCol,
-            'display_name'      =>'host.display_name'
-        ];
-
-        $queryHost = $queryHost->columns($hostStatusCols)->assembleSelect();
-
-        $hostStatus = $this->backend->select($queryHost)->fetchAll();
-
-        Benchmark::measure('Retrieved states for ' . count($hostStatus) . ' hosts in ' . $config->getName());
+        Benchmark::measure('Retrieved states for ' . $queryHost->count() . ' hosts in ' . $config->getName());
 
         $queryService = Service::on($this->backend)->with([
             'state',
             'host',
             'host.state'
         ]);
+
         $queryService->getSelectBase()
             ->where(['service_host.name IN (?)' => $hosts]);
 
         IcingaDbBackend::applyIcingaDbRestrictions($queryService);
 
-        $serviceStatusCols = [
-            'hostname'          => 'host.name',
-            'service'           => 'service.name',
-            'last_state_change' => 'state.last_state_change',
-            'in_downtime'       => 'state.in_downtime',
-            'ack'               => 'state.is_acknowledged',
-            'state'             => 'state.soft_state',
-            'display_name'      => 'service.display_name',
-            'host_display_name' => 'host.display_name'
-        ];
-
-        $queryService = $queryService->columns($serviceStatusCols)->assembleSelect();
-
-        $serviceStatus = $this->backend->select($queryService)->fetchAll();
-
-        Benchmark::measure('Retrieved states for ' . count($serviceStatus) . ' services in ' . $config->getName());
+        Benchmark::measure('Retrieved states for ' . $queryService->count() . ' services in ' . $config->getName());
 
         $configs = $config->listInvolvedConfigs();
-        $hostStatus = (object) $hostStatus;
-        $serviceStatus = (object) $serviceStatus;
+
+        $serviceObject = $queryService->getModel()->getTableName();
 
         foreach ($configs as $cfg) {
-            foreach ($serviceStatus as $row) {
-                $this->handleDbRow($row, $cfg);
+            foreach ($queryService as $row) {
+                $this->handleDbRow($row, $cfg, $serviceObject);
             }
-            foreach ($hostStatus as $row) {
-                $this->handleDbRow($row, $cfg);
+            foreach ($queryHost as $row) {
+                $this->handleDbRow($row, $cfg, $hostObject);
             }
         }
 
@@ -138,13 +107,12 @@ class IcingaDbState extends IcingaDbBackend
         return $this;
     }
 
-    protected function handleDbRow($row, BpConfig $config)
+    protected function handleDbRow($row, BpConfig $config, $objectName)
     {
-        $key = $row->hostname;
-        if (property_exists($row, 'service')) {
-            $key .= ';' . $row->service;
+        if ($objectName === 'service') {
+            $key = $row->host->name . ';' . $row->name;
         } else {
-            $key .= ';Hoststatus';
+            $key = $row->name . ';Hoststatus';
         }
 
         // We fetch more states than we need, so skip unknown ones
@@ -152,27 +120,32 @@ class IcingaDbState extends IcingaDbBackend
             return;
         }
 
-        // Since we are fetching the values directly using assembleSelect instead of using ORM,
-        // the following changes for 'last_state_change', 'in_downtime' and 'ack' is required
         $node = $config->getNode($key);
 
-        if ($row->state !== null) {
-            $node->setState($row->state)->setMissing(false);
+        if ($this->config->usesHardStates()) {
+            if ($row->state->hard_state !== null) {
+                $node->setState($row->state->hard_state)->setMissing(false);
+            }
+        } else {
+            if ($row->state->soft_state !== null) {
+                $node->setState($row->state->soft_state)->setMissing(false);
+            }
         }
-        if ($row->last_state_change !== null) {
-            $node->setLastStateChange($row->last_state_change/1000);
+
+        if ($row->state->last_state_change !== null) {
+            $node->setLastStateChange($row->state->last_state_change/1000);
         }
-        if ($row->in_downtime === 'y') {
+        if ($row->state->in_downtime === 'y') {
             $node->setDowntime(true);
         }
-        if ($row->ack !== 'n') {
+        if ($row->state->is_acknowledged !== 'n') {
             $node->setAck(true);
         }
 
         $node->setAlias($row->display_name);
 
         if ($node instanceof ServiceNode) {
-            $node->setHostAlias($row->host_display_name);
+            $node->setHostAlias($row->host->display_name);
         }
     }
 }
