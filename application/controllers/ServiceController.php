@@ -3,7 +3,7 @@
 namespace Icinga\Module\Businessprocess\Controllers;
 
 use Icinga\Module\Businessprocess\Common\IcingadbDatabase;
-use Icinga\Module\Businessprocess\IcingaDbBackend;
+use Icinga\Module\Businessprocess\IcingaDbObject;
 use Icinga\Module\Icingadb\Model\Service;
 use Icinga\Module\Monitoring\Controller;
 use Icinga\Web\Url;
@@ -21,7 +21,7 @@ class ServiceController extends Controller
             $serviceName = $this->params->shift('service');
 
             $query = Service::on($this->getDb())->with('host');
-            IcingaDbBackend::applyIcingaDbRestrictions($query);
+            IcingaDbObject::applyIcingaDbRestrictions($query);
 
             $query->getSelectBase()
                 ->where(['service.name = ?' => $serviceName])

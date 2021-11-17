@@ -6,7 +6,7 @@ use Exception;
 use Icinga\Application\Benchmark;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Common\IcingadbDatabase;
-use Icinga\Module\Businessprocess\IcingaDbBackend;
+use Icinga\Module\Businessprocess\IcingaDbObject;
 use Icinga\Module\Businessprocess\ServiceNode;
 use Icinga\Module\Icingadb\Common\Auth;
 use Icinga\Module\Icingadb\Model\Host;
@@ -65,14 +65,14 @@ class IcingaDbState
         }
 
         $queryHost = Host::on($this->backend)->with('state');
-        IcingaDbBackend::applyIcingaDbRestrictions($queryHost);
+        IcingaDbObject::applyIcingaDbRestrictions($queryHost);
 
         $queryHost->getSelectBase()
             ->where(['host.name IN (?)' => $hosts]);
 
         $hostObject = $queryHost->getModel()->getTableName();
 
-        IcingaDbBackend::applyIcingaDbRestrictions($queryHost);
+        IcingaDbObject::applyIcingaDbRestrictions($queryHost);
 
         Benchmark::measure('Retrieved states for ' . $queryHost->count() . ' hosts in ' . $config->getName());
 
@@ -85,7 +85,7 @@ class IcingaDbState
         $queryService->getSelectBase()
             ->where(['service_host.name IN (?)' => $hosts]);
 
-        IcingaDbBackend::applyIcingaDbRestrictions($queryService);
+        IcingaDbObject::applyIcingaDbRestrictions($queryService);
 
         Benchmark::measure('Retrieved states for ' . $queryService->count() . ' services in ' . $config->getName());
 

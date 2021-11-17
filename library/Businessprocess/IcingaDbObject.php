@@ -8,7 +8,7 @@ use Icinga\Module\Icingadb\Model\Host;
 use Icinga\Module\Icingadb\Model\Service;
 use ipl\Web\Filter\QueryString;
 
-class IcingaDbBackend
+class IcingaDbObject
 {
     use IcingadbDatabase;
 

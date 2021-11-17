@@ -3,7 +3,7 @@
 namespace Icinga\Module\Businessprocess\Common;
 
 use Icinga\Data\Filter\Filter;
-use Icinga\Module\Businessprocess\IcingaDbBackend;
+use Icinga\Module\Businessprocess\IcingaDbObject;
 use Icinga\Module\Businessprocess\MonitoringRestrictions;
 
 trait EnumList
@@ -11,7 +11,7 @@ trait EnumList
     protected function enumHostForServiceList()
     {
         if ($this->useIcingaDbBackend()) {
-            $names = (new IcingaDbBackend())->yieldHostnames();
+            $names = (new IcingaDbObject())->yieldHostnames();
         } else {
             $names = $this->backend
                 ->select()
@@ -35,7 +35,7 @@ trait EnumList
     protected function enumHostList()
     {
         if ($this->useIcingaDbBackend()) {
-            $names = (new IcingaDbBackend())->yieldHostnames();
+            $names = (new IcingaDbObject())->yieldHostnames();
         } else {
             $names = $this->backend
                 ->select()
@@ -60,7 +60,7 @@ trait EnumList
     protected function enumServiceList($host)
     {
         if ($this->useIcingaDbBackend()) {
-            $names = (new IcingaDbBackend())->yieldServicenames($host);
+            $names = (new IcingaDbObject())->yieldServicenames($host);
         } else {
             $names = $this->backend
                 ->select()
@@ -83,7 +83,7 @@ trait EnumList
     protected function enumHostListByFilter($filter)
     {
         if ($this->useIcingaDbBackend()) {
-            $names = (new IcingaDbBackend())->yieldHostnames($filter);
+            $names = (new IcingaDbObject())->yieldHostnames($filter);
         } else {
             $names = $this->backend
                 ->select()
@@ -110,7 +110,7 @@ trait EnumList
         $services = array();
 
         if ($this->useIcingaDbBackend()) {
-            $objects = (new IcingaDbBackend())->fetchServices($filter);
+            $objects = (new IcingaDbObject())->fetchServices($filter);
             foreach ($objects as $object) {
                 $services[$object->host->name . ';' . $object->name] = $object->host->name . ':' . $object->name;
             }

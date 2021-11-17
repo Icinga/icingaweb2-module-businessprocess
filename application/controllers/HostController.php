@@ -3,7 +3,7 @@
 namespace Icinga\Module\Businessprocess\Controllers;
 
 use Icinga\Module\Businessprocess\Common\IcingadbDatabase;
-use Icinga\Module\Businessprocess\IcingaDbBackend;
+use Icinga\Module\Businessprocess\IcingaDbObject;
 use Icinga\Module\Icingadb\Model\Host;
 use Icinga\Module\Monitoring\Controller;
 use Icinga\Web\Url;
@@ -20,7 +20,7 @@ class HostController extends Controller
             $hostName = $this->params->shift('host');
 
             $query = Host::on($this->getDb());
-            IcingaDbBackend::applyIcingaDbRestrictions($query);
+            IcingaDbObject::applyIcingaDbRestrictions($query);
 
             $query->getSelectBase()
                 ->where(['host.name = ?' => $hostName]);
