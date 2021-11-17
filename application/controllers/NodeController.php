@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Controllers;
 
+use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
 use Icinga\Module\Businessprocess\Renderer\Breadcrumb;
 use Icinga\Module\Businessprocess\Renderer\TileRenderer;
 use Icinga\Module\Businessprocess\Simulation;
@@ -82,7 +83,7 @@ class NodeController extends Controller
             if (empty($parents)) {
                 continue;
             }
-            if ($config->getBackendName() === '_icingadb') {
+            if ($config->getBackendName() === '_icingadb' || IcingadbSupport::useIcingaDbAsBackend()) {
                 IcingaDbState::apply($config);
             } else {
                 MonitoringState::apply($config);

@@ -5,6 +5,7 @@ namespace Icinga\Module\Businessprocess\Common;
 use Icinga\Data\Filter\Filter;
 use Icinga\Module\Businessprocess\IcingaDbObject;
 use Icinga\Module\Businessprocess\MonitoringRestrictions;
+use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
 
 trait EnumList
 {
@@ -133,6 +134,6 @@ trait EnumList
 
     protected function useIcingaDbBackend()
     {
-        return $this->backendName === '_icingadb';
+        return $this->backendName === '_icingadb' || IcingadbSupport::useIcingaDbAsBackend();
     }
 }
