@@ -20,18 +20,19 @@ class ServiceController extends Controller
             $hostName = $this->params->shift('host');
             $serviceName = $this->params->shift('service');
 
-            $service = Service::on($this->getDb())->with('host');
-            $service->getSelectBase()
-                ->where(['service_host.name = ?' => $hostName, 'service.name = ?' => $serviceName]);
+            $query = Service::on($this->getDb())->with('host');
+            IcingaDbBackend::applyIcingaDbRestrictions($query);
 
-            IcingaDbBackend::applyMonitoringRestriction($service);
+            $query->getSelectBase()
+                ->where(['service.name = ?' => $serviceName])
+                ->where(['service_host.name = ?' => $hostName]);
 
-            $rs = $service->columns('host.name')->first();
+            $service = $query->first();
 
             $this->params->add('name', $serviceName);
             $this->params->add('host.name', $hostName);
 
-            if ($rs !== false) {
+            if ($service !== false) {
                 $this->redirectNow(Url::fromPath('icingadb/service')->setParams($this->params));
             }
         } else {

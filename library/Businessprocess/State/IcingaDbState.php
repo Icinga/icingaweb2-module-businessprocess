@@ -8,11 +8,14 @@ use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Common\IcingadbDatabase;
 use Icinga\Module\Businessprocess\IcingaDbBackend;
 use Icinga\Module\Businessprocess\ServiceNode;
+use Icinga\Module\Icingadb\Common\Auth;
 use Icinga\Module\Icingadb\Model\Host;
 use Icinga\Module\Icingadb\Model\Service;
 
 class IcingaDbState extends IcingaDbBackend
 {
+    use Auth;
+
     /** @var BpConfig */
     protected $config;
 
@@ -62,11 +65,12 @@ class IcingaDbState extends IcingaDbBackend
         }
 
         $queryHost = Host::on($this->backend)->with('state');
+        IcingaDbBackend::applyIcingaDbRestrictions($queryHost);
 
         $queryHost->getSelectBase()
             ->where(['host.name IN (?)' => $hosts]);
 
-        IcingaDbBackend::applyMonitoringRestriction($queryHost);
+        IcingaDbBackend::applyIcingaDbRestrictions($queryHost);
 
         if ($this->config->usesHardStates()) {
             $stateCol = 'state.hard_state';
@@ -97,15 +101,15 @@ class IcingaDbState extends IcingaDbBackend
         $queryService->getSelectBase()
             ->where(['service_host.name IN (?)' => $hosts]);
 
-        IcingaDbBackend::applyMonitoringRestriction($queryService);
+        IcingaDbBackend::applyIcingaDbRestrictions($queryService);
 
         $serviceStatusCols = [
             'hostname'          => 'host.name',
             'service'           => 'service.name',
             'last_state_change' => 'state.last_state_change',
             'in_downtime'       => 'state.in_downtime',
-            'ack'               => 'host.state.is_acknowledged',
-            'state'             => $stateCol,
+            'ack'               => 'state.is_acknowledged',
+            'state'             => 'state.soft_state',
             'display_name'      => 'service.display_name',
             'host_display_name' => 'host.display_name'
         ];

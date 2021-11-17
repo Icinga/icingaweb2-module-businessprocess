@@ -19,16 +19,17 @@ class HostController extends Controller
         if ($icingadb) {
             $hostName = $this->params->shift('host');
 
-            $host = Host::on($this->getDb());
-            $host->getSelectBase()
-                ->where(['host.name = ?' => $hostName]);
-            IcingaDbBackend::applyMonitoringRestriction($host);
+            $query = Host::on($this->getDb());
+            IcingaDbBackend::applyIcingaDbRestrictions($query);
 
-            $rs = $host->columns('host.name')->first();
+            $query->getSelectBase()
+                ->where(['host.name = ?' => $hostName]);
+
+            $host = $query->first();
 
             $this->params->add('name', $hostName);
 
-            if ($rs !== false) {
+            if ($host !== false) {
                 $this->redirectNow(Url::fromPath('icingadb/host')->setParams($this->params));
             }
         } else {

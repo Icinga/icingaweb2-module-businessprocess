@@ -3,15 +3,16 @@
 namespace Icinga\Module\Businessprocess;
 
 use Icinga\Module\Businessprocess\Common\IcingadbDatabase;
+use Icinga\Module\Icingadb\Common\Auth;
 use Icinga\Module\Icingadb\Model\Host;
 use Icinga\Module\Icingadb\Model\Service;
-use Icinga\Module\Monitoring\Backend\MonitoringBackend;
-use ipl\Orm\Compat\FilterProcessor;
-use ipl\Orm\Query;
+use ipl\Web\Filter\QueryString;
 
 class IcingaDbBackend
 {
     use IcingadbDatabase;
+
+    use Auth;
 
     /** @var BpConfig */
     protected $config;
@@ -24,51 +25,63 @@ class IcingaDbBackend
         $this->conn = $this->getDb();
     }
 
-    public function fetchHosts()
+    public function fetchHosts($filter = null)
     {
-        $hosts = Host::on($this->conn)
-            ->orderBy('host.name');
 
-        self::applyMonitoringRestriction($hosts);
+        $hosts = Host::on($this->conn);
+
+        if ($filter !== null) {
+            $filterQuery = QueryString::parse($filter);
+
+            $hosts->filter($filterQuery);
+        }
+
+        $hosts->orderBy('host.name');
+
+        $this->applyIcingaDbRestrictions($hosts);
 
         return $hosts;
     }
 
-    public function fetchServices($host)
+    public function fetchServices($filter)
     {
         $services = Service::on($this->conn)
             ->with('host');
 
-        $services->getSelectBase()
-            ->where(['service_host.name = ?' => $host])
-            ->orderBy('service.name');
+        if ($filter !== null) {
+            $filterQuery = QueryString::parse($filter);
 
-        self::applyMonitoringRestriction($services);
+            $services->filter($filterQuery);
+        }
+
+        $services->orderBy('service.name');
+
+        $this->applyIcingaDbRestrictions($services);
 
         return $services;
     }
 
-    public function yieldHostnames()
+    public function yieldHostnames($filter = null)
     {
-        foreach ($this->fetchHosts() as $host) {
+        foreach ($this->fetchHosts($filter) as $host) {
             yield $host->name;
         }
     }
 
     public function yieldServicenames($host)
     {
-        foreach ($this->fetchServices($host) as $service) {
+        $filter = "host.name=$host";
+
+        foreach ($this->fetchServices($filter) as $service) {
             yield $service->name;
         }
     }
 
-    public static function applyMonitoringRestriction(Query $query)
+    public static function applyIcingaDbRestrictions($query)
     {
-        $restriction = FilterProcessor::apply(
-            MonitoringRestrictions::getRestriction('monitoring/filter/objects'),
-            $query
-        );
+        $object = new self;
+        $object->applyRestrictions($query);
 
-        return $restriction;
+        return $object;
     }
 }
