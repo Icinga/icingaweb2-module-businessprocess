@@ -463,30 +463,6 @@ class AddNodeForm extends QuickForm
         return $this;
     }
 
-    protected function enumHostStateList()
-    {
-        $hostStateList = [
-            0 => $this->translate('UP'),
-            1 => $this->translate('DOWN'),
-            99 => $this->translate('PENDING')
-        ];
-
-        return $hostStateList;
-    }
-
-    protected function enumServiceStateList()
-    {
-        $serviceStateList = [
-            0 => $this->translate('OK'),
-            1 => $this->translate('WARNING'),
-            2 => $this->translate('CRITICAL'),
-            3 => $this->translate('UNKNOWN'),
-            99 => $this->translate('PENDING'),
-        ];
-
-        return $serviceStateList;
-    }
-
     protected function hasProcesses()
     {
         return count($this->enumProcesses()) > 0;
