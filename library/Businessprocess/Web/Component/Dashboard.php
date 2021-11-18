@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Web\Component;
 
+use Icinga\Application\Modules\Module;
 use Icinga\Authentication\Auth;
 use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
 use Icinga\Module\Businessprocess\State\IcingaDbState;
@@ -93,7 +94,13 @@ class Dashboard extends BaseHtmlElement
             }
 
             $bp = $storage->loadProcess($name);
-            if ($bp->getBackendName() === '_icingadb' || IcingadbSupport::useIcingaDbAsBackend()) {
+            if (! Module::exists('icingadb')) {
+                $bp->getMetadata()->set('Backend', null);
+            }
+
+            if (Module::exists('icingadb') &&
+                ($bp->getBackendName() === '_icingadb' || IcingadbSupport::useIcingaDbAsBackend())
+            ) {
                 IcingaDbState::apply($bp);
             } else {
                 MonitoringState::apply($bp);

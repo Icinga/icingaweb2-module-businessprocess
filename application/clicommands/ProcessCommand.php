@@ -4,6 +4,7 @@ namespace Icinga\Module\Businessprocess\Clicommands;
 
 use Exception;
 use Icinga\Application\Logger;
+use Icinga\Application\Modules\Module;
 use Icinga\Cli\Command;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
@@ -134,7 +135,9 @@ class ProcessCommand extends Command
         /** @var BpNode $node */
         try {
             $node = $bp->getNode($nodeName);
-            if ($bp->getBackendName() === '_icingadb' || IcingadbSupport::useIcingaDbAsBackend()) {
+            if (Module::exists('icingadb') &&
+                ($bp->getBackendName() === '_icingadb' || IcingadbSupport::useIcingaDbAsBackend())
+            ) {
                 IcingaDbState::apply($bp);
             } else {
                 MonitoringState::apply($bp);

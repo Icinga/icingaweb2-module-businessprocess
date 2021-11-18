@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Controllers;
 
+use Icinga\Application\Modules\Module;
 use Icinga\Date\DateFormatter;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
@@ -83,7 +84,13 @@ class ProcessController extends Controller
         $bp = $this->loadModifiedBpConfig();
         $node = $this->getNode($bp);
 
-        if ($bp->getBackendName() === '_icingadb' || IcingadbSupport::useIcingaDbAsBackend()) {
+        if (! Module::exists('icingadb')) {
+            $bp->getMetadata()->set('Backend', null);
+        }
+
+        if (Module::exists('icingadb') &&
+            ($bp->getBackendName() === '_icingadb' || IcingadbSupport::useIcingaDbAsBackend())
+        ) {
             IcingaDbState::apply($bp);
         } else {
             MonitoringState::apply($bp);

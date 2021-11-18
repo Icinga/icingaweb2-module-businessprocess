@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess;
 
+use Icinga\Application\Modules\Module;
 use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
 use Icinga\Module\Businessprocess\Web\Url;
 use ipl\Html\Html;
@@ -57,9 +58,14 @@ class HostNode extends MonitoredNode
             'host' => $this->getHostname(),
         );
 
-        if ($this->getBpConfig()->hasBackendName() || IcingadbSupport::useIcingaDbAsBackend()) {
+        if ($this->getBpConfig()->hasBackendName() ||
+            (Module::exists('icingadb') && IcingadbSupport::useIcingaDbAsBackend())
+        ) {
             $backendName = $this->getBpConfig()->getBackendName();
-            if ($backendName === '_icingadb' || IcingadbSupport::useIcingaDbAsBackend()) {
+
+            if (Module::exists('icingadb') &&
+                ($backendName === '_icingadb' || IcingadbSupport::useIcingaDbAsBackend())
+            ) {
                 $params['icingadb'] = 1;
             } else {
                 $params['backend'] = $this->getBpConfig()->getBackendName();

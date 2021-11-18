@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Controllers;
 
+use Icinga\Application\Modules\Module;
 use Icinga\Module\Businessprocess\Common\IcingadbDatabase;
 use Icinga\Module\Businessprocess\IcingaDbObject;
 use Icinga\Module\Icingadb\Model\Service;
@@ -16,7 +17,7 @@ class ServiceController extends Controller
     {
         $icingadb = $this->params->shift('icingadb');
 
-        if ($icingadb) {
+        if ($icingadb && Module::exists('icingadb')) {
             $hostName = $this->params->shift('host');
             $serviceName = $this->params->shift('service');
 

@@ -3,7 +3,6 @@
 namespace Icinga\Module\Businessprocess;
 
 use Exception;
-use Icinga\Application\Config;
 use Icinga\Application\Modules\Module;
 use Icinga\Exception\IcingaException;
 use Icinga\Exception\NotFoundError;
@@ -295,6 +294,10 @@ class BpConfig
     public function getBackend()
     {
         if ($this->backend === null) {
+            if (! Module::exists('icingadb')) {
+                $this->getMetadata()->set('Backend', null);
+            }
+
             if ($this->getBackendName() === '_icingadb' ||
                 (Module::exists('icingadb') && IcingadbSupport::useIcingaDbAsBackend())
             ) {
