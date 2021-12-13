@@ -133,7 +133,13 @@ class NodeTile extends BaseHtmlElement
                     ? Html::tag(
                         'span',
                         null,
-                        sprintf('%u %s', $node->countChildren(), mt('businessprocess', 'Children'))
+                        sprintf('%u %s', $node->countChildren(), mtp(
+                            'businessprocess',
+                            'Child',
+                            'Children',
+                            $node->countChildren(),
+                            'businessprocess.nodes'
+                        ))
                     )
                     : null
             ));
