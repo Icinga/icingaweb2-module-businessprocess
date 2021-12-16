@@ -802,34 +802,8 @@ form input[type=file] {
     padding-right: 1em;
 }
 
-
-form input[type=submit] {
-    .button();
-    border-width: 1px;
-    margin-top: 0.5em;
-
-    &:disabled {
-        border-color: @gray-light;
-        background-color: @gray-light;
-        color: @text-color;
-    }
-}
-
 form input[type=submit]:first-of-type {
     border-width: 2px;
-}
-
-form input[type=submit].link-button {
-    color: @icinga-blue;
-    background: none;
-    border: none;
-    padding: 0;
-
-    text-align: left;
-
-    &:hover {
-        text-decoration: underline;
-    }
 }
 
 form p.description {
@@ -839,12 +813,6 @@ form p.description {
     width: 100%;
 }
 
-input[type=text], input[type=button], select, select option, textarea {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-}
-
 form ul.form-errors {
     margin-bottom: 0.5em;
 
@@ -852,50 +820,14 @@ form ul.form-errors {
         background: @color-critical;
         font-weight: bold;
         padding: 0.5em 1em;
-        color: @text-color;
+        color: @text-color-on-icinga-blue;
     }
 }
 
-select::-ms-expand, input::-ms-expand, textarea::-ms-expand { /* for IE 11 */
-    display: none;
-}
-
-select {
-    border: 1px solid @gray;
-    cursor: pointer;
-    background: none;
-}
-
-input[type=text], input[type=password], textarea, select {
+input[type=text], input[type=password], input[type=file], textarea, select {
     max-width: 36em;
     min-width: 20em;
     width: 100%;
-    line-height: 2em;
-    height: 2.4em;
-    padding-left: 0.5em;
-    border-style: solid;
-    border-color: transparent;
-    border-bottom-color: @gray-lighter;
-    border-width: 1px 1px 1px 3px;
-    background-color: @low-sat-blue;
-
-    &.search {
-        background: transparent url("../img/icons/search.png") no-repeat scroll 0.5em center / 1em 1em;
-        padding-left: 2em;
-    }
-}
-
-select[multiple] {
-    height: auto;
-}
-
-select option {
-    height: 2em;
-    padding-top: 0.3em;
-}
-
-select[multiple=multiple] {
-    height: auto;
 }
 
 label {
@@ -907,39 +839,8 @@ form dl {
     padding: 0;
 }
 
-select::-moz-focus-inner { border: 0; }
-
-select:-moz-focusring {
-    color: transparent;
-    text-shadow: 0 0 0 @black;
-}
-
-select, input[type=text], textarea {
-    &:hover {
-        border-style: dotted solid dotted solid;
-        border-color: @gray-light;
-    }
-
-    &:focus, &:focus:hover {
-        border-style: solid;
-        border-color: @icinga-blue;
-        outline: none;
-    }
-}
-
-select[value=""] {
-    color: @icinga-blue;
-    border: 1px solid @gray-light;
-    background-color: @body-bg-color;
-}
-
 select option {
-    color: inherit;
     padding-left: 0.5em;
-}
-
-select option[value=""] {
-    color: @disabled-gray;
 }
 
 form dt label {
@@ -1067,29 +968,39 @@ form dd ul.errors {
     }
 }
 
-form div.hint {
-    padding: 1em;
-    background-color: @tr-hover-color;
-    margin: 1em 0;
-    max-width: 65em;
-    font-size: 1em;
-
-    pre {
-        font-style: normal;
-        background-color: @white;
-        margin: 0;
-        padding: 1em;
-    }
-}
-
-
 form {
     #_FAKE_SUBMIT {
         position: absolute;
         left: -100%;
     }
 }
+
 /** END of forms **/
+
+/* Form fallback styles, remove once <=2.9.5 support is dropped */
+
+.icinga-controls {
+    input[type="file"] {
+        background-color: @low-sat-blue;
+    }
+
+    button[type="button"] {
+        background-color: @low-sat-blue;
+    }
+}
+
+form.icinga-form {
+    input[type="file"] {
+        flex: 1 1 auto;
+        width: 0;
+    }
+
+    button[type="button"] {
+        line-height: normal;
+    }
+}
+
+/* Form fallback styles end */
 
 /** Custom font styling **/
 textarea.smaller {
