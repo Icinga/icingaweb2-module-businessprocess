@@ -130,7 +130,7 @@ class TreeRenderer extends Renderer
             )
         ]);
         if ($node->isInDowntime()) {
-            $icons[] = Html::tag('i', ['class' => 'icon icon-moon']);
+            $icons[] = Html::tag('i', ['class' => 'icon icon-plug']);
         }
         if ($node->isAcknowledged()) {
             $icons[] = Html::tag('i', ['class' => 'icon icon-ok']);
