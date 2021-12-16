@@ -1,9 +1,3 @@
-@color-diff-ins: @color-ok;
-@color-diff-del: @color-critical;
-@color-diff-changed-old: fade(@color-critical, 30%);
-@color-diff-changed-new: fade(@color-ok, 30%);
-@color-change-replace-del: #e99;
-
 a:focus {
     outline: none;
     text-decoration: underline;
@@ -94,12 +88,6 @@ div.bp.sortable > .sortable-ghost {
     opacity: 0.5;
 }
 
-.simulation div.bp {
-    border-right: 1em solid @color-critical-handled;
-    padding-right: 1em;
-    background: @white;
-}
-
 
 /* TreeView */
 
@@ -173,10 +161,10 @@ ul.bp {
             &.op {
                 padding: .1em .5em;
                 border-radius: .5em;
-                background-color: @gray-light;
+                background-color: @gray-semilight;
                 font-weight: bold;
                 font-size: 1em;
-                color: @text-color-light;
+                color: @text-color-on-icinga-blue;
             }
         }
     }
@@ -206,10 +194,6 @@ ul.bp {
                 margin-top: 0;
                 padding-top: 0;
             }
-        }
-
-        > i.icon-service {
-            opacity: .75;
         }
     }
 
@@ -382,7 +366,7 @@ ul.bp {
     padding: 0.3em 0.4em;
 
     .badge {
-        border: 1px solid @white;
+        border: 1px solid @body-bg-color;
         margin: 0;
     }
 }
@@ -402,7 +386,7 @@ td > a > .badges {
 .badge-unknown, .badge-unreachable { background: @color-unknown; }
 .badge-warning { background: @color-warning }
 .badge-pending { background: @color-pending }
-.badge-missing { background: @gray; }
+.badge-missing { background: @gray-semilight; color: @text-color-on-icinga-blue; }
 /** END Badges **/
 
 /** BEGIN Tiles **/
@@ -414,11 +398,11 @@ td > a > .badges {
 
 .tiles.sortable > .sortable-ghost {
     opacity: 0.5;
-    border: .2em dashed @black;
+    border: .2em dashed @gray;
 }
 
 .tiles > div {
-    color: @body-bg-color;
+    color: @text-color-on-icinga-blue;
     width: 12em;
     display: inline-block;
     float: left;
@@ -444,7 +428,7 @@ td > a > .badges {
         left: 0;
         bottom: 0;
         margin: .5em;
-        border: 1px solid @white;
+        border: 1px solid @body-bg-color;
     }
 
     > a {
@@ -469,7 +453,7 @@ td > a > .badges {
     }
 
     &:hover {
-        box-shadow: 0px 0px .2em @black;
+        box-shadow: 0 0 .2em @gray;
     }
 
     .actions {
@@ -547,33 +531,9 @@ td > a > .badges {
     > .ok                  { background-color: @color-ok;               > a { text-shadow: 0 0 1px mix(#000, @color-ok, 40%); }}
     > .up                  { background-color: @color-ok;               > a { text-shadow: 0 0 1px mix(#000, @color-ok, 40%); }}
     > .pending             { background-color: @color-pending;          > a { text-shadow: 0 0 1px mix(#000, @color-pending, 40%); }}
-    > .missing             { background-color: @gray-light;             > a { text-shadow: 0 0 1px @gray; }}
-    > .empty               { background-color: @gray-light;             > a { text-shadow: 0 0 1px @gray; } }
+    > .missing             { background-color: @gray-semilight;         > a { color: @text-color-on-icinga-blue; }}
+    > .empty               { background-color: @gray-semilight;         > a { color: @text-color-on-icinga-blue; }}
 }
-
-/*
-.tiles > div:hover {
-    > .critical            { background: @white; color: @text-color; }
-    > .critical.handled    { background: @color-critical-handled; }
-    > .down                { background: @color-critical; }
-    > .down.handled        { background: @color-critical-handled; }
-    > .unknown             { background: @color-unknown; }
-    > .unknown.handled     { background: @color-unknown-handled; }
-    > .unreachable         { background: @color-unknown; }
-    > .unreachable.handled { background: @color-unknown-handled; }
-    > .warning             { background: @color-warning; }
-    > .warning.handled     { background: @color-warning-handled; }
-    > .ok                  { background: @color-ok; }
-    > .pending             { background: @color-pending; }
-    > .missing             { background: @gray; }
-}
-*/
-/*
-.tiles .missing a {
-    pointer-events: none;
-    cursor: default;
-}
-*/
 
 .tiles.few { font-size: 2.5em; }
 .tiles.normal { font-size: 2.1em; }
@@ -663,7 +623,7 @@ td > a > .badges {
         padding-right: 1.2em;
 
         a {
-            color: @text-color-light;
+            color: @text-color-on-icinga-blue;
         }
     }
 }
@@ -746,7 +706,7 @@ ul.error, ul.warning {
 
     li {
         font-weight: bold;
-        color: @text-color;
+        color: @text-color-on-icinga-blue;
         padding: 0.3em 0.8em;
     }
 
