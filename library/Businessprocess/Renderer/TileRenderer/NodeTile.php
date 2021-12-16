@@ -10,10 +10,10 @@ use Icinga\Module\Businessprocess\MonitoredNode;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Renderer\Renderer;
 use Icinga\Module\Businessprocess\ServiceNode;
-use Icinga\Module\Businessprocess\Web\Component\StateBall;
 use Icinga\Web\Url;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
+use ipl\Web\Widget\StateBall;
 
 class NodeTile extends BaseHtmlElement
 {
@@ -90,9 +90,9 @@ class NodeTile extends BaseHtmlElement
             if ($renderer->isBreadcrumb()) {
                 $state = strtolower($node->getStateName());
                 if ($node->isHandled()) {
-                    $state = $state . '-handled';
+                    $state = $state . ' handled';
                 }
-                $link->prepend((new StateBall($state))->addAttributes([
+                $link->prepend((new StateBall($state, StateBall::SIZE_MEDIUM))->addAttributes([
                     'title' => sprintf(
                         '%s %s',
                         $state,
@@ -116,13 +116,16 @@ class NodeTile extends BaseHtmlElement
         if ($this->renderer->rendersSubNode()
             && $this->renderer->getParentNode()->getChildState($node) !== $node->getState()
         ) {
-            $this->add((new StateBall(strtolower($node->getStateName())))->addAttributes([
-                'class' => 'overridden-state',
-                'title' => sprintf(
-                    '%s',
-                    $node->getStateName()
-                )
-            ]));
+            $this->add(
+                (new StateBall(strtolower($node->getStateName()), StateBall::SIZE_MEDIUM))
+                    ->addAttributes([
+                        'class' => 'overridden-state',
+                        'title' => sprintf(
+                            '%s',
+                            $node->getStateName()
+                        )
+                    ])
+            );
         }
 
         if ($node instanceof BpNode && !$renderer->isBreadcrumb()) {
