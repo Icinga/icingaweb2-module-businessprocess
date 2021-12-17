@@ -7,10 +7,11 @@ use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\Node;
-use Icinga\Module\Businessprocess\Web\Component\StateBall;
 use Icinga\Module\Businessprocess\Web\Form\CsrfToken;
+use Icinga\Module\Icingadb\Model\State;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
+use ipl\Web\Widget\StateBall;
 
 class TreeRenderer extends Renderer
 {
@@ -119,9 +120,9 @@ class TreeRenderer extends Renderer
         }
         $state = strtolower($node->getStateName($parent !== null ? $parent->getChildState($node) : null));
         if ($node->isHandled()) {
-            $state = $state . '-handled';
+            $state = $state . ' handled';
         }
-        $icons[] = (new StateBall($state))->addAttributes([
+        $icons[] = (new StateBall($state, StateBall::SIZE_MEDIUM))->addAttributes([
             'title' => sprintf(
                 '%s %s',
                 $state,
@@ -129,7 +130,7 @@ class TreeRenderer extends Renderer
             )
         ]);
         if ($node->isInDowntime()) {
-            $icons[] = Html::tag('i', ['class' => 'icon icon-moon']);
+            $icons[] = Html::tag('i', ['class' => 'icon icon-plug']);
         }
         if ($node->isAcknowledged()) {
             $icons[] = Html::tag('i', ['class' => 'icon icon-ok']);
@@ -140,20 +141,26 @@ class TreeRenderer extends Renderer
     public function getOverriddenState($fakeState, Node $node)
     {
         $overriddenState = Html::tag('div', ['class' => 'overridden-state']);
-        $overriddenState->add((new StateBall(strtolower($node->getStateName())))->addAttributes([
-            'title' => sprintf(
-                '%s',
-                $node->getStateName()
-            )
-        ]));
+        $overriddenState->add(
+            (new StateBall(strtolower($node->getStateName()), StateBall::SIZE_MEDIUM))
+                ->addAttributes([
+                    'title' => sprintf(
+                        '%s',
+                        $node->getStateName()
+                    )
+                ])
+        );
         $overriddenState->add(Html::tag('i', ['class' => 'icon icon-right-small']));
-        $overriddenState->add((new StateBall(strtolower($node->getStateName($fakeState))))->addAttributes([
-            'title' => sprintf(
-                '%s',
-                $node->getStateName($fakeState)
-            ),
-            'class' => 'last'
-        ]));
+        $overriddenState->add(
+            (new StateBall(strtolower($node->getStateName($fakeState)), StateBall::SIZE_MEDIUM))
+                ->addAttributes([
+                    'title' => sprintf(
+                        '%s',
+                        $node->getStateName($fakeState)
+                    ),
+                    'class' => 'last'
+                ])
+        );
 
         return $overriddenState;
     }

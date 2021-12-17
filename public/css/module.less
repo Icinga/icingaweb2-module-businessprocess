@@ -22,7 +22,7 @@ a:focus {
         }
 
         &.button-link {
-            color: white;
+            color: @text-color-on-icinga-blue;
             background: @icinga-blue;
 
             &:active, &:focus {
@@ -55,7 +55,7 @@ a:focus {
                 }
 
                 &.active {
-                    color: white;
+                    color: @text-color-on-icinga-blue;
                     background-color: @icinga-blue;
                 }
 
@@ -86,12 +86,6 @@ div.bp {
 
 div.bp.sortable > .sortable-ghost {
     opacity: 0.5;
-}
-
-.simulation div.bp {
-    border-right: 1em solid @colorCriticalHandled;
-    padding-right: 1em;
-    background: white;
 }
 
 
@@ -126,6 +120,24 @@ ul.bp {
     &[data-sortable-disabled="true"] {
         li.process > div {
             cursor: pointer;
+        }
+    }
+
+    li {
+        i.icon-service {
+            opacity: .75;
+        }
+
+        i.icon-sitemap {
+            opacity: .8;
+        }
+
+        i.icon-ok {
+            opacity: .8;
+        }
+
+        i.icon-plug {
+            opacity: .7;
         }
     }
 
@@ -167,10 +179,10 @@ ul.bp {
             &.op {
                 padding: .1em .5em;
                 border-radius: .5em;
-                background-color: @gray-light;
+                background-color: @gray-semilight;
                 font-weight: bold;
                 font-size: 1em;
-                color: white;
+                color: @text-color-on-icinga-blue;
             }
         }
     }
@@ -266,7 +278,7 @@ ul.bp {
 
     li.process > div > .state-ball,
     li:not(.process) > .state-ball {
-        border: .15em solid white;
+        border: .15em solid @body-bg-color;
 
         &.size-s {
             width: 7em/6em;
@@ -301,17 +313,21 @@ ul.bp {
         padding: 1em;
 
         &:hover {
-            background-color: @gray-lighter;
+            background-color: @tr-hover-color;
         }
 
         .bp-link {
             > a {
                 text-decoration: none;
-                color: inherit;
+                color: @gray;
                 vertical-align: middle;
                 word-wrap: break-word;
                 width: 100%;
                 overflow: hidden;
+
+                > span.header {
+                    color: @text-color;
+                }
             }
         }
 
@@ -324,7 +340,7 @@ ul.bp {
             }
 
             &:hover {
-                box-shadow: 0px 0px 5px #666;
+                box-shadow: 0px 0px 5px @gray-light;
             }
         }
     }
@@ -339,7 +355,7 @@ ul.bp {
     .action {
         > a {
             text-decoration: none;
-            color: inherit;
+            color: @gray;
             vertical-align: middle;
             display: block;
             padding: 1em;
@@ -349,8 +365,11 @@ ul.bp {
             box-sizing: border-box;
 
             &.addnew:hover {
-                background-color: @icinga-blue;
-                color: white;
+                background-color: @tr-hover-color;
+            }
+
+            > span.header {
+                color: @text-color;
             }
         }
     }
@@ -365,7 +384,7 @@ ul.bp {
     padding: 0.3em 0.4em;
 
     .badge {
-        border: 1px solid white;
+        border: 1px solid @body-bg-color;
         margin: 0;
     }
 }
@@ -381,11 +400,11 @@ td > a > .badges {
     background-color: transparent;
 }
 
-.badge-critical, .badge-down { background: @colorCritical; }
-.badge-unknown, .badge-unreachable { background: @colorUnknown; }
-.badge-warning { background: @colorWarning; }
-.badge-pending { background: @colorPending; }
-.badge-missing { background: #ccc; }
+.badge-critical, .badge-down { background: @color-critical; }
+.badge-unknown, .badge-unreachable { background: @color-unknown; }
+.badge-warning { background: @color-warning }
+.badge-pending { background: @color-pending }
+.badge-missing { background: @gray-semilight; color: @text-color-on-icinga-blue; }
 /** END Badges **/
 
 /** BEGIN Tiles **/
@@ -397,11 +416,11 @@ td > a > .badges {
 
 .tiles.sortable > .sortable-ghost {
     opacity: 0.5;
-    border: .2em dashed black;
+    border: .2em dashed @gray;
 }
 
 .tiles > div {
-    color: white;
+    color: @text-color-on-icinga-blue;
     width: 12em;
     display: inline-block;
     float: left;
@@ -427,7 +446,7 @@ td > a > .badges {
         left: 0;
         bottom: 0;
         margin: .5em;
-        border: 1px solid white;
+        border: 1px solid @body-bg-color;
     }
 
     > a {
@@ -438,7 +457,6 @@ td > a > .badges {
         padding: 1em 1em 0;
         font-weight: bold;
         word-wrap: break-word;
-        color: @text-color-inverted;
 
         & + p.children-count {
             margin: 0;
@@ -453,7 +471,7 @@ td > a > .badges {
     }
 
     &:hover {
-        box-shadow: 0px 0px 5px #666;
+        box-shadow: 0 0 .2em @gray;
     }
 
     .actions {
@@ -518,47 +536,22 @@ td > a > .badges {
 }
 
 .tiles {
-    > .critical            { background-color: @colorCritical;          > a { text-shadow: 0 0 1px mix(#000, @colorCritical, 40%); }}
-    > .critical.handled    { background-color: @colorCriticalHandled;   > a { text-shadow: 0 0 1px mix(#000, @colorCriticalHandled, 40%); }}
-    > .down                { background-color: @colorCritical;          > a { text-shadow: 0 0 1px mix(#000, @colorCritical, 40%); }}
-    > .down.handled        { background-color: @colorCriticalHandled;   > a { text-shadow: 0 0 1px mix(#000, @colorCriticalHandled, 40%); }}
-    > .unknown             { background-color: @colorUnknown;           > a { text-shadow: 0 0 1px mix(#000, @colorUnknown, 40%); }}
-    > .unknown.handled     { background-color: @colorUnknownHandled;    > a { text-shadow: 0 0 1px mix(#000, @colorUnknownHandled, 40%); }}
-    > .unreachable         { background-color: @colorUnknown;           > a { text-shadow: 0 0 1px mix(#000, @colorUnknown, 40%); }}
-    > .unreachable.handled { background-color: @colorUnknownHandled;    > a { text-shadow: 0 0 1px mix(#000, @colorUnknownHandled, 40%); }}
-    > .warning             { background-color: @colorWarning;           > a { text-shadow: 0 0 1px mix(#000, @colorWarning, 40%); }}
-    > .warning.handled     { background-color: @colorWarningHandled;    > a { text-shadow: 0 0 1px mix(#000, @colorWarningHandled, 40%); }}
-    > .ok                  { background-color: @colorOk;                > a { text-shadow: 0 0 1px mix(#000, @colorOk, 40%); }}
-    > .up                  { background-color: @colorOk;                > a { text-shadow: 0 0 1px mix(#000, @colorOk, 40%); }}
-    > .pending             { background-color: @colorPending;           > a { text-shadow: 0 0 1px mix(#000, @colorPending, 40%); }}
-    > .missing             { background-color: @gray-light;             > a { text-shadow: 0 0 1px @gray }}
-    > .addnew              { background-color: @icinga-blue;            > a { text-shadow: 0 0 1px mix(#000, @icinga-blue, 40%); }}
-    > .empty               { background-color: @gray-light;             > a { text-shadow: 0 0 1px @gray }}
+    > .critical            { background-color: @color-critical;         > a { text-shadow: 0 0 1px mix(#000, @color-critical, 40%); }}
+    > .critical.handled    { background-color: @color-critical-handled; > a { text-shadow: 0 0 1px mix(#000, @color-critical-handled, 40%); }}
+    > .down                { background-color: @color-critical;         > a { text-shadow: 0 0 1px mix(#000, @color-critical, 40%); }}
+    > .down.handled        { background-color: @color-critical-handled; > a { text-shadow: 0 0 1px mix(#000, @color-critical-handled, 40%); }}
+    > .unknown             { background-color: @color-unknown;          > a { text-shadow: 0 0 1px mix(#000, @color-unknown, 40%); }}
+    > .unknown.handled     { background-color: @color-unknown-handled;  > a { text-shadow: 0 0 1px mix(#000, @color-unknown-handled, 40%); }}
+    > .unreachable         { background-color: @color-unknown;          > a { text-shadow: 0 0 1px mix(#000, @color-unknown, 40%); }}
+    > .unreachable.handled { background-color: @color-unknown-handled;  > a { text-shadow: 0 0 1px mix(#000, @color-unknown-handled, 40%); }}
+    > .warning             { background-color: @color-warning;          > a { text-shadow: 0 0 1px mix(#000, @color-warning, 40%); }}
+    > .warning.handled     { background-color: @color-warning-handled;  > a { text-shadow: 0 0 1px mix(#000, @color-warning-handled, 40%); }}
+    > .ok                  { background-color: @color-ok;               > a { text-shadow: 0 0 1px mix(#000, @color-ok, 40%); }}
+    > .up                  { background-color: @color-ok;               > a { text-shadow: 0 0 1px mix(#000, @color-ok, 40%); }}
+    > .pending             { background-color: @color-pending;          > a { text-shadow: 0 0 1px mix(#000, @color-pending, 40%); }}
+    > .missing             { background-color: @gray-semilight;         > a { color: @text-color-on-icinga-blue; }}
+    > .empty               { background-color: @gray-semilight;         > a { color: @text-color-on-icinga-blue; }}
 }
-
-/*
-.tiles > div:hover {
-    > .critical            { background: white; color: @text-color; }
-    > .critical.handled    { background: @colorCriticalHandled; }
-    > .down                { background: @colorCritical; }
-    > .down.handled        { background: @colorCriticalHandled; }
-    > .unknown             { background: @colorUnknown; }
-    > .unknown.handled     { background: @colorUnknownHandled; }
-    > .unreachable         { background: @colorUnknown; }
-    > .unreachable.handled { background: @colorUnknownHandled; }
-    > .warning             { background: @colorWarning; }
-    > .warning.handled     { background: @colorWarningHandled; }
-    > .ok                  { background: @colorOk; }
-    > .pending             { background: @colorPending; }
-    > .missing             { background: #ccc; }
-}
-*/
-/*
-.tiles .missing a {
-    pointer-events: none;
-    cursor: default;
-}
-*/
 
 .tiles.few { font-size: 2.5em; }
 .tiles.normal { font-size: 2.1em; }
@@ -624,7 +617,7 @@ td > a > .badges {
 
     > .state-ball {
         margin-right: .5em;
-        border: .15em solid white;
+        border: .15em solid @body-bg-color;
 
         &.size-s {
             width: 7em/6em;
@@ -642,12 +635,13 @@ td > a > .badges {
 
     &:last-of-type {
         border-radius: .25em;
-        border: 1px solid @icinga-blue;
+        border: 1px solid transparent;
         background: @icinga-blue;
+        color: @text-color-on-icinga-blue;
         padding-right: 1.2em;
 
         a {
-            color: white;
+            color: @text-color-on-icinga-blue;
         }
     }
 }
@@ -679,17 +673,17 @@ td > a > .badges {
 &.impact {
     .breadcrumb li:not(:last-of-type) a:after {
         .transition(border-left-color 2s 0.66s linear ~'!important');
-        border-left-color: @gray-lighter !important;
+        border-left-color: @gray-lighter;
     }
 
     .breadcrumb li:not(:last-of-type) a:before {
         .transition(border-left-color 2s 1s linear ~'!important');
-        border-left-color: @gray-light !important;
+        border-left-color: @gray-light;
     }
 
     .breadcrumb li:not(:last-of-type) {
         .transition(border-color 2s 1s linear ~'!important');
-        border-color: @gray-light !important;
+        border-color: @gray-light;
     }
     .breadcrumb li:not(:last-of-type) a:hover {
         background-color: transparent !important;
@@ -706,7 +700,7 @@ td > a > .badges {
     padding-right: 0.5em;
 }
 
-.breadcrumb li:not(:last-child) a:hover { background: @icinga-blue; color: white; }
+.breadcrumb li:not(:last-child) a:hover { background: @icinga-blue; color: @text-color-on-icinga-blue; }
 .breadcrumb li:not(:last-child) a:hover:after { border-left-color: @icinga-blue; }
 .breadcrumb li:last-child:hover, .breadcrumb li:last-child a:hover { background: @icinga-blue; border-color: @icinga-blue; }
 
@@ -726,11 +720,11 @@ td > a > .badges {
 ul.error, ul.warning {
     padding: 0;
     list-style-type: none;
-    background-color: @colorCritical;
+    background-color: @color-critical;
 
     li {
         font-weight: bold;
-        color: white;
+        color: @text-color-on-icinga-blue;
         padding: 0.3em 0.8em;
     }
 
@@ -746,7 +740,7 @@ ul.error, ul.warning {
 
 
 ul.warning {
-    background-color: @colorWarning;
+    background-color: @color-warning;
 }
 
 table.sourcecode {
@@ -786,34 +780,8 @@ form input[type=file] {
     padding-right: 1em;
 }
 
-
-form input[type=submit] {
-    .button();
-    border-width: 1px;
-    margin-top: 0.5em;
-
-    &:disabled {
-        border-color: @gray-light;
-        background-color: @gray-light;
-        color: #fff;
-    }
-}
-
 form input[type=submit]:first-of-type {
     border-width: 2px;
-}
-
-form input[type=submit].link-button {
-    color: @icinga-blue;
-    background: none;
-    border: none;
-    padding: 0;
-
-    text-align: left;
-
-    &:hover {
-        text-decoration: underline;
-    }
 }
 
 form p.description {
@@ -823,12 +791,6 @@ form p.description {
     width: 100%;
 }
 
-input[type=text], input[type=button], select, select option, textarea {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-}
-
 form ul.form-errors {
     margin-bottom: 0.5em;
 
@@ -836,49 +798,14 @@ form ul.form-errors {
         background: @color-critical;
         font-weight: bold;
         padding: 0.5em 1em;
-        color: white;
+        color: @text-color-on-icinga-blue;
     }
 }
 
-select::-ms-expand, input::-ms-expand, textarea::-ms-expand { /* for IE 11 */
-    display: none;
-}
-
-select {
-    border: 1px solid #ddd;
-    cursor: pointer;
-    background: none;
-}
-
-input[type=text], input[type=password], textarea, select {
+input[type=text], input[type=password], input[type=file], textarea, select {
     max-width: 36em;
     min-width: 20em;
     width: 100%;
-    line-height: 2em;
-    height: 2.4em;
-    padding-left: 0.5em;
-    border-style: solid;
-    border-color: transparent;
-    border-bottom-color: @gray-lighter;
-    border-width: 1px 1px 1px 3px;
-
-    &.search {
-        background: transparent url("../img/icons/search.png") no-repeat scroll 0.5em center / 1em 1em;
-        padding-left: 2em;
-    }
-}
-
-select[multiple] {
-    height: auto;
-}
-
-select option {
-    height: 2em;
-    padding-top: 0.3em;
-}
-
-select[multiple=multiple] {
-    height: auto;
 }
 
 label {
@@ -890,41 +817,8 @@ form dl {
     padding: 0;
 }
 
-select::-moz-focus-inner { border: 0; }
-
-select:-moz-focusring {
-    color: transparent;
-    text-shadow: 0 0 0 #000;
-}
-
-select, input[type=text], textarea {
-    &:hover {
-        border-style: dotted solid dotted solid;
-        border-color: @gray-light;
-    }
-
-    &:focus, &:focus:hover {
-        border-style: solid;
-        border-color: @icinga-blue;
-        outline: none;
-    }
-}
-
-select[value=""] {
-    color: blue;
-    border: 1px solid #666;
-    background-color: @body-bg-color;
-}
-
 select option {
-    color: inherit;
     padding-left: 0.5em;
-    background-color: @body-bg-color;
-}
-
-select option[value=""] {
-    color: #aaa;
-    background-color: @body-bg-color;
 }
 
 form dt label {
@@ -1047,26 +941,10 @@ form dd ul.errors {
     padding-left: 0.3em;
 
     li {
-        color: @colorCritical;
+        color: @color-critical;
         padding: 0.3em;
     }
 }
-
-form div.hint {
-    padding: 1em;
-    background-color: @tr-hover-color;
-    margin: 1em 0;
-    max-width: 65em;
-    font-size: 1em;
-
-    pre {
-        font-style: normal;
-        background-color: white;
-        margin: 0;
-        padding: 1em;
-    }
-}
-
 
 form {
     #_FAKE_SUBMIT {
@@ -1076,6 +954,31 @@ form {
 }
 
 /** END of forms **/
+
+/* Form fallback styles, remove once <=2.9.5 support is dropped */
+
+.icinga-controls {
+    input[type="file"] {
+        background-color: @low-sat-blue;
+    }
+
+    button[type="button"] {
+        background-color: @low-sat-blue;
+    }
+}
+
+form.icinga-form {
+    input[type="file"] {
+        flex: 1 1 auto;
+        width: 0;
+    }
+
+    button[type="button"] {
+        line-height: normal;
+    }
+}
+
+/* Form fallback styles end */
 
 /** Custom font styling **/
 textarea.smaller {
