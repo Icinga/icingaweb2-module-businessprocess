@@ -9,10 +9,10 @@ use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\MonitoredNode;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Web\Url;
-use Icinga\Module\Businessprocess\Widget\StateBadge;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
 use ipl\Html\HtmlDocument;
+use ipl\Web\Widget\StateBadge;
 
 abstract class Renderer extends HtmlDocument
 {
@@ -181,7 +181,7 @@ abstract class Renderer extends HtmlDocument
     protected function createBadge($summary, $state)
     {
         if ($summary[$state] !== 0) {
-            return Html::tag('li', new StateBadge($summary[$state], $state));
+            return Html::tag('li', new StateBadge($summary[$state], strtolower($state)));
         }
 
         return null;
@@ -191,11 +191,11 @@ abstract class Renderer extends HtmlDocument
     {
         $content = [];
         if ($summary[$state] !== 0) {
-            $content[] = Html::tag('li', new StateBadge($summary[$state], $state));
+            $content[] = Html::tag('li', new StateBadge($summary[$state], strtolower($state)));
         }
 
         if ($summary[$state . '-HANDLED'] !== 0) {
-            $content[] = Html::tag('li', new StateBadge($summary[$state . '-HANDLED'], $state, true));
+            $content[] = Html::tag('li', new StateBadge($summary[$state . '-HANDLED'], strtolower($state), true));
         }
 
         if (empty($content)) {

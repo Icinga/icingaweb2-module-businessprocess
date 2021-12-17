@@ -366,6 +366,14 @@ ul.bp {
 // State summary badges
 .state-badges {
     .state-badges();
+
+    &.state-badges li > ul > li:last-child {
+        margin-left: 0;
+    }
+
+    li > ul > li:first-child:not(:last-child) .state-badge {
+        border-right: 0;
+    }
 }
 
 // Node children count
@@ -384,10 +392,20 @@ td > a > .state-badges {
     background-color: transparent;
 }
 
-.state-badge.state-missing {
-    background: @gray-semilight;
-    color: @text-color-on-icinga-blue;
+.state-badge {
+    font-size: .8em;
+    border: 1px solid @body-bg-color;
+
+    &.state-missing {
+        background: @gray-semilight;
+        color: @text-color-on-icinga-blue;
+    }
+
+    &.state-critical.handled, &.state-down.handled { background: @color-critical-handled; opacity: 1; }
+    &.state-unknown.handled { background-color: @color-unknown-handled; opacity: 1; }
+    &.state-warning.handled { background: @color-warning-handled; opacity: 1; }
 }
+
 /** END Badges **/
 
 /** BEGIN Tiles **/
