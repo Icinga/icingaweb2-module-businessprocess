@@ -768,25 +768,6 @@ table.sourcecode {
     }
 }
 
-.diff {
-    font-family: monospace;
-    white-space: pre-wrap;
-
-    del, ins {
-        text-decoration: none;
-    }
-
-    del {
-        color: @colorCritical;
-        background-color: #fdd;
-    }
-
-    ins {
-        color: @colorOk;
-        background-color: #dfd;
-    }
-}
-
 /** Forms stolen from director **/
 .content form {
     margin-bottom: 2em;
@@ -1095,106 +1076,6 @@ form {
 }
 
 /** END of forms **/
-
-/** php-diff **/
-.Differences {
-    width: 100%;
-    table-layout: fixed;
-    empty-cells: show;
-}
-
-.Differences thead {
-    display: none;
-}
-
-.Differences thead th {
-    text-align: left;
-    padding-left: 4 / 14 * 16em;
-}
-.Differences tbody th {
-    text-align: right;
-    width: 4em;
-    padding: 1px 2px;
-    border-right: 1px solid @gray-light;
-    background: @gray-lightest;
-    font-weight: normal;
-    vertical-align: top;
-}
-
-.Differences tbody td {
-    width: 50%;
-    .preformatted();
-    word-break: break-all;
-}
-
-@color-diff-ins: #bfb;
-@color-diff-del: #faa;
-@color-diff-changed-old: #fdd;
-@color-diff-changed-new: #efe;
-
-.DifferencesSideBySide {
-    ins, del {
-        text-decoration: none;
-    }
-
-    .ChangeInsert {
-        td.Left {
-            background: @gray-lighter;
-        }
-        td.Right {
-            background: @color-diff-ins;
-        }
-    }
-
-    .ChangeDelete {
-        td.Left {
-            background: @color-diff-del;
-        }
-        td.Right {
-            background: @gray-lighter;
-        }
-    }
-
-    .ChangeReplace {
-        td.Left {
-            background: @color-diff-changed-old;
-            del {
-                background: @color-diff-del;
-            }
-        }
-
-        td.Right {
-            background: @color-diff-changed-new;
-            ins {
-                background: @color-diff-ins;
-            }
-        }
-
-    }
-}
-
-.Differences .Skipped {
-    background: @gray-lightest;
-}
-
-.DifferencesInline .ChangeReplace .Left,
-.DifferencesInline .ChangeDelete .Left {
-    background: #fdd;
-}
-
-.DifferencesInline .ChangeReplace .Right,
-.DifferencesInline .ChangeInsert .Right {
-    background: #dfd;
-}
-
-.DifferencesInline .ChangeReplace ins {
-    background: #9e9;
-}
-
-.DifferencesInline .ChangeReplace del {
-    background: #e99;
-}
-/** END of php-diff **/
 
 /** Custom font styling **/
 textarea.smaller {
