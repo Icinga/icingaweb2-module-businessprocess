@@ -145,16 +145,9 @@ abstract class Renderer extends HtmlDocument
             [
                 'class' => [
                     'item-count',
-                ],
-                'title' => sprintf('%u %s', $totalChildren, mtp(
-                    'businessprocess',
-                    'Child',
-                    'Children',
-                    $totalChildren,
-                    'businessprocess.nodes'
-                ))
+                ]
             ],
-            $totalChildren
+            sprintf(mtp('businessprocess', '%u Child', '%u Children', $totalChildren), $totalChildren)
         );
 
         $elements[] = array_filter([
