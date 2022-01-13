@@ -161,7 +161,6 @@ abstract class Renderer extends HtmlDocument
             $this->createBadgeGroup($summary, 'CRITICAL'),
             $this->createBadgeGroup($summary, 'UNKNOWN'),
             $this->createBadgeGroup($summary, 'WARNING'),
-            $this->createBadge($summary, 'OK'),
             $this->createBadge($summary, 'MISSING'),
             $this->createBadge($summary, 'PENDING')
         ]);
