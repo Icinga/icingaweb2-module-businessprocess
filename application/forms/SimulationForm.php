@@ -54,10 +54,13 @@ class SimulationForm extends QuickForm
             'class'        => 'autosubmit',
             'value'        => $this->simulatedNode ? $node->getState() : null,
         ));
-        if (in_array($this->getSentValue('state'), array('0', '99'))) {
+
+        $sentState = $this->getSentValue('state');
+        if (in_array($sentState, array('0', '99'))) {
             return;
         }
-        if ($hasSimulation || ctype_digit($this->getSentValue('state'))) {
+
+        if ($hasSimulation || ($sentState !== null && ctype_digit($sentState))) {
             $this->addElement('checkbox', 'acknowledged', array(
                 'label' => $this->translate('Acknowledged'),
                 'value' => $node->isAcknowledged(),
@@ -98,8 +101,9 @@ class SimulationForm extends QuickForm
     public function onSuccess()
     {
         $nodeName = $this->node->getName();
+        $state = $this->getValue('state');
 
-        if (ctype_digit($this->getValue('state'))) {
+        if ($state !== null && ctype_digit($state)) {
             $this->notifySuccess($this->translate('Simulation has been set'));
             $this->simulation->set($nodeName, (object) array(
                 'state'        => $this->getValue('state'),
