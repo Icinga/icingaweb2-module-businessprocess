@@ -65,12 +65,7 @@ class BpNode extends Node
             $this->counters = self::$emptyStateSummary;
 
             foreach ($this->getChildren() as $child) {
-                if ($child instanceof BpNode) {
-                    $counters = $child->getStateSummary();
-                    foreach ($counters as $k => $v) {
-                        $this->counters[$k] += $v;
-                    }
-                } elseif ($child->isMissing()) {
+                if ($child->isMissing()) {
                     $this->counters['MISSING']++;
                 } else {
                     $state = $child->getStateName($this->getChildState($child));
