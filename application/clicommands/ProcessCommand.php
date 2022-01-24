@@ -101,6 +101,12 @@ class ProcessCommand extends Command
      */
     public function checkAction()
     {
+        $nodeName = $this->params->shift();
+        if (! $nodeName) {
+            Logger::error('A process name is required');
+            exit(1);
+        }
+
         try {
             $name = $this->params->get('config');
             if ($name === null) {
@@ -125,7 +131,7 @@ class ProcessCommand extends Command
 
         /** @var BpNode $node */
         try {
-            $node = $bp->getNode($this->params->shift());
+            $node = $bp->getNode($nodeName);
             MonitoringState::apply($bp);
             if ($bp->hasErrors()) {
                 Logger::error("Checking Business Process '%s' failed: %s\n", $name, $bp->getErrors());
@@ -133,7 +139,7 @@ class ProcessCommand extends Command
                 exit(3);
             }
         } catch (Exception $err) {
-            Logger::error("Checking Business Process '%s' failed: %s", $name, $err->getMessage());
+            Logger::error("Checking Business Process '%s' failed: %s", $name, $err);
 
             exit(3);
         }
