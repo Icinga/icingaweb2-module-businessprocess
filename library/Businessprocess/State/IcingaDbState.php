@@ -25,7 +25,7 @@ class IcingaDbState
     public function __construct(BpConfig $config)
     {
         $this->config = $config;
-        $this->backend = $config->getBackend();
+        $this->backend = IcingaDbObject::fetchDb();
     }
 
     public static function apply(BpConfig $config)

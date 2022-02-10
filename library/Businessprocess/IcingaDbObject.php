@@ -2,8 +2,8 @@
 
 namespace Icinga\Module\Businessprocess;
 
-use Icinga\Module\Businessprocess\Common\IcingadbDatabase;
 use Icinga\Module\Icingadb\Common\Auth;
+use Icinga\Module\Icingadb\Common\Database as IcingadbDatabase;
 use Icinga\Module\Icingadb\Model\Host;
 use Icinga\Module\Icingadb\Model\Service;
 use ipl\Web\Filter\QueryString;
@@ -83,5 +83,11 @@ class IcingaDbObject
         $object->applyRestrictions($query);
 
         return $object;
+    }
+
+    public static function fetchDb()
+    {
+        $object = new self;
+        return $object->getDb();
     }
 }
