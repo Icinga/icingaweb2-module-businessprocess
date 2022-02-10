@@ -94,9 +94,6 @@ class Dashboard extends BaseHtmlElement
             }
 
             $bp = $storage->loadProcess($name);
-            if (! Module::exists('icingadb')) {
-                $bp->getMetadata()->set('Backend', null);
-            }
 
             if (Module::exists('icingadb') &&
                 ($bp->getBackendName() === '_icingadb' || IcingadbSupport::useIcingaDbAsBackend())

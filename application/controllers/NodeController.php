@@ -85,10 +85,6 @@ class NodeController extends Controller
                 continue;
             }
 
-            if (! Module::exists('icingadb')) {
-                $config->getMetadata()->set('Backend', null);
-            }
-
             if (Module::exists('icingadb') &&
                 ($config->getBackendName() === '_icingadb' || IcingadbSupport::useIcingaDbAsBackend())
             ) {
