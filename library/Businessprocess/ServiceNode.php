@@ -85,7 +85,7 @@ class ServiceNode extends MonitoredNode
             if (Module::exists('icingadb') &&
                 ($backendName === '_icingadb' || IcingadbSupport::useIcingaDbAsBackend())
             ) {
-                $params['icingadb'] = 1;
+                $params['backend'] = '_icingadb';
             } else {
                 $params['backend'] = $this->getBpConfig()->getBackendName();
             }
