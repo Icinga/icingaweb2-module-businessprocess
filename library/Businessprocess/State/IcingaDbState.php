@@ -5,10 +5,10 @@ namespace Icinga\Module\Businessprocess\State;
 use Exception;
 use Icinga\Application\Benchmark;
 use Icinga\Module\Businessprocess\BpConfig;
-use Icinga\Module\Businessprocess\Common\IcingadbDatabase;
 use Icinga\Module\Businessprocess\IcingaDbObject;
 use Icinga\Module\Businessprocess\ServiceNode;
 use Icinga\Module\Icingadb\Common\Auth;
+use Icinga\Module\Icingadb\Common\Database as IcingadbDatabase;
 use Icinga\Module\Icingadb\Model\Host;
 use Icinga\Module\Icingadb\Model\Service;
 

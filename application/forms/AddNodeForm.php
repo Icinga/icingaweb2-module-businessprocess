@@ -4,7 +4,7 @@ namespace Icinga\Module\Businessprocess\Forms;
 
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
-use Icinga\Module\Businessprocess\Common\IcingadbDatabase;
+use Icinga\Module\Icingadb\Common\Database as IcingadbDatabase;
 use Icinga\Module\Businessprocess\Common\EnumList;
 use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
