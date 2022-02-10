@@ -6,17 +6,15 @@ use Exception;
 use Icinga\Application\Modules\Module;
 use Icinga\Exception\IcingaException;
 use Icinga\Exception\NotFoundError;
-use Icinga\Module\Businessprocess\Common\IcingadbDatabase;
 use Icinga\Module\Businessprocess\Exception\NestingError;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
+use Icinga\Module\Icingadb\Common\Database as IcingadbDatabase;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 
 class BpConfig
 {
-    use IcingadbDatabase;
-
     const SOFT_STATE = 0;
 
     const HARD_STATE = 1;
@@ -294,18 +292,22 @@ class BpConfig
     public function getBackend()
     {
         if ($this->backend === null) {
-            if (! Module::exists('icingadb')) {
-                $this->getMetadata()->set('Backend', null);
-            }
-
             if ($this->getBackendName() === '_icingadb' ||
                 (Module::exists('icingadb') && IcingadbSupport::useIcingaDbAsBackend())
             ) {
-                $this->backend = $this->getDb();
+                if (! Module::exists('icingadb')) {
+                    throw new Exception('Icingadb module is not enabled.');
+                }
+
+                $this->backend = IcingaDbObject::fetchDb();
             } else {
-                $this->backend = MonitoringBackend::instance(
-                    $this->getBackendName()
-                );
+                if (! Module::exists('monitoring') && Module::exists('icingadb')) {
+                    $this->backend = IcingaDbObject::fetchDb();
+                } else {
+                    $this->backend = MonitoringBackend::instance(
+                        $this->getBackendName()
+                    );
+                }
             }
         }
 
