@@ -2,16 +2,31 @@
 
 namespace Icinga\Module\Businessprocess\Controllers;
 
+use Dompdf\Exception;
 use Icinga\Application\Modules\Module;
-use Icinga\Module\Businessprocess\Common\IcingadbDatabase;
 use Icinga\Module\Businessprocess\IcingaDbObject;
+use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
 use Icinga\Module\Icingadb\Model\Service;
 use Icinga\Module\Monitoring\Controller;
 use Icinga\Web\Url;
+use ipl\Stdlib\Filter;
 
 class ServiceController extends Controller
 {
-    use IcingadbDatabase;
+    protected $isIcingadb;
+
+    protected $explicitIcingadb;
+
+    protected function moduleInit()
+    {
+        $this->isIcingadb = $this->params->shift('backend') === '_icingadb';
+        $this->explicitIcingadb = Module::exists('icingadb')
+            && IcingadbSupport::useIcingaDbAsBackend();
+
+        if (! $this->isIcingadb) {
+            parent::moduleInit();
+        }
+    }
 
     public function showAction()
     {
@@ -21,12 +36,13 @@ class ServiceController extends Controller
             $hostName = $this->params->shift('host');
             $serviceName = $this->params->shift('service');
 
-            $query = Service::on($this->getDb())->with('host');
+            $query = Service::on(IcingaDbObject::fetchDb())->with('host');
             IcingaDbObject::applyIcingaDbRestrictions($query);
 
-            $query->getSelectBase()
-                ->where(['service.name = ?' => $serviceName])
-                ->where(['service_host.name = ?' => $hostName]);
+            $query->filter(Filter::all(
+                Filter::equal('service.name', $serviceName),
+                Filter::equal('host.name', $hostName)
+            ));
 
             $service = $query->first();
 
