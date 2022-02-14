@@ -25,10 +25,6 @@ abstract class BpConfigBaseForm extends QuickForm
             $keys = array_combine($keys, $keys);
         }
 
-        if ($moduleManager->hasEnabled('icingadb')) {
-            $keys['_icingadb'] = 'Icinga DB';
-        }
-
         return $keys;
     }
 
