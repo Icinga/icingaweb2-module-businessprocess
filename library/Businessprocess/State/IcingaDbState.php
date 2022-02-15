@@ -134,10 +134,10 @@ class IcingaDbState
         if ($row->state->last_state_change !== null) {
             $node->setLastStateChange($row->state->last_state_change/1000);
         }
-        if ($row->state->in_downtime === 'y') {
+        if ($row->state->in_downtime) {
             $node->setDowntime(true);
         }
-        if ($row->state->is_acknowledged !== 'n') {
+        if ($row->state->is_acknowledged) {
             $node->setAck(true);
         }
 
