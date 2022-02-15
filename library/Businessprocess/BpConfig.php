@@ -292,22 +292,13 @@ class BpConfig
     public function getBackend()
     {
         if ($this->backend === null) {
-            if ($this->getBackendName() === '_icingadb' ||
-                (Module::exists('icingadb') && IcingadbSupport::useIcingaDbAsBackend())
-            ) {
-                if (! Module::exists('icingadb')) {
-                    throw new Exception('Icingadb module is not enabled.');
-                }
-
+            if (Module::exists('icingadb')
+                && (! $this->hasBackendName() && IcingadbSupport::useIcingaDbAsBackend())) {
                 $this->backend = IcingaDbObject::fetchDb();
             } else {
-                if (! Module::exists('monitoring') && Module::exists('icingadb')) {
-                    $this->backend = IcingaDbObject::fetchDb();
-                } else {
-                    $this->backend = MonitoringBackend::instance(
-                        $this->getBackendName()
-                    );
-                }
+                $this->backend = MonitoringBackend::instance(
+                    $this->getBackendName()
+                );
             }
         }
 

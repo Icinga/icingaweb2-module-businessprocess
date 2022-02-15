@@ -2,8 +2,6 @@
 
 namespace Icinga\Module\Businessprocess;
 
-use Icinga\Application\Modules\Module;
-use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
 use Icinga\Module\Businessprocess\Web\Url;
 
 class ServiceNode extends MonitoredNode
@@ -77,18 +75,8 @@ class ServiceNode extends MonitoredNode
             'service' => $this->getServiceDescription()
         );
 
-        if ($this->getBpConfig()->hasBackendName() ||
-            (Module::exists('icingadb') && IcingadbSupport::useIcingaDbAsBackend())
-        ) {
-            $backendName = $this->getBpConfig()->getBackendName();
-
-            if (Module::exists('icingadb') &&
-                ($backendName === '_icingadb' || IcingadbSupport::useIcingaDbAsBackend())
-            ) {
-                $params['backend'] = '_icingadb';
-            } else {
-                $params['backend'] = $this->getBpConfig()->getBackendName();
-            }
+        if ($this->getBpConfig()->hasBackendName()) {
+            $params['backend'] = $this->getBpConfig()->getBackendName();
         }
 
         return Url::fromPath('businessprocess/service/show', $params);

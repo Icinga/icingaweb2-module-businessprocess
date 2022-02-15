@@ -85,7 +85,7 @@ class ProcessController extends Controller
         $node = $this->getNode($bp);
 
         if (Module::exists('icingadb') &&
-            ($bp->getBackendName() === '_icingadb' || IcingadbSupport::useIcingaDbAsBackend())
+            (! $bp->hasBackendName() && IcingadbSupport::useIcingaDbAsBackend())
         ) {
             IcingaDbState::apply($bp);
         } else {

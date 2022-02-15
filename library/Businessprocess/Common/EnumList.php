@@ -160,7 +160,7 @@ trait EnumList
     protected function useIcingaDbBackend()
     {
         if (Module::exists('icingadb')) {
-            return $this->backendName === '_icingadb' || IcingadbSupport::useIcingaDbAsBackend();
+            return ! $this->bp->hasBackendName() && IcingadbSupport::useIcingaDbAsBackend();
         }
 
         return false;
