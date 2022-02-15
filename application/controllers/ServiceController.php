@@ -2,7 +2,6 @@
 
 namespace Icinga\Module\Businessprocess\Controllers;
 
-use Dompdf\Exception;
 use Icinga\Application\Modules\Module;
 use Icinga\Module\Businessprocess\IcingaDbObject;
 use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
@@ -13,30 +12,31 @@ use ipl\Stdlib\Filter;
 
 class ServiceController extends Controller
 {
-    protected $isIcingadb;
-
-    protected $explicitIcingadb;
+    /**
+     * True if business process prefers to use icingadb as backend for it's nodes
+     *
+     * @var bool
+     */
+    protected $isIcingadbPreferred;
 
     protected function moduleInit()
     {
-        $this->isIcingadb = $this->params->shift('backend') === '_icingadb';
-        $this->explicitIcingadb = Module::exists('icingadb')
+        $this->isIcingadbPreferred = Module::exists('icingadb')
+            && ! $this->params->has('backend')
             && IcingadbSupport::useIcingaDbAsBackend();
 
-        if (! $this->isIcingadb) {
+        if (! $this->isIcingadbPreferred) {
             parent::moduleInit();
         }
     }
 
     public function showAction()
     {
-        $icingadb = $this->params->shift('icingadb');
-
-        if ($icingadb && Module::exists('icingadb')) {
+        if ($this->isIcingadbPreferred) {
             $hostName = $this->params->shift('host');
             $serviceName = $this->params->shift('service');
 
-            $query = Service::on(IcingaDbObject::fetchDb())->with('host');
+            $query = Service::on(IcingaDbObject::fetchDb());
             IcingaDbObject::applyIcingaDbRestrictions($query);
 
             $query->filter(Filter::all(

@@ -12,24 +12,27 @@ use ipl\Stdlib\Filter;
 
 class HostController extends Controller
 {
-    protected $isIcingadb;
-
-    protected $explicitIcingadb;
+    /**
+     * True if business process prefers to use icingadb as backend for it's nodes
+     *
+     * @var bool
+     */
+    protected $isIcingadbPreferred;
 
     protected function moduleInit()
     {
-        $this->isIcingadb = $this->params->shift('backend') === '_icingadb';
-        $this->explicitIcingadb = Module::exists('icingadb')
+        $this->isIcingadbPreferred = Module::exists('icingadb')
+            && ! $this->params->has('backend')
             && IcingadbSupport::useIcingaDbAsBackend();
 
-        if (! $this->isIcingadb) {
+        if (! $this->isIcingadbPreferred) {
             parent::moduleInit();
         }
     }
 
     public function showAction()
     {
-        if ($this->isIcingadb || $this->explicitIcingadb) {
+        if ($this->isIcingadbPreferred) {
             $hostName = $this->params->shift('host');
 
             $query = Host::on(IcingaDbObject::fetchDb());
