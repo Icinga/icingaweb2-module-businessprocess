@@ -7,13 +7,13 @@ use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Web\Form\QuickForm;
-use Icinga\Module\Icingadb\Common\Database as IcingadbDatabase;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 use Icinga\Web\Session\SessionNamespace;
+use ipl\Sql\Connection as IcingaDbConnection;
 
 class DeleteNodeForm extends QuickForm
 {
-    /** @var MonitoringBackend|IcingadbDatabase */
+    /** @var MonitoringBackend|IcingaDbConnection */
     protected $backend;
 
     /** @var BpConfig */
@@ -80,7 +80,7 @@ class DeleteNodeForm extends QuickForm
     }
 
     /**
-     * @param MonitoringBackend|IcingadbDatabase $backend
+     * @param MonitoringBackend|IcingaDbConnection $backend
      * @return $this
      */
     public function setBackend($backend)

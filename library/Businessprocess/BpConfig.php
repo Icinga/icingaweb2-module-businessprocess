@@ -10,8 +10,8 @@ use Icinga\Module\Businessprocess\Exception\NestingError;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
-use Icinga\Module\Icingadb\Common\Database as IcingadbDatabase;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
+use ipl\Sql\Connection as IcingaDbConnection;
 
 class BpConfig
 {
@@ -29,7 +29,7 @@ class BpConfig
     /**
      * Backend to retrieve states from
      *
-     * @var MonitoringBackend|IcingadbDatabase
+     * @var MonitoringBackend|IcingaDbConnection
      */
     protected $backend;
 

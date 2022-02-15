@@ -6,6 +6,7 @@ use Icinga\Module\Icingadb\Common\Auth;
 use Icinga\Module\Icingadb\Common\Database as IcingadbDatabase;
 use Icinga\Module\Icingadb\Model\Host;
 use Icinga\Module\Icingadb\Model\Service;
+use ipl\Sql\Connection as IcingaDbConnection;
 use ipl\Web\Filter\QueryString;
 
 class IcingaDbObject
@@ -17,7 +18,7 @@ class IcingaDbObject
     /** @var BpConfig */
     protected $config;
 
-    /** @var IcingadbDatabase */
+    /** @var IcingaDbConnection */
     protected $conn;
 
     public function __construct()

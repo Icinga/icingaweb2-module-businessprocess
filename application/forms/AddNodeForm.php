@@ -4,7 +4,6 @@ namespace Icinga\Module\Businessprocess\Forms;
 
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
-use Icinga\Module\Icingadb\Common\Database as IcingadbDatabase;
 use Icinga\Module\Businessprocess\Common\EnumList;
 use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
@@ -13,12 +12,13 @@ use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 use Icinga\Module\Businessprocess\Web\Form\Validator\NoDuplicateChildrenValidator;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 use Icinga\Web\Session\SessionNamespace;
+use ipl\Sql\Connection as IcingaDbConnection;
 
 class AddNodeForm extends QuickForm
 {
     use EnumList;
 
-    /** @var MonitoringBackend|IcingadbDatabase */
+    /** @var MonitoringBackend|IcingaDbConnection*/
     protected $backend;
 
     /** @var Storage */
@@ -404,7 +404,7 @@ class AddNodeForm extends QuickForm
     }
 
     /**
-     * @param MonitoringBackend|IcingadbDatabase $backend
+     * @param MonitoringBackend|IcingaDbConnection $backend
      * @return $this
      */
     public function setBackend($backend)

@@ -6,14 +6,14 @@ use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Web\Form\QuickForm;
-use Icinga\Module\Icingadb\Common\Database as IcingadbDatabase;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 use Icinga\Web\Notification;
 use Icinga\Web\Session\SessionNamespace;
+use ipl\Sql\Connection as IcingaDbConnection;
 
 class ProcessForm extends QuickForm
 {
-    /** @var MonitoringBackend|IcingadbDatabase */
+    /** @var MonitoringBackend|IcingaDbConnection */
     protected $backend;
 
     /** @var BpConfig */
@@ -111,7 +111,7 @@ class ProcessForm extends QuickForm
     }
 
     /**
-     * @param MonitoringBackend|IcingadbDatabase $backend
+     * @param MonitoringBackend|IcingaDbConnection $backend
      * @return $this
      */
     public function setBackend($backend)

@@ -8,9 +8,9 @@ use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\IcingaDbObject;
 use Icinga\Module\Businessprocess\ServiceNode;
 use Icinga\Module\Icingadb\Common\Auth;
-use Icinga\Module\Icingadb\Common\Database as IcingadbDatabase;
 use Icinga\Module\Icingadb\Model\Host;
 use Icinga\Module\Icingadb\Model\Service;
+use ipl\Sql\Connection as IcingaDbConnection;
 
 class IcingaDbState
 {
@@ -19,7 +19,7 @@ class IcingaDbState
     /** @var BpConfig */
     protected $config;
 
-    /** @var IcingadbDatabase */
+    /** @var IcingaDbConnection */
     protected $backend;
 
     public function __construct(BpConfig $config)
