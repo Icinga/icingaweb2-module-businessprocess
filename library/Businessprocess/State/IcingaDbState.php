@@ -7,7 +7,6 @@ use Icinga\Application\Benchmark;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\IcingaDbObject;
 use Icinga\Module\Businessprocess\ServiceNode;
-use Icinga\Module\Icingadb\Common\Auth;
 use Icinga\Module\Icingadb\Model\Host;
 use Icinga\Module\Icingadb\Model\Service;
 use ipl\Sql\Connection as IcingaDbConnection;
@@ -15,8 +14,6 @@ use ipl\Stdlib\Filter;
 
 class IcingaDbState
 {
-    use Auth;
-
     /** @var BpConfig */
     protected $config;
 
@@ -71,8 +68,6 @@ class IcingaDbState
         $queryHost->filter(Filter::equal('host.name', $hosts));
 
         $hostObject = $queryHost->getModel()->getTableName();
-
-        IcingaDbObject::applyIcingaDbRestrictions($queryHost);
 
         Benchmark::measure('Retrieved states for ' . $queryHost->count() . ' hosts in ' . $config->getName());
 

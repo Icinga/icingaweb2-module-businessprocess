@@ -20,9 +20,6 @@ class EditNodeForm extends QuickForm
     /** @var MonitoringBackend|IcingaDbConnection */
     protected $backend;
 
-    /** @var string $backendName */
-    protected $backendName;
-
     /** @var BpConfig */
     protected $bp;
 
@@ -315,7 +312,6 @@ class EditNodeForm extends QuickForm
     public function setProcess(BpConfig $process)
     {
         $this->bp = $process;
-        $this->backendName = $process->getBackendName();
         $this->setBackend($process->getBackend());
         return $this;
     }

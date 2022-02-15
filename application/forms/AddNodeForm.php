@@ -37,9 +37,6 @@ class AddNodeForm extends QuickForm
     /** @var SessionNamespace */
     protected $session;
 
-    /** @var  string $backendName */
-    protected $backendName;
-
     public function setup()
     {
         $view = $this->getView();
@@ -430,7 +427,6 @@ class AddNodeForm extends QuickForm
     public function setProcess(BpConfig $process)
     {
         $this->bp = $process;
-        $this->backendName = $process->getBackendName();
         $this->setBackend($process->getBackend());
         return $this;
     }
