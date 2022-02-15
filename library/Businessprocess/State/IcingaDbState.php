@@ -11,6 +11,7 @@ use Icinga\Module\Icingadb\Common\Auth;
 use Icinga\Module\Icingadb\Model\Host;
 use Icinga\Module\Icingadb\Model\Service;
 use ipl\Sql\Connection as IcingaDbConnection;
+use ipl\Stdlib\Filter;
 
 class IcingaDbState
 {
@@ -67,8 +68,7 @@ class IcingaDbState
         $queryHost = Host::on($this->backend)->with('state');
         IcingaDbObject::applyIcingaDbRestrictions($queryHost);
 
-        $queryHost->getSelectBase()
-            ->where(['host.name IN (?)' => $hosts]);
+        $queryHost->filter(Filter::equal('host.name', $hosts));
 
         $hostObject = $queryHost->getModel()->getTableName();
 
@@ -82,8 +82,7 @@ class IcingaDbState
             'host.state'
         ]);
 
-        $queryService->getSelectBase()
-            ->where(['service_host.name IN (?)' => $hosts]);
+        $queryService->filter(Filter::equal('host.name', $hosts));
 
         IcingaDbObject::applyIcingaDbRestrictions($queryService);
 
