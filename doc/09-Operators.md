@@ -17,6 +17,15 @@ The `OR` operator selects the **BEST** state of its child nodes:
 
 ![Or Operator #2](screenshot/09_operators/0903_or-operator-without-ok.png)
 
+## DEGRADED <a id="deg-operator">
+
+The `DEGRADED` operator behaves like an `AND`, but if the resulting
+state is **CRITICAL** it transforms it into a **WARNING**.
+Refer to the table below for the case-by-case
+analysis of the statuses.
+
+![Degraded Operator](screenshot/09_operators/0905_deg-operator.jpg)
+
 ## MIN n <a id="min-operator">
 
 The `MIN` operator selects the **WORST** state out of the **BEST n** child node states:

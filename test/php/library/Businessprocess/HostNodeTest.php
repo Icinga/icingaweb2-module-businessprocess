@@ -41,11 +41,9 @@ class HostNodeTest extends BaseTestCase
         );
     }
 
-    /**
-     * @expectedException \Icinga\Exception\ProgrammingError
-     */
     public function testSettingAnInvalidStateFails()
     {
+        $this->expectException(\Icinga\Exception\ProgrammingError::class);
         $bp = new BpConfig();
         $host = $bp->createHost('localhost')->setState(98);
         $bp->createBp('p')->addChild($host)->getState();
