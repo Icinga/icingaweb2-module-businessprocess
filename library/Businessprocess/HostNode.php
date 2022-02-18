@@ -3,7 +3,6 @@
 namespace Icinga\Module\Businessprocess;
 
 use Icinga\Module\Businessprocess\Web\Url;
-use ipl\Html\Html;
 
 class HostNode extends MonitoredNode
 {

@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess\Web\Form;
 
 use Icinga\Application\Config;
+use Icinga\Application\Icinga;
 use Icinga\Authentication\Auth;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Businessprocess\BpConfig;
@@ -17,8 +18,14 @@ abstract class BpConfigBaseForm extends QuickForm
 
     protected function listAvailableBackends()
     {
-        $keys = array_keys(Config::module('monitoring', 'backends')->toArray());
-        return array_combine($keys, $keys);
+        $keys = [];
+        $moduleManager = Icinga::app()->getModuleManager();
+        if ($moduleManager->hasEnabled('monitoring')) {
+            $keys = array_keys(Config::module('monitoring', 'backends')->toArray());
+            $keys = array_combine($keys, $keys);
+        }
+
+        return $keys;
     }
 
     public function setStorage(LegacyStorage $storage)

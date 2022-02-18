@@ -2,23 +2,23 @@
 
 namespace Icinga\Module\Businessprocess\Forms;
 
-use Icinga\Data\Filter\Filter;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
+use Icinga\Module\Businessprocess\Common\EnumList;
 use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
-use Icinga\Module\Businessprocess\MonitoringRestrictions;
 use Icinga\Module\Businessprocess\Storage\Storage;
 use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 use Icinga\Module\Businessprocess\Web\Form\Validator\NoDuplicateChildrenValidator;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 use Icinga\Web\Session\SessionNamespace;
+use ipl\Sql\Connection as IcingaDbConnection;
 
 class AddNodeForm extends QuickForm
 {
-    use MonitoringRestrictions;
+    use EnumList;
 
-    /** @var MonitoringBackend */
+    /** @var MonitoringBackend|IcingaDbConnection*/
     protected $backend;
 
     /** @var Storage */
@@ -402,10 +402,10 @@ class AddNodeForm extends QuickForm
     }
 
     /**
-     * @param MonitoringBackend $backend
+     * @param MonitoringBackend|IcingaDbConnection $backend
      * @return $this
      */
-    public function setBackend(MonitoringBackend $backend)
+    public function setBackend($backend)
     {
         $this->backend = $backend;
         return $this;
@@ -458,127 +458,6 @@ class AddNodeForm extends QuickForm
     {
         $this->session = $session;
         return $this;
-    }
-
-    protected function enumHostForServiceList()
-    {
-        $names = $this->backend
-            ->select()
-            ->from('hostStatus', ['hostname' => 'host_name'])
-            ->applyFilter($this->getRestriction('monitoring/filter/objects'))
-            ->order('host_name')
-            ->getQuery()
-            ->fetchColumn();
-
-        // fetchPairs doesn't seem to work when using the same column with
-        // different aliases twice
-
-        return array_combine((array) $names, (array) $names);
-    }
-
-    protected function enumHostList()
-    {
-        $names = $this->backend
-            ->select()
-            ->from('hostStatus', ['hostname' => 'host_name'])
-            ->applyFilter($this->getRestriction('monitoring/filter/objects'))
-            ->order('host_name')
-            ->getQuery()
-            ->fetchColumn();
-
-        // fetchPairs doesn't seem to work when using the same column with
-        // different aliases twice
-        $res = array();
-        $suffix = ';Hoststatus';
-        foreach ($names as $name) {
-            $res[$name . $suffix] = $name;
-        }
-
-        return $res;
-    }
-
-    protected function enumHostStateList()
-    {
-        $hostStateList = [
-            0 => $this->translate('UP'),
-            1 => $this->translate('DOWN'),
-            99 => $this->translate('PENDING')
-        ];
-
-        return $hostStateList;
-    }
-
-    protected function enumServiceList($host)
-    {
-        $names = $this->backend
-            ->select()
-            ->from('serviceStatus', ['service' => 'service_description'])
-            ->where('host_name', $host)
-            ->applyFilter($this->getRestriction('monitoring/filter/objects'))
-            ->order('service_description')
-            ->getQuery()
-            ->fetchColumn();
-
-        $services = array();
-        foreach ($names as $name) {
-            $services[$host . ';' . $name] = $name;
-        }
-
-        return $services;
-    }
-
-    protected function enumServiceStateList()
-    {
-        $serviceStateList = [
-            0 => $this->translate('OK'),
-            1 => $this->translate('WARNING'),
-            2 => $this->translate('CRITICAL'),
-            3 => $this->translate('UNKNOWN'),
-            99 => $this->translate('PENDING'),
-        ];
-
-        return $serviceStateList;
-    }
-
-    protected function enumHostListByFilter($filter)
-    {
-        $names = $this->backend
-            ->select()
-            ->from('hostStatus', ['hostname' => 'host_name'])
-            ->applyFilter(Filter::fromQueryString($filter))
-            ->applyFilter($this->getRestriction('monitoring/filter/objects'))
-            ->order('host_name')
-            ->getQuery()
-            ->fetchColumn();
-
-        // fetchPairs doesn't seem to work when using the same column with
-        // different aliases twice
-        $res = array();
-        $suffix = ';Hoststatus';
-        foreach ($names as $name) {
-            $res[$name . $suffix] = $name;
-        }
-
-        return $res;
-    }
-
-    protected function enumServiceListByFilter($filter)
-    {
-        $objects = $this->backend
-            ->select()
-            ->from('serviceStatus', ['host' => 'host_name', 'service' => 'service_description'])
-            ->applyFilter(Filter::fromQueryString($filter))
-            ->applyFilter($this->getRestriction('monitoring/filter/objects'))
-            ->order('service_description')
-            ->getQuery()
-            ->fetchAll();
-
-        $services = array();
-        foreach ($objects as $object) {
-            $services[$object->host . ';' . $object->service] = $object->host . ':' . $object->service;
-        }
-
-        return $services;
     }
 
     protected function hasProcesses()

@@ -9,10 +9,11 @@ use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 use Icinga\Web\Notification;
 use Icinga\Web\Session\SessionNamespace;
+use ipl\Sql\Connection as IcingaDbConnection;
 
 class ProcessForm extends QuickForm
 {
-    /** @var MonitoringBackend */
+    /** @var MonitoringBackend|IcingaDbConnection */
     protected $backend;
 
     /** @var BpConfig */
@@ -111,10 +112,10 @@ class ProcessForm extends QuickForm
     }
 
     /**
-     * @param MonitoringBackend $backend
+     * @param MonitoringBackend|IcingaDbConnection $backend
      * @return $this
      */
-    public function setBackend(MonitoringBackend $backend)
+    public function setBackend($backend)
     {
         $this->backend = $backend;
         return $this;

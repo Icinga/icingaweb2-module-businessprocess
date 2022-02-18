@@ -7,7 +7,7 @@ Requirements
 * Icinga Web 2 (&gt;= 2.9)
 * PHP (&gt;= 7.2)
 * Icinga Web 2 modules:
-  * The `monitoring` module needs to be configured and enabled.
+  * The `monitoring` or `icingadb` module needs to be configured and enabled.
 
 Installation from .tar.gz
 -------------------------

@@ -51,16 +51,18 @@ class BpConfigForm extends BpConfigBaseForm
             'rows' => 4,
         ));
 
-        $this->addElement('select', 'Backend', array(
-            'label'       => $this->translate('Backend'),
-            'description' => $this->translate(
-                'Icinga Web Monitoring Backend where current object states for'
-                . ' this process should be retrieved from'
-            ),
-            'multiOptions' => array(
-                null => $this->translate('Use the configured default backend'),
-            ) + $this->listAvailableBackends()
-        ));
+        if (! empty($this->listAvailableBackends())) {
+            $this->addElement('select', 'Backend', array(
+                'label'       => $this->translate('Backend'),
+                'description' => $this->translate(
+                    'Icinga Web Monitoring Backend where current object states for'
+                    . ' this process should be retrieved from'
+                ),
+                'multiOptions' => array(
+                        null => $this->translate('Use the configured default backend'),
+                    ) + $this->listAvailableBackends()
+            ));
+        }
 
         $this->addElement('select', 'Statetype', array(
             'label'       => $this->translate('State Type'),
@@ -167,9 +169,11 @@ class BpConfigForm extends BpConfigBaseForm
         }
         $meta = $config->getMetadata();
         foreach ($this->getValues() as $key => $value) {
-            if ($value === null || $value === '') {
+            if (! in_array($key, ['Title', 'Description', 'Backend'], true)
+                && ($value === null || $value === '')) {
                 continue;
             }
+
             if ($meta->hasKey($key)) {
                 $meta->set($key, $value);
             }

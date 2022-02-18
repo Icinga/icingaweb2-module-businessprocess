@@ -3,13 +3,15 @@
 namespace Icinga\Module\Businessprocess;
 
 use Exception;
-use Icinga\Application\Config;
+use Icinga\Application\Modules\Module;
 use Icinga\Exception\IcingaException;
 use Icinga\Exception\NotFoundError;
 use Icinga\Module\Businessprocess\Exception\NestingError;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
+use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
+use ipl\Sql\Connection as IcingaDbConnection;
 
 class BpConfig
 {
@@ -25,9 +27,9 @@ class BpConfig
     protected $backendName;
 
     /**
-     * Monitoring backend to retrieve states from
+     * Backend to retrieve states from
      *
-     * @var MonitoringBackend
+     * @var MonitoringBackend|IcingaDbConnection
      */
     protected $backend;
 
@@ -281,7 +283,7 @@ class BpConfig
         return $this->getMetadata()->has('Backend');
     }
 
-    public function setBackend(MonitoringBackend $backend)
+    public function setBackend($backend)
     {
         $this->backend = $backend;
         return $this;
@@ -290,9 +292,14 @@ class BpConfig
     public function getBackend()
     {
         if ($this->backend === null) {
-            $this->backend = MonitoringBackend::instance(
-                $this->getBackendName()
-            );
+            if (Module::exists('icingadb')
+                && (! $this->hasBackendName() && IcingadbSupport::useIcingaDbAsBackend())) {
+                $this->backend = IcingaDbObject::fetchDb();
+            } else {
+                $this->backend = MonitoringBackend::instance(
+                    $this->getBackendName()
+                );
+            }
         }
 
         return $this->backend;
