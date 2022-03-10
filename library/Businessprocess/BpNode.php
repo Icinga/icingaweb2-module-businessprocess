@@ -30,15 +30,15 @@ class BpNode extends Node
     protected $stateOverrides = [];
 
     protected static $emptyStateSummary = array(
-        'OK'          => 0,
-        'WARNING'     => 0,
-        'CRITICAL'    => 0,
-        'UNKNOWN'     => 0,
-        'PENDING'     => 0,
-        'UP'          => 0,
-        'DOWN'        => 0,
-        'UNREACHABLE' => 0,
-        'MISSING'     => 0,
+        'CRITICAL'            => 0,
+        'CRITICAL-HANDLED'    => 0,
+        'WARNING'             => 0,
+        'WARNING-HANDLED'     => 0,
+        'UNKNOWN'             => 0,
+        'UNKNOWN-HANDLED'     => 0,
+        'OK'                  => 0,
+        'PENDING'             => 0,
+        'MISSING'             => 0,
     );
 
     protected static $sortStateInversionMap = array(
@@ -65,16 +65,27 @@ class BpNode extends Node
             $this->counters = self::$emptyStateSummary;
 
             foreach ($this->getChildren() as $child) {
-                if ($child instanceof BpNode) {
-                    $counters = $child->getStateSummary();
-                    foreach ($counters as $k => $v) {
-                        $this->counters[$k] += $v;
-                    }
-                } elseif ($child->isMissing()) {
+                if ($child->isMissing()) {
                     $this->counters['MISSING']++;
                 } else {
                     $state = $child->getStateName($this->getChildState($child));
-                    $this->counters[$state]++;
+                    if ($child->isHandled() && ($state !== 'UP' && $state !== 'OK')) {
+                        $state = $state . '-HANDLED';
+                    }
+
+                    if ($state === 'DOWN') {
+                        $this->counters['CRITICAL']++;
+                    } elseif ($state === 'DOWN-HANDLED') {
+                        $this->counters['CRITICAL-HANDLED']++;
+                    } elseif ($state === 'UNREACHABLE') {
+                        $this->counters['UNKNOWN']++;
+                    } elseif ($state === 'UNREACHABLE-HANDLED') {
+                        $this->counters['UNKNOWN-HANDLED']++;
+                    } elseif ($state === 'UP') {
+                        $this->counters['OK']++;
+                    } else {
+                        $this->counters[$state]++;
+                    }
                 }
             }
         }

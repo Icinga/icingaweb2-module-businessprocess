@@ -330,19 +330,6 @@ ul.bp {
                 }
             }
         }
-
-        .badge {
-            margin-top: 0.25em;
-            text-decoration: none;
-
-            &:last-child {
-                margin-right: 0;
-            }
-
-            &:hover {
-                box-shadow: 0px 0px 5px @gray-light;
-            }
-        }
     }
 
     .dashboard-tile,
@@ -376,35 +363,49 @@ ul.bp {
 }
 /** END Dashboard **/
 
-/** BEGIN Badges **/
-.badges {
-    background-color: fade(@body-bg-color, 50%);
-    border-radius: 0.45em;
-    display: block;
-    padding: 0.3em 0.4em;
+// State summary badges
+.state-badges {
+    .state-badges();
 
-    .badge {
-        border: 1px solid @body-bg-color;
-        margin: 0;
+    &.state-badges li > ul > li:last-child {
+        margin-left: 0;
+    }
+
+    li > ul > li:first-child:not(:last-child) .state-badge {
+        border-right: 0;
     }
 }
 
-div.bp .badges {
+// Node children count
+.item-count {
+    font-size: 1em;
+    text-align: center;
+    color: @text-color-inverted;
+}
+
+div.bp .state-badges {
     display: inline-block;
     padding-top: 0;
 }
 
-
-
-td > a > .badges {
+td > a > .state-badges {
     background-color: transparent;
 }
 
-.badge-critical, .badge-down { background: @color-critical; }
-.badge-unknown, .badge-unreachable { background: @color-unknown; }
-.badge-warning { background: @color-warning }
-.badge-pending { background: @color-pending }
-.badge-missing { background: @gray-semilight; color: @text-color-on-icinga-blue; }
+.state-badge {
+    font-size: .8em;
+    border: 1px solid @body-bg-color;
+
+    &.state-missing {
+        background: @gray-semilight;
+        color: @text-color-on-icinga-blue;
+    }
+
+    &.state-critical.handled, &.state-down.handled { background: @color-critical-handled; opacity: 1; }
+    &.state-unknown.handled { background-color: @color-unknown-handled; opacity: 1; }
+    &.state-warning.handled { background: @color-warning-handled; opacity: 1; }
+}
+
 /** END Badges **/
 
 /** BEGIN Tiles **/
@@ -431,7 +432,11 @@ td > a > .badges {
     cursor: pointer;
     position: relative;
 
-    .badges {
+    .item-count {
+        margin-right: .5em;
+    }
+
+    .state-badges {
         position: absolute;
         bottom: 0;
         right: 0;
@@ -457,17 +462,6 @@ td > a > .badges {
         padding: 1em 1em 0;
         font-weight: bold;
         word-wrap: break-word;
-
-        & + p.children-count {
-            margin: 0;
-            font-size: .5em;
-            text-align: center;
-
-            span {
-                font-size: .8em;
-                font-weight: bold;
-            }
-        }
     }
 
     &:hover {
