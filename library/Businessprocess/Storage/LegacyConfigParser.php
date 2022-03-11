@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Storage;
 
+use Icinga\Application\Logger;
 use Icinga\Application\Benchmark;
 use Icinga\Exception\ConfigurationError;
 use Icinga\Exception\SystemPermissionException;
@@ -89,6 +90,7 @@ class LegacyConfigParser
     protected function reallyParseFile($filename)
     {
         $file = $this->currentFilename = $filename;
+        Logger::Debug(basename(__FILE__) . '::' . __FUNCTION__ . '(): $file = ' . $file);
         $fh = @fopen($file, 'r');
         if (! $fh) {
             throw new SystemPermissionException('Could not open "%s"', $filename);
@@ -322,8 +324,12 @@ class LegacyConfigParser
         }
 
         $op = '&';
-        if (preg_match_all('~(?<!\\\\)([\|\+&\!\%])~', $value, $m)) {
+        Logger::Debug(basename(__FILE__) . '::' . __FUNCTION__ . '(): $value = "' . $value . '"');
+        // match operators:
+        if (preg_match_all('~(?<!\\\\)([\|\+&\!\%\#])~', $value, $m)) {
             $op = implode('', $m[1]);
+            Logger::Debug(basename(__FILE__) . '::' . __FUNCTION__ . '(): $op = ' . $op);
+            Logger::Debug(basename(__FILE__) . '::' . __FUNCTION__ . '(): strlen($op) = ' . strlen($op));
             for ($i = 1; $i < strlen($op); $i++) {
                 if ($op[$i] !== $op[$i - 1]) {
                     $this->parseError('Mixing operators is not allowed');
@@ -332,6 +338,8 @@ class LegacyConfigParser
         }
         $op = $op[0];
         $op_name = $op;
+        Logger::Debug(basename(__FILE__) . '::' . __FUNCTION__ . '(): $op = ' . $op);
+        Logger::Debug(basename(__FILE__) . '::' . __FUNCTION__ . '(): $op_name = ' . $op_name);
 
         if ($op === '+') {
             if (! preg_match('~^(\d+)(?::(\d+))?\s*of:\s*(.+?)$~', $value, $m)) {
@@ -351,7 +359,8 @@ class LegacyConfigParser
 
         $cmps = preg_split('~\s*(?<!\\\\)\\' . $op . '\s*~', $value, -1, PREG_SPLIT_NO_EMPTY);
         foreach ($cmps as $val) {
-            $val = preg_replace('~(\\\\([\|\+&\!\%]))~', '$2', $val);
+            // match operators:
+            $val = preg_replace('~(\\\\([\|\+&\!\%\#]))~', '$2', $val);
             if (strpos($val, ';') !== false) {
                 if ($bp->hasNode($val)) {
                     $node->addChild($bp->getNode($val));

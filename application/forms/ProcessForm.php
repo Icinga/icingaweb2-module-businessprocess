@@ -72,6 +72,7 @@ class ProcessForm extends QuickForm
                 '7' => $this->translate('MIN 7'),
                 '8' => $this->translate('MIN 8'),
                 '9' => $this->translate('MIN 9'),
+                '#' => $this->translate('MAX 1'),
             )
         ));
 

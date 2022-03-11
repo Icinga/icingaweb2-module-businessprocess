@@ -2,16 +2,23 @@
 
 namespace Icinga\Module\Businessprocess;
 
+use Icinga\Application\Logger;
 use Icinga\Exception\ConfigurationError;
 use Icinga\Exception\NotFoundError;
 use Icinga\Module\Businessprocess\Exception\NestingError;
 
 class BpNode extends Node
 {
+    // due to the structure of this module, its numerous preg-expressions and internal logic,
+    // if adding new operators, use special single characters only. because of missing utf-8
+    // capabilities just anyone of out of the ascii set:
+    //      !  "  #  $  %  &  '  (  )  *  +  ,  -  .  /
+    //      :  ;  <  =  >  ?  [  \  ]  ^  _  `  {  |  }  ~
     const OP_AND = '&';
     const OP_OR  = '|';
     const OP_NOT  = '!';
     const OP_DEGRADED  = '%';
+    const OP_MAX1  = '#';           // Only one of n children may be OK at the same time
 
     protected $operator = '&';
     protected $url;
@@ -302,6 +309,7 @@ class BpNode extends Node
             case self::OP_OR:
             case self::OP_NOT:
             case self::OP_DEGRADED:
+            case self::OP_MAX1:
                 return;
             default:
                 if (is_numeric($operator)) {
@@ -460,9 +468,11 @@ class BpNode extends Node
             $lastStateChange = max($lastStateChange, $child->getLastStateChange());
             $bp->endLoopDetection($this->name);
         }
+        Logger::Debug(basename(__FILE__) . '::' . __FUNCTION__ . '(): $sort_states = ' . implode(', ', $sort_states));
 
         $this->setLastStateChange($lastStateChange);
 
+        Logger::Debug(basename(__FILE__) . '::' . __FUNCTION__ . '(): $this->getOperator() = ' . $this->getOperator());
         switch ($this->getOperator()) {
             case self::OP_AND:
                 $sort_state = max($sort_states);
@@ -482,6 +492,22 @@ class BpNode extends Node
 
                 $sort_state = ($maxIcingaState === self::ICINGA_CRITICAL) ? $warningState : $maxState;
                 break;
+            case self::OP_MAX1:
+                Logger::Debug(basename(__FILE__) . '::' . __FUNCTION__ . '(): Only one of n children may be OK at the same time');
+                $actualGood = 0;
+                foreach ($sort_states as $s) {
+                    if (($s >> self::SHIFT_FLAGS) === self::ICINGA_OK) {
+                        $actualGood++;
+                    }
+                }
+                Logger::Debug(basename(__FILE__) . '::' . __FUNCTION__ . '(): $actualGood = ' . $actualGood);
+
+                if ($actualGood == 1) {
+                    $this->state = self::ICINGA_OK;
+                } else {
+                    $this->state = self::ICINGA_CRITICAL;
+                }
+                return $this;
             default:
                 // MIN:
                 $sort_state = 3 << self::SHIFT_FLAGS;
@@ -648,6 +674,9 @@ class BpNode extends Node
                 break;
             case self::OP_DEGRADED:
                 return 'DEG';
+                break;
+            case self::OP_MAX1:
+                return 'MAX 1';
                 break;
             default:
                 // MIN

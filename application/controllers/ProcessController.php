@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Controllers;
 
+use Icinga\Application\Logger;
 use Icinga\Application\Modules\Module;
 use Icinga\Date\DateFormatter;
 use Icinga\Module\Businessprocess\BpConfig;
@@ -115,6 +116,8 @@ class ProcessController extends Controller
         $this->tabs()->extend(new OutputFormat());
 
         $missing = $bp->getMissingChildren();
+        Logger::Debug(basename(__FILE__) . '::' . __FUNCTION__ . '(): $missing = ' . implode(', ', $missing));
+
         if (! empty($missing)) {
             if (($count = count($missing)) > 10) {
                 $missing = array_slice($missing, 0, 10);

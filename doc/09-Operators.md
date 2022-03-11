@@ -31,3 +31,9 @@ analysis of the statuses.
 The `MIN` operator selects the **WORST** state out of the **BEST n** child node states:
 
 ![MIN](screenshot/09_operators/0904_min-operator.png)
+
+## MAX 1 <a id="max1-operator">
+
+Only one of n children may be OK at the same time. In all other cases the parent node is CRITICAL.
+Useful for a service on n servers, only one of which may be running. If both were running,
+race conditions and duplication of data could occur.
