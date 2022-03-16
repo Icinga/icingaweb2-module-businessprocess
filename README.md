@@ -1,18 +1,16 @@
-[![Build Status](https://travis-ci.org/Icinga/icingaweb2-module-businessprocess.png?branch=master)](https://travis-ci.org/Icinga/icingaweb2-module-businessprocess)
+# Icinga Business Process Modeling
+
+[![PHP Support](https://img.shields.io/badge/php-%3E%3D%207.0-777BB4?logo=PHP)](https://php.net/)
+![Build Status](https://github.com/icinga/icingaweb2-module-businessprocess/workflows/PHP%20Tests/badge.svg?branch=master)
 [![Github Tag](https://img.shields.io/github/tag/Icinga/icingaweb2-module-businessprocess.svg)](https://github.com/Icinga/icingaweb2-module-businessprocess)
 
-Business Processes - Icinga Web 2 module
-========================================
-
-![Icinga Logo](https://www.icinga.com/wp-content/uploads/2014/06/icinga_logo.png)
+![Icinga Logo](https://icinga.com/wp-content/uploads/2014/06/icinga_logo.png)
 
 If you want to visualize and monitor hierarchical business processes based on
 any or all objects monitored by Icinga, the Icinga Web 2 business process
 module is the way to go.
 
-[![Tile View](doc/screenshot/00_preview/0005_preview-smaller-tile-view.png)](doc/13-Web-Components-Tile-Renderer.md)
-[![Tree View](doc/screenshot/00_preview/0006_preview-smaller-tree-view.png)](doc/14-Web-Components-Tree-Renderer.md)
-[![Dashboard](doc/screenshot/00_preview/0007_preview-smallerbusinessprocesses-on-dashboard.png)](doc/16-Add-To-Dashboard.md)
+![Preview](doc/screenshot/00_preview/0005_readme-preview.png)
 
 Want to create custom process-based dashboards? Trigger notifications at
 process or sub-process level? Provide a quick top-level view for thousands of
