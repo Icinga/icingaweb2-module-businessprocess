@@ -2,7 +2,7 @@
 
 ## Requirements
 
-* PHP (>= 7.0)
+* PHP (>= 7.2)
 * Icinga Web 2 (>= 2.9)
 * Icinga Web 2 libraries:
   * [Icinga PHP Library (ipl)](https://github.com/Icinga/icinga-php-library) (>= 0.8)
