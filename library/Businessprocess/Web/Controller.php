@@ -50,7 +50,6 @@ class Controller extends ModuleController
             = $this->showFullscreen
             = (bool) $this->_helper->layout()->showFullscreen;
 
-        $this->view->compact = $this->params->get('view') === 'compact';
         $this->setViewScript('default');
     }
 
@@ -62,7 +61,7 @@ class Controller extends ModuleController
         if ($this->url === null) {
             $this->url = Url::fromPath(
                 $this->getRequest()->getUrl()->getPath()
-            )->setParams($this->params);
+            )->setParams($this->getRequest()->getUrl()->getParams());
         }
 
         return $this->url;
