@@ -756,25 +756,6 @@ table.sourcecode {
     }
 }
 
-.diff {
-    font-family: monospace;
-    white-space: pre-wrap;
-
-    del, ins {
-        text-decoration: none;
-    }
-
-    del {
-        color: @colorCritical;
-        background-color: #fdd;
-    }
-
-    ins {
-        color: @colorOk;
-        background-color: #dfd;
-    }
-}
-
 /** Forms stolen from director **/
 .content form {
     margin-bottom: 2em;
@@ -1036,6 +1017,25 @@ textarea.smaller {
 @color-diff-changed-old: #fdd;
 @color-diff-changed-new: #efe;
 
+.diff {
+    font-family: monospace;
+    white-space: pre-wrap;
+
+    del, ins {
+        text-decoration: none;
+    }
+
+    del {
+        color: @color-critical;
+        background-color: #fdd;
+    }
+
+    ins {
+        color: @color-ok;
+        background-color: #dfd;
+    }
+}
+
 .DifferencesSideBySide {
     ins, del {
         text-decoration: none;
@@ -1061,6 +1061,7 @@ textarea.smaller {
 
     .ChangeReplace {
         td.Left {
+            color: black;
             background: @color-diff-changed-old;
             del {
                 background: @color-diff-del;
@@ -1068,6 +1069,7 @@ textarea.smaller {
         }
 
         td.Right {
+            color: black;
             background: @color-diff-changed-new;
             ins {
                 background: @color-diff-ins;
