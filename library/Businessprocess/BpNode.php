@@ -493,7 +493,8 @@ class BpNode extends Node
                 $sort_state = ($maxIcingaState === self::ICINGA_CRITICAL) ? $warningState : $maxState;
                 break;
             case self::OP_MAX1:
-                Logger::Debug(basename(__FILE__) . '::' . __FUNCTION__ . '(): Only one of n children may be OK at the same time');
+                Logger::Debug(basename(__FILE__) . '::' . __FUNCTION__ . 
+                    '(): Only one of n children may be OK at the same time');
                 $actualGood = 0;
                 foreach ($sort_states as $s) {
                     if (($s >> self::SHIFT_FLAGS) === self::ICINGA_OK) {
