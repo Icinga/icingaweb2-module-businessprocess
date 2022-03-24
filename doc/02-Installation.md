@@ -2,11 +2,11 @@
 
 ## Requirements
 
-* PHP (>= 7.0)
+* PHP (>= 7.2)
 * Icinga Web 2 (>= 2.9)
 * Icinga Web 2 libraries:
   * [Icinga PHP Library (ipl)](https://github.com/Icinga/icinga-php-library) (>= 0.8)
-  * [Icinga PHP Thirdparty](https://github.com/Icinga/icinga-php-thirdparty) (>= 0.10)
+  * [Icinga PHP Thirdparty](https://github.com/Icinga/icinga-php-thirdparty) (>= 0.11)
 * Icinga Web 2 modules:
   * The `monitoring` or `icingadb` module needs to be configured and enabled.
 
