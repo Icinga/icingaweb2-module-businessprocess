@@ -39,6 +39,7 @@ class BpNode extends Node
         'OK'                  => 0,
         'PENDING'             => 0,
         'MISSING'             => 0,
+        'EMPTY'               => 0,
     );
 
     protected static $sortStateInversionMap = array(
