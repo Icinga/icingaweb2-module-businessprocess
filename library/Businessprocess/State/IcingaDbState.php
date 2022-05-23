@@ -71,11 +71,10 @@ class IcingaDbState
 
         Benchmark::measure('Retrieved states for ' . $queryHost->count() . ' hosts in ' . $config->getName());
 
-        $queryService = Service::on($this->backend)->with([
-            'state',
-            'host',
-            'host.state'
-        ]);
+        $queryService = Service::on($this->backend)
+            ->with('state')
+            ->with('host')
+            ->with('host.state');
 
         $queryService->filter(Filter::equal('host.name', $hosts));
 
