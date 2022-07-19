@@ -9,10 +9,7 @@ use ipl\Html\Html;
 
 class TileRenderer extends Renderer
 {
-    /**
-     * @inheritdoc
-     */
-    public function render()
+    public function assemble()
     {
         $bp = $this->config;
         $nodesDiv = Html::tag(
@@ -60,10 +57,8 @@ class TileRenderer extends Renderer
             }
         }
 
-        $nodesDiv->add($this->getContent());
-        $this->setContent($nodesDiv);
-
-        return parent::render();
+        $nodesDiv->addHtml(...$this->getContent());
+        $this->setHtmlContent($nodesDiv);
     }
 
     /**
