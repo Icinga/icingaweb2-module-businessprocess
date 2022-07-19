@@ -15,10 +15,7 @@ use ipl\Web\Widget\StateBall;
 
 class TreeRenderer extends Renderer
 {
-    /**
-     * @inheritdoc
-     */
-    public function render()
+    public function assemble()
     {
         $bp = $this->config;
         $htmlId = $bp->getHtmlId();
@@ -59,8 +56,7 @@ class TreeRenderer extends Renderer
                     ->getAbsoluteUrl());
         }
 
-        $this->add($tree);
-        return parent::render();
+        $this->addHtml($tree);
     }
 
     /**
