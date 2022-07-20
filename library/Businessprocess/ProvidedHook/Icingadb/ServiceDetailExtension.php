@@ -1,17 +1,20 @@
 <?php
 
-namespace Icinga\Module\Businessprocess\ProvidedHook\Monitoring;
+namespace Icinga\Module\Businessprocess\ProvidedHook\Icingadb;
 
 use Icinga\Module\Businessprocess\Renderer\TileRenderer;
 use Icinga\Module\Businessprocess\Renderer\TreeRenderer;
-use Icinga\Module\Businessprocess\State\MonitoringState;
+use Icinga\Module\Businessprocess\State\IcingaDbState;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Businessprocess\Web\Url;
-use Icinga\Module\Monitoring\Hook\DetailviewExtensionHook;
-use Icinga\Module\Monitoring\Object\MonitoredObject;
-use Icinga\Module\Monitoring\Object\Service;
+use Icinga\Module\Icingadb\Hook\ServiceDetailExtensionHook;
+use Icinga\Module\Icingadb\Model\Service;
+use ipl\Html\Html;
+use ipl\Html\HtmlDocument;
+use ipl\Html\HtmlString;
+use ipl\Html\ValidHtml;
 
-class DetailviewExtension extends DetailviewExtensionHook
+class ServiceDetailExtension extends ServiceDetailExtensionHook
 {
     /** @var LegacyStorage */
     private $storage;
@@ -19,11 +22,10 @@ class DetailviewExtension extends DetailviewExtensionHook
     /** @var string */
     private $commandName;
 
-    /**
-     * Initialize storage
-     */
-    public function init()
+    protected function init()
     {
+        $this->setSection(self::GRAPH_SECTION);
+
         try {
             $this->storage = LegacyStorage::getInstance();
             $this->commandName = $this->getModule()->getConfig()->get(
@@ -36,38 +38,30 @@ class DetailviewExtension extends DetailviewExtensionHook
         }
     }
 
-    /**
-     * Returns the rendered Tree-/TileRenderer HTML
-     *
-     * @param MonitoredObject $object
-     *
-     * @return string
-     */
-    public function getHtmlForObject(MonitoredObject $object)
+    public function getHtmlForObject(Service $service): ValidHtml
     {
         if (! isset($this->storage)
-            || ! $object instanceof Service
-            || $object->check_command !== $this->commandName
+            || $service->checkcommand_name !== $this->commandName
         ) {
-            return '';
+            return HtmlString::create('');
         }
 
-        $bpName = $object->_service_businessprocess_config;
+        $bpName = $service->customvars['businessprocess_config'] ?? null;
         if (! $bpName) {
-            return '';
+            return HtmlString::create('');
         }
 
-        $nodeName = $object->_service_businessprocess_process;
+        $nodeName = $service->customvars['businessprocess_process'] ?? null;
         if (! $nodeName) {
-            return '';
+            return HtmlString::create('');
         }
 
         $bp = $this->storage->loadProcess($bpName);
         $node = $bp->getBpNode($nodeName);
 
-        MonitoringState::apply($bp);
+        IcingaDbState::apply($bp);
 
-        if (filter_var($object->_service_businessprocess_as_tree, FILTER_VALIDATE_BOOLEAN)) {
+        if ($service->customvars['businessprocess_as_tree'] ?? false) {
             $renderer = new TreeRenderer($bp, $node);
             $tag = 'ul';
         } else {
@@ -78,6 +72,6 @@ class DetailviewExtension extends DetailviewExtensionHook
         $renderer->setUrl(Url::fromPath('businessprocess/process/show?config=' . $bpName . '&node=' . $nodeName));
         $renderer->ensureAssembled()->getFirst($tag)->setAttribute('data-base-target', '_next');
 
-        return '<h2>Business Process</h2>' . $renderer;
+        return (new HtmlDocument())->addHtml(Html::tag('h2', 'Business Process'), $renderer);
     }
 }
