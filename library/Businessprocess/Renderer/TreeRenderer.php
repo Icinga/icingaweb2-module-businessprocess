@@ -2,19 +2,24 @@
 
 namespace Icinga\Module\Businessprocess\Renderer;
 
+use Icinga\Application\Version;
 use Icinga\Date\DateFormatter;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Web\Form\CsrfToken;
-use Icinga\Module\Icingadb\Model\State;
+use ipl\Html\Attributes;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
+use ipl\Html\HtmlElement;
+use ipl\Web\Widget\Icon;
 use ipl\Web\Widget\StateBall;
 
 class TreeRenderer extends Renderer
 {
+    const NEW_COLLAPSIBLE_IMPLEMENTATION_SINCE = '2.11.2';
+
     public function assemble()
     {
         $bp = $this->config;
@@ -32,7 +37,6 @@ class TreeRenderer extends Renderer
                     'put'   => 'function:rowPutAllowed'
                 ]),
                 'data-sortable-invert-swap'     => 'true',
-                'data-is-root-config'           => $this->wantsRootNodes() ? 'true' : 'false',
                 'data-csrf-token'               => CsrfToken::generate()
             ],
             $this->renderBp($bp)
@@ -42,6 +46,10 @@ class TreeRenderer extends Renderer
                 'data-action-url',
                 $this->getUrl()->with(['config' => $bp->getName()])->getAbsoluteUrl()
             );
+
+            if (version_compare(Version::VERSION, self::NEW_COLLAPSIBLE_IMPLEMENTATION_SINCE, '<')) {
+                $tree->getAttributes()->add('data-is-root-config', true);
+            }
         } else {
             $nodeName = $this->parent instanceof ImportedNode
                 ? $this->parent->getNodeName()
@@ -192,27 +200,35 @@ class TreeRenderer extends Renderer
             $attributes->add('class', 'node');
         }
 
-        $div = Html::tag('div');
-        $li->add($div);
+        $details = new HtmlElement('details', Attributes::create(['open' => true]));
+        $summary = new HtmlElement('summary');
+        if (version_compare(Version::VERSION, self::NEW_COLLAPSIBLE_IMPLEMENTATION_SINCE, '>=')) {
+            $details->getAttributes()->add('class', 'collapsible');
+            $summary->getAttributes()->add('class', 'collapsible-control'); // Helps JS, improves performance a bit
+        }
 
-        $div->add($node->getLink());
-        $div->add($this->getNodeIcons($node, $path));
+        $summary->addHtml(
+            new Icon('caret-down', ['class' => 'collapse-icon']),
+            new Icon('caret-right', ['class' => 'expand-icon'])
+        );
 
-        $div->add(Html::tag('span', null, $node->getAlias()));
+        $summary->add($this->getNodeIcons($node, $path));
+
+        $summary->add(Html::tag('span', null, $node->getAlias()));
 
         if ($node instanceof BpNode) {
-            $div->add(Html::tag('span', ['class' => 'op'], $node->operatorHtml()));
+            $summary->add(Html::tag('span', ['class' => 'op'], $node->operatorHtml()));
         }
 
         if ($node instanceof BpNode && $node->hasInfoUrl()) {
-            $div->add($this->createInfoAction($node));
+            $summary->add($this->createInfoAction($node));
         }
 
         $differentConfig = $node->getBpConfig()->getName() !== $this->getBusinessProcess()->getName();
         if (! $this->isLocked() && !$differentConfig) {
-            $div->add($this->getActionIcons($bp, $node));
+            $summary->add($this->getActionIcons($bp, $node));
         } elseif ($differentConfig) {
-            $div->add($this->actionIcon(
+            $summary->add($this->actionIcon(
                 'forward',
                 $this->getSourceUrl($node)->addParams(['mode' => 'tree'])->getAbsoluteUrl(),
                 mt('businessprocess', 'Show this process as part of its original configuration')
@@ -240,7 +256,6 @@ class TreeRenderer extends Renderer
                 ])
                 ->getAbsoluteUrl()
         ]);
-        $li->add($ul);
 
         $path[] = $differentConfig ? $node->getIdentifier() : $node->getName();
         foreach ($node->getChildren() as $name => $child) {
@@ -250,6 +265,10 @@ class TreeRenderer extends Renderer
                 $ul->add($this->renderChild($bp, $node, $child, $path));
             }
         }
+
+        $details->addHtml($summary);
+        $details->addHtml($ul);
+        $li->addHtml($details);
 
         return $li;
     }
