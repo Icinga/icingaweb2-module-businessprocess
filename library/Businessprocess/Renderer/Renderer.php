@@ -265,7 +265,7 @@ abstract class Renderer extends HtmlDocument
      */
     public function getId(Node $node, $path)
     {
-        return md5((empty($path) ? '' : implode(';', $path)) . $node->getName());
+        return 'businessprocess-' . md5((empty($path) ? '' : implode(';', $path)) . $node->getName());
     }
 
     public function setPath(array $path)

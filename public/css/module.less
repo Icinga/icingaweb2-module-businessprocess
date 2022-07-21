@@ -118,7 +118,7 @@ ul.bp {
         }
     }
     &[data-sortable-disabled="true"] {
-        li.process > div {
+        li.process summary {
             cursor: pointer;
         }
     }
@@ -143,15 +143,17 @@ ul.bp {
 
     // ghost style
     &.sortable > li.sortable-ghost {
-        position: relative;
-        overflow: hidden;
-        max-height: 30em;
-        background-color: @gray-lighter;
-        border: .2em dotted @gray-light;
-        border-left-width: 0;
-        border-right-width: 0;
+        > details {
+            position: relative;
+            overflow: hidden;
+            max-height: 30em;
+            background-color: @gray-lighter;
+            border: .2em dotted @gray-light;
+            border-left-width: 0;
+            border-right-width: 0;
+        }
 
-        &.process:after {
+        &.process > .details:after {
             // TODO: Only apply if content overflows?
             content: " ";
             position: absolute;
@@ -164,12 +166,14 @@ ul.bp {
     }
 
     // header style
-    li.process > div {
+    li.process summary {
         padding: .291666667em 0;
         border-bottom: 1px solid @gray-light;
+        user-select: none;
 
-        > a.toggle {
-            min-width: 1.25em; // So that process icons align with their node's icons
+        > .icon:nth-child(1),
+        > .icon:nth-child(2) {
+            min-width: 1.3em; // So that process icons align with their node's icons
             color: @gray;
         }
 
@@ -187,8 +191,23 @@ ul.bp {
         }
     }
 
+    li.process.sortable-ghost details:not([open]) > summary {
+        border-bottom: none;
+    }
+
+    // TODO: Remove once support for Icinga Web 2.10.x is dropped
+    li.process details:not(.collapsible) {
+        &[open] > summary .expand-icon {
+            display: none;
+        }
+
+        &:not([open]) > summary .collapse-icon {
+            display: none;
+        }
+    }
+
     // subprocess style
-    li.process > ul {
+    li.process > details ul {
         padding-left: 2em;
         list-style-type: none;
 
@@ -216,7 +235,7 @@ ul.bp {
     }
 
     // horizontal layout
-    li.process > div,
+    li.process summary,
     li:not(.process) {
         display: flex;
         align-items: center;
@@ -241,42 +260,23 @@ ul.bp {
     }
 
     // collapse handling
-    li.process {
-        // toggle, default
-        > div > a.toggle > i:before {
-            -webkit-transition: -webkit-transform 0.3s;
-            -moz-transition: -moz-transform 0.3s;
-            -o-transition: -o-transform 0.3s;
-            transition: transform 0.3s;
-        }
+    li.process details:not([open]) {
+        margin-bottom: (@vertical-tree-item-gap * 2);
 
-        // toggle, collapsed
-        &.collapsed > div > a.toggle > i:before {
-            -moz-transform:rotate(-90deg);
-            -ms-transform:rotate(-90deg);
-            -o-transform:rotate(-90deg);
-            -webkit-transform:rotate(-90deg);
-            transform:rotate(-90deg);
-        }
-
-        &.collapsed {
-            margin-bottom: (@vertical-tree-item-gap * 2);
-
-            > ul.bp {
-                display: none;
-            }
+        > ul.bp {
+            display: none;
         }
     }
 
     // hover style
-    li.process:hover > div {
+    li.process:hover summary {
         background-color: @tr-active-color;
     }
     li:not(.process):hover {
         background-color: @tr-active-color;
     }
 
-    li.process > div > .state-ball,
+    li.process summary > .state-ball,
     li:not(.process) > .state-ball {
         border: .15em solid @body-bg-color;
 

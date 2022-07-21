@@ -25,8 +25,7 @@
 
             this.module.on('focus', 'form input, form textarea, form select', this.formElementFocus);
 
-            this.module.on('click', 'li.process a.toggle', this.processToggleClick);
-            this.module.on('click', 'li.process > div', this.processHeaderClick);
+            this.module.on('click', 'li.process summary:not(.collapsible-control)', this.processHeaderClick);
             this.module.on('end', 'ul.sortable', this.rowDropped);
 
             this.module.on('click', 'div.tiles > div', this.tileClick);
@@ -42,40 +41,39 @@
         onRendered: function (event) {
             var $container = $(event.currentTarget);
             this.fixFullscreen($container);
-            this.restoreCollapsedBps($container);
+            this.restoreCollapsedBps(event.target);
             this.highlightFormErrors($container);
             this.hideInactiveFormDescriptions($container);
             this.fixTileLinksOnDashboard($container);
         },
 
-        processToggleClick: function (event) {
+        // TODO: Remove once support for Icinga Web 2.10.x is dropped
+        processHeaderClick: function (event) {
             event.stopPropagation();
+            event.preventDefault();
 
-            var $li = $(event.currentTarget).closest('li.process');
-            $li.toggleClass('collapsed');
+            let details = event.currentTarget.parentNode;
+            details.open = ! details.open;
 
-            var $bpUl = $(event.currentTarget).closest('.content > ul.bp');
-            if (! $bpUl.length || !$bpUl.data('isRootConfig')) {
+            let bpUl = event.currentTarget.closest('.content > ul.bp');
+            if (! bpUl || ! ('isRootConfig' in bpUl.dataset)) {
                 return;
             }
 
-            var bpName = $bpUl.attr('id');
+            let bpName = bpUl.id;
             if (typeof this.idCache[bpName] === 'undefined') {
                 this.idCache[bpName] = [];
             }
 
-            var index = this.idCache[bpName].indexOf($li.attr('id'));
-            if ($li.is('.collapsed')) {
+            let li = details.parentNode;
+            let index = this.idCache[bpName].indexOf(li.id);
+            if (! details.open) {
                 if (index === -1) {
-                    this.idCache[bpName].push($li.attr('id'));
+                    this.idCache[bpName].push(li.id);
                 }
             } else if (index !== -1) {
                 this.idCache[bpName].splice(index, 1);
             }
-        },
-
-        processHeaderClick: function (event) {
-            this.processToggleClick(event);
         },
 
         hideInactiveFormDescriptions: function($container) {
@@ -226,23 +224,23 @@
             }
         },
 
-        restoreCollapsedBps: function($container) {
-            var $bpUl = $container.find('.content > ul.bp');
-            if (! $bpUl.length || !$bpUl.data('isRootConfig')) {
+        // TODO: Remove once support for Icinga Web 2.10.x is dropped
+        restoreCollapsedBps: function(container) {
+            let bpUl = container.querySelector('.content > ul.bp');
+            if (! bpUl || ! ('isRootConfig' in bpUl.dataset)) {
                 return;
             }
 
-            var bpName = $bpUl.attr('id');
+            let bpName = bpUl.id;
             if (typeof this.idCache[bpName] === 'undefined') {
                 return;
             }
 
-            var _this = this;
-            $bpUl.find('li.process')
-                .filter(function () {
-                    return _this.idCache[bpName].indexOf(this.id) !== -1;
-                })
-                .addClass('collapsed');
+            bpUl.querySelectorAll('li.process').forEach(li => {
+                if (this.idCache[bpName].indexOf(li.id) !== -1) {
+                    li.querySelector(':scope > details').open = false;
+                }
+            });
         },
 
         /** BEGIN Form handling, borrowed from Director **/
