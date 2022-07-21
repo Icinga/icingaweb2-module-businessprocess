@@ -46,12 +46,12 @@ class ServiceDetailExtension extends ServiceDetailExtensionHook
             return HtmlString::create('');
         }
 
-        $bpName = $service->customvars['businessprocess_config'] ?? null;
+        $bpName = $service->customvars['icingacli_businessprocess_config'] ?? null;
         if (! $bpName) {
-            return HtmlString::create('');
+            $bpName = key($this->storage->listProcessNames());
         }
 
-        $nodeName = $service->customvars['businessprocess_process'] ?? null;
+        $nodeName = $service->customvars['icingacli_businessprocess_process'] ?? null;
         if (! $nodeName) {
             return HtmlString::create('');
         }
@@ -61,7 +61,7 @@ class ServiceDetailExtension extends ServiceDetailExtensionHook
 
         IcingaDbState::apply($bp);
 
-        if ($service->customvars['businessprocess_as_tree'] ?? false) {
+        if ($service->customvars['icingaweb_businessprocess_as_tree'] ?? false) {
             $renderer = new TreeRenderer($bp, $node);
             $tag = 'ul';
         } else {

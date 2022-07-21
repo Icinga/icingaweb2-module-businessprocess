@@ -52,12 +52,12 @@ class DetailviewExtension extends DetailviewExtensionHook
             return '';
         }
 
-        $bpName = $object->_service_businessprocess_config;
+        $bpName = $object->_service_icingacli_businessprocess_config;
         if (! $bpName) {
-            return '';
+            $bpName = key($this->storage->listProcessNames());
         }
 
-        $nodeName = $object->_service_businessprocess_process;
+        $nodeName = $object->_service_icingacli_businessprocess_process;
         if (! $nodeName) {
             return '';
         }
@@ -67,7 +67,7 @@ class DetailviewExtension extends DetailviewExtensionHook
 
         MonitoringState::apply($bp);
 
-        if (filter_var($object->_service_businessprocess_as_tree, FILTER_VALIDATE_BOOLEAN)) {
+        if (filter_var($object->_service_icingaweb_businessprocess_as_tree, FILTER_VALIDATE_BOOLEAN)) {
             $renderer = new TreeRenderer($bp, $node);
             $tag = 'ul';
         } else {
