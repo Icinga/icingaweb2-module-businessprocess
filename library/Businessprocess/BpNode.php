@@ -82,6 +82,8 @@ class BpNode extends Node
                         $this->counters['UNKNOWN']++;
                     } elseif ($state === 'UNREACHABLE-HANDLED') {
                         $this->counters['UNKNOWN-HANDLED']++;
+                    } elseif ($state === 'PENDING-HANDLED') {
+                        $this->counters['PENDING']++;
                     } elseif ($state === 'UP') {
                         $this->counters['OK']++;
                     } else {
