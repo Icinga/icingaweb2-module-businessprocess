@@ -1,9 +1,11 @@
 <?php
 
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
+use Icinga\Module\Businessprocess\Web\Navigation\Renderer\ProcessProblemsBadge;
 
 /** @var \Icinga\Application\Modules\Module $this */
 $section = $this->menuSection(N_('Business Processes'), array(
+    'renderer' => 'ProcessesProblemsBadge',
     'url'      => 'businessprocess',
     'icon'     => 'sitemap',
     'priority' => 46
@@ -30,6 +32,7 @@ try {
         }
 
         $section->add($meta->getTitle(), array(
+            'renderer' => (new ProcessProblemsBadge())->setBpConfigName($name),
             'url' => 'businessprocess/process/show',
             'urlParameters' => array('config' => $name),
             'priority' => $prio
