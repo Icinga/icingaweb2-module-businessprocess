@@ -149,10 +149,17 @@ class BpConfigForm extends BpConfigBaseForm
         $name = $this->getValue('name');
 
         if ($this->shouldBeDeleted()) {
-            $this->config->clearAppliedChanges();
-            $this->storage->deleteProcess($name);
-            $this->setSuccessUrl('businessprocess');
-            $this->redirectOnSuccess(sprintf('Process %s has been deleted', $name));
+            if ($this->config->isReferenced()) {
+                $this->addError(sprintf(
+                    $this->translate('Process "%s" cannot be deleted as it has been referenced in other processes'),
+                    $name
+                ));
+            } else {
+                $this->config->clearAppliedChanges();
+                $this->storage->deleteProcess($name);
+                $this->setSuccessUrl('businessprocess');
+                $this->redirectOnSuccess(sprintf('Process %s has been deleted', $name));
+            }
         }
     }
 

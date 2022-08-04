@@ -305,6 +305,22 @@ class BpConfig
         return $this->backend;
     }
 
+    public function isReferenced()
+    {
+        foreach ($this->storage()->listProcessNames() as $bpName) {
+            if ($bpName !== $this->getName()) {
+                $bp = $this->storage()->loadProcess($bpName);
+                foreach ($bp->getImportedNodes() as $importedNode) {
+                    if ($importedNode->getConfigName() === $this->getName()) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     public function hasBackend()
     {
         return $this->backend !== null;
