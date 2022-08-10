@@ -49,7 +49,7 @@ class ServiceController extends Controller
             $this->params->add('name', $serviceName);
             $this->params->add('host.name', $hostName);
 
-            if ($service !== false) {
+            if ($service !== null) {
                 $this->redirectNow(Url::fromPath('icingadb/service')->setParams($this->params));
             }
         } else {

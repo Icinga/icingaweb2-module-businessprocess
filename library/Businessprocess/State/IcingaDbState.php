@@ -64,8 +64,6 @@ class IcingaDbState
         }
 
         $queryHost = Host::on($this->backend)->with('state');
-        IcingaDbObject::applyIcingaDbRestrictions($queryHost);
-
         $queryHost->filter(Filter::equal('host.name', $hosts));
 
         $hostObject = $queryHost->getModel()->getTableName();
@@ -79,8 +77,6 @@ class IcingaDbState
         ]);
 
         $queryService->filter(Filter::equal('host.name', $hosts));
-
-        IcingaDbObject::applyIcingaDbRestrictions($queryService);
 
         Benchmark::measure('Retrieved states for ' . $queryService->count() . ' services in ' . $config->getName());
 
