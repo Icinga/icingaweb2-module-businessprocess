@@ -44,7 +44,7 @@ class HostController extends Controller
 
             $this->params->add('name', $hostName);
 
-            if ($host !== false) {
+            if ($host !== null) {
                 $this->redirectNow(Url::fromPath('icingadb/host')->setParams($this->params));
             }
         } else {
