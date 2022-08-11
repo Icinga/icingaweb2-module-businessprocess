@@ -1,0 +1,10 @@
+.line-clamp(@numOfLines: 2) when (@numOfLines > 1) {
+  display: -webkit-box;
+  -webkit-line-clamp: @numOfLines;
+  -webkit-box-orient: vertical;
+}
+
+.text-ellipsis() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

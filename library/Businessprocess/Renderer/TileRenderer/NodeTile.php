@@ -13,6 +13,7 @@ use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
 use ipl\Web\Widget\Icon;
 use ipl\Web\Widget\Link;
+use ipl\Html\HtmlElement;
 use ipl\Web\Widget\StateBall;
 
 class NodeTile extends BaseHtmlElement
@@ -88,6 +89,14 @@ class NodeTile extends BaseHtmlElement
         if (! $node instanceof ImportedNode || $node->getBpConfig()->hasNode($node->getName())) {
             $link = $this->getMainNodeLink();
             if ($renderer->isBreadcrumb()) {
+                $link->setContent(
+                    HtmlElement::create(
+                        'span',
+                        ['class' => ['text', 'process-title'], 'title' => $link->getContent()],
+                        $link->getContent()
+                    )
+                );
+
                 $state = strtolower($node->getStateName());
                 if ($node->isHandled()) {
                     $state = $state . ' handled';
@@ -179,7 +188,7 @@ class NodeTile extends BaseHtmlElement
                 $node->getAlias() ?? $node->getName()
             );
         } else {
-            $link = Html::tag('a', ['href' => $url], $node->getAlias());
+            $link = Html::tag('a', ['href' => $url, 'title' => $node->getAlias()], $node->getAlias());
         }
 
         return $link;
