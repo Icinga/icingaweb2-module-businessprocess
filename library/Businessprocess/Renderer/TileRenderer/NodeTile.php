@@ -13,6 +13,7 @@ use Icinga\Module\Businessprocess\ServiceNode;
 use Icinga\Web\Url;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
+use ipl\Web\Widget\Icon;
 use ipl\Web\Widget\StateBall;
 
 class NodeTile extends BaseHtmlElement
@@ -262,6 +263,12 @@ class NodeTile extends BaseHtmlElement
                     Html::tag('i', ['class' => 'icon icon-host'])
                 ));
             }
+        }
+
+        if ($node->isAcknowledged()) {
+            $this->actions()->add(new Icon('check', ['class' => 'handled-icon']));
+        } elseif ($node->isInDowntime()) {
+            $this->actions()->add(new Icon('plug', ['class' => 'handled-icon']));
         }
     }
 
