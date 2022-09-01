@@ -338,7 +338,7 @@ class NodeTile extends BaseHtmlElement
             }
         }
 
-        if ($this->renderer->getBusinessProcess()->getMetadata()->canModify()) {
+        if ($this->renderer->getBusinessProcess()->getMetadata()->canModify() && $this->node instanceof ImportedNode) {
             $params = array(
                 'action'     => 'delete',
                 'deletenode' => $this->node->getName(),
