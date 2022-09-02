@@ -90,6 +90,7 @@ trait EnumList
             $names = $this->backend
                 ->select()
                 ->from('hostStatus', ['hostname' => 'host_name'])
+                ->applyFilter(Filter::fromQueryString($filter))
                 ->applyFilter(MonitoringRestrictions::getRestriction('monitoring/filter/objects'))
                 ->order('host_name')
                 ->getQuery()
