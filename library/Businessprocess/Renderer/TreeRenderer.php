@@ -133,12 +133,13 @@ class TreeRenderer extends Renderer
                 DateFormatter::timeSince($node->getLastStateChange())
             )
         ]);
-        if ($node->isInDowntime()) {
-            $icons[] = Html::tag('i', ['class' => 'icon icon-plug']);
-        }
+
         if ($node->isAcknowledged()) {
             $icons[] = Html::tag('i', ['class' => 'icon icon-ok']);
+        } elseif ($node->isInDowntime()) {
+            $icons[] = new Icon('plug');
         }
+
         return $icons;
     }
 
