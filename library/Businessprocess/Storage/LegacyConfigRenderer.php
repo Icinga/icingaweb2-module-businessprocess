@@ -52,7 +52,18 @@ class LegacyConfigRenderer
                 continue;
             }
 
-            $str .= sprintf("# %-15s : %s\n", $key, $value);
+            $lineNum = 1;
+            $spaces = str_repeat(' ', strlen(sprintf("%-15s :", $key)));
+
+            foreach (preg_split('/\r?\n/', $value) as $line) {
+                if ($lineNum === 1) {
+                    $str .= sprintf("# %-15s : %s\n", $key, $line);
+                } else {
+                    $str .= sprintf("# %s %s\n", $spaces, $line);
+                }
+
+                $lineNum++;
+            }
         }
 
         $str .= "#\n###################################\n\n";

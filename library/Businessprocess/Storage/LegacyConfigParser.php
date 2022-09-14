@@ -11,6 +11,9 @@ use Icinga\Module\Businessprocess\Metadata;
 
 class LegacyConfigParser
 {
+    /** @var string */
+    protected static $prevKey;
+
     /** @var int */
     protected $currentLineNumber;
 
@@ -131,6 +134,7 @@ class LegacyConfigParser
         $metadata = new Metadata($name);
         $fh = fopen($filename, 'r');
         $cnt = 0;
+        static::$prevKey = null;
         while ($cnt < 15 && false !== ($line = fgets($fh))) {
             $cnt++;
             static::parseHeaderLine($line, $metadata);
@@ -145,6 +149,8 @@ class LegacyConfigParser
         $metadata = new Metadata($name);
 
         $lines = preg_split('/\r?\n/', substr($string, 0, 8092));
+        static::$prevKey = null;
+
         foreach ($lines as $line) {
             static::parseHeaderLine($line, $metadata);
         }
@@ -192,7 +198,24 @@ class LegacyConfigParser
     {
         if (preg_match('/^\s*#\s+(.+?)\s*:\s*(.+)$/', trim($line), $m)) {
             if ($metadata->hasKey($m[1])) {
+                static::$prevKey = $m[1];
                 $metadata->set($m[1], $m[2]);
+            }
+        } elseif ($line[0] === '#') {
+            $line = ltrim($line, "#");
+
+            // Check if the line is from the multi-line comment and parse it accordingly
+            if (trim($line) !== '' && ! preg_match('/^\s*(.+?)\s*:$/', trim($line), $m) && static::$prevKey) {
+                $line = trim(
+                    substr(
+                        $line,
+                        strlen(sprintf("%-15s :", static::$prevKey)) + 2
+                    ),
+                    "\n\r"
+                );
+
+                $description = $metadata->get(static::$prevKey) . "\n" . $line;
+                $metadata->set(static::$prevKey, $description);
             }
         }
     }
