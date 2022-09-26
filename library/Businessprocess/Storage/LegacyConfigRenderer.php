@@ -4,7 +4,10 @@ namespace Icinga\Module\Businessprocess\Storage;
 
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
+use Icinga\Module\Businessprocess\Common\StringQuoter;
+use Icinga\Module\Businessprocess\HostNode;
 use Icinga\Module\Businessprocess\ImportedNode;
+use Icinga\Module\Businessprocess\ServiceNode;
 
 class LegacyConfigRenderer
 {
@@ -195,7 +198,22 @@ class LegacyConfigRenderer
     public static function renderChildNames(BpNode $node)
     {
         $op = static::renderOperator($node);
-        $children = $node->getChildNames();
+        $children = [];
+        foreach ($node->getChildNames() as $name) {
+            $childNode = $node->getChildByName($name);
+
+            if ($childNode instanceof HostNode) {
+                $children[] = StringQuoter::wrapString($childNode->getHostname()) . ';Hoststatus';
+            } elseif ($childNode instanceof ServiceNode) {
+                $host = StringQuoter::wrapString($childNode->getHostname());
+                $service = StringQuoter::wrapString($childNode->getServiceDescription());
+
+                $children[] = $host . ';' . $service;
+            } else {
+                $children[] = $name;
+            }
+        }
+
         $str = implode(' ' . $op . ' ', array_map(function ($val) {
             return preg_replace('~([\|\+&\!\%])~', '\\\\$1', $val);
         }, $children));

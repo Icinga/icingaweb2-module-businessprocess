@@ -5,6 +5,7 @@ namespace Icinga\Module\Businessprocess\Forms;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Common\EnumList;
+use Icinga\Module\Businessprocess\Common\StringQuoter;
 use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Storage\Storage;
@@ -552,7 +553,7 @@ class AddNodeForm extends QuickForm
             case 'hosts_from_filter':
             case 'services_from_filter':
                 if ($this->hasParentNode()) {
-                    $changes->addChildrenToNode($this->getValue('children'), $this->parent);
+                    $changes->addChildrenToNode(StringQuoter::decodeChildren($this->getValue('children')), $this->parent);
                 } else {
                     foreach ($this->getValue('children') as $nodeName) {
                         $changes->copyNode($nodeName);

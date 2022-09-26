@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess;
 
+use Icinga\Module\Businessprocess\Common\StringQuoter;
 use Icinga\Module\Businessprocess\Web\Url;
 
 class HostNode extends MonitoredNode
@@ -35,7 +36,7 @@ class HostNode extends MonitoredNode
 
     public function __construct($object)
     {
-        $this->name     = $object->hostname . ';Hoststatus';
+        $this->name     = StringQuoter::wrapString($object->hostname) . ';Hoststatus';
         $this->hostname = $object->hostname;
         if (isset($object->state)) {
             $this->setState($object->state);

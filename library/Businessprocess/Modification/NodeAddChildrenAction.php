@@ -31,29 +31,28 @@ class NodeAddChildrenAction extends NodeAction
     {
         $node = $config->getBpNode($this->getNodeName());
 
-        foreach ($this->children as $name) {
-            if (! $config->hasNode($name) || $config->getNode($name)->getBpConfig()->getName() !== $config->getName()) {
-                if (strpos($name, ';') !== false) {
-                    list($host, $service) = preg_split('/;/', $name, 2);
-
-                    if ($service === 'Hoststatus') {
-                        $config->createHost($host);
+        foreach ($this->children as $child) {
+            if ( ! $config->hasNode($child['id']) || $config->getNode($child['id'])->getBpConfig()->getName() !== $config->getName()) {
+                if ($child['type'] === 'host' || $child['type'] === 'service') {
+                    if ($child['type'] === 'host') {
+                        $config->createHost($child['hostname']);
                     } else {
-                        $config->createService($host, $service);
+                        $config->createService($child['hostname'], $child['servicename']);
                     }
-                } elseif ($name[0] === '@' && strpos($name, ':') !== false) {
-                    list($configName, $nodeName) = preg_split('~:\s*~', substr($name, 1), 2);
+                } elseif ($child[0] === '@' && strpos($child, ':') !== false) {
+                    list($configName, $nodeName) = preg_split('~:\s*~', substr($child, 1), 2);
                     $config->createImportedNode($configName, $nodeName);
                 }
             }
-            $node->addChild($config->getNode($name));
+            $node->addChild($config->getNode($child['id']));
         }
 
         return $this;
     }
 
     /**
-     * @param array|string $children
+     * @param array $children
+     *
      * @return $this
      */
     public function setChildren($children)

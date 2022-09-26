@@ -52,8 +52,15 @@ trait EnumList
         // different aliases twice
         $res = array();
         $suffix = ';Hoststatus';
+
+        $object = (object) [
+            'type' => 'host',
+        ];
+
         foreach ($names as $name) {
-            $res[$name . $suffix] = $name;
+            $object->id = $name . $suffix;
+            $object->hostname = $name;
+            $res[json_encode($object)] = $name;
         }
 
         return $res;
@@ -74,9 +81,17 @@ trait EnumList
                 ->fetchColumn();
         }
 
+        $object = (object) [
+            'type' => 'service',
+        ];
+
         $services = array();
         foreach ($names as $name) {
-            $services[$host . ';' . $name] = $name;
+            $object->id = $host . ';' . $name;
+            $object->hostname = $host;
+            $object->servicename = $name;
+
+            $services[json_encode($object)] = $name;
         }
 
         return $services;
@@ -101,8 +116,14 @@ trait EnumList
         // different aliases twice
         $res = array();
         $suffix = ';Hoststatus';
+        $object = (object) [
+            'type' => 'host',
+        ];
+
         foreach ($names as $name) {
-            $res[$name . $suffix] = $name;
+            $object->id = $name .$suffix;
+            $object->hostname = $name;
+            $res[json_encode($object)] = $name;
         }
 
         return $res;
@@ -111,11 +132,21 @@ trait EnumList
     protected function enumServiceListByFilter($filter)
     {
         $services = array();
+        $object = (object) [
+            'type' => 'service',
+        ];
 
         if ($this->useIcingaDbBackend()) {
             $objects = (new IcingaDbObject())->fetchServices($filter);
-            foreach ($objects as $object) {
-                $services[$object->host->name . ';' . $object->name] = $object->host->name . ':' . $object->name;
+            foreach ($objects as $obj) {
+                $hostName = $obj->host->name;
+                $serviceName = $obj->name;
+
+                $object->id = StringQuoter::wrapString($hostName) . ';' . $serviceName;
+                $object->hostname = $hostName;
+                $object->servicename = $serviceName;
+
+                $services[json_encode($object)] = $hostName . ':' . $serviceName;
             }
         } else {
             $objects = $this->backend
@@ -126,8 +157,16 @@ trait EnumList
                 ->order('service_description')
                 ->getQuery()
                 ->fetchAll();
-            foreach ($objects as $object) {
-                $services[$object->host . ';' . $object->service] = $object->host . ':' . $object->service;
+            foreach ($objects as $obj) {
+                $hostName = $obj->host;
+                $serviceName = $obj->service;
+
+                $object->id =$hostName . ';' . $serviceName;
+
+                $object->hostname = $hostName;
+                $object->servicename = $serviceName;
+
+                $services[json_encode($object)] = $hostName . ':' . $serviceName;
             }
         }
 
@@ -166,4 +205,50 @@ trait EnumList
 
         return false;
     }
+
+
+    /**
+     * Whether the given value is Host or Service
+     *
+     * @param $value
+     *
+     * @return bool
+     */
+    protected function isMonitoringNode($value)
+    {
+        if (StringQuoter::hasQuoteAtBeginning($value)) {
+            $host = StringQuoter::stringBetweenQuotes($value);
+            $value = substr($value, strlen($host) + 2); // 2 bcz two quotes
+        }
+
+        return  strpos($value, ';') !== false;
+    }
+
+    /**
+     * Prepare host and service name
+     *
+     * @param $value
+     *
+     * @return array
+     */
+    protected function prepareMonitoringNode($value)
+    {
+        if (StringQuoter::hasQuoteAtBeginning($value)) { // check host
+            $host = StringQuoter::stringBetweenQuotes($value);
+            $service = substr($value, strlen($host) + 3); // 3 bcz two quotes and one semicolon
+
+            $host = StringQuoter::undoQuoteEscaping($host);
+        } else { //(strpos($value, ';') !== false)
+            list($host, $service) = preg_split('~;~', $value, 2);
+        }
+
+        if (StringQuoter::hasQuoteAtBeginning($service)) { // check service
+            $service = StringQuoter::undoQuoteEscaping(
+                StringQuoter::stringBetweenQuotes($service)
+            );
+        }
+
+        return [$host, $service];
+    }
+
 }

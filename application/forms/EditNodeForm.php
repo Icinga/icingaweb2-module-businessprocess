@@ -5,6 +5,7 @@ namespace Icinga\Module\Businessprocess\Forms;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Common\EnumList;
+use Icinga\Module\Businessprocess\Common\StringQuoter;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Web\Form\QuickForm;
@@ -42,9 +43,12 @@ class EditNodeForm extends QuickForm
 
     public function setup()
     {
-        $this->host = substr($this->getNode()->getName(), 0, strpos($this->getNode()->getName(), ';'));
+        [$host, $service] = $this->prepareMonitoringNode($this->getNode()->getName());
+        $monitoredNodeType = 'host';
+        $this->host = $host;
         if ($this->isService()) {
-            $this->service = substr($this->getNode()->getName(), strpos($this->getNode()->getName(), ';') + 1);
+            $this->service = $service;
+            $monitoredNodeType = 'service';
         }
 
         $view = $this->getView();
@@ -53,13 +57,6 @@ class EditNodeForm extends QuickForm
                 sprintf($this->translate('Modify "%s"'), $this->getNode()->getAlias())
             ) . '</h2>'
         );
-
-        $monitoredNodeType = null;
-        if ($this->isService()) {
-            $monitoredNodeType = 'service';
-        } else {
-            $monitoredNodeType = 'host';
-        }
 
         $type = $this->selectNodeType($monitoredNodeType);
         switch ($type) {
@@ -425,7 +422,7 @@ class EditNodeForm extends QuickForm
                 $changes->modifyNode($this->parent, ['stateOverrides' => $stateOverrides]);
                 // Fallthrough
             case 'process':
-                $changes->addChildrenToNode($this->getValue('children'), $this->parent);
+                $changes->addChildrenToNode(StringQuoter::decodeChildren($this->getValue('children')), $this->parent);
                 break;
             case 'new-process':
                 $properties = $this->getValues();

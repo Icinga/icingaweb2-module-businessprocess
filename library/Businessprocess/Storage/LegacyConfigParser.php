@@ -7,10 +7,14 @@ use Icinga\Exception\ConfigurationError;
 use Icinga\Exception\SystemPermissionException;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
+use Icinga\Module\Businessprocess\Common\EnumList;
+use Icinga\Module\Businessprocess\Common\StringQuoter;
 use Icinga\Module\Businessprocess\Metadata;
 
 class LegacyConfigParser
 {
+    use EnumList;
+
     /** @var string */
     protected static $prevKey;
 
@@ -226,7 +230,20 @@ class LegacyConfigParser
      */
     protected function parseDisplay(&$line, BpConfig $bp)
     {
-        list($display, $name, $desc) = preg_split('~\s*;\s*~', substr($line, 8), 3);
+        $lineToSplit = substr($line, 8);
+        $splittedArr = explode(';', $lineToSplit, 2);
+        $display = $splittedArr[0];
+        $lineToSplit = $splittedArr[1];
+
+        if (StringQuoter::hasQuoteAtBeginning($lineToSplit)) {
+            $name = StringQuoter::stringBetweenQuotes($lineToSplit);
+            $desc = substr($lineToSplit, strlen($name) + 3); // 3 bcz two quotes and one semicolon
+        } else {
+            $splittedArr = explode(';', $lineToSplit, 2);
+            $name = $splittedArr[0];
+            $desc = $splittedArr[1];
+        }
+        //list($display, $name, $desc) = preg_split('~\s*;\s*~', $lineToSplit, 3);
         $bp->getBpNode($name)->setAlias($desc)->setDisplay($display);
         if ($display > 0) {
             $bp->addRootNode($name);
@@ -339,6 +356,7 @@ class LegacyConfigParser
         }
 
         list($name, $value) = preg_split('~\s*=\s*~', $line, 2);
+        $name = StringQuoter::stringBetweenQuotes($name);
 
         if (strpos($name, ';') !== false) {
             $this->parseError('No semicolon allowed in varname');
@@ -375,11 +393,14 @@ class LegacyConfigParser
         $cmps = preg_split('~\s*(?<!\\\\)\\' . $op . '\s*~', $value, -1, PREG_SPLIT_NO_EMPTY);
         foreach ($cmps as $val) {
             $val = preg_replace('~(\\\\([\|\+&\!\%]))~', '$2', $val);
-            if (strpos($val, ';') !== false) {
-                if ($bp->hasNode($val)) {
-                    $node->addChild($bp->getNode($val));
+
+            if ($this->isMonitoringNode($val)) {
+                list($host, $service) = $this->prepareMonitoringNode($val);
+                 $id = $service === 'Hoststatus' ? $host . ';Hoststatus' : $host . $service;
+
+                if ($bp->hasNode($id)) {
+                    $node->addChild($bp->getNode($id));
                 } else {
-                    list($host, $service) = preg_split('~;~', $val, 2);
                     if ($service === 'Hoststatus') {
                         $node->addChild($bp->createHost($host));
                     } else {
