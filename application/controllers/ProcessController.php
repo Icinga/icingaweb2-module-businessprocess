@@ -120,7 +120,7 @@ class ProcessController extends Controller
                 $missing = array_slice($missing, 0, 10);
                 $missing[] = '...';
             }
-            $bp->addError('There are %d missing nodes: %s', $count, implode(', ', $missing));
+            $bp->addError('There are %d missing nodes: %s ', $count, implode(', ', $missing));
         }
         $this->content()->add($this->showHints($bp));
         $this->content()->add($this->showWarnings($bp));
@@ -232,6 +232,12 @@ class ProcessController extends Controller
                 ->setParentNode($node)
                 ->setSession($this->session())
                 ->handleRequest();
+        } elseif ($action === 'cleanup' && $canEdit) {
+            $form = $this->loadForm('CleanupNode')
+                ->setSuccessUrl(Url::fromRequest()->without('action'))
+                ->setProcess($bp)
+                ->setSession($this->session())
+                ->handleRequest();
         } elseif ($action === 'editmonitored' && $canEdit) {
             $form = $this->loadForm('EditNode')
                 ->setSuccessUrl(Url::fromRequest()->without('action'))
@@ -324,6 +330,23 @@ class ProcessController extends Controller
     {
         $ul = Html::tag('ul', ['class' => 'error']);
         foreach ($bp->getErrors() as $error) {
+            if (strpos($error, 'missing nodes')) {
+                $error = [
+                    $error,
+                    Html::tag(
+                        'a',
+                        [
+                            'href' => Url::fromPath('businessprocess/process/show')
+                                ->setParams(
+                                    $this->getRequest()->getUrl()->getParams()
+                                    ->add('action', 'cleanup')
+                                )
+                        ],
+                        $this->translate('Cleanup')
+                    )
+                ];
+            }
+
             $ul->add(Html::tag('li')->setContent($error));
         }
         if ($bp->hasChanges()) {
