@@ -27,7 +27,10 @@ use Icinga\Web\Url;
 use Icinga\Web\Widget\Tabextension\DashboardAction;
 use Icinga\Web\Widget\Tabextension\OutputFormat;
 use ipl\Html\Html;
+use ipl\Html\HtmlElement;
 use ipl\Html\HtmlString;
+use ipl\Html\TemplateString;
+use ipl\Web\Widget\Link;
 
 class ProcessController extends Controller
 {
@@ -114,14 +117,6 @@ class ProcessController extends Controller
 
         $this->tabs()->extend(new OutputFormat());
 
-        $missing = $bp->getMissingChildren();
-        if (! empty($missing)) {
-            if (($count = count($missing)) > 10) {
-                $missing = array_slice($missing, 0, 10);
-                $missing[] = '...';
-            }
-            $bp->addError('There are %d missing nodes: %s ', $count, implode(', ', $missing));
-        }
         $this->content()->add($this->showHints($bp));
         $this->content()->add($this->showWarnings($bp));
         $this->content()->add($this->showErrors($bp));
@@ -329,26 +324,11 @@ class ProcessController extends Controller
     protected function showHints(BpConfig $bp)
     {
         $ul = Html::tag('ul', ['class' => 'error']);
+        $this->prepareMissingNodeLinks($ul);
         foreach ($bp->getErrors() as $error) {
-            if (strpos($error, 'missing nodes')) {
-                $error = [
-                    $error,
-                    Html::tag(
-                        'a',
-                        [
-                            'href' => Url::fromPath('businessprocess/process/show')
-                                ->setParams(
-                                    $this->getRequest()->getUrl()->getParams()
-                                    ->add('action', 'cleanup')
-                                )
-                        ],
-                        $this->translate('Cleanup')
-                    )
-                ];
-            }
-
-            $ul->add(Html::tag('li')->setContent($error));
+            $ul->addHtml(Html::tag('li', $error));
         }
+
         if ($bp->hasChanges()) {
             $li = Html::tag('li')->setSeparator(' ');
             $li->add(sprintf(
@@ -386,6 +366,66 @@ class ProcessController extends Controller
             return $ul;
         } else {
             return null;
+        }
+    }
+
+    protected function prepareMissingNodeLinks(HtmlElement $ul): void
+    {
+        $missing = $this->bp->getMissingChildren();
+        if (! empty($missing)) {
+            $missingLinkedNodes = null;
+            foreach ($this->bp->getImportedNodes() as $process) {
+                if ($process->hasMissingChildren()) {
+                    $missingLinkedNodes = array_keys($process->getMissingChildren());
+                    $link = Url::fromPath('businessprocess/process/show')
+                        ->addParams(['config' => $process->getConfigName()]);
+
+                    $ul->addHtml(Html::tag(
+                        'li',
+                        [
+                            TemplateString::create(
+                                tp(
+                                    'Linked node %s has one missing child node: {{#link}}Show{{/link}}',
+                                    'Linked node %s has %d missing child nodes: {{#link}}Show{{/link}}',
+                                    count($missingLinkedNodes)
+                                ),
+                                $process->getAlias(),
+                                count($missingLinkedNodes),
+                                ['link' => new Link(null, (string) $link)]
+                            )
+                        ]
+                    ));
+                }
+            }
+
+            if (! empty($missingLinkedNodes)) {
+                return;
+            }
+
+            $count = count($missing);
+            if ($count > 10) {
+                $missing = array_slice($missing, 0, 10);
+                $missing[] = '...';
+            }
+
+            $link = Url::fromPath('businessprocess/process/show')
+                ->addParams(['config' => $this->bp->getName(), 'action' => 'cleanup']);
+
+            $ul->addHtml(Html::tag(
+                'li',
+                [
+                    TemplateString::create(
+                        tp(
+                            '{{#link}}Cleanup{{/link}} one missing node: %2$s',
+                            '{{#link}}Cleanup{{/link}} %d missing nodes: %s',
+                            count($missing)
+                        ),
+                        ['link' => new Link(null, (string) $link)],
+                        $count,
+                        implode(', ', $missing)
+                    )
+                ]
+            ));
         }
     }
 
