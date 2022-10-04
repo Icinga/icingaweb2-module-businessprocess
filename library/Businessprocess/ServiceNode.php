@@ -65,6 +65,10 @@ class ServiceNode extends MonitoredNode
 
     public function getAlias()
     {
+        if ($this->getHostAlias() === null || $this->alias === null) {
+            return null;
+        }
+
         return $this->getHostAlias() . ': ' . $this->alias;
     }
 
