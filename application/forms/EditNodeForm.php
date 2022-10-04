@@ -48,9 +48,10 @@ class EditNodeForm extends QuickForm
         }
 
         $view = $this->getView();
+        $nodeName = $this->getNode()->getAlias() ?? $this->getNode()->getName();
         $this->addHtml(
             '<h2>' . $view->escape(
-                sprintf($this->translate('Modify "%s"'), $this->getNode()->getAlias())
+                sprintf($this->translate('Modify "%s"'), $nodeName)
             ) . '</h2>'
         );
 

@@ -180,7 +180,11 @@ class NodeTile extends BaseHtmlElement
         $node = $this->node;
         $url = $this->getMainNodeUrl($node);
         if ($node instanceof MonitoredNode) {
-            $link = Html::tag('a', ['href' => $url, 'data-base-target' => '_next'], $node->getAlias());
+            $link = Html::tag(
+                'a',
+                ['href' => $url, 'data-base-target' => '_next'],
+                $node->getAlias() ?? $node->getName()
+            );
         } else {
             $link = Html::tag('a', ['href' => $url], $node->getAlias());
         }
