@@ -23,12 +23,19 @@ class BpConfigForm extends BpConfigBaseForm
                         'max' => 40
                     )
                 ),
-                array(
+                [
                     'validator' => 'Regex',
-                    'options' => array(
-                        'pattern' => '/^[a-zA-Z0-9](?:[a-zA-Z0-9 ._-]*)?[a-zA-Z0-9_]$/'
-                    )
-                )
+                    'options'   => [
+                        'pattern' => '/^[a-zA-Z0-9](?:[\w\h._-]*)?\w$/',
+                        'messages'  => [
+                            'regexNotMatch' => $this->translate(
+                                'Id must only consist of alphanumeric characters.'
+                                . ' Underscore at the beginning and space, dot and hyphen at the beginning'
+                                . ' and end are not allowed.'
+                            )
+                        ]
+                    ]
+                ]
             ),
             'description' => $this->translate(
                 'This is the unique identifier of this process'
