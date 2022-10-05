@@ -195,7 +195,17 @@ class AddNodeForm extends QuickForm
             'description'  => $this->translate(
                 'Hosts that should be part of this business process node'
             ),
-            'validators'    => [[new NoDuplicateChildrenValidator($this, $this->bp, $this->parent), true]]
+            'validators'   => [
+                [new NoDuplicateChildrenValidator($this, $this->bp, $this->parent), true],
+                ['Callback', true, [
+                    'callback' => function ($value) {
+                        return substr_count($value, ';') === 1;
+                    },
+                    'messages' => [
+                        'callbackValue' => $this->translate('Hosts containing semicolon in name are not allowed')
+                    ]
+                ]]
+            ]
         ]);
 
         $this->addHostOverrideCheckbox();
@@ -227,6 +237,16 @@ class AddNodeForm extends QuickForm
             'ignore'       => true,
             'class'        => 'autosubmit',
             'multiOptions' => $this->optionalEnum($this->enumHostForServiceList()),
+            'validators'   => [
+                ['Callback', true, [
+                    'callback' => function ($value) {
+                        return substr_count($value, ';') === 0;
+                    },
+                    'messages' => [
+                        'callbackValue' => $this->translate('Host containing semicolon in name is not allowed')
+                    ]
+                ]]
+            ]
         ));
     }
 
@@ -241,7 +261,19 @@ class AddNodeForm extends QuickForm
             'description'  => $this->translate(
                 'Services that should be part of this business process node'
             ),
-            'validators'    => [[new NoDuplicateChildrenValidator($this, $this->bp, $this->parent), true]]
+            'validators'   => [
+                [new NoDuplicateChildrenValidator($this, $this->bp, $this->parent), true],
+                ['Callback', true, [
+                    'callback'  => function ($value) {
+                        return substr_count($value, ';') === 1;
+                    },
+                    'messages'  => [
+                        'callbackValue' => $this->translate(
+                            'Services containing semicolon in name are not allowed'
+                        )
+                    ]
+                ]]
+            ]
         ]);
     }
 
@@ -260,7 +292,17 @@ class AddNodeForm extends QuickForm
             'description'  => $this->translate(
                 'Hosts that should be part of this business process node'
             ),
-            'validators'    => [[new NoDuplicateChildrenValidator($this, $this->bp, $this->parent), true]]
+            'validators'   => [
+                [new NoDuplicateChildrenValidator($this, $this->bp, $this->parent), true],
+                ['Callback', true, [
+                    'callback' => function ($value) {
+                        return substr_count($value, ';') === 1;
+                    },
+                    'messages' => [
+                        'callbackValue' => $this->translate('Hosts containing semicolon in name are not allowed')
+                    ]
+                ]]
+            ]
         ]);
     }
 
@@ -279,7 +321,19 @@ class AddNodeForm extends QuickForm
             'description'  => $this->translate(
                 'Services that should be part of this business process node'
             ),
-            'validators'    => [[new NoDuplicateChildrenValidator($this, $this->bp, $this->parent), true]]
+            'validators'   => [
+                [new NoDuplicateChildrenValidator($this, $this->bp, $this->parent), true],
+                ['Callback', true, [
+                    'callback'  => function ($value) {
+                        return substr_count($value, ';') === 1;
+                    },
+                    'messages'  => [
+                        'callbackValue' => $this->translate(
+                            'Services containing semicolon in name are not allowed'
+                        )
+                    ]
+                ]]
+            ]
         ]);
     }
 
