@@ -203,7 +203,7 @@ class AddNodeForm extends QuickForm
             'label'        => $this->translate('Hosts'),
             'required'     => true,
             'size'         => 8,
-            'style'        => 'width: 25em',
+            'style'        => 'width: 45em',
             'multiOptions' => $this->enumHostList(),
             'description'  => $this->translate(
                 'Hosts that should be part of this business process node'
@@ -249,7 +249,7 @@ class AddNodeForm extends QuickForm
             'label'        => $this->translate('Services'),
             'required'     => true,
             'size'         => 8,
-            'style'        => 'width: 25em',
+            'style'        => 'width: 45em',
             'multiOptions' => $this->enumServiceList($host),
             'description'  => $this->translate(
                 'Services that should be part of this business process node'
@@ -268,7 +268,7 @@ class AddNodeForm extends QuickForm
             'label'        => $this->translate('Hosts'),
             'required'     => true,
             'size'         => 8,
-            'style'        => 'width: 25em',
+            'style'        => 'width: 45em',
             'multiOptions' => $this->enumHostListByFilter($filter),
             'description'  => $this->translate(
                 'Hosts that should be part of this business process node'
@@ -287,7 +287,7 @@ class AddNodeForm extends QuickForm
             'label'        => $this->translate('Services'),
             'required'     => true,
             'size'         => 8,
-            'style'        => 'width: 25em',
+            'style'        => 'width: 45em',
             'multiOptions' => $this->enumServiceListByFilter($filter),
             'description'  => $this->translate(
                 'Services that should be part of this business process node'
