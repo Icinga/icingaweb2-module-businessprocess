@@ -288,7 +288,7 @@ class EditNodeForm extends QuickForm
             'label'        => $this->translate('Process nodes'),
             'required'     => true,
             'size'         => 8,
-            'style'        => 'width: 25em',
+            'style'        => 'width: 45em',
             'multiOptions' => $this->enumProcesses(),
             'description'  => $this->translate(
                 'Other processes that should be part of this business process node'
