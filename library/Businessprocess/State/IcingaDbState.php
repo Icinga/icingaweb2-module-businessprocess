@@ -122,7 +122,7 @@ class IcingaDbState
         }
 
         if ($row->state->last_state_change !== null) {
-            $node->setLastStateChange($row->state->last_state_change/1000);
+            $node->setLastStateChange($row->state->last_state_change->getTimestamp());
         }
         if ($row->state->in_downtime) {
             $node->setDowntime(true);
