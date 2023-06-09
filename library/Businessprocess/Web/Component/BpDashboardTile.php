@@ -3,10 +3,12 @@
 namespace Icinga\Module\Businessprocess\Web\Component;
 
 use Icinga\Module\Businessprocess\BpConfig;
-use Icinga\Web\Url;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
 use ipl\Html\Text;
+use ipl\Web\Url;
+use ipl\Web\Widget\Icon;
+use ipl\Web\Widget\Link;
 
 class BpDashboardTile extends BaseHtmlElement
 {
@@ -16,14 +18,10 @@ class BpDashboardTile extends BaseHtmlElement
 
     public function __construct(BpConfig $bp, $title, $description, $icon, $url, $urlParams = null, $attributes = null)
     {
-        if (! isset($attributes['href'])) {
-            $attributes['href'] = Url::fromPath($url, $urlParams ?: []);
-        }
-
         $this->add(Html::tag(
             'div',
             ['class' => 'bp-link', 'data-base-target' => '_main'],
-            Html::tag('a', $attributes, Html::tag('i', ['class' => 'icon icon-' . $icon]))
+            (new Link(new Icon($icon), Url::fromPath($url, $urlParams ?: []), $attributes))
                 ->add(Html::tag('span', ['class' => 'header'], $title))
                 ->add($description)
         ));
