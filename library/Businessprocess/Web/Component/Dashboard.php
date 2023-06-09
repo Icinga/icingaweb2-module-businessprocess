@@ -87,9 +87,8 @@ class Dashboard extends BaseHtmlElement
         foreach ($processes as $name) {
             $meta = $storage->loadMetadata($name);
             $title = $meta->get('Title');
-            if ($title) {
-                $title = sprintf('%s (%s)', $title, $name);
-            } else {
+
+            if ($title === null) {
                 $title = $name;
             }
 
