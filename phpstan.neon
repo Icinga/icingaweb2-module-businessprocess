@@ -1,0 +1,23 @@
+parameters:
+    level: 5
+
+    checkFunctionNameCase: true
+    checkMissingIterableValueType: true
+    checkInternalClassCaseSensitivity: true
+    checkDynamicProperties: true
+    treatPhpDocTypesAsCertain: false # ignore phpDoc failure for now, remove it later
+
+    paths:
+        - application
+        - library
+
+    scanDirectories:
+        - vendor
+
+    ignoreErrors:
+        - '#Unsafe usage of new static\(\)#'
+
+    universalObjectCratesClasses: # dependency classes
+        - Icinga\Web\View
+        - ipl\Orm\Model
+        - Icinga\Module\Monitoring\Object\MonitoredObject

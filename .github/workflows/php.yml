@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.2', '7.3', '7.4', '8.0', '8.1']
+        php: ['7.2', '7.3', '7.4', '8.0', '8.1', '8.2']
         os: ['ubuntu-latest']
 
     steps:
@@ -32,6 +32,11 @@ jobs:
 
       - name: Setup dependencies
         run: composer require -n --no-progress overtrue/phplint
+          && git clone --single-branch --branch master https://github.com/Icinga/icingaweb2.git vendor/icingaweb2
+          && git clone --single-branch --branch master https://github.com/Icinga/icingadb-web.git vendor/icingadb-web
+          && git clone --single-branch --branch master https://github.com/Icinga/icingaweb2-module-director.git vendor/icingaweb2-module-director
+          && git clone --single-branch --branch snapshot/nightly https://github.com/Icinga/icinga-php-library.git vendor/icinga-php-library
+          && git clone --single-branch --branch snapshot/nightly https://github.com/Icinga/icinga-php-thirdparty.git vendor/icinga-php-thirdparty
 
       - name: PHP Lint
         if: success() || matrix.allow_failure
@@ -40,6 +45,10 @@ jobs:
       - name: PHP CodeSniffer
         if: success() || matrix.allow_failure
         run: phpcs
+
+      - name: PHPStan
+        uses: php-actions/phpstan@v3
+        if: success() || matrix.allow_failure
 
   test:
     name: Unit tests with php ${{ matrix.php }} on ${{ matrix.os }}
