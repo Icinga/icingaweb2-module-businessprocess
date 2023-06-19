@@ -1,0 +1,21 @@
+parameters:
+    level: 5
+
+    checkFunctionNameCase: true
+    checkInternalClassCaseSensitivity: true
+    treatPhpDocTypesAsCertain: false
+
+    paths:
+        - application
+        - library
+
+    scanDirectories:
+        - vendor
+
+    ignoreErrors:
+        - '#Unsafe usage of new static\(\)#'
+
+    universalObjectCratesClasses:
+        - Icinga\Web\View
+        - ipl\Orm\Model
+        - Icinga\Module\Monitoring\Object\MonitoredObject
