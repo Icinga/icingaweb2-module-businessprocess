@@ -237,23 +237,6 @@ class LegacyConfigParser
         }
     }
 
-    /**
-     * @param $line
-     * @param BpConfig $bp
-     */
-    protected function parseExternalInfo(&$line, BpConfig $bp)
-    {
-        list($name, $script) = preg_split('~\s*;\s*~', substr($line, 14), 2);
-        $bp->getBpNode($name)->setInfoCommand($script);
-    }
-
-    protected function parseExtraInfo(&$line, BpConfig $bp)
-    {
-        // TODO: Not yet
-        // list($name, $script) = preg_split('~\s*;\s*~', substr($line, 14), 2);
-        // $this->getNode($name)->setExtraInfo($script);
-    }
-
     protected function parseInfoUrl(&$line, BpConfig $bp)
     {
         list($name, $url) = preg_split('~\s*;\s*~', substr($line, 9), 2);
@@ -288,10 +271,7 @@ class LegacyConfigParser
 
         switch ($type) {
             case 'external_info':
-                $this->parseExternalInfo($line, $bp);
-                break;
             case 'extra_info':
-                $this->parseExtraInfo($line, $bp);
                 break;
             case 'info_url':
                 $this->parseInfoUrl($line, $bp);
