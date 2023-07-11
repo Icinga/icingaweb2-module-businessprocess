@@ -196,6 +196,10 @@ class LegacyConfigParser
      */
     protected static function parseHeaderLine($line, Metadata $metadata)
     {
+        if (empty($line)) {
+            return;
+        }
+
         if (preg_match('/^\s*#\s+(.+?)\s*:\s*(.+)$/', trim($line), $m)) {
             if ($metadata->hasKey($m[1])) {
                 static::$prevKey = $m[1];
