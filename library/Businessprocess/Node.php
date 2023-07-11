@@ -483,6 +483,31 @@ abstract class Node
         return $this->name;
     }
 
+    /**
+     * Get the Node operators
+     *
+     * @return array
+     */
+    public static function getOperators(): array
+    {
+        return [
+            '&' => t('AND'),
+            '|' => t('OR'),
+            '^' => t('XOR'),
+            '!' => t('NOT'),
+            '%' => t('DEGRADED'),
+            '1' => t('MIN 1'),
+            '2' => t('MIN 2'),
+            '3' => t('MIN 3'),
+            '4' => t('MIN 4'),
+            '5' => t('MIN 5'),
+            '6' => t('MIN 6'),
+            '7' => t('MIN 7'),
+            '8' => t('MIN 8'),
+            '9' => t('MIN 9'),
+        ];
+    }
+
     public function getIdentifier()
     {
         return '@' . $this->getBpConfig()->getName() . ':' . $this->getName();

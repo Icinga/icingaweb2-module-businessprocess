@@ -17,6 +17,16 @@ The `OR` operator selects the **BEST** state of its child nodes:
 
 ![Or Operator #2](screenshot/09_operators/0903_or-operator-without-ok.png)
 
+## XOR <a id="xor-operator">
+
+The `XOR` operator shows OK if only one of n children is OK at the same time. In all other cases the parent node is CRITICAL.
+Useful for a service on n servers, only one of which may be running. If both were running,
+race conditions and duplication of data could occur.
+
+![Xor Operator](screenshot/09_operators/0906_xor-operator.png)
+
+![Xor Operator #2](screenshot/09_operators/0907_xor-operator-not-ok.png)
+
 ## DEGRADED <a id="deg-operator">
 
 The `DEGRADED` operator behaves like an `AND`, but if the resulting
