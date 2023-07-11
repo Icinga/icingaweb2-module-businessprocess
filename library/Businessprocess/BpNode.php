@@ -14,8 +14,9 @@ class BpNode extends Node
     const OP_DEGRADED  = '%';
 
     protected $operator = '&';
+
     protected $url;
-    protected $info_command;
+
     protected $display = 0;
 
     /** @var  Node[] */
@@ -332,21 +333,6 @@ class BpNode extends Node
     public function getInfoUrl()
     {
         return $this->url;
-    }
-
-    public function setInfoCommand($cmd)
-    {
-        $this->info_command = $cmd;
-    }
-
-    public function hasInfoCommand()
-    {
-        return $this->info_command !== null;
-    }
-
-    public function getInfoCommand()
-    {
-        return $this->info_command;
     }
 
     public function setStateOverrides(array $overrides, $name = null)
