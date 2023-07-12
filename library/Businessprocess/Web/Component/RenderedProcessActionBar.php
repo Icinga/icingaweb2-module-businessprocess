@@ -12,7 +12,7 @@ use ipl\Web\Widget\Icon;
 
 class RenderedProcessActionBar extends ActionBar
 {
-    public function __construct(BpConfig $config, Renderer $renderer, Auth $auth, Url $url)
+    public function __construct(BpConfig $config, Renderer $renderer, Url $url)
     {
         $meta = $config->getMetadata();
 
