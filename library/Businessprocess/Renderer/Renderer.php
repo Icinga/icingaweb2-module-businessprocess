@@ -165,7 +165,7 @@ abstract class Renderer extends HtmlDocument
 
     /**
      * @param $summary
-     * @return BaseHtmlElement
+     * @return ?BaseHtmlElement
      */
     public function renderStateBadges($summary, $totalChildren)
     {

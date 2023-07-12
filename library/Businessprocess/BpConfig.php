@@ -226,7 +226,7 @@ class BpConfig
     /**
      * Whether changes have been applied to this configuration
      *
-     * @return int
+     * @return bool
      */
     public function hasChanges()
     {
@@ -631,7 +631,7 @@ class BpConfig
 
     /**
      * @param   string  $name
-     * @return  Node
+     * @return  MonitoredNode|BpNode
      * @throws  Exception
      */
     public function getNode($name)

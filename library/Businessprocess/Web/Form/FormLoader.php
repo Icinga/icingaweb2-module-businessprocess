@@ -17,6 +17,8 @@ class FormLoader
             $basedir = $module->getFormDir();
             $ns = '\\Icinga\\Module\\' . ucfirst($module->getName()) . '\\Forms\\';
         }
+
+        $file = null;
         if (preg_match('~^[a-z0-9/]+$~i', $name)) {
             $parts = preg_split('~/~', $name);
             $class = ucfirst(array_pop($parts)) . 'Form';

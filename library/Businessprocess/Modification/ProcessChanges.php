@@ -100,7 +100,6 @@ class ProcessChanges
 
     /**
      * @param $nodeName
-     * @param Node|null $parent
      * @return $this
      */
     public function copyNode($nodeName)
@@ -211,7 +210,7 @@ class ProcessChanges
     /**
      * Number of stacked changes
      *
-     * @return bool
+     * @return int
      */
     public function count()
     {

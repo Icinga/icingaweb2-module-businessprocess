@@ -21,7 +21,7 @@ class BpNode extends Node
 
     protected $display = 0;
 
-    /** @var  Node[] */
+    /** @var  ?Node[] */
     protected $children;
 
     /** @var array */
@@ -623,18 +623,14 @@ class BpNode extends Node
         switch ($this->getOperator()) {
             case self::OP_AND:
                 return 'AND';
-                break;
             case self::OP_OR:
                 return 'OR';
             case self::OP_XOR:
                 return 'XOR';
-                break;
             case self::OP_NOT:
                 return 'NOT';
-                break;
             case self::OP_DEGRADED:
                 return 'DEG';
-                break;
             default:
                 // MIN
                 $this->assertNumericOperator();

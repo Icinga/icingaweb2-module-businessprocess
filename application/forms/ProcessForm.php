@@ -7,6 +7,7 @@ use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Web\Form\BpConfigBaseForm;
 use Icinga\Web\Notification;
+use Icinga\Web\View;
 
 class ProcessForm extends BpConfigBaseForm
 {
@@ -16,8 +17,11 @@ class ProcessForm extends BpConfigBaseForm
     public function setup()
     {
         if ($this->node !== null) {
+            /** @var View $view */
+            $view = $this->getView();
+
             $this->addHtml(
-                '<h2>' . $this->getView()->escape(
+                '<h2>' . $view->escape(
                     sprintf($this->translate('Modify "%s"'), $this->node->getAlias())
                 ) . '</h2>'
             );

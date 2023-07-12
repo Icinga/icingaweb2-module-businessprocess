@@ -2,6 +2,8 @@
 
 // Avoid complaints about missing namespace and invalid class name
 // @codingStandardsIgnoreStart
+use Icinga\Web\View;
+
 class Zend_View_Helper_FormStateOverrides extends Zend_View_Helper_FormElement
 {
     // @codingStandardsIgnoreEnd
@@ -25,8 +27,10 @@ class Zend_View_Helper_FormStateOverrides extends Zend_View_Helper_FormElement
 
             $options = [$state => t('Keep actual state')] + $states;
 
-            $html .= '<label><span>' . $this->view->escape($label) . '</span>';
-            $html .= $this->view->formSelect(
+            /** @var View $view */
+            $view = $this->view;
+            $html .= '<label><span>' . $view->escape($label) . '</span>';
+            $html .= $view->formSelect(
                 sprintf('%s[%d]', substr($name, 0, -2), $state),
                 $chosen,
                 $attribs,

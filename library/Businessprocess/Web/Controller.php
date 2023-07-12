@@ -248,7 +248,7 @@ class Controller extends CompatController
     }
 
     /**
-     * @return LegacyStorage|Storage
+     * @return LegacyStorage
      */
     protected function storage()
     {

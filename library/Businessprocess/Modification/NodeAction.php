@@ -88,14 +88,13 @@ abstract class NodeAction
     /**
      * Throw a ModificationError
      *
-     * @param   string  $msg
-     * @param   mixed   ...
+     * @param   mixed  ...$msg
      *
      * @throws  ModificationError
      */
-    protected function error($msg)
+    protected function error(...$msg)
     {
-        $error = ModificationError::create(func_get_args());
+        $error = ModificationError::create($msg);
         /** @var ModificationError $error */
         throw $error;
     }
@@ -110,6 +109,7 @@ abstract class NodeAction
      */
     public static function create($actionName, $nodeName)
     {
+        /** @var static $className */
         $className = __NAMESPACE__ . '\\Node' . ucfirst($actionName) . 'Action';
         $object = new $className($nodeName);
         return $object;
@@ -144,7 +144,7 @@ abstract class NodeAction
      */
     public static function unSerialize($string)
     {
-        $object = json_decode($string, JSON_FORCE_OBJECT);
+        $object = json_decode($string, true);
         $action = self::create($object['actionName'], $object['nodeName']);
 
         foreach ($object['properties'] as $key => $val) {

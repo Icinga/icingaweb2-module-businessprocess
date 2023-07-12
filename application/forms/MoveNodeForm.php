@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess\Forms;
 
 use Icinga\Application\Icinga;
+use Icinga\Application\Web;
 use Icinga\Exception\Http\HttpException;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
@@ -136,7 +137,9 @@ class MoveNodeForm extends BpConfigBaseForm
             );
         } catch (ModificationError $e) {
             $this->notifyError($e->getMessage());
-            Icinga::app()->getResponse()
+            /** @var Web $app */
+            $app = Icinga::app();
+            $app->getResponse()
                 // Web 2's JS forces a content update for non-200s. Our own JS
                 // can't prevent this, hence we're not making this a 400 :(
                 //->setHttpResponseCode(400)

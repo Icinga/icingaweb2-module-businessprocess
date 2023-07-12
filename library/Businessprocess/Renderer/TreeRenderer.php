@@ -175,7 +175,7 @@ class TreeRenderer extends Renderer
 
     /**
      * @param BpConfig $bp
-     * @param Node $node
+     * @param BpNode|Node $node
      * @param array $path
      *
      * @return string

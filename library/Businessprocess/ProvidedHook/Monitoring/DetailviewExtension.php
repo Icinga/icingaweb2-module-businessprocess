@@ -13,7 +13,7 @@ use Icinga\Module\Monitoring\Object\Service;
 
 class DetailviewExtension extends DetailviewExtensionHook
 {
-    /** @var LegacyStorage */
+    /** @var ?LegacyStorage */
     private $storage;
 
     /** @var string */

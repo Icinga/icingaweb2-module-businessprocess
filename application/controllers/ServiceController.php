@@ -7,6 +7,7 @@ use Icinga\Module\Businessprocess\IcingaDbObject;
 use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
 use Icinga\Module\Icingadb\Model\Service;
 use Icinga\Module\Monitoring\Controller;
+use Icinga\Module\Monitoring\DataView\DataView;
 use Icinga\Web\Url;
 use ipl\Stdlib\Filter;
 
@@ -61,7 +62,9 @@ class ServiceController extends Controller
                 ->where('host_name', $hostName)
                 ->where('service_description', $serviceName);
 
-            if ($this->applyRestriction('monitoring/filter/objects', $query)->fetchRow() !== false) {
+            /** @var DataView $restrictedQuery */
+            $restrictedQuery = $this->applyRestriction('monitoring/filter/objects', $query);
+            if ($restrictedQuery->fetchRow() !== false) {
                 $this->redirectNow(Url::fromPath('monitoring/service/show')->setParams($this->params));
             }
         }
