@@ -169,8 +169,6 @@ abstract class Renderer extends HtmlDocument
      */
     public function renderStateBadges($summary, $totalChildren)
     {
-        $elements = [];
-
         $itemCount = Html::tag(
             'span',
             [
@@ -181,7 +179,7 @@ abstract class Renderer extends HtmlDocument
             sprintf(mtp('businessprocess', '%u Child', '%u Children', $totalChildren), $totalChildren)
         );
 
-        $elements[] = array_filter([
+        $elements = array_filter([
             $this->createBadgeGroup($summary, 'CRITICAL'),
             $this->createBadgeGroup($summary, 'UNKNOWN'),
             $this->createBadgeGroup($summary, 'WARNING'),
