@@ -32,21 +32,21 @@ class ProcessForm extends QuickForm
 
     public function setup()
     {
-        if ($this->node === null) {
-            $this->addElement('text', 'name', array(
-                'label'        => $this->translate('ID'),
-                'required'     => true,
-                'description' => $this->translate(
-                    'This is the unique identifier of this process'
-                ),
-            ));
-        } else {
+        if ($this->node !== null) {
             $this->addHtml(
                 '<h2>' . $this->getView()->escape(
                     sprintf($this->translate('Modify "%s"'), $this->node->getAlias())
                 ) . '</h2>'
             );
         }
+
+        $this->addElement('text', 'name', [
+            'label'         => $this->translate('ID'),
+            'value'         => (string) $this->node,
+            'required'      => true,
+            'readonly'      => $this->node ? true : null,
+            'description'   => $this->translate('This is the unique identifier of this process')
+        ]);
 
         $this->addElement('text', 'alias', array(
             'label'        => $this->translate('Display Name'),
