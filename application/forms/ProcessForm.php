@@ -23,10 +23,6 @@ class ProcessForm extends QuickForm
     /** @var BpNode */
     protected $node;
 
-    protected $objectList = array();
-
-    protected $processList = array();
-
     /** @var SessionNamespace */
     protected $session;
 
