@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Controllers;
 
+use Exception;
 use Icinga\Application\Modules\Module;
 use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
 use Icinga\Module\Businessprocess\Renderer\Breadcrumb;
@@ -11,6 +12,8 @@ use Icinga\Module\Businessprocess\State\IcingaDbState;
 use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Web\Controller;
 use Icinga\Module\Businessprocess\Web\Url;
+use ipl\Html\Html;
+use ipl\Web\Widget\Link;
 
 class NodeController extends Controller
 {
@@ -24,9 +27,16 @@ class NodeController extends Controller
         $name = $this->params->get('name');
         $this->addTitle($this->translate('Business Impact (%s)'), $name);
 
+        $brokenFiles = [];
         $simulation = Simulation::fromSession($this->session());
         foreach ($this->storage()->listProcessNames() as $configName) {
-            $config = $this->storage()->loadProcess($configName);
+            try {
+                $config = $this->storage()->loadProcess($configName);
+            } catch (Exception $e) {
+                $meta = $this->storage()->loadMetadata($configName);
+                $brokenFiles[$meta->get('Title')] = $configName;
+                continue;
+            }
 
             $parents = [];
             if ($config->hasNode($name)) {
@@ -107,6 +117,32 @@ class NodeController extends Controller
 
         if ($content->isEmpty()) {
             $content->add($this->translate('No impact detected. Is this node part of a business process?'));
+        }
+
+        if (! empty($brokenFiles)) {
+            $elem = Html::tag(
+                'ul',
+                ['class' => 'broken-files'],
+                tp(
+                    'The following business process has an invalid config file and therefore cannot be read:',
+                    'The following business processes have invalid config files and therefore cannot be read:',
+                    count($brokenFiles)
+                )
+            );
+
+            foreach ($brokenFiles as $bpName => $fileName) {
+                $elem->addHtml(
+                    Html::tag(
+                        'li',
+                        new Link(
+                            sprintf('%s (%s.conf)', $bpName, $fileName),
+                            (string) Url::fromPath('businessprocess/process/show', ['config' => $fileName])
+                        )
+                    )
+                );
+            }
+
+            $content->addHtml($elem);
         }
     }
 }
