@@ -10,6 +10,7 @@ class BpNode extends Node
 {
     const OP_AND = '&';
     const OP_OR  = '|';
+    const OP_XOR  = '^';
     const OP_NOT  = '!';
     const OP_DEGRADED  = '%';
 
@@ -303,6 +304,7 @@ class BpNode extends Node
         switch ($operator) {
             case self::OP_AND:
             case self::OP_OR:
+            case self::OP_XOR:
             case self::OP_NOT:
             case self::OP_DEGRADED:
                 return;
@@ -476,6 +478,21 @@ class BpNode extends Node
             case self::OP_OR:
                 $sort_state = min($sort_states);
                 break;
+            case self::OP_XOR:
+                $actualGood = 0;
+                foreach ($sort_states as $s) {
+                    if ($this->sortStateTostate($s) === self::ICINGA_OK) {
+                        $actualGood++;
+                    }
+                }
+
+                if ($actualGood === 1) {
+                    $this->state = self::ICINGA_OK;
+                } else {
+                    $this->state = self::ICINGA_CRITICAL;
+                }
+
+                return $this;
             case self::OP_DEGRADED:
                 $maxState = max($sort_states);
                 $flags = $maxState & 0xf;
@@ -645,6 +662,8 @@ class BpNode extends Node
                 break;
             case self::OP_OR:
                 return 'OR';
+            case self::OP_XOR:
+                return 'XOR';
                 break;
             case self::OP_NOT:
                 return 'NOT';

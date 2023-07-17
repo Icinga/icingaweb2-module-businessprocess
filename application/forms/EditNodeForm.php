@@ -111,21 +111,7 @@ class EditNodeForm extends QuickForm
         $this->addElement('select', 'operator', array(
             'label'        => $this->translate('Operator'),
             'required'     => true,
-            'multiOptions' => array(
-                '&' => $this->translate('AND'),
-                '|' => $this->translate('OR'),
-                '!' => $this->translate('NOT'),
-                '%' => $this->translate('DEGRADED'),
-                '1' => $this->translate('MIN 1'),
-                '2' => $this->translate('MIN 2'),
-                '3' => $this->translate('MIN 3'),
-                '4' => $this->translate('MIN 4'),
-                '5' => $this->translate('MIN 5'),
-                '6' => $this->translate('MIN 6'),
-                '7' => $this->translate('MIN 7'),
-                '8' => $this->translate('MIN 8'),
-                '9' => $this->translate('MIN 9'),
-            )
+            'multiOptions' => Node::getOperators()
         ));
 
         $display = $this->getNode()->getDisplay() ?: 1;
