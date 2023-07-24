@@ -44,7 +44,7 @@ class SimulationForm extends QuickForm
         }
         $this->addHtml(
             '<h2>'
-            . $view->escape(sprintf($title, $node->getAlias()))
+            . $view->escape(sprintf($title, $node->getAlias() ?? $node->getName()))
             . '</h2>'
         );
 

@@ -31,15 +31,16 @@ class DeleteNodeForm extends QuickForm
     public function setup()
     {
         $node = $this->node;
+        $nodeName = $node->getAlias() ?? $node->getName();
         $view = $this->getView();
         $this->addHtml(
             '<h2>' . $view->escape(
-                sprintf($this->translate('Delete "%s"'), $node->getAlias())
+                sprintf($this->translate('Delete "%s"'), $nodeName)
             ) . '</h2>'
         );
 
         $biLink = $view->qlink(
-            $node->getAlias(),
+            $nodeName,
             'businessprocess/node/impact',
             array('name' => $node->getName()),
             array('data-base-target' => '_next')
@@ -61,7 +62,7 @@ class DeleteNodeForm extends QuickForm
         } else {
             $yesMsg = sprintf(
                 $this->translate('Delete root node "%s"'),
-                $this->node->getAlias()
+                $nodeName
             );
         }
 
@@ -74,7 +75,7 @@ class DeleteNodeForm extends QuickForm
             'multiOptions' => $this->optionalEnum(array(
                 'no'  => $this->translate('No'),
                 'yes' => $yesMsg,
-                'all' => sprintf($this->translate('Delete all occurrences of %s'), $node->getAlias()),
+                'all' => sprintf($this->translate('Delete all occurrences of %s'), $nodeName),
             ))
         ));
     }
