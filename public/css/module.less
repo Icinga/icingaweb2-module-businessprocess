@@ -790,177 +790,178 @@ table.sourcecode {
     left: -100%;
 }
 
-form input[type=file] {
-    padding-right: 1em;
-}
-
-form input[type=submit]:first-of-type {
-    border-width: 2px;
-}
-
-form p.description {
-    padding: 1em 1em;
-    margin: 0;
-    font-style: italic;
-    width: 100%;
-}
-
-form ul.form-errors {
-    margin-bottom: 0.5em;
-
-    ul.errors li {
-        background: @color-critical;
-        font-weight: bold;
-        padding: 0.5em 1em;
-        color: @text-color-on-icinga-blue;
-    }
-}
-
-input[type=text], input[type=password], input[type=file], textarea, select {
-    max-width: 36em;
-    min-width: 20em;
-    width: 100%;
-}
-
-label {
-    line-height: 2em;
-}
-
-form dl {
-    margin: 0;
-    padding: 0;
-}
-
-select option {
-    padding-left: 0.5em;
-}
-
-form dt label {
-    width: auto;
-    font-weight: normal;
-    font-size: inherit;
-
-    &.required {
-        &::after {
-            content: '*'
-        }
+form.bp-form {
+    input[type=file] {
+        padding-right: 1em;
     }
 
-    &:hover {
-        text-decoration: underline;
-        cursor: pointer;
+    input[type=submit]:first-of-type {
+        border-width: 2px;
     }
-}
 
-#stateOverrides-element {
-    display: inline-table;
-    table-layout: fixed;
-    border-spacing: .5em;
-    padding: 0;
-
-    label {
-        display: table-row;
-
-        span, select {
-            display: table-cell;
-        }
-
-        span {
-            width: 10em;
-        }
-
-        select {
-            width: 26em;
-        }
-    }
-}
-
-form fieldset {
-    min-width: 36em;
-}
-
-form dd input.related-action[type='submit'] {
-    display: none;
-}
-
-form dd.active li.active input.related-action[type='submit'] {
-    display: inline-block;
-}
-
-form dd.active {
     p.description {
-        color: inherit;
-        font-style: normal;
-    }
-}
-
-form dd {
-    padding: 0.3em 0.5em;
-    margin: 0;
-}
-
-form dt {
-    padding: 0.5em 0.5em;
-    margin: 0;
-}
-
-form dt.active, form dd.active {
-    background-color: @tr-active-color;
-}
-
-form dt {
-    display: inline-block;
-    vertical-align: top;
-    min-width: 12em;
-    min-height: 2.5em;
-    width: 30%;
-    &.errors label {
-        color: @color-critical;
-    }
-}
-
-form .errors label {
-    color: @color-critical;
-}
-
-form dd {
-    display: inline-block;
-    width: 63%;
-    min-height: 2.5em;
-    vertical-align: top;
-    margin: 0;
-    &.errors {
-        input[type=text], select {
-            border-color: @color-critical;
-        }
-    }
-
-    &.full-width {
-        padding: 0.5em;
+        padding: 1em 1em;
+        margin: 0;
+        font-style: italic;
         width: 100%;
     }
-}
 
-form dd:after {
-    display: block;
-    content: '';
-}
+    ul.form-errors {
+        margin-bottom: 0.5em;
 
-form textarea {
-    height: auto;
-}
-
-form dd ul.errors {
-    list-style-type: none;
-    padding-left: 0.3em;
-
-    li {
-        color: @color-critical;
-        padding: 0.3em;
+        ul.errors li {
+            background: @color-critical;
+            font-weight: bold;
+            padding: 0.5em 1em;
+            color: @text-color-on-icinga-blue;
+        }
     }
-}
 
-form {
+    input[type=text], input[type=password], input[type=file], textarea, select {
+        max-width: 36em;
+        min-width: 20em;
+        width: 100%;
+    }
+
+    label {
+        line-height: 2em;
+    }
+
+    dl {
+        margin: 0;
+        padding: 0;
+    }
+
+    select option {
+        padding-left: 0.5em;
+    }
+
+    dt label {
+        width: auto;
+        font-weight: normal;
+        font-size: inherit;
+
+        &.required {
+            &::after {
+                content: '*'
+            }
+        }
+
+        &:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+
+    #stateOverrides-element {
+        display: inline-table;
+        table-layout: fixed;
+        border-spacing: .5em;
+        padding: 0;
+
+        label {
+            display: table-row;
+
+            span, select {
+                display: table-cell;
+            }
+
+            span {
+                width: 10em;
+            }
+
+            select {
+                width: 26em;
+            }
+        }
+    }
+
+    fieldset {
+        min-width: 36em;
+    }
+
+    dd input.related-action[type='submit'] {
+        display: none;
+    }
+
+    dd.active li.active input.related-action[type='submit'] {
+        display: inline-block;
+    }
+
+    dd.active {
+        p.description {
+            color: inherit;
+            font-style: normal;
+        }
+    }
+
+    dd {
+        padding: 0.3em 0.5em;
+        margin: 0;
+    }
+
+    dt {
+        padding: 0.5em 0.5em;
+        margin: 0;
+    }
+
+    dt.active, dd.active {
+        background-color: @tr-active-color;
+    }
+
+    dt {
+        display: inline-block;
+        vertical-align: top;
+        min-width: 12em;
+        min-height: 2.5em;
+        width: 30%;
+        &.errors label {
+            color: @color-critical;
+        }
+    }
+
+    .errors label {
+        color: @color-critical;
+    }
+
+    dd {
+        display: inline-block;
+        width: 63%;
+        min-height: 2.5em;
+        vertical-align: top;
+        margin: 0;
+        &.errors {
+            input[type=text], select {
+                border-color: @color-critical;
+            }
+        }
+
+        &.full-width {
+            padding: 0.5em;
+            width: 100%;
+        }
+    }
+
+    dd:after {
+        display: block;
+        content: '';
+    }
+
+    textarea {
+        height: auto;
+    }
+
+    dd ul.errors {
+        list-style-type: none;
+        padding-left: 0.3em;
+
+        li {
+            color: @color-critical;
+            padding: 0.3em;
+        }
+    }
+
+
     #_FAKE_SUBMIT {
         position: absolute;
         left: -100%;

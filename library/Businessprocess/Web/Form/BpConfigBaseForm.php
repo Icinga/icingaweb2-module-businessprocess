@@ -123,4 +123,13 @@ abstract class BpConfigBaseForm extends QuickForm
 
         return true;
     }
+
+    protected function setPreferredDecorators()
+    {
+        parent::setPreferredDecorators();
+
+        $this->setAttrib('class', $this->getAttrib('class') . ' bp-form');
+
+        return $this;
+    }
 }
