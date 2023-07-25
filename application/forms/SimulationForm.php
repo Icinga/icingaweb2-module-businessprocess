@@ -4,9 +4,9 @@ namespace Icinga\Module\Businessprocess\Forms;
 
 use Icinga\Module\Businessprocess\MonitoredNode;
 use Icinga\Module\Businessprocess\Simulation;
-use Icinga\Module\Businessprocess\Web\Form\QuickForm;
+use Icinga\Module\Businessprocess\Web\Form\BpConfigBaseForm;
 
-class SimulationForm extends QuickForm
+class SimulationForm extends BpConfigBaseForm
 {
     /** @var MonitoredNode */
     protected $node;

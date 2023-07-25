@@ -3,25 +3,15 @@
 namespace Icinga\Module\Businessprocess\Forms;
 
 use Icinga\Module\Businessprocess\BpNode;
-use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Common\EnumList;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Node;
-use Icinga\Module\Businessprocess\Web\Form\QuickForm;
+use Icinga\Module\Businessprocess\Web\Form\BpConfigBaseForm;
 use Icinga\Module\Businessprocess\Web\Form\Validator\NoDuplicateChildrenValidator;
-use Icinga\Module\Monitoring\Backend\MonitoringBackend;
-use Icinga\Web\Session\SessionNamespace;
-use ipl\Sql\Connection as IcingaDbConnection;
 
-class EditNodeForm extends QuickForm
+class EditNodeForm extends BpConfigBaseForm
 {
     use EnumList;
-
-    /** @var MonitoringBackend|IcingaDbConnection */
-    protected $backend;
-
-    /** @var BpConfig */
-    protected $bp;
 
     /** @var Node */
     protected $node;
@@ -36,9 +26,6 @@ class EditNodeForm extends QuickForm
     protected $service;
 
     protected $host;
-
-    /** @var SessionNamespace */
-    protected $session;
 
     public function setup()
     {
@@ -284,27 +271,6 @@ class EditNodeForm extends QuickForm
     }
 
     /**
-     * @param MonitoringBackend|IcingaDbConnection $backend
-     * @return $this
-     */
-    public function setBackend($backend)
-    {
-        $this->backend = $backend;
-        return $this;
-    }
-
-    /**
-     * @param BpConfig $process
-     * @return $this
-     */
-    public function setProcess(BpConfig $process)
-    {
-        $this->bp = $process;
-        $this->setBackend($process->getBackend());
-        return $this;
-    }
-
-    /**
      * @param BpNode|null $node
      * @return $this
      */
@@ -320,16 +286,6 @@ class EditNodeForm extends QuickForm
     public function hasParentNode()
     {
         return $this->parent !== null;
-    }
-
-    /**
-     * @param SessionNamespace $session
-     * @return $this
-     */
-    public function setSession(SessionNamespace $session)
-    {
-        $this->session = $session;
-        return $this;
     }
 
     protected function hasProcesses()

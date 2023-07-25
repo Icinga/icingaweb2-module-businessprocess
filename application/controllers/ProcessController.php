@@ -510,7 +510,7 @@ class ProcessController extends Controller
             ->setParams($this->getRequest()->getUrl()->getParams());
         $this->content()->add(
             $this->loadForm('bpConfig')
-                ->setProcessConfig($bp)
+                ->setProcess($bp)
                 ->setStorage($this->storage())
                 ->setSuccessUrl($url)
                 ->handleRequest()
