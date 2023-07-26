@@ -5,6 +5,7 @@ namespace Icinga\Module\Businessprocess\Forms;
 use Exception;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\Common\EnumList;
+use Icinga\Module\Businessprocess\Common\Sort;
 use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Node;
@@ -14,6 +15,7 @@ use Icinga\Module\Businessprocess\Web\Form\Validator\NoDuplicateChildrenValidato
 class AddNodeForm extends BpConfigBaseForm
 {
     use EnumList;
+    use Sort;
 
     /** @var BpNode */
     protected $parent;
@@ -102,8 +104,8 @@ class AddNodeForm extends BpConfigBaseForm
         ));
 
         $display = 1;
-        if ($this->bp->getMetadata()->isManuallyOrdered() && !$this->bp->isEmpty()) {
-            $rootNodes = $this->bp->getRootNodes();
+        if ($this->bp->getMetadata()->isManuallyOrdered() && ! $this->bp->isEmpty()) {
+            $rootNodes = self::applyManualSorting($this->bp->getRootNodes());
             $display = end($rootNodes)->getDisplay() + 1;
         }
         $this->addElement('select', 'display', array(
@@ -434,9 +436,6 @@ class AddNodeForm extends BpConfigBaseForm
             }
         }
 
-        if (! $this->bp->getMetadata()->isManuallyOrdered()) {
-            natcasesort($list);
-        }
         return $list;
     }
 

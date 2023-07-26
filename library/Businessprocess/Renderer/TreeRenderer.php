@@ -29,7 +29,9 @@ class TreeRenderer extends Renderer
             [
                 'id'                            => $htmlId,
                 'class'                         => ['bp', 'sortable', $this->wantsRootNodes() ? '' : 'process'],
-                'data-sortable-disabled'        => $this->isLocked() ? 'true' : 'false',
+                'data-sortable-disabled'        => $this->isLocked() || $this->appliesCustomSorting()
+                    ? 'true'
+                    : 'false',
                 'data-sortable-data-id-attr'    => 'id',
                 'data-sortable-direction'       => 'vertical',
                 'data-sortable-group'           => json_encode([
@@ -69,18 +71,18 @@ class TreeRenderer extends Renderer
 
     /**
      * @param BpConfig $bp
-     * @return string
+     * @return array
      */
     public function renderBp(BpConfig $bp)
     {
-        $html = array();
+        $html = [];
         if ($this->wantsRootNodes()) {
-            $nodes = $bp->getChildren();
+            $nodes = $bp->getRootNodes();
         } else {
             $nodes = $this->parent->getChildren();
         }
 
-        foreach ($nodes as $name => $node) {
+        foreach ($this->sort($nodes) as $name => $node) {
             if ($node instanceof BpNode) {
                 $html[] = $this->renderNode($bp, $node);
             } else {
@@ -238,7 +240,9 @@ class TreeRenderer extends Renderer
 
         $ul = Html::tag('ul', [
             'class'                         => ['bp', 'sortable'],
-            'data-sortable-disabled'        => ($this->isLocked() || $differentConfig) ? 'true' : 'false',
+            'data-sortable-disabled'        => ($this->isLocked() || $differentConfig || $this->appliesCustomSorting())
+                ? 'true'
+                : 'false',
             'data-sortable-invert-swap'     => 'true',
             'data-sortable-data-id-attr'    => 'id',
             'data-sortable-draggable'       => '.movable',
@@ -259,7 +263,7 @@ class TreeRenderer extends Renderer
         ]);
 
         $path[] = $differentConfig ? $node->getIdentifier() : $node->getName();
-        foreach ($node->getChildren() as $name => $child) {
+        foreach ($this->sort($node->getChildren()) as $name => $child) {
             if ($child instanceof BpNode) {
                 $ul->add($this->renderNode($bp, $child, $path));
             } else {

@@ -4,9 +4,12 @@ namespace Icinga\Module\Businessprocess\Modification;
 
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
+use Icinga\Module\Businessprocess\Common\Sort;
 
 class NodeMoveAction extends NodeAction
 {
+    use Sort;
+
     /**
      * @var string
      */
@@ -87,16 +90,28 @@ class NodeMoveAction extends NodeAction
 
             $nodes = $parent->getChildNames();
             if (! isset($nodes[$this->from]) || $nodes[$this->from] !== $name) {
-                $this->error('Node "%s" not found at position %d', $name, $this->from);
+                $reversedNodes = array_reverse($nodes); // The user may have reversed the sort direction
+                if (! isset($reversedNodes[$this->from]) || $reversedNodes[$this->from] !== $name) {
+                    $this->error('Node "%s" not found at position %d', $name, $this->from);
+                } else {
+                    $this->from = array_search($reversedNodes[$this->from], $nodes, true);
+                    $this->to = array_search($reversedNodes[$this->to], $nodes, true);
+                }
             }
         } else {
             if (! $config->hasRootNode($name)) {
                 $this->error('Toplevel process "%s" not found', $name);
             }
 
-            $nodes = $config->listRootNodes();
+            $nodes = array_keys(self::applyManualSorting($config->getRootNodes()));
             if (! isset($nodes[$this->from]) || $nodes[$this->from] !== $name) {
-                $this->error('Toplevel process "%s" not found at position %d', $name, $this->from);
+                $reversedNodes = array_reverse($nodes); // The user may have reversed the sort direction
+                if (! isset($reversedNodes[$this->from]) || $reversedNodes[$this->from] !== $name) {
+                    $this->error('Toplevel process "%s" not found at position %d', $name, $this->from);
+                } else {
+                    $this->from = array_search($reversedNodes[$this->from], $nodes, true);
+                    $this->to = array_search($reversedNodes[$this->to], $nodes, true);
+                }
             }
         }
 
@@ -144,7 +159,7 @@ class NodeMoveAction extends NodeAction
         if ($this->parent !== null) {
             $nodes = $config->getBpNode($this->parent)->getChildren();
         } else {
-            $nodes = $config->getRootNodes();
+            $nodes = self::applyManualSorting($config->getRootNodes());
         }
 
         $node = $nodes[$name];
@@ -162,7 +177,7 @@ class NodeMoveAction extends NodeAction
             if ($this->newParent !== null) {
                 $newNodes = $config->getBpNode($this->newParent)->getChildren();
             } else {
-                $newNodes = $config->getRootNodes();
+                $newNodes = self::applyManualSorting($config->getRootNodes());
             }
 
             $newNodes = array_merge(

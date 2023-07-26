@@ -17,7 +17,9 @@ class TileRenderer extends Renderer
             [
                 'class'                         => ['sortable', 'tiles', $this->howMany()],
                 'data-base-target'              => '_self',
-                'data-sortable-disabled'        => $this->isLocked() ? 'true' : 'false',
+                'data-sortable-disabled'        => $this->isLocked() || $this->appliesCustomSorting()
+                    ? 'true'
+                    : 'false',
                 'data-sortable-data-id-attr'    => 'id',
                 'data-sortable-direction'       => 'horizontal', // Otherwise movement is buggy on small lists
                 'data-csrf-token'               => CsrfToken::generate()
@@ -43,10 +45,8 @@ class TileRenderer extends Renderer
                     ->getAbsoluteUrl());
         }
 
-        $nodes = $this->getChildNodes();
-
         $path = $this->getCurrentPath();
-        foreach ($nodes as $name => $node) {
+        foreach ($this->sort($this->getChildNodes()) as $name => $node) {
             $this->add(new NodeTile($this, $node, $path));
         }
 

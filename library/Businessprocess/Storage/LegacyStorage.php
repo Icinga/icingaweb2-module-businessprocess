@@ -73,7 +73,6 @@ class LegacyStorage extends Storage
             $files[$name] = $meta->getExtendedTitle();
         }
 
-        natcasesort($files);
         return $files;
     }
 
@@ -93,7 +92,6 @@ class LegacyStorage extends Storage
             $files[$name] = $name;
         }
 
-        natcasesort($files);
         return $files;
     }
 
