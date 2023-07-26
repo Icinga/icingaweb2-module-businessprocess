@@ -7,6 +7,7 @@ a:focus {
 }
 
 .action-bar {
+    float: left;
     display: flex;
     align-items: center;
     font-size: 1.3em;
@@ -74,6 +75,10 @@ a:focus {
     span.disabled {
         color: @gray;
     }
+}
+
+.controls .sort-control {
+    float: right;
 }
 
 form a {
@@ -742,7 +747,8 @@ ul.error, ul.warning {
         padding: 0.3em 0.8em;
     }
 
-    li a {
+    li a,
+    li .link-button {
         color: inherit;
         text-decoration: underline;
 

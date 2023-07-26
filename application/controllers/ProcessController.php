@@ -26,10 +26,13 @@ use Icinga\Web\Notification;
 use Icinga\Web\Url;
 use Icinga\Web\Widget\Tabextension\DashboardAction;
 use Icinga\Web\Widget\Tabextension\OutputFormat;
+use ipl\Html\Form;
 use ipl\Html\Html;
 use ipl\Html\HtmlElement;
 use ipl\Html\HtmlString;
 use ipl\Html\TemplateString;
+use ipl\Html\Text;
+use ipl\Web\Control\SortControl;
 use ipl\Web\Widget\Link;
 
 class ProcessController extends Controller
@@ -117,12 +120,56 @@ class ProcessController extends Controller
 
         $this->tabs()->extend(new OutputFormat());
 
-        $this->content()->add($this->showHints($bp));
+        $this->content()->add($this->showHints($bp, $renderer));
         $this->content()->add($this->showWarnings($bp));
         $this->content()->add($this->showErrors($bp));
         $this->content()->add($renderer);
         $this->loadActionForm($bp, $node);
         $this->setDynamicAutorefresh();
+    }
+
+    /**
+     * Create a sort control and apply its sort specification to the given renderer
+     *
+     * @param Renderer $renderer
+     * @param BpConfig $config
+     *
+     * @return SortControl
+     */
+    protected function createBpSortControl(Renderer $renderer, BpConfig $config): SortControl
+    {
+        $defaultSort = $this->session()->get('sort.default', $renderer->getDefaultSort());
+        $options = [
+            'display_name asc'  => $this->translate('Name'),
+            'state desc'        => $this->translate('State')
+        ];
+        if ($config->getMetadata()->isManuallyOrdered()) {
+            $options['manual asc'] = $this->translate('Manual');
+        } elseif ($defaultSort === 'manual desc') {
+            $defaultSort = $renderer->getDefaultSort();
+        }
+
+        $sortControl = SortControl::create($options)
+            ->setDefault($defaultSort)
+            ->setMethod('POST')
+            ->setAttribute('name', 'bp-sort-control')
+            ->on(Form::ON_SUCCESS, function (SortControl $sortControl) use ($renderer) {
+                $sort = $sortControl->getSort();
+                if ($sort === $renderer->getDefaultSort()) {
+                    $this->session()->delete('sort.default');
+                    $url = Url::fromRequest()->without($sortControl->getSortParam());
+                } else {
+                    $this->session()->set('sort.default', $sort);
+                    $url = Url::fromRequest()->with($sortControl->getSortParam(), $sort);
+                }
+
+                $this->redirectNow($url);
+            })->handleRequest($this->getServerRequest());
+
+        $renderer->setSort($sortControl->getSort());
+        $this->params->shift($sortControl->getSortParam());
+
+        return $sortControl;
     }
 
     protected function prepareControls($bp, $renderer)
@@ -153,6 +200,8 @@ class ProcessController extends Controller
                 new RenderedProcessActionBar($bp, $renderer, $this->Auth(), $this->url())
             );
         }
+
+        $controls->addHtml($this->createBpSortControl($renderer, $bp));
     }
 
     protected function getNode(BpConfig $bp)
@@ -269,6 +318,13 @@ class ProcessController extends Controller
                 $successUrl->getParams()->remove('node');
             }
 
+            if ($this->session()->get('sort.default')) {
+                // If there's a default sort specification in the session, it can only be `display_name desc`,
+                // as otherwise the user wouldn't be able to trigger this action. So it's safe to just define
+                // descending manual order now.
+                $successUrl->getParams()->add(SortControl::DEFAULT_SORT_PARAM, 'manual desc');
+            }
+
             $form = $this->loadForm('MoveNode')
                 ->setSuccessUrl($successUrl)
                 ->setProcess($bp)
@@ -328,7 +384,7 @@ class ProcessController extends Controller
         }
     }
 
-    protected function showHints(BpConfig $bp)
+    protected function showHints(BpConfig $bp, Renderer $renderer)
     {
         $ul = Html::tag('ul', ['class' => 'error']);
         $this->prepareMissingNodeLinks($ul);
@@ -367,6 +423,20 @@ class ProcessController extends Controller
                 $this->translate('Dismiss')
             ));
             $ul->add($li);
+        }
+
+        if (! $renderer->isLocked() && $renderer->appliesCustomSorting()) {
+            $ul->addHtml(Html::tag('li', null, [
+                Text::create($this->translate('Drag&Drop disabled. Custom sort order applied.')),
+                (new Form())
+                    ->setAttribute('class', 'inline')
+                    ->addElement('submitButton', SortControl::DEFAULT_SORT_PARAM, [
+                        'label' => $this->translate('Reset to default'),
+                        'value' => $renderer->getDefaultSort(),
+                        'class' => 'link-button'
+                    ])
+                    ->addElement('hidden', 'uid', ['value' => 'bp-sort-control'])
+            ])->setSeparator(' '));
         }
 
         if (! $ul->isEmpty()) {
@@ -654,7 +724,7 @@ class ProcessController extends Controller
                     if (isset($node['since'])) {
                         $data[] = DateFormatter::formatDateTime($node['since']);
                     }
-                    
+
                     if (isset($node['in_downtime'])) {
                         $data[] = $node['in_downtime'];
                     }
