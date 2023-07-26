@@ -263,7 +263,14 @@ class ProcessController extends Controller
                 ->setSimulation(Simulation::fromSession($this->session()))
                 ->handleRequest();
         } elseif ($action === 'move') {
+            $successUrl = $this->url()->without(['action', 'movenode']);
+            if ($this->params->get('mode') === 'tree') {
+                // If the user moves a node from a subtree, the `node` param exists
+                $successUrl->getParams()->remove('node');
+            }
+
             $form = $this->loadForm('MoveNode')
+                ->setSuccessUrl($successUrl)
                 ->setProcess($bp)
                 ->setParentNode($node)
                 ->setSession($this->session())

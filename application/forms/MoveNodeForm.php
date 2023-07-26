@@ -171,7 +171,11 @@ class MoveNodeForm extends QuickForm
         $this->notifySuccess($this->getSuccessMessage($this->translate('Node order updated')));
 
         $response = $this->getRequest()->getResponse()
-            ->setHeader('X-Icinga-Container', 'ignore');
+            ->setHeader('X-Icinga-Container', 'ignore')
+            ->setHeader('X-Icinga-Extra-Updates', implode(';', [
+                $this->getRequest()->getHeader('X-Icinga-Container'),
+                $this->getSuccessUrl()->getAbsoluteUrl()
+            ]));
 
         Session::getSession()->write();
         $response->sendResponse();
