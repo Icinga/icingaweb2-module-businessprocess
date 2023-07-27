@@ -455,12 +455,14 @@ td > a > .state-badges {
     }
 
     > a {
-        display: block;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         text-decoration: none;
         font-size: 0.7em;
         text-align: center;
-        padding: 1em 1em 0;
         font-weight: bold;
+        height: 100%;
         word-wrap: break-word;
     }
 
@@ -469,10 +471,13 @@ td > a > .state-badges {
     }
 
     .actions {
+        position: absolute;
+        top: .5em;
+        left: .5em;
         opacity: 0.8;
-        margin: 0.5em 0 0 0.5em;
         font-size: 0.75em;
         height: 1.8em;
+        max-width: calc(~"100%" - 1em);
 
         i {
             float: none;
