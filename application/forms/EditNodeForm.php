@@ -95,9 +95,29 @@ class EditNodeForm extends QuickForm
             'label'        => $this->translate('ID'),
             'required'     => true,
             'disabled'     => true,
-            'description' => $this->translate(
-                'This is the unique identifier of this process'
-            ),
+            'description'  => $this->translate('This is the unique identifier of this process'),
+            'validators'   => [
+                ['Callback', true, [
+                    'callback'  => function ($value) {
+                        if ($this->hasParentNode()) {
+                            return ! $this->parent->hasChild($value);
+                        }
+
+                        return ! $this->bp->hasRootNode($value);
+                    },
+                    'messages'  => [
+                        'callbackValue' => $this->translate('%value% is already defined in this process')
+                    ]
+                ]],
+                ['Callback', true, [
+                    'callback' => function ($value) {
+                        return strpos($value, ';') === false;
+                    },
+                    'messages' => [
+                        'callbackValue' => $this->translate('Semicolon in id is not allowed')
+                    ]
+                ]]
+            ]
         ));
 
         $this->addElement('text', 'alias', array(

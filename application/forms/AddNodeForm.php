@@ -84,10 +84,8 @@ class AddNodeForm extends QuickForm
         $this->addElement('text', 'name', array(
             'label'        => $this->translate('ID'),
             'required'     => true,
-            'description' => $this->translate(
-                'This is the unique identifier of this process'
-            ),
-            'validators'    => [
+            'description'  => $this->translate('This is the unique identifier of this process'),
+            'validators'   => [
                 ['Callback', true, [
                     'callback'  => function ($value) {
                         if ($this->hasParentNode()) {
@@ -98,6 +96,14 @@ class AddNodeForm extends QuickForm
                     },
                     'messages'  => [
                         'callbackValue' => $this->translate('%value% is already defined in this process')
+                    ]
+                ]],
+                ['Callback', true, [
+                    'callback' => function ($value) {
+                        return strpos($value, ';') === false;
+                    },
+                    'messages' => [
+                        'callbackValue' => $this->translate('Semicolon in id is not allowed')
                     ]
                 ]]
             ]
