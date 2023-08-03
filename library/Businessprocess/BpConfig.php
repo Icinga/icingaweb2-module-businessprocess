@@ -432,33 +432,12 @@ class BpConfig
      */
     public function getRootNodes()
     {
-        if ($this->getMetadata()->isManuallyOrdered()) {
-            uasort($this->root_nodes, function (BpNode $a, BpNode $b) {
-                $a = $a->getDisplay();
-                $b = $b->getDisplay();
-                return $a > $b ? 1 : ($a < $b ? -1 : 0);
-            });
-        } else {
-            ksort($this->root_nodes, SORT_NATURAL | SORT_FLAG_CASE);
-        }
-
         return $this->root_nodes;
     }
 
     public function listRootNodes()
     {
-        $names = array_keys($this->root_nodes);
-        if ($this->getMetadata()->isManuallyOrdered()) {
-            uasort($names, function ($a, $b) {
-                $a = $this->root_nodes[$a]->getDisplay();
-                $b = $this->root_nodes[$b]->getDisplay();
-                return $a > $b ? 1 : ($a < $b ? -1 : 0);
-            });
-        } else {
-            natcasesort($names);
-        }
-
-        return $names;
+        return array_keys($this->root_nodes);
     }
 
     public function getNodes()
@@ -824,16 +803,6 @@ class BpConfig
         foreach ($this->getBpNodes() as $name => $node) {
             $alias = $node->getAlias();
             $nodes[$name] = $name === $alias ? $name : sprintf('%s (%s)', $alias, $node);
-        }
-
-        if ($this->getMetadata()->isManuallyOrdered()) {
-            uasort($nodes, function ($a, $b) {
-                $a = $this->nodes[$a]->getDisplay();
-                $b = $this->nodes[$b]->getDisplay();
-                return $a > $b ? 1 : ($a < $b ? -1 : 0);
-            });
-        } else {
-            natcasesort($nodes);
         }
 
         return $nodes;

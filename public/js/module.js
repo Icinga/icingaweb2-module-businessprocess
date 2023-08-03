@@ -122,11 +122,7 @@
                 ].join('&');
 
                 var $container = $source.closest('.container');
-                var req = icinga.loader.loadUrl(actionUrl, $container, data, 'POST');
-                req.always(function() {
-                    icinga.loader.loadUrl(
-                        $container.data('icingaUrl'), $container, undefined, undefined, undefined, true);
-                });
+                icinga.loader.loadUrl(actionUrl, $container, data, 'POST');
             }
         },
 
@@ -159,11 +155,7 @@
                 ].join('&');
 
                 var $container = $target.closest('.container');
-                var req = icinga.loader.loadUrl(actionUrl, $container, data, 'POST');
-                req.always(function() {
-                    icinga.loader.loadUrl(
-                        $container.data('icingaUrl'), $container, undefined, undefined, undefined, true);
-                });
+                icinga.loader.loadUrl(actionUrl, $container, data, 'POST');
                 event.stopPropagation();
             }
         },

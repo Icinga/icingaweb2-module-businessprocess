@@ -12,12 +12,12 @@ use Icinga\Module\Businessprocess\Web\Component\Controls;
 use Icinga\Module\Businessprocess\Web\Component\Content;
 use Icinga\Module\Businessprocess\Web\Component\Tabs;
 use Icinga\Module\Businessprocess\Web\Form\FormLoader;
-use Icinga\Web\Controller as ModuleController;
 use Icinga\Web\Notification;
 use Icinga\Web\View;
 use ipl\Html\Html;
+use ipl\Web\Compat\CompatController;
 
-class Controller extends ModuleController
+class Controller extends CompatController
 {
     /** @var View */
     public $view;
@@ -170,14 +170,6 @@ class Controller extends ModuleController
     {
         $this->_helper->viewRenderer->setNoController(true);
         $this->_helper->viewRenderer->setScriptAction($name);
-        return $this;
-    }
-
-    protected function setTitle($title)
-    {
-        $args = func_get_args();
-        array_shift($args);
-        $this->view->title = vsprintf($title, $args);
         return $this;
     }
 

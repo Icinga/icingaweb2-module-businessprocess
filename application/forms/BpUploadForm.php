@@ -10,8 +10,6 @@ use Icinga\Web\Notification;
 
 class BpUploadForm extends BpConfigBaseForm
 {
-    protected $backend;
-
     protected $node;
 
     protected $objectList = array();

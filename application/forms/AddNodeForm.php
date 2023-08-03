@@ -4,30 +4,18 @@ namespace Icinga\Module\Businessprocess\Forms;
 
 use Exception;
 use Icinga\Module\Businessprocess\BpNode;
-use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Common\EnumList;
+use Icinga\Module\Businessprocess\Common\Sort;
 use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Node;
-use Icinga\Module\Businessprocess\Storage\Storage;
-use Icinga\Module\Businessprocess\Web\Form\QuickForm;
+use Icinga\Module\Businessprocess\Web\Form\BpConfigBaseForm;
 use Icinga\Module\Businessprocess\Web\Form\Validator\NoDuplicateChildrenValidator;
-use Icinga\Module\Monitoring\Backend\MonitoringBackend;
-use Icinga\Web\Session\SessionNamespace;
-use ipl\Sql\Connection as IcingaDbConnection;
 
-class AddNodeForm extends QuickForm
+class AddNodeForm extends BpConfigBaseForm
 {
     use EnumList;
-
-    /** @var MonitoringBackend|IcingaDbConnection*/
-    protected $backend;
-
-    /** @var Storage */
-    protected $storage;
-
-    /** @var BpConfig */
-    protected $bp;
+    use Sort;
 
     /** @var BpNode */
     protected $parent;
@@ -35,9 +23,6 @@ class AddNodeForm extends QuickForm
     protected $objectList = array();
 
     protected $processList = array();
-
-    /** @var SessionNamespace */
-    protected $session;
 
     public function setup()
     {
@@ -119,8 +104,8 @@ class AddNodeForm extends QuickForm
         ));
 
         $display = 1;
-        if ($this->bp->getMetadata()->isManuallyOrdered() && !$this->bp->isEmpty()) {
-            $rootNodes = $this->bp->getRootNodes();
+        if ($this->bp->getMetadata()->isManuallyOrdered() && ! $this->bp->isEmpty()) {
+            $rootNodes = self::applyManualSorting($this->bp->getRootNodes());
             $display = end($rootNodes)->getDisplay() + 1;
         }
         $this->addElement('select', 'display', array(
@@ -390,37 +375,6 @@ class AddNodeForm extends QuickForm
     }
 
     /**
-     * @param MonitoringBackend|IcingaDbConnection $backend
-     * @return $this
-     */
-    public function setBackend($backend)
-    {
-        $this->backend = $backend;
-        return $this;
-    }
-
-    /**
-     * @param Storage $storage
-     * @return $this
-     */
-    public function setStorage(Storage $storage)
-    {
-        $this->storage = $storage;
-        return $this;
-    }
-
-    /**
-     * @param BpConfig $process
-     * @return $this
-     */
-    public function setProcess(BpConfig $process)
-    {
-        $this->bp = $process;
-        $this->setBackend($process->getBackend());
-        return $this;
-    }
-
-    /**
      * @param BpNode|null $node
      * @return $this
      */
@@ -436,16 +390,6 @@ class AddNodeForm extends QuickForm
     public function hasParentNode()
     {
         return $this->parent !== null;
-    }
-
-    /**
-     * @param SessionNamespace $session
-     * @return $this
-     */
-    public function setSession(SessionNamespace $session)
-    {
-        $this->session = $session;
-        return $this;
     }
 
     protected function hasProcesses()
@@ -492,9 +436,6 @@ class AddNodeForm extends QuickForm
             }
         }
 
-        if (! $this->bp->getMetadata()->isManuallyOrdered()) {
-            natcasesort($list);
-        }
         return $list;
     }
 

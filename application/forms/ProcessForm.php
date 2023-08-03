@@ -3,28 +3,15 @@
 namespace Icinga\Module\Businessprocess\Forms;
 
 use Icinga\Module\Businessprocess\BpNode;
-use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Node;
-use Icinga\Module\Businessprocess\Web\Form\QuickForm;
-use Icinga\Module\Monitoring\Backend\MonitoringBackend;
+use Icinga\Module\Businessprocess\Web\Form\BpConfigBaseForm;
 use Icinga\Web\Notification;
-use Icinga\Web\Session\SessionNamespace;
-use ipl\Sql\Connection as IcingaDbConnection;
 
-class ProcessForm extends QuickForm
+class ProcessForm extends BpConfigBaseForm
 {
-    /** @var MonitoringBackend|IcingaDbConnection */
-    protected $backend;
-
-    /** @var BpConfig */
-    protected $bp;
-
     /** @var BpNode */
     protected $node;
-
-    /** @var SessionNamespace */
-    protected $session;
 
     public function setup()
     {
@@ -95,43 +82,12 @@ class ProcessForm extends QuickForm
     }
 
     /**
-     * @param MonitoringBackend|IcingaDbConnection $backend
-     * @return $this
-     */
-    public function setBackend($backend)
-    {
-        $this->backend = $backend;
-        return $this;
-    }
-
-    /**
-     * @param BpConfig $process
-     * @return $this
-     */
-    public function setProcess(BpConfig $process)
-    {
-        $this->bp = $process;
-        $this->setBackend($process->getBackend());
-        return $this;
-    }
-
-    /**
      * @param BpNode $node
      * @return $this
      */
     public function setNode(BpNode $node)
     {
         $this->node = $node;
-        return $this;
-    }
-
-    /**
-     * @param SessionNamespace $session
-     * @return $this
-     */
-    public function setSession(SessionNamespace $session)
-    {
-        $this->session = $session;
         return $this;
     }
 

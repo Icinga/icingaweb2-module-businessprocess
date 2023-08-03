@@ -5,6 +5,7 @@ namespace Icinga\Module\Businessprocess\Renderer;
 use Icinga\Exception\ProgrammingError;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
+use Icinga\Module\Businessprocess\Common\Sort;
 use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\MonitoredNode;
 use Icinga\Module\Businessprocess\Node;
@@ -12,10 +13,13 @@ use Icinga\Module\Businessprocess\Web\Url;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
 use ipl\Html\HtmlDocument;
+use ipl\Stdlib\Str;
 use ipl\Web\Widget\StateBadge;
 
 abstract class Renderer extends HtmlDocument
 {
+    use Sort;
+
     /** @var BpConfig */
     protected $config;
 
@@ -118,6 +122,33 @@ abstract class Renderer extends HtmlDocument
         } else {
             return $this->parent->getChildren();
         }
+    }
+
+    /**
+     * Get the default sort specification
+     *
+     * @return string
+     */
+    public function getDefaultSort(): string
+    {
+        if ($this->config->getMetadata()->isManuallyOrdered()) {
+            return 'manual asc';
+        }
+
+        return 'display_name asc';
+    }
+
+    /**
+     * Get whether a custom sort order is applied
+     *
+     * @return bool
+     */
+    public function appliesCustomSorting(): bool
+    {
+        list($sortBy, $_) = Str::symmetricSplit($this->getSort(), ' ', 2);
+        list($defaultSortBy, $_) = Str::symmetricSplit($this->getDefaultSort(), ' ', 2);
+
+        return $sortBy !== $defaultSortBy;
     }
 
     /**
