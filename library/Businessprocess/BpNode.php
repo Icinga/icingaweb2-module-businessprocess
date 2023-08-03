@@ -173,6 +173,8 @@ class BpNode extends Node
             if (! empty($this->children)) {
                 unset($this->children[$name]);
             }
+
+            $this->childNames = array_values($this->childNames);
         }
 
         return $this;
