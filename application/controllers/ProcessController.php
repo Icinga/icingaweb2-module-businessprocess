@@ -268,15 +268,7 @@ class ProcessController extends Controller
 
         $canEdit =  $bp->getMetadata()->canModify();
 
-        if ($action === 'add' && $canEdit) {
-            $form = $this->loadForm('AddNode')
-                ->setSuccessUrl(Url::fromRequest()->without('action'))
-                ->setStorage($this->storage())
-                ->setProcess($bp)
-                ->setParentNode($node)
-                ->setSession($this->session())
-                ->handleRequest();
-        } elseif ($action === 'cleanup' && $canEdit) {
+        if ($action === 'cleanup' && $canEdit) {
             $form = $this->loadForm('CleanupNode')
                 ->setSuccessUrl(Url::fromRequest()->without('action'))
                 ->setProcess($bp)
