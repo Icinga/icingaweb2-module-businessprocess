@@ -6,6 +6,7 @@ use Icinga\Application\Modules\Module;
 use Icinga\Date\DateFormatter;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
+use Icinga\Module\Businessprocess\Forms\AddNodeForm;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
 use Icinga\Module\Businessprocess\Renderer\Breadcrumb;
@@ -268,7 +269,27 @@ class ProcessController extends Controller
 
         $canEdit =  $bp->getMetadata()->canModify();
 
-        if ($action === 'cleanup' && $canEdit) {
+        if ($action === 'add' && $canEdit) {
+            $form = (new AddNodeForm())
+                ->setProcess($bp)
+                ->setParentNode($node)
+                ->setStorage($this->storage())
+                ->setSession($this->session())
+                ->on(AddNodeForm::ON_SUCCESS, function () {
+                    $this->redirectNow(Url::fromRequest()->without('action'));
+                })
+                ->handleRequest($this->getServerRequest());
+
+            if ($form->hasElement('children')) {
+                foreach ($form->getElement('children')->prepareMultipartUpdate($this->getServerRequest()) as $update) {
+                    if (! is_array($update)) {
+                        $update = [$update];
+                    }
+
+                    $this->addPart(...$update);
+                }
+            }
+        } elseif ($action === 'cleanup' && $canEdit) {
             $form = $this->loadForm('CleanupNode')
                 ->setSuccessUrl(Url::fromRequest()->without('action'))
                 ->setProcess($bp)
@@ -341,8 +362,11 @@ class ProcessController extends Controller
             return;
         }
 
-        if ($this->params->get('action')) {
-            $this->setAutorefreshInterval(45);
+        if ($this->params->has('action')) {
+            if ($this->params->get('action') !== 'add') {
+                // The new add form uses the term input, which doesn't support value persistence across refreshes
+                $this->setAutorefreshInterval(45);
+            }
         } else {
             $this->setAutorefreshInterval(10);
         }
