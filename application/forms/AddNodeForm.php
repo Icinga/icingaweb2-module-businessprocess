@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Forms;
 
+use Exception;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Common\EnumList;
@@ -471,7 +472,13 @@ class AddNodeForm extends QuickForm
 
         $bp = $this->bp;
         if ($differentFile) {
-            $bp = $this->storage->loadProcess($file);
+            try {
+                $bp = $this->storage->loadProcess($file);
+            } catch (Exception $e) {
+                $this->addError('Cannot add invalid config file');
+
+                return $list;
+            }
         }
 
         foreach ($bp->getNodes() as $node) {

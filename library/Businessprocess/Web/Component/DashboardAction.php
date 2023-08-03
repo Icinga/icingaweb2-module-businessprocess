@@ -5,6 +5,7 @@ namespace Icinga\Module\Businessprocess\Web\Component;
 use Icinga\Web\Url;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
+use ipl\Web\Widget\Icon;
 
 class DashboardAction extends BaseHtmlElement
 {
@@ -19,7 +20,7 @@ class DashboardAction extends BaseHtmlElement
         }
 
         $this->add(Html::tag('a', $attributes)
-            ->add(Html::tag('i', ['class' => 'icon icon-' . $icon]))
+            ->add(new Icon($icon))
             ->add(Html::tag('span', ['class' => 'header'], $title))
             ->add($description));
     }
