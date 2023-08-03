@@ -19,7 +19,7 @@ class ServiceNode extends MonitoredNode
 
     public function __construct($object)
     {
-        $this->name = $object->hostname . ';' . $object->service;
+        $this->name = BpConfig::joinNodeName($object->hostname, $object->service);
         $this->hostname = $object->hostname;
         $this->service  = $object->service;
         if (isset($object->state)) {

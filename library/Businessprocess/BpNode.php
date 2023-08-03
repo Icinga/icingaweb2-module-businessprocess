@@ -56,7 +56,8 @@ class BpNode extends Node
 
     public function __construct($object)
     {
-        $this->name = $object->name;
+        $this->name = BpConfig::escapeName($object->name);
+        $this->alias = BpConfig::unescapeName($object->name);
         $this->operator = $object->operator;
         $this->childNames = $object->child_names;
     }

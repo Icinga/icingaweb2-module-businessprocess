@@ -471,7 +471,7 @@ class BpConfig
             )
         );
         $node->setBpConfig($this);
-        $this->nodes[$host . ';' . $service] = $node;
+        $this->nodes[$node->getName()] = $node;
         $this->hosts[$host] = true;
         return $node;
     }
@@ -480,7 +480,7 @@ class BpConfig
     {
         $node = new HostNode((object) array('hostname' => $host));
         $node->setBpConfig($this);
-        $this->nodes[$host . ';Hoststatus'] = $node;
+        $this->nodes[$node->getName()] = $node;
         $this->hosts[$host] = true;
         return $node;
     }
@@ -642,15 +642,13 @@ class BpConfig
 
         // Fallback: if it is a service, create an empty one:
         $this->warn(sprintf('The node "%s" doesn\'t exist', $name));
-        $pos = strpos($name, ';');
-        if ($pos !== false) {
-            $host = substr($name, 0, $pos);
-            $service = substr($name, $pos + 1);
-            // TODO: deactivated, this scares me, test it
-            if ($service === 'Hoststatus') {
-                return $this->createHost($host);
+
+        [$name, $suffix] = self::splitNodeName($name);
+        if ($suffix !== null) {
+            if ($suffix === 'Hoststatus') {
+                return $this->createHost($name);
             } else {
-                return $this->createService($host, $service);
+                return $this->createService($name, $suffix);
             }
         }
 
@@ -1014,5 +1012,62 @@ class BpConfig
         }
 
         return $data;
+    }
+
+    /**
+     * Escape the given node name
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    public static function escapeName(string $name): string
+    {
+        return preg_replace('/((?<!\\\\);)/', '\\\\$1', $name);
+    }
+
+    /**
+     * Unescape the given node name
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    public static function unescapeName(string $name): string
+    {
+        return str_replace('\\;', ';', $name);
+    }
+
+    /**
+     * Join the given two name parts together
+     *
+     * The used separator is the semicolon. If a semicolon exists in either part, it's escaped.
+     *
+     * @param string $name
+     * @param ?string $suffix
+     *
+     * @return string
+     */
+    public static function joinNodeName(string $name, ?string $suffix = null): string
+    {
+        return self::escapeName($name) . ($suffix ? ";$suffix" : '');
+    }
+
+    /**
+     * Split the given node name into two parts
+     *
+     * The first part is always a string, with any semicolons unescaped.
+     * The second part may be null or a string otherwise.
+     *
+     * @param string $nodeName
+     *
+     * @return array
+     */
+    public static function splitNodeName(string $nodeName): array
+    {
+        $parts = preg_split('/(?<!\\\\);/', $nodeName, 2);
+        $parts[0] = self::unescapeName($parts[0]);
+
+        return array_pad($parts, 2, null);
     }
 }
