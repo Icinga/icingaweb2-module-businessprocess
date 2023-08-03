@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Forms;
 
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\Common\EnumList;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
@@ -29,9 +30,9 @@ class EditNodeForm extends BpConfigBaseForm
 
     public function setup()
     {
-        $this->host = substr($this->getNode()->getName(), 0, strpos($this->getNode()->getName(), ';'));
-        if ($this->isService()) {
-            $this->service = substr($this->getNode()->getName(), strpos($this->getNode()->getName(), ';') + 1);
+        [$this->host, $suffix] = BpConfig::splitNodeName($this->getNode()->getName());
+        if ($suffix !== 'Hoststatus') {
+            $this->service = $suffix;
         }
 
         $view = $this->getView();

@@ -99,9 +99,9 @@ class IcingaDbState
     protected function handleDbRow($row, BpConfig $config, $objectName)
     {
         if ($objectName === 'service') {
-            $key = $row->host->name . ';' . $row->name;
+            $key = BpConfig::joinNodeName($row->host->name, $row->name);
         } else {
-            $key = $row->name . ';Hoststatus';
+            $key = BpConfig::joinNodeName($row->name, 'Hoststatus');
         }
 
         // We fetch more states than we need, so skip unknown ones

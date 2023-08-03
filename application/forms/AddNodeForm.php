@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess\Forms;
 
 use Exception;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\Common\EnumList;
 use Icinga\Module\Businessprocess\Common\Sort;
@@ -498,10 +499,13 @@ class AddNodeForm extends BpConfigBaseForm
             case 'new-process':
                 $properties = $this->getValues();
                 unset($properties['name']);
+                if (! $properties['alias']) {
+                    unset($properties['alias']);
+                }
                 if ($this->hasParentNode()) {
                     $properties['parentName'] = $this->parent->getName();
                 }
-                $changes->createNode($this->getValue('name'), $properties);
+                $changes->createNode(BpConfig::escapeName($this->getValue('name')), $properties);
                 break;
         }
 

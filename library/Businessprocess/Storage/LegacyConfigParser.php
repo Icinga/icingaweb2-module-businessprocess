@@ -230,7 +230,7 @@ class LegacyConfigParser
      */
     protected function parseDisplay(&$line, BpConfig $bp)
     {
-        list($display, $name, $desc) = preg_split('~\s*;\s*~', substr($line, 8), 3);
+        list($display, $name, $desc) = preg_split('~\s*(?<!\\\\);\s*~', substr($line, 8), 3);
         $bp->getBpNode($name)->setAlias($desc)->setDisplay($display);
         if ($display > 0) {
             $bp->addRootNode($name);
@@ -239,7 +239,7 @@ class LegacyConfigParser
 
     protected function parseInfoUrl(&$line, BpConfig $bp)
     {
-        list($name, $url) = preg_split('~\s*;\s*~', substr($line, 9), 2);
+        list($name, $url) = preg_split('~\s*(?<!\\\\);\s*~', substr($line, 9), 2);
         $bp->getBpNode($name)->setInfoUrl($url);
     }
 
@@ -324,10 +324,6 @@ class LegacyConfigParser
 
         list($name, $value) = preg_split('~\s*=\s*~', $line, 2);
 
-        if (strpos($name, ';') !== false) {
-            $this->parseError('No semicolon allowed in varname');
-        }
-
         $op = '&';
         if (preg_match_all('~(?<!\\\\)([\|\+&\!\%\^])~', $value, $m)) {
             $op = implode('', $m[1]);
@@ -359,15 +355,15 @@ class LegacyConfigParser
         $cmps = preg_split('~\s*(?<!\\\\)\\' . $op . '\s*~', $value, -1, PREG_SPLIT_NO_EMPTY);
         foreach ($cmps as $val) {
             $val = preg_replace('~(\\\\([\|\+&\!\%\^]))~', '$2', $val);
-            if (strpos($val, ';') !== false) {
+            if (preg_match('~(?<!\\\\);~', $val)) {
                 if ($bp->hasNode($val)) {
                     $node->addChild($bp->getNode($val));
                 } else {
-                    list($host, $service) = preg_split('~;~', $val, 2);
+                    list($host, $service) = preg_split('~(?<!\\\\);~', $val, 2);
                     if ($service === 'Hoststatus') {
-                        $node->addChild($bp->createHost($host));
+                        $node->addChild($bp->createHost(str_replace('\\;', ';', $host)));
                     } else {
-                        $node->addChild($bp->createService($host, $service));
+                        $node->addChild($bp->createService(str_replace('\\;', ';', $host), $service));
                     }
                 }
             } elseif ($val[0] === '@') {

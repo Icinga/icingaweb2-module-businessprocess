@@ -4,6 +4,7 @@ namespace Icinga\Module\Businessprocess\ProvidedHook\Monitoring;
 
 use Exception;
 use Icinga\Application\Config;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Monitoring\Hook\ServiceActionsHook;
 use Icinga\Module\Monitoring\Object\Service;
 use Icinga\Web\Url;
@@ -16,9 +17,7 @@ class ServiceActions extends ServiceActionsHook
         return array(
             $label => sprintf(
                 'businessprocess/node/impact?name=%s',
-                rawurlencode(
-                    sprintf('%s;%s', $service->getHost()->getName(), $service->getName())
-                )
+                rawurlencode(BpConfig::joinNodeName($service->getHost()->getName(), $service->getName()))
             )
         );
     }

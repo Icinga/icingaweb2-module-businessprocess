@@ -4,6 +4,7 @@ namespace Icinga\Module\Businessprocess\Common;
 
 use Icinga\Application\Modules\Module;
 use Icinga\Data\Filter\Filter;
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\IcingaDbObject;
 use Icinga\Module\Businessprocess\MonitoringRestrictions;
 use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
@@ -51,9 +52,8 @@ trait EnumList
         // fetchPairs doesn't seem to work when using the same column with
         // different aliases twice
         $res = array();
-        $suffix = ';Hoststatus';
         foreach ($names as $name) {
-            $res[$name . $suffix] = $name;
+            $res[BpConfig::joinNodeName($name, 'Hoststatus')] = $name;
         }
 
         return $res;
@@ -76,7 +76,7 @@ trait EnumList
 
         $services = array();
         foreach ($names as $name) {
-            $services[$host . ';' . $name] = $name;
+            $services[BpConfig::joinNodeName($host, $name)] = $name;
         }
 
         return $services;
@@ -100,9 +100,8 @@ trait EnumList
         // fetchPairs doesn't seem to work when using the same column with
         // different aliases twice
         $res = array();
-        $suffix = ';Hoststatus';
         foreach ($names as $name) {
-            $res[$name . $suffix] = $name;
+            $res[BpConfig::joinNodeName($name, 'Hoststatus')] = $name;
         }
 
         return $res;
@@ -115,7 +114,8 @@ trait EnumList
         if ($this->useIcingaDbBackend()) {
             $objects = (new IcingaDbObject())->fetchServices($filter);
             foreach ($objects as $object) {
-                $services[$object->host->name . ';' . $object->name] = $object->host->name . ':' . $object->name;
+                $services[BpConfig::joinNodeName($object->host->name, $object->name)]
+                    = $object->host->name . ':' . $object->name;
             }
         } else {
             $objects = $this->backend
@@ -127,7 +127,8 @@ trait EnumList
                 ->getQuery()
                 ->fetchAll();
             foreach ($objects as $object) {
-                $services[$object->host . ';' . $object->service] = $object->host . ':' . $object->service;
+                $services[BpConfig::joinNodeName($object->host, $object->service)]
+                    = $object->host . ':' . $object->service;
             }
         }
 

@@ -28,7 +28,7 @@ class ImportedNode extends BpNode
     {
         $this->parentBp = $parentBp;
         $this->configName = $object->configName;
-        $this->nodeName = $object->node;
+        $this->nodeName = BpConfig::escapeName($object->node);
 
         parent::__construct((object) [
             'name'          => '@' . $this->configName . ':' . $this->nodeName,
@@ -69,11 +69,7 @@ class ImportedNode extends BpNode
 
     public function getAlias()
     {
-        if ($this->alias === null) {
-            $this->alias = $this->importedNode()->getAlias();
-        }
-
-        return $this->alias;
+        return $this->importedNode()->getAlias();
     }
 
     public function getOperator()
