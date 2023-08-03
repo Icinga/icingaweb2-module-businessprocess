@@ -12,6 +12,9 @@ use Icinga\Module\Businessprocess\Web\Form\Validator\NoDuplicateChildrenValidato
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 use Icinga\Web\Session\SessionNamespace;
 use ipl\Sql\Connection as IcingaDbConnection;
+use ipl\Web\Url;
+use ipl\Web\Widget\ButtonLink;
+use Zend_Form_Element_Note;
 
 class EditNodeForm extends QuickForm
 {
@@ -36,6 +39,8 @@ class EditNodeForm extends QuickForm
     protected $service;
 
     protected $host;
+
+    protected $deleteButtonName = 'delete_node';
 
     /** @var SessionNamespace */
     protected $session;
@@ -80,6 +85,43 @@ class EditNodeForm extends QuickForm
                 $this->setSubmitLabel($this->translate('Next'));
                 return;
         }
+
+        $url = Url::fromRequest();
+        $params = $url->getParams();
+
+        $url->setParams([
+            'config'     => $params->get('config'),
+            'node'       => $params->get('node'),
+            'unlocked'   => 1,
+            'action'     => 'delete',
+            'deletenode' => $params->get('editmonitorednode')
+        ]);
+
+        $deleteButton = (new Zend_Form_Element_Note(
+            'delete',
+            [
+                'value' => new ButtonLink(
+                    $this->translate('Delete'),
+                    $url,
+                    null,
+                    ['class' => 'node-delete-button']
+                )
+            ]
+        ));
+
+        $deleteButton->removeDecorator('Label');
+        $deleteButton->removeDecorator('HtmlTag');
+
+        $this->addElement($deleteButton, $this->deleteButtonName);
+    }
+
+    protected function onSetup()
+    {
+        $label = $this->translate('Save Changes');
+        $this->setSubmitLabel($label);
+        $this->getElement($this->submitButtonName)
+            ->setAttribs(['class' => 'btn-primary'])
+            ->setLabel($label);
     }
 
     protected function isService()
