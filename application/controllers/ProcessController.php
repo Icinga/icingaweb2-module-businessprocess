@@ -7,6 +7,7 @@ use Icinga\Date\DateFormatter;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\Forms\AddNodeForm;
+use Icinga\Module\Businessprocess\Forms\EditNodeForm;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
 use Icinga\Module\Businessprocess\Renderer\Breadcrumb;
@@ -295,6 +296,16 @@ class ProcessController extends Controller
                 ->setProcess($bp)
                 ->setSession($this->session())
                 ->handleRequest();
+        } elseif ($action === 'editmonitored' && $canEdit) {
+            $form = (new EditNodeForm())
+                ->setProcess($bp)
+                ->setNode($bp->getNode($this->params->get('editmonitorednode')))
+                ->setParentNode($node)
+                ->setSession($this->session())
+                ->on(EditNodeForm::ON_SUCCESS, function () {
+                    $this->redirectNow(Url::fromRequest()->without(['action', 'editmonitorednode']));
+                })
+                ->handleRequest($this->getServerRequest());
         } elseif ($action === 'delete' && $canEdit) {
             $form = $this->loadForm('DeleteNode')
                 ->setSuccessUrl(Url::fromRequest()->without('action'))
