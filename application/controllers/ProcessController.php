@@ -295,14 +295,6 @@ class ProcessController extends Controller
                 ->setProcess($bp)
                 ->setSession($this->session())
                 ->handleRequest();
-        } elseif ($action === 'editmonitored' && $canEdit) {
-            $form = $this->loadForm('EditNode')
-                ->setSuccessUrl(Url::fromRequest()->without('action'))
-                ->setProcess($bp)
-                ->setNode($bp->getNode($this->params->get('editmonitorednode')))
-                ->setParentNode($node)
-                ->setSession($this->session())
-                ->handleRequest();
         } elseif ($action === 'delete' && $canEdit) {
             $form = $this->loadForm('DeleteNode')
                 ->setSuccessUrl(Url::fromRequest()->without('action'))
