@@ -136,7 +136,7 @@ class NodeController extends Controller
                         'li',
                         new Link(
                             sprintf('%s (%s.conf)', $bpName, $fileName),
-                            (string) Url::fromPath('businessprocess/process/show', ['config' => $fileName])
+                            \ipl\Web\Url::fromPath('businessprocess/process/show', ['config' => $fileName])
                         )
                     )
                 );
