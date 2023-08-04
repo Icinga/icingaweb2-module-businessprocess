@@ -20,6 +20,9 @@ class TreeRenderer extends Renderer
 {
     const NEW_COLLAPSIBLE_IMPLEMENTATION_SINCE = '2.11.2';
 
+    /** @var ?string */
+    protected $extraChild;
+
     public function assemble()
     {
         $bp = $this->config;
@@ -34,9 +37,11 @@ class TreeRenderer extends Renderer
                     : 'false',
                 'data-sortable-data-id-attr'    => 'id',
                 'data-sortable-direction'       => 'vertical',
+                'data-sortable-sort'            => $this->hasExtraChild() ? 'false' : 'true',
                 'data-sortable-group'           => json_encode([
                     'name'  => $this->wantsRootNodes() ? 'root' : $htmlId,
-                    'put'   => 'function:rowPutAllowed'
+                    'put'   => 'function:rowPutAllowed',
+                    'pull'  => ! $this->hasExtraChild()
                 ]),
                 'data-sortable-invert-swap'     => 'true',
                 'data-csrf-token'               => CsrfToken::generate()
@@ -78,6 +83,20 @@ class TreeRenderer extends Renderer
         $html = [];
         if ($this->wantsRootNodes()) {
             $nodes = $bp->getRootNodes();
+            if ($this->hasExtraChild()) {
+                $objectToAdd = $this->getExtraChild();
+                $parts = explode(';', $objectToAdd);
+                if ($parts[1] === 'Hoststatus') {
+                    $bp->createHost($parts[0]);
+                } else {
+                    $bp->createService($parts[0], $parts[1]);
+                }
+
+                $parent = $bp->createBp('Unbound');
+                $parent->addChild($bp->getNode($objectToAdd));
+
+                $html[] = $this->renderNode($bp, $parent, true);
+            }
         } else {
             $nodes = $this->parent->getChildren();
         }
@@ -175,11 +194,12 @@ class TreeRenderer extends Renderer
     /**
      * @param BpConfig $bp
      * @param Node $node
+     * @param bool $isFakeNode
      * @param array $path
      *
      * @return string
      */
-    public function renderNode(BpConfig $bp, Node $node, $path = array())
+    public function renderNode(BpConfig $bp, Node $node, bool $isFakeNode = false, $path = array())
     {
         $htmlId = $this->getId($node, $path);
         $li = Html::tag(
@@ -219,7 +239,7 @@ class TreeRenderer extends Renderer
 
         $summary->add(Html::tag('span', null, $node->getAlias()));
 
-        if ($node instanceof BpNode) {
+        if ( ! $isFakeNode && $node instanceof BpNode) {
             $summary->add(Html::tag('span', ['class' => 'op'], $node->operatorHtml()));
         }
 
@@ -228,7 +248,7 @@ class TreeRenderer extends Renderer
         }
 
         $differentConfig = $node->getBpConfig()->getName() !== $this->getBusinessProcess()->getName();
-        if (! $this->isLocked() && !$differentConfig) {
+        if (! $this->isLocked() && ! $this->hasExtraChild() && ! $differentConfig) {
             $summary->add($this->getActionIcons($bp, $node));
         } elseif ($differentConfig) {
             $summary->add($this->actionIcon(
@@ -247,9 +267,11 @@ class TreeRenderer extends Renderer
             'data-sortable-data-id-attr'    => 'id',
             'data-sortable-draggable'       => '.movable',
             'data-sortable-direction'       => 'vertical',
+            'data-sortable-sort'            => $this->hasExtraChild() ? 'false' : 'true',
             'data-sortable-group'           => json_encode([
                 'name'  => $htmlId, // Unique, so that the function below is the only deciding factor
-                'put'   => 'function:rowPutAllowed'
+                'put'   => ! $isFakeNode ? 'function:rowPutAllowed' : false,
+                'pull'  => $this->hasExtraChild() ? 'function:rowPullAllowed' : true,
             ]),
             'data-csrf-token'               => CsrfToken::generate(),
             'data-action-url'               => $this->getUrl()
@@ -265,7 +287,7 @@ class TreeRenderer extends Renderer
         $path[] = $differentConfig ? $node->getIdentifier() : $node->getName();
         foreach ($this->sort($node->getChildren()) as $name => $child) {
             if ($child instanceof BpNode) {
-                $ul->add($this->renderNode($bp, $child, $path));
+                $ul->add($this->renderNode($bp, $child, false, $path));
             } else {
                 $ul->add($this->renderChild($bp, $node, $child, $path));
             }
@@ -286,6 +308,14 @@ class TreeRenderer extends Renderer
             'data-node-name'    => $node->getName()
         ]);
 
+        if ($this->hasExtraChild()) {
+            if ($node->getName() === $this->getExtraChild()) {
+                $li->addAttributes(['class' => 'new-child']);
+            } else {
+                $li->addAttributes(['class' => 'unhighlight']);
+            }
+        }
+
         $li->add($this->getNodeIcons($node, $path, $parent));
 
         $link = $node->getLink();
@@ -296,7 +326,11 @@ class TreeRenderer extends Renderer
             $li->add($this->getOverriddenState($overriddenState, $node));
         }
 
-        if (! $this->isLocked() && $node->getBpConfig()->getName() === $this->getBusinessProcess()->getName()) {
+        if (
+            ! $this->isLocked()
+            && ! $this->hasExtraChild()
+            && $node->getBpConfig()->getName() === $this->getBusinessProcess()->getName()
+        ) {
             $li->add($this->getActionIcons($bp, $node));
         }
 
@@ -373,5 +407,22 @@ class TreeRenderer extends Renderer
                 ->with('node', $parent->getName()),
             mt('businessprocess', 'Add a new business process node')
         );
+    }
+
+    public function setExtraChild(?string $extraChild): self
+    {
+        $this->extraChild = $extraChild;
+
+        return $this;
+    }
+
+    public function getExtraChild(): ?string
+    {
+        return $this->extraChild;
+    }
+
+    public function hasExtraChild(): bool
+    {
+        return $this->extraChild !== null;
     }
 }
