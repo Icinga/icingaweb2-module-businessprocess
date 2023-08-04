@@ -3,9 +3,12 @@
 namespace Icinga\Module\Businessprocess;
 
 use Icinga\Module\Businessprocess\Web\Url;
+use ipl\I18n\Translation;
 
 class ServiceNode extends MonitoredNode
 {
+    use Translation;
+
     protected $hostname;
 
     /** @var string Alias of the host */
@@ -69,7 +72,11 @@ class ServiceNode extends MonitoredNode
             return null;
         }
 
-        return $this->getHostAlias() . ': ' . $this->alias;
+        return sprintf(
+            $this->translate('%s on %s', '<service> on <host>'),
+            $this->alias,
+            $this->getHostAlias()
+        );
     }
 
     public function getUrl()
