@@ -7,21 +7,21 @@ use Icinga\Application\ApplicationBootstrap;
 use Icinga\Application\Icinga;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
-use Icinga\Module\Businessprocess\Web\FakeRequest;
-use PHPUnit_Framework_TestCase;
 
-abstract class BaseTestCase extends PHPUnit_Framework_TestCase
+abstract class BaseTestCase extends \Icinga\Test\BaseTestCase
 {
     /** @var ApplicationBootstrap */
     private static $app;
 
-    /**
-     * @inheritdoc
-     */
-    public function setUp()
+    public function setUp(): void
     {
-        $this->app();
-        FakeRequest::setConfiguredBaseUrl('/icingaweb2/');
+        parent::setUp();
+
+        $this->getRequestMock()->shouldReceive('getBaseUrl')->andReturn('/icingaweb2/');
+
+        $this->app()
+            ->getModuleManager()
+            ->loadModule('businessprocess');
     }
 
     protected function emptyConfigSection()
