@@ -3,10 +3,9 @@
 namespace Icinga\Module\Businessprocess\Forms;
 
 use Exception;
-use Icinga\Application\Icinga;
 use Icinga\Exception\ConfigurationError;
 use Icinga\Module\Businessprocess\BpConfig;
-use Icinga\Module\Businessprocess\Exception\ModificationError;
+use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Renderer\TreeRenderer;
 use Icinga\Module\Businessprocess\Storage\Storage;
@@ -35,6 +34,8 @@ class AddNodeToProcessForm extends Form
     protected $bpConfig;
 
     protected $changes;
+
+    protected $fakeNodeName = '$_Unbound_$';
 
     /**
      * Set the storage
@@ -83,6 +84,11 @@ class AddNodeToProcessForm extends Form
         return $this->nodeName;
     }
 
+    protected function getProcessChanges(BpConfig $bpConfig)
+    {
+        return ProcessChanges::construct($bpConfig, $this->session);
+    }
+
     protected function assemble()
     {
         $this->createCsrfCounterMeasure(Session::getSession()->getId());
@@ -105,49 +111,45 @@ class AddNodeToProcessForm extends Form
         if ($configName !== null) {
             try {
                 $this->setBpConfig($this->storage->loadProcess($configName));
-                $changes = ProcessChanges::construct($this->bpConfig, $this->session);
-                $parent = $this->bpConfig->createBp('Unbound');
-                $changes->addChildrenToNode($this->getNodeName(), $parent);
-                $newParentNode = $this->getPopulatedValue('parent');
-                $newParentNode = $newParentNode ? $this->bpConfig->getNode($newParentNode) : null;
-                if ($newParentNode && ! $this->bpConfig->hasNode($this->getNodeName())) {
-                    $changes->addChildrenToNode($this->getNodeName(), $newParentNode);
-                }
-
-                if ($this->getPopulatedValue('from') !== null) {
-                    if (! $this->bpConfig->getMetadata()->isManuallyOrdered()) {
-                        $changes->applyManualOrder();
-                    }
-
-
-                    try {
-                        $changes->moveNode(
-                            $this->bpConfig->getNode($this->getNodeName()),
-                            $this->getPopulatedValue('from'),
-                            $this->getPopulatedValue('to'),
-                            $this->getPopulatedValue('parent')
-                        );
-                    } catch (Exception $e) {
-                        throw new Exception($e->getMessage());
-                        /*$this->notifyError($e->getMessage());
-                    Icinga::app()->getResponse()
-                        // Web 2's JS forces a content update for non-200s. Our own JS
-                        // can't prevent this, hence we're not making this a 400 :(
-                        //->setHttpResponseCode(400)
-                        ->setHeader('X-Icinga-Container', 'ignore')
-                        ->sendResponse();
-                    exit;*/
-                    }
-                }
-                // Trigger session destruction to make sure it get's stored.
-                unset($changes);
             } catch (Exception $e) {
                 throw new ConfigurationError(
-                    'Config file %s.conf is invalid, please choose another one: %s',
-                    $configName,
-                    $e->getMessage()
+                    'Config file %s.conf is invalid, please choose another one',
+                    $configName
                 );
             }
+
+            $changes = $this->getProcessChanges($this->bpConfig);
+
+           /* if ($changes->count() > 2) {// moves again
+                $changes->pop(); // remove last change
+            }*/
+
+            if ($changes->isEmpty()) {
+                $changes->createNode($this->fakeNodeName, ['operator' => '&', 'childNames' => [$this->getNodeName()]]);
+            } else {
+                $this->bpConfig->applyChanges($changes);
+            }
+
+            if ($this->getPopulatedValue('from') !== null) {
+                if (! $this->bpConfig->getMetadata()->isManuallyOrdered()) {
+                    $changes->applyManualOrder();
+                }
+
+                try {
+                    $changes->moveNode(
+                        $this->bpConfig->getNode($this->getNodeName()),
+                       0, // $this->getPopulatedValue('from'),
+                        $this->getPopulatedValue('to'),
+                        $this->getPopulatedValue('parent'),
+                        $this->fakeNodeName
+                    );
+                } catch (Exception $e) {
+                    throw new Exception($e->getMessage());
+                }
+            }
+
+            // Trigger session destruction to make sure it get's stored.
+            unset($changes);
 
             $tree = (new TreeRenderer($this->bpConfig))
                 ->setUrl(Url::fromRequest())
@@ -164,6 +166,11 @@ class AddNodeToProcessForm extends Form
 
     protected function onSuccess()
     {
+        //$this->bpConfig->removeNode('Unbound');
 
+        $changes = $this->getProcessChanges($this->bpConfig);
+        $this->bpConfig->applyChanges($changes);
+
+        $this->storage->storeProcess($this->bpConfig);
     }
 }

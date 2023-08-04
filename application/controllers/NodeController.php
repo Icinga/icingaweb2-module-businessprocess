@@ -176,6 +176,9 @@ class NodeController extends Controller
             ->setStorage($this->storage())
             ->setNodeName($objectName)
             ->setSession($this->session())
+            ->on(AddNodeToProcessForm::ON_SUCCESS, function($form) use ($objectName) {
+                $this->redirectNow(iplUrl::fromPath('businessprocess/node/impact', ['name' => $objectName]));
+            })
             ->handleRequest(ServerRequest::fromGlobals());
 
         $this->content()->add($form);
