@@ -105,12 +105,9 @@ class NodeTile extends BaseHtmlElement
             $this->add($link);
         } else {
             $this->add(Html::tag(
-                'a',
-                Html::tag(
-                    'span',
-                    ['style' => 'font-size: 75%'],
-                    sprintf('Trying to access a missing business process node "%s"', $node->getNodeName())
-                )
+                'span',
+                ['class' => 'missing-node-msg'],
+                sprintf('Trying to access a missing business process node "%s"', $node->getNodeName())
             ));
         }
 

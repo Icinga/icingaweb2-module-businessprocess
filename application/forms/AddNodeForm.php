@@ -176,7 +176,6 @@ class AddNodeForm extends BpConfigBaseForm
             'label'        => $this->translate('Hosts'),
             'required'     => true,
             'size'         => 8,
-            'style'        => 'width: 25em',
             'multiOptions' => $this->enumHostList(),
             'description'  => $this->translate(
                 'Hosts that should be part of this business process node'
@@ -222,7 +221,6 @@ class AddNodeForm extends BpConfigBaseForm
             'label'        => $this->translate('Services'),
             'required'     => true,
             'size'         => 8,
-            'style'        => 'width: 25em',
             'multiOptions' => $this->enumServiceList($host),
             'description'  => $this->translate(
                 'Services that should be part of this business process node'
@@ -241,7 +239,6 @@ class AddNodeForm extends BpConfigBaseForm
             'label'        => $this->translate('Hosts'),
             'required'     => true,
             'size'         => 8,
-            'style'        => 'width: 25em',
             'multiOptions' => $this->enumHostListByFilter($filter),
             'description'  => $this->translate(
                 'Hosts that should be part of this business process node'
@@ -260,7 +257,6 @@ class AddNodeForm extends BpConfigBaseForm
             'label'        => $this->translate('Services'),
             'required'     => true,
             'size'         => 8,
-            'style'        => 'width: 25em',
             'multiOptions' => $this->enumServiceListByFilter($filter),
             'description'  => $this->translate(
                 'Services that should be part of this business process node'
@@ -362,7 +358,6 @@ class AddNodeForm extends BpConfigBaseForm
                 'label'        => $this->translate('Process nodes'),
                 'required'     => true,
                 'size'         => 8,
-                'style'        => 'width: 25em',
                 'multiOptions' => $this->enumProcesses($file),
                 'description'  => $this->translate(
                     'Other processes that should be part of this business process node'

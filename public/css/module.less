@@ -77,8 +77,11 @@ a:focus {
     }
 }
 
-.controls .sort-control {
-    float: right;
+.controls {
+    &.sort-control,
+    &.want-fullscreen > a {
+        float: right;
+    }
 }
 
 form a {
@@ -471,7 +474,8 @@ td > a > .state-badges {
         border: 1px solid @body-bg-color;
     }
 
-    > a {
+    > a,
+    .missing-node-msg {
         display: block;
         text-decoration: none;
         font-size: 0.7em;
@@ -479,6 +483,10 @@ td > a > .state-badges {
         padding: 1em 1em 0;
         font-weight: bold;
         word-wrap: break-word;
+    }
+
+    .missing-node-msg {
+        font-size: 0.5em;
     }
 
     &:hover {
