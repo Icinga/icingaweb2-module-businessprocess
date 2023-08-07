@@ -4,12 +4,10 @@ namespace Icinga\Module\Businessprocess\Renderer\TileRenderer;
 
 use Icinga\Date\DateFormatter;
 use Icinga\Module\Businessprocess\BpNode;
-use Icinga\Module\Businessprocess\HostNode;
 use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\MonitoredNode;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Renderer\Renderer;
-use Icinga\Module\Businessprocess\ServiceNode;
 use Icinga\Web\Url;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
@@ -202,14 +200,14 @@ class NodeTile extends BaseHtmlElement
                     'href'  => $url->with('mode', 'tile'),
                     'title' => mt('businessprocess', 'Show tiles for this subtree')
                 ],
-                Html::tag('i', ['class' => 'icon icon-dashboard'])
+                new Icon('grip')
             ))->add(Html::tag(
                 'a',
                 [
                     'href'  => $url->with('mode', 'tree'),
                     'title' => mt('businessprocess', 'Show this subtree as a tree')
                 ],
-                Html::tag('i', ['class' => 'icon icon-sitemap'])
+                new Icon('sitemap')
             ));
             if ($node instanceof ImportedNode) {
                 if ($node->getBpConfig()->hasNode($node->getName())) {
@@ -223,7 +221,7 @@ class NodeTile extends BaseHtmlElement
                                 'Show this process as part of its original configuration'
                             )
                         ],
-                        Html::tag('i', ['class' => 'icon icon-forward'])
+                        new Icon('share')
                     ));
                 }
             }
@@ -238,7 +236,7 @@ class NodeTile extends BaseHtmlElement
                         'class' => 'node-info',
                         'title' => sprintf('%s: %s', mt('businessprocess', 'More information'), $url)
                     ],
-                    Html::tag('i', ['class' => 'icon icon-info-circled'])
+                    new Icon('info')
                 );
                 if (preg_match('#^http(?:s)?://#', $url)) {
                     $link->addAttributes(['target' => '_blank']);
@@ -246,20 +244,11 @@ class NodeTile extends BaseHtmlElement
                 $this->actions()->add($link);
             }
         } else {
-            // $url = $this->makeMonitoredNodeUrl($node);
-            if ($node instanceof ServiceNode) {
-                $this->actions()->add(Html::tag(
-                    'a',
-                    ['href' => $node->getUrl(), 'data-base-target' => '_next'],
-                    Html::tag('i', ['class' => 'icon icon-service'])
-                ));
-            } elseif ($node instanceof HostNode) {
-                $this->actions()->add(Html::tag(
-                    'a',
-                    ['href' => $node->getUrl(), 'data-base-target' => '_next'],
-                    Html::tag('i', ['class' => 'icon icon-host'])
-                ));
-            }
+            $this->actions()->add(Html::tag(
+                'a',
+                ['href' => $node->getUrl(), 'data-base-target' => '_next'],
+                $node->getIcon()
+            ));
         }
 
         if ($node->isAcknowledged()) {
@@ -299,7 +288,7 @@ class NodeTile extends BaseHtmlElement
                         'Show the business impact of this node by simulating a specific state'
                     )
                 ],
-                Html::tag('i', ['class' => 'icon icon-magic'])
+                new Icon('wand-magic-sparkles')
             ));
 
             $this->actions()->add(Html::tag(
@@ -310,7 +299,7 @@ class NodeTile extends BaseHtmlElement
                         ->with('editmonitorednode', $this->node->getName()),
                     'title' => mt('businessprocess', 'Modify this monitored node')
                 ],
-                Html::tag('i', ['class' => 'icon icon-edit'])
+                new Icon('edit')
             ));
         }
 
@@ -327,7 +316,7 @@ class NodeTile extends BaseHtmlElement
                             ->with('editnode', $this->node->getName()),
                         'title' => mt('businessprocess', 'Modify this business process node')
                     ],
-                    Html::tag('i', ['class' => 'icon icon-edit'])
+                    new Icon('edit')
                 ));
 
                 $addUrl = $baseUrl->with([
@@ -341,7 +330,7 @@ class NodeTile extends BaseHtmlElement
                         'href'  => $addUrl,
                         'title' => mt('businessprocess', 'Add a new sub-node to this business process')
                     ],
-                    Html::tag('i', ['class' => 'icon icon-plus'])
+                    new Icon('plus')
                 ));
             }
         }
@@ -358,7 +347,7 @@ class NodeTile extends BaseHtmlElement
                     'href'  => $baseUrl->with($params),
                     'title' => mt('businessprocess', 'Delete this node')
                 ],
-                Html::tag('i', ['class' => 'icon icon-cancel'])
+                new Icon('xmark')
             ));
         }
     }

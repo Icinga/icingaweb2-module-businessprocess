@@ -31,7 +31,7 @@ class HostNode extends MonitoredNode
 
     protected $className = 'host';
 
-    protected $icon = 'host';
+    protected $icon = 'laptop';
 
     public function __construct($object)
     {

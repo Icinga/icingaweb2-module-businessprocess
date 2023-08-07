@@ -120,7 +120,7 @@ class TreeRenderer extends Renderer
     {
         $icons = [];
         if (empty($path) && $node instanceof BpNode) {
-            $icons[] = Html::tag('i', ['class' => 'icon icon-sitemap']);
+            $icons[] = new Icon('sitemap');
         } else {
             $icons[] = $node->getIcon();
         }
@@ -137,7 +137,7 @@ class TreeRenderer extends Renderer
         ]);
 
         if ($node->isAcknowledged()) {
-            $icons[] = Html::tag('i', ['class' => 'icon icon-ok']);
+            $icons[] = new Icon('check');
         } elseif ($node->isInDowntime()) {
             $icons[] = new Icon('plug');
         }
@@ -157,7 +157,8 @@ class TreeRenderer extends Renderer
                     )
                 ])
         );
-        $overriddenState->add(Html::tag('i', ['class' => 'icon icon-right-small']));
+
+        $overriddenState->add(new Icon('arrow-right'));
         $overriddenState->add(
             (new StateBall(strtolower($node->getStateName($fakeState)), StateBall::SIZE_MEDIUM))
                 ->addAttributes([
@@ -232,7 +233,7 @@ class TreeRenderer extends Renderer
             $summary->add($this->getActionIcons($bp, $node));
         } elseif ($differentConfig) {
             $summary->add($this->actionIcon(
-                'forward',
+                'share',
                 $this->getSourceUrl($node)->addParams(['mode' => 'tree'])->getAbsoluteUrl(),
                 mt('businessprocess', 'Show this process as part of its original configuration')
             )->addAttributes(['data-base-target' => '_next']));
@@ -331,7 +332,7 @@ class TreeRenderer extends Renderer
     protected function createSimulationAction(BpConfig $bp, Node $node)
     {
         return $this->actionIcon(
-            'magic',
+            'wand-magic-sparkles',
             $this->getUrl()->with(array(
                 //'config' => $bp->getName(),
                 'action' => 'simulation',
@@ -345,7 +346,7 @@ class TreeRenderer extends Renderer
     {
         $url = $node->getInfoUrl();
         return $this->actionIcon(
-            'help',
+            'question',
             $url,
             sprintf('%s: %s', mt('businessprocess', 'More information'), $url)
         )->addAttributes(['target' => '_blank']);
@@ -360,7 +361,7 @@ class TreeRenderer extends Renderer
                 'title' => $title,
                 'class' => 'action-link'
             ],
-            Html::tag('i', ['class' => 'icon icon-' . $icon])
+            new Icon($icon)
         );
     }
 

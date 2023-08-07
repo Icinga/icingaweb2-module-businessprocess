@@ -132,12 +132,9 @@ ul.bp {
     }
 
     li {
-        i.icon-service {
+        > .icon,
+        summary > .icon {
             opacity: .75;
-        }
-
-        i.icon-sitemap {
-            opacity: .8;
         }
 
         span.state-ball ~ i:last-of-type {
@@ -260,6 +257,16 @@ ul.bp {
         .overridden-state {
             margin-left: auto;
             margin-right: 1em;
+
+            i.icon {
+                font-size: 0.75em;
+                line-height: 0.08333em;
+                vertical-align: 0.125em;
+
+                &::before {
+                    margin: 0 .3em;
+                }
+            }
         }
     }
 

@@ -15,7 +15,7 @@ class ServiceNode extends MonitoredNode
 
     protected $className = 'service';
 
-    protected $icon = 'service';
+    protected $icon = 'gear';
 
     public function __construct($object)
     {

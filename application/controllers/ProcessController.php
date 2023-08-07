@@ -34,6 +34,7 @@ use ipl\Html\TemplateString;
 use ipl\Html\Text;
 use ipl\Web\Control\SortControl;
 use ipl\Web\Widget\Link;
+use ipl\Web\Widget\Icon;
 
 class ProcessController extends Controller
 {
@@ -184,7 +185,7 @@ class ProcessController extends Controller
                     'href'  => $this->url()->without('showFullscreen')->without('view'),
                     'title' => $this->translate('Leave full screen and switch back to normal mode')
                 ],
-                Html::tag('i', ['class' => 'icon icon-resize-small'])
+                new Icon('down-left-and-up-right-to-center')
             ));
         }
 
@@ -603,10 +604,12 @@ class ProcessController extends Controller
                 'a',
                 [
                     'href'  => Url::fromPath('businessprocess/process/source', $params),
-                    'class' => 'icon-doc-text',
                     'title' => $this->translate('Show source code')
                 ],
-                $this->translate('Source')
+                [
+                    new Icon('file-lines'),
+                    $this->translate('Source'),
+                ]
             ));
         } else {
             $params = array(
@@ -618,10 +621,12 @@ class ProcessController extends Controller
                 'a',
                 [
                     'href'  => Url::fromPath('businessprocess/process/source', $params),
-                    'class' => 'icon-flapping',
                     'title' => $this->translate('Highlight changes')
                 ],
-                $this->translate('Diff')
+                [
+                    new Icon('shuffle'),
+                    $this->translate('Diff')
+                ]
             ));
         }
 
@@ -629,11 +634,13 @@ class ProcessController extends Controller
             'a',
             [
                 'href'      => Url::fromPath('businessprocess/process/download', ['config' => $config->getName()]),
-                'class'     => 'icon-download',
                 'target'    => '_blank',
                 'title'     => $this->translate('Download process configuration')
             ],
-            $this->translate('Download')
+            [
+                new Icon('download'),
+                $this->translate('Download')
+            ]
         ));
 
         return $actionBar;
