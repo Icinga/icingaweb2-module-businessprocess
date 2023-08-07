@@ -182,8 +182,7 @@ class ProcessController extends Controller
                 'a',
                 [
                     'href'  => $this->url()->without('showFullscreen')->without('view'),
-                    'title' => $this->translate('Leave full screen and switch back to normal mode'),
-                    'style' => 'float: right'
+                    'title' => $this->translate('Leave full screen and switch back to normal mode')
                 ],
                 Html::tag('i', ['class' => 'icon icon-resize-small'])
             ));
