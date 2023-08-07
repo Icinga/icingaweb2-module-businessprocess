@@ -8,6 +8,7 @@ use Icinga\Module\Businessprocess\Renderer\Renderer;
 use Icinga\Module\Businessprocess\Renderer\TreeRenderer;
 use Icinga\Web\Url;
 use ipl\Html\Html;
+use ipl\Web\Widget\Icon;
 
 class RenderedProcessActionBar extends ActionBar
 {
@@ -34,8 +35,8 @@ class RenderedProcessActionBar extends ActionBar
         }
 
         $link->add([
-            Html::tag('i', ['class' => 'icon icon-dashboard' . ($renderer instanceof TreeRenderer ? '' : ' active')]),
-            Html::tag('i', ['class' => 'icon icon-sitemap' . ($renderer instanceof TreeRenderer ? ' active' : '')])
+            new Icon('grip', ['class' => $renderer instanceof TreeRenderer ? null : 'active']),
+            new Icon('sitemap', ['class' => $renderer instanceof TreeRenderer ? 'active' : null])
         ]);
 
         $this->add(
@@ -50,9 +51,11 @@ class RenderedProcessActionBar extends ActionBar
                 'data-base-target' => '_main',
                 'href'  => $url->with('showFullscreen', true),
                 'title' => mt('businessprocess', 'Switch to fullscreen mode'),
-                'class' => 'icon-resize-full-alt'
             ],
-            mt('businessprocess', 'Fullscreen')
+            [
+                new Icon('maximize'),
+                mt('businessprocess', 'Fullscreen')
+            ]
         ));
 
         $hasChanges = $config->hasSimulations() || $config->hasBeenChanged();
@@ -66,8 +69,7 @@ class RenderedProcessActionBar extends ActionBar
                         'Imported processes can only be changed in their original configuration'
                     )
                 ]);
-                $span->add(Html::tag('i', ['class' => 'icon icon-lock']))
-                    ->add(mt('businessprocess', 'Editing Locked'));
+                $span->add([new Icon('lock'), mt('businessprocess', 'Editing Locked')]);
                 $this->add($span);
             } else {
                 $this->add(Html::tag(
@@ -75,9 +77,11 @@ class RenderedProcessActionBar extends ActionBar
                     [
                         'href'  => $url->with('unlocked', true),
                         'title' => mt('businessprocess', 'Click to unlock editing for this process'),
-                        'class' => 'icon-lock'
                     ],
-                    mt('businessprocess', 'Unlock Editing')
+                    [
+                        new Icon('lock'),
+                        mt('businessprocess', 'Unlock Editing')
+                    ]
                 ));
             }
         } elseif (! $hasChanges) {
@@ -86,9 +90,11 @@ class RenderedProcessActionBar extends ActionBar
                 [
                     'href'  => $url->without('unlocked')->without('action'),
                     'title' => mt('businessprocess', 'Click to lock editing for this process'),
-                    'class' => 'icon-lock-open'
                 ],
-                mt('businessprocess', 'Lock Editing')
+                [
+                    new Icon('lock-open'),
+                    mt('businessprocess', 'Lock Editing')
+                ]
             ));
         }
 
@@ -100,9 +106,11 @@ class RenderedProcessActionBar extends ActionBar
                         'data-base-target' => '_next',
                         'href'  => Url::fromPath('businessprocess/process/config', $this->currentProcessParams($url)),
                         'title' => mt('businessprocess', 'Modify this process'),
-                        'class' => 'icon-wrench'
                     ],
-                    mt('businessprocess', 'Config')
+                    [
+                        new Icon('wrench'),
+                        mt('businessprocess', 'Config')
+                    ]
                 ));
             } else {
                 $this->add(Html::tag(
@@ -113,9 +121,11 @@ class RenderedProcessActionBar extends ActionBar
                             'editnode'  => $url->getParam('node')
                         ])->getAbsoluteUrl(),
                         'title' => mt('businessprocess', 'Modify this process'),
-                        'class' => 'icon-wrench'
                     ],
-                    mt('businessprocess', 'Config')
+                    [
+                        new Icon('wrench'),
+                        mt('businessprocess', 'Config')
+                    ]
                 ));
             }
         }
@@ -126,9 +136,12 @@ class RenderedProcessActionBar extends ActionBar
                 [
                     'href'  => $url->with('action', 'add'),
                     'title' => mt('businessprocess', 'Add a new business process node'),
-                    'class' => 'icon-plus button-link'
+                    'class' => 'button-link'
                 ],
-                mt('businessprocess', 'Add Node')
+                [
+                    new Icon('plus'),
+                    mt('businessprocess', 'Add Node')
+                ]
             ));
         }
     }

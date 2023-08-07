@@ -7,6 +7,7 @@ use Icinga\Module\Businessprocess\Renderer\TileRenderer\NodeTile;
 use Icinga\Module\Businessprocess\Web\Url;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
+use ipl\Web\Widget\Icon;
 
 class Breadcrumb extends BaseHtmlElement
 {
@@ -37,7 +38,7 @@ class Breadcrumb extends BaseHtmlElement
                     'href'  => Url::fromPath('businessprocess'),
                     'title' => mt('businessprocess', 'Show Overview')
                 ],
-                Html::tag('i', ['class' => 'icon icon-home'])
+                new Icon('house')
             )
         ));
         $breadcrumb->add(Html::tag('li')->add(

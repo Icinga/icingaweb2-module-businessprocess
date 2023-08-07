@@ -4,6 +4,7 @@ namespace Icinga\Module\Businessprocess;
 
 use Icinga\Exception\ProgrammingError;
 use ipl\Html\Html;
+use ipl\Web\Widget\Icon;
 
 abstract class Node
 {
@@ -463,14 +464,12 @@ abstract class Node
 
     public function getLink()
     {
-        return Html::tag('a', ['href' => '#', 'class' => 'toggle'], Html::tag('i', [
-            'class' => 'icon icon-down-dir'
-        ]));
+        return Html::tag('a', ['href' => '#', 'class' => 'toggle'], new Icon('caret-down'));
     }
 
-    public function getIcon()
+    public function getIcon(): Icon
     {
-        return Html::tag('i', ['class' => 'icon icon-' . ($this->icon ?: 'attention-circled')]);
+        return new Icon($this->icon ?? 'circle-exclamation');
     }
 
     public function operatorHtml()

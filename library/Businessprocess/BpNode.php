@@ -5,6 +5,7 @@ namespace Icinga\Module\Businessprocess;
 use Icinga\Exception\ConfigurationError;
 use Icinga\Exception\NotFoundError;
 use Icinga\Module\Businessprocess\Exception\NestingError;
+use ipl\Web\Widget\Icon;
 
 class BpNode extends Node
 {
@@ -639,7 +640,7 @@ class BpNode extends Node
         }
     }
 
-    public function getIcon()
+    public function getIcon(): Icon
     {
         $this->icon = $this->hasParents() ? 'cubes' : 'sitemap';
         return parent::getIcon();
