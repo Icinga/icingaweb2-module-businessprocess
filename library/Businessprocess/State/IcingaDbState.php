@@ -53,44 +53,57 @@ class IcingaDbState
     {
         $config = $this->config;
 
+        $involvedHostNames = $config->listInvolvedHostNames();
+        if (empty($involvedHostNames)) {
+            return $this;
+        }
+
         Benchmark::measure(sprintf(
             'Retrieving states for business process %s using Icinga DB backend',
             $config->getName()
         ));
 
-        $hosts = $config->listInvolvedHostNames();
-        if (empty($hosts)) {
-            return $this;
-        }
+        $hosts = Host::on($this->backend)->columns([
+            'name' => 'host.name',
+            'display_name' => 'host.display_name',
+            'hard_state' => 'host.state.hard_state',
+            'soft_state' => 'host.state.soft_state',
+            'last_state_change' => 'host.state.last_state_change',
+            'in_downtime' => 'host.state.in_downtime',
+            'is_acknowledged' => 'host.state.is_acknowledged'
+        ])->filter(Filter::equal('host.name', $involvedHostNames));
 
-        $queryHost = Host::on($this->backend)->with('state');
-        $queryHost->filter(Filter::equal('host.name', $hosts));
+        $services = Service::on($this->backend)->columns([
+            'name' => 'service.name',
+            'display_name' => 'service.display_name',
+            'host_name' => 'host.name',
+            'host_display_name' => 'host.display_name',
+            'hard_state' => 'service.state.hard_state',
+            'soft_state' => 'service.state.soft_state',
+            'last_state_change' => 'service.state.last_state_change',
+            'in_downtime' => 'service.state.in_downtime',
+            'is_acknowledged' => 'service.state.is_acknowledged'
+        ])->filter(Filter::equal('host.name', $involvedHostNames));
 
-        $hostObject = $queryHost->getModel()->getTableName();
+        // All of this is ipl-sql now, for performance reasons
+        foreach ($config->listInvolvedConfigs() as $cfg) {
+            $i = 0;
+            foreach ($this->backend->yieldAll($services->assembleSelect()) as $row) {
+                $i++;
 
-        Benchmark::measure('Retrieved states for ' . $queryHost->count() . ' hosts in ' . $config->getName());
-
-        $queryService = Service::on($this->backend)->with([
-            'state',
-            'host',
-            'host.state'
-        ]);
-
-        $queryService->filter(Filter::equal('host.name', $hosts));
-
-        Benchmark::measure('Retrieved states for ' . $queryService->count() . ' services in ' . $config->getName());
-
-        $configs = $config->listInvolvedConfigs();
-
-        $serviceObject = $queryService->getModel()->getTableName();
-
-        foreach ($configs as $cfg) {
-            foreach ($queryService as $row) {
-                $this->handleDbRow($row, $cfg, $serviceObject);
+                $this->handleDbRow($row, $cfg, 'service');
             }
-            foreach ($queryHost as $row) {
-                $this->handleDbRow($row, $cfg, $hostObject);
+
+            Benchmark::measure("Retrieved states for $i services in " . $config->getName());
+
+            $i = 0;
+            foreach ($this->backend->yieldAll($hosts->assembleSelect()) as $row) {
+                $i++;
+
+                $this->handleDbRow($row, $cfg, 'host');
             }
+
+            Benchmark::measure("Retrieved states for $i hosts in " . $config->getName());
         }
 
         Benchmark::measure('Got states for business process ' . $config->getName());
@@ -98,10 +111,10 @@ class IcingaDbState
         return $this;
     }
 
-    protected function handleDbRow($row, BpConfig $config, $objectName)
+    protected function handleDbRow($row, BpConfig $config, $type)
     {
-        if ($objectName === 'service') {
-            $key = $row->host->name . ';' . $row->name;
+        if ($type === 'service') {
+            $key = $row->host_name . ';' . $row->name;
         } else {
             $key = $row->name . ';Hoststatus';
         }
@@ -114,33 +127,29 @@ class IcingaDbState
         $node = $config->getNode($key);
 
         if ($this->config->usesHardStates()) {
-            if ($row->state->hard_state !== null) {
-                $node->setState($row->state->hard_state)->setMissing(false);
+            if ($row->hard_state !== null) {
+                $node->setState($row->hard_state)->setMissing(false);
             }
         } else {
-            if ($row->state->soft_state !== null) {
-                $node->setState($row->state->soft_state)->setMissing(false);
+            if ($row->soft_state !== null) {
+                $node->setState($row->soft_state)->setMissing(false);
             }
         }
 
-        if ($row->state->last_state_change !== null) {
-            if ($row->state->last_state_change instanceof DateTime) {
-                $node->setLastStateChange($row->state->last_state_change->getTimestamp());
+        if ($row->last_state_change !== null) {
+            if ($row->last_state_change instanceof DateTime) {
+                $node->setLastStateChange($row->last_state_change->getTimestamp());
             } else {
-                $node->setLastStateChange($row->state->last_state_change/1000);
+                $node->setLastStateChange($row->last_state_change/1000);
             }
         }
-        if ($row->state->in_downtime) {
-            $node->setDowntime(true);
-        }
-        if ($row->state->is_acknowledged) {
-            $node->setAck(true);
-        }
 
+        $node->setDowntime($row->in_downtime === 'y');
+        $node->setAck($row->is_acknowledged === 'y');
         $node->setAlias($row->display_name);
 
         if ($node instanceof ServiceNode) {
-            $node->setHostAlias($row->host->display_name);
+            $node->setHostAlias($row->host_display_name);
         }
     }
 }
