@@ -130,6 +130,9 @@ class BpConfig
     /** @var ProcessChanges */
     protected $appliedChanges;
 
+    /** @var bool Whether the config is faulty */
+    protected $isFaulty = false;
+
     public function __construct()
     {
     }
@@ -577,7 +580,13 @@ class BpConfig
     public function getImportedConfig($name)
     {
         if (! isset($this->importedConfigs[$name])) {
-            $import = $this->storage()->loadProcess($name);
+            try {
+                $import = $this->storage()->loadProcess($name);
+            } catch (Exception $e) {
+                $import = (new static())
+                    ->setName($name)
+                    ->setFaulty();
+            }
 
             if ($this->usesSoftStates()) {
                 $import->useSoftStates();
@@ -687,9 +696,17 @@ class BpConfig
     {
         if ($this->hasBpNode($name)) {
             return $this->nodes[$name];
-        } else {
-            throw new NotFoundError('Trying to access a missing business process node "%s"', $name);
         }
+
+        $msg = $this->isFaulty()
+            ? sprintf(
+                t('Trying to import node "%s" from faulty config file "%s.conf"'),
+                $name,
+                $this->getName()
+            )
+            : sprintf(t('Trying to access a missing business process node "%s"'), $name);
+
+        throw new NotFoundError($msg);
     }
 
     /**
@@ -1069,5 +1086,29 @@ class BpConfig
         $parts[0] = self::unescapeName($parts[0]);
 
         return array_pad($parts, 2, null);
+    }
+
+    /**
+     * Set whether the config is faulty
+     *
+     * @param bool $isFaulty
+     *
+     * @return $this
+     */
+    public function setFaulty(bool $isFaulty = true): self
+    {
+        $this->isFaulty = $isFaulty;
+
+        return $this;
+    }
+
+    /**
+     * Get whether the config is faulty
+     *
+     * @return bool
+     */
+    public function isFaulty(): bool
+    {
+        return $this->isFaulty;
     }
 }

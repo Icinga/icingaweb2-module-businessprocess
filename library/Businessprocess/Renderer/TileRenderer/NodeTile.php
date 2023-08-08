@@ -12,6 +12,7 @@ use Icinga\Web\Url;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
 use ipl\Web\Widget\Icon;
+use ipl\Web\Widget\Link;
 use ipl\Web\Widget\StateBall;
 
 class NodeTile extends BaseHtmlElement
@@ -102,11 +103,7 @@ class NodeTile extends BaseHtmlElement
 
             $this->add($link);
         } else {
-            $this->add(Html::tag(
-                'span',
-                ['class' => 'missing-node-msg'],
-                sprintf('Trying to access a missing business process node "%s"', $node->getNodeName())
-            ));
+            $this->add(new Link($node->getAlias(), $this->getMainNodeUrl($node)->getAbsoluteUrl()));
         }
 
         if ($this->renderer->rendersSubNode()
@@ -210,12 +207,15 @@ class NodeTile extends BaseHtmlElement
                 new Icon('sitemap')
             ));
             if ($node instanceof ImportedNode) {
-                if ($node->getBpConfig()->hasNode($node->getName())) {
+                $bpConfig = $node->getBpConfig();
+                if ($bpConfig->isFaulty() || $bpConfig->hasNode($node->getName())) {
                     $this->actions()->add(Html::tag(
                         'a',
                         [
                             'data-base-target'  => '_next',
-                            'href'              => $this->renderer->getSourceUrl($node)->getAbsoluteUrl(),
+                            'href'              => $bpConfig->isFaulty()
+                                ? $this->renderer->getBaseUrl()->setParam('config', $bpConfig->getName())
+                                : $this->renderer->getSourceUrl($node)->getAbsoluteUrl(),
                             'title'             => mt(
                                 'businessprocess',
                                 'Show this process as part of its original configuration'
