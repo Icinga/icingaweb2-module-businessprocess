@@ -92,7 +92,7 @@ class IcingaDbState
             $serviceIds = [];
             $serviceResults = [];
             foreach ($this->backend->yieldAll($services->assembleSelect()) as $row) {
-                $row->hex_id = bin2hex($row->id);
+                $row->hex_id = bin2hex(is_resource($row->id) ? stream_get_contents($row->id) : $row->id);
                 $serviceIds[] = $row->hex_id;
                 $serviceResults[] = $row;
             }
@@ -120,7 +120,7 @@ class IcingaDbState
             $hostIds = [];
             $hostResults = [];
             foreach ($this->backend->yieldAll($hosts->assembleSelect()) as $row) {
-                $row->hex_id = bin2hex($row->id);
+                $row->hex_id = bin2hex(is_resource($row->id) ? stream_get_contents($row->id) : $row->id);
                 $hostIds[] = $row->hex_id;
                 $hostResults[] = $row;
             }
