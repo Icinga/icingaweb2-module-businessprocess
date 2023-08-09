@@ -9,12 +9,12 @@ use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\Exception\ModificationError;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Node;
+use Icinga\Module\Businessprocess\Web\Form\BpConfigBaseForm;
 use Icinga\Module\Businessprocess\Web\Form\CsrfToken;
-use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 use Icinga\Web\Session;
 use Icinga\Web\Session\SessionNamespace;
 
-class MoveNodeForm extends QuickForm
+class MoveNodeForm extends BpConfigBaseForm
 {
     /** @var BpConfig */
     protected $bp;
@@ -96,16 +96,6 @@ class MoveNodeForm extends QuickForm
     }
 
     /**
-     * @param BpConfig $process
-     * @return $this
-     */
-    public function setProcess(BpConfig $process)
-    {
-        $this->bp = $process;
-        return $this;
-    }
-
-    /**
      * @param Node $node
      * @return $this
      */
@@ -122,16 +112,6 @@ class MoveNodeForm extends QuickForm
     public function setParentNode(BpNode $node = null)
     {
         $this->parentNode = $node;
-        return $this;
-    }
-
-    /**
-     * @param SessionNamespace $session
-     * @return $this
-     */
-    public function setSession(SessionNamespace $session)
-    {
-        $this->session = $session;
         return $this;
     }
 
