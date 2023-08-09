@@ -7,6 +7,7 @@ use Icinga\Application\Benchmark;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\IcingaDbObject;
 use Icinga\Module\Businessprocess\ServiceNode;
+use Icinga\Module\Icingadb\Common\IcingaRedis;
 use Icinga\Module\Icingadb\Model\Host;
 use Icinga\Module\Icingadb\Model\Service;
 use ipl\Sql\Connection as IcingaDbConnection;
@@ -63,6 +64,7 @@ class IcingaDbState
         ));
 
         $hosts = Host::on($this->backend)->columns([
+            'id' => 'host.id',
             'name' => 'host.name',
             'display_name' => 'host.display_name',
             'hard_state' => 'host.state.hard_state',
@@ -73,6 +75,7 @@ class IcingaDbState
         ])->filter(Filter::equal('host.name', $involvedHostNames));
 
         $services = Service::on($this->backend)->columns([
+            'id' => 'service.id',
             'name' => 'service.name',
             'display_name' => 'service.display_name',
             'host_name' => 'host.name',
@@ -86,23 +89,61 @@ class IcingaDbState
 
         // All of this is ipl-sql now, for performance reasons
         foreach ($config->listInvolvedConfigs() as $cfg) {
-            $i = 0;
+            $serviceIds = [];
+            $serviceResults = [];
             foreach ($this->backend->yieldAll($services->assembleSelect()) as $row) {
-                $i++;
+                $row->hex_id = bin2hex($row->id);
+                $serviceIds[] = $row->hex_id;
+                $serviceResults[] = $row;
+            }
+
+            $redisServiceResults = iterator_to_array(IcingaRedis::fetchServiceState($serviceIds, [
+                'hard_state',
+                'soft_state',
+                'last_state_change',
+                'in_downtime',
+                'is_acknowledged'
+            ]));
+            foreach ($serviceResults as $row) {
+                if (isset($redisServiceResults[$row->hex_id])) {
+                    $row = (object) array_merge(
+                        (array) $row,
+                        $redisServiceResults[$row->hex_id]
+                    );
+                }
 
                 $this->handleDbRow($row, $cfg, 'service');
             }
 
-            Benchmark::measure("Retrieved states for $i services in " . $config->getName());
+            Benchmark::measure('Retrieved states for ' . count($serviceIds) .  ' services in ' . $config->getName());
 
-            $i = 0;
+            $hostIds = [];
+            $hostResults = [];
             foreach ($this->backend->yieldAll($hosts->assembleSelect()) as $row) {
-                $i++;
+                $row->hex_id = bin2hex($row->id);
+                $hostIds[] = $row->hex_id;
+                $hostResults[] = $row;
+            }
+
+            $redisHostResults = iterator_to_array(IcingaRedis::fetchHostState($hostIds, [
+                'hard_state',
+                'soft_state',
+                'last_state_change',
+                'in_downtime',
+                'is_acknowledged'
+            ]));
+            foreach ($hostResults as $row) {
+                if (isset($redisHostResults[$row->hex_id])) {
+                    $row = (object) array_merge(
+                        (array) $row,
+                        $redisHostResults[$row->hex_id]
+                    );
+                }
 
                 $this->handleDbRow($row, $cfg, 'host');
             }
 
-            Benchmark::measure("Retrieved states for $i hosts in " . $config->getName());
+            Benchmark::measure('Retrieved states for ' . count($hostIds) .  ' hosts in ' . $config->getName());
         }
 
         Benchmark::measure('Got states for business process ' . $config->getName());
