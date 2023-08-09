@@ -929,7 +929,10 @@ class BpConfig
             throw new IcingaException($msg);
         }
 
-        $this->errors[] = $msg;
+        if (! in_array($msg, $this->errors)) {
+            $this->errors[] = $msg;
+        }
+
         return $this;
     }
 
