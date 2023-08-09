@@ -275,11 +275,11 @@ class BpNode extends Node
 
             foreach ($this->getChildren() as $child) {
                 if ($child->isMissing()) {
-                    $missing[$child->getName()] = $child;
+                    $missing[$child->getAlias()] = $child;
                 }
 
                 foreach ($child->getMissingChildren() as $m) {
-                    $missing[$m->getName()] = $m;
+                    $missing[$m->getAlias()] = $m;
                 }
             }
 

@@ -701,7 +701,7 @@ class BpConfig
         $msg = $this->isFaulty()
             ? sprintf(
                 t('Trying to import node "%s" from faulty config file "%s.conf"'),
-                $name,
+                self::unescapeName($name),
                 $this->getName()
             )
             : sprintf(t('Trying to access a missing business process node "%s"'), $name);
