@@ -90,6 +90,15 @@ class ImportedNode extends BpNode
         return $this->childNames;
     }
 
+    public function isMissing()
+    {
+        if ($this->missing === null && $this->getBpConfig()->isFaulty()) {
+            $this->missing = true;
+        }
+
+        return parent::isMissing();
+    }
+
     /**
      * @return BpNode
      */
@@ -121,10 +130,9 @@ class ImportedNode extends BpNode
         ));
         $node->setBpConfig($this->getBpConfig());
         $node->setState(2);
-        $node->setMissing(false)
+        $node->setMissing()
             ->setDowntime(false)
-            ->setAck(false)
-            ->setAlias($e->getMessage());
+            ->setAck(false);
 
         return $node;
     }

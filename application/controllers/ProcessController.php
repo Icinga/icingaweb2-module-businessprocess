@@ -448,7 +448,7 @@ class ProcessController extends Controller
 
     protected function prepareMissingNodeLinks(HtmlElement $ul): void
     {
-        $missing = $this->bp->getMissingChildren();
+        $missing = array_keys($this->bp->getMissingChildren());
         if (! empty($missing)) {
             $missingLinkedNodes = null;
             foreach ($this->bp->getImportedNodes() as $process) {

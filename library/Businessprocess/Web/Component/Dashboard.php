@@ -100,7 +100,7 @@ class Dashboard extends BaseHtmlElement
                 $this->add(new BpDashboardTile(
                     new BpConfig(),
                     $title,
-                    sprintf(t('File %s has invalid config'), $name . '.conf'),
+                    sprintf(t('File %s has faulty config'), $name . '.conf'),
                     'file-circle-xmark',
                     'businessprocess/process/show',
                     ['config' => $name]

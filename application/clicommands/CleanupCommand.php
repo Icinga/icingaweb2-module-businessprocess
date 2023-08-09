@@ -52,7 +52,7 @@ class CleanupCommand extends Command
                 $bp = $this->storage->loadProcess($configName);
             } catch (Exception $e) {
                 Logger::error(
-                    'Failed to scan the %s.conf file for missing nodes. Invalid config found.',
+                    'Failed to scan the %s.conf file for missing nodes. Faulty config found.',
                     $configName
                 );
 

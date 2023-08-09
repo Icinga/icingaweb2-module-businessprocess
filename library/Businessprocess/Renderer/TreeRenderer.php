@@ -234,7 +234,9 @@ class TreeRenderer extends Renderer
         } elseif ($differentConfig) {
             $summary->add($this->actionIcon(
                 'share',
-                $this->getSourceUrl($node)->addParams(['mode' => 'tree'])->getAbsoluteUrl(),
+                $node->getBpConfig()->isFaulty()
+                    ? $this->getBaseUrl()->setParam('config', $node->getBpConfig()->getName())
+                    : $this->getSourceUrl($node)->addParams(['mode' => 'tree'])->getAbsoluteUrl(),
                 mt('businessprocess', 'Show this process as part of its original configuration')
             )->addAttributes(['data-base-target' => '_next']));
         }
