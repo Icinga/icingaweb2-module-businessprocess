@@ -172,6 +172,10 @@ ul.bp {
         border-bottom: 1px solid @gray-light;
         user-select: none;
 
+        &::-webkit-details-marker {
+            display:none;
+        }
+
         > .icon:nth-child(1),
         > .icon:nth-child(2) {
             min-width: 1.3em; // So that process icons align with their node's icons
