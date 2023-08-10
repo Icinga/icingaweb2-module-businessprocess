@@ -27,7 +27,7 @@ class ServiceNodeTest extends BaseTestCase
     public function testReturnsCorrectAlias()
     {
         $this->assertEquals(
-            'localhost: ping <> pong',
+            'ping <> pong on localhost',
             $this->pingOnLocalhost()->getAlias()
         );
     }
@@ -36,7 +36,7 @@ class ServiceNodeTest extends BaseTestCase
     {
         $this->assertEquals(
             '<a href="/icingaweb2/businessprocess/service/show?host=localhost&amp;service=ping%20%3C%3E%20pong">'
-            . 'localhost: ping &lt;&gt; pong</a>',
+            . 'ping &lt;&gt; pong on localhost</a>',
             $this->pingOnLocalhost()->getLink()->render()
         );
     }

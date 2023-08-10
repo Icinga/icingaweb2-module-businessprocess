@@ -4,397 +4,312 @@ namespace Icinga\Module\Businessprocess\Forms;
 
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
-use Icinga\Module\Businessprocess\Common\EnumList;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Node;
-use Icinga\Module\Businessprocess\Web\Form\BpConfigBaseForm;
-use Icinga\Module\Businessprocess\Web\Form\Validator\NoDuplicateChildrenValidator;
+use Icinga\Module\Businessprocess\ServiceNode;
+use Icinga\Module\Businessprocess\Web\Form\Element\IplStateOverrides;
+use Icinga\Module\Businessprocess\Web\Form\Validator\HostServiceTermValidator;
+use Icinga\Module\Monitoring\Backend\MonitoringBackend;
+use Icinga\Web\Session\SessionNamespace;
+use ipl\Html\Attributes;
+use ipl\Html\FormattedString;
+use ipl\Html\HtmlElement;
+use ipl\Html\ValidHtml;
+use ipl\I18n\Translation;
+use ipl\Web\Compat\CompatForm;
+use ipl\Web\FormElement\TermInput\ValidatedTerm;
+use ipl\Web\Url;
 
-class EditNodeForm extends BpConfigBaseForm
+class EditNodeForm extends CompatForm
 {
-    use EnumList;
+    use Translation;
 
-    /** @var Node */
+    /** @var ?BpConfig */
+    protected $bp;
+
+    /** @var ?Node */
     protected $node;
 
-    /** @var BpNode */
+    /** @var ?BpNode */
     protected $parent;
 
-    protected $objectList = array();
-
-    protected $processList = array();
-
-    protected $service;
-
-    protected $host;
-
-    public function setup()
-    {
-        [$this->host, $suffix] = BpConfig::splitNodeName($this->getNode()->getName());
-        if ($suffix !== 'Hoststatus') {
-            $this->service = $suffix;
-        }
-
-        $view = $this->getView();
-        $nodeName = $this->getNode()->getAlias() ?? $this->getNode()->getName();
-        $this->addHtml(
-            '<h2>' . $view->escape(
-                sprintf($this->translate('Modify "%s"'), $nodeName)
-            ) . '</h2>'
-        );
-
-        $monitoredNodeType = null;
-        if ($this->isService()) {
-            $monitoredNodeType = 'service';
-        } else {
-            $monitoredNodeType = 'host';
-        }
-
-        $type = $this->selectNodeType($monitoredNodeType);
-        switch ($type) {
-            case 'host':
-                $this->selectHost();
-                break;
-            case 'service':
-                $this->selectService();
-                break;
-            case 'process':
-                $this->selectProcess();
-                break;
-            case 'new-process':
-                $this->addNewProcess();
-                break;
-            case null:
-                $this->setSubmitLabel($this->translate('Next'));
-                return;
-        }
-    }
-
-    protected function isService()
-    {
-        if (strpos($this->getNode()->getName(), ';Hoststatus')) {
-            return false;
-        }
-        return true;
-    }
-
-    protected function addNewProcess()
-    {
-        $this->addElement('text', 'name', array(
-            'label'        => $this->translate('ID'),
-            'required'     => true,
-            'disabled'     => true,
-            'description' => $this->translate(
-                'This is the unique identifier of this process'
-            ),
-        ));
-
-        $this->addElement('text', 'alias', array(
-            'label'        => $this->translate('Display Name'),
-            'description' => $this->translate(
-                'Usually this name will be shown for this node. Equals ID'
-                . ' if not given'
-            ),
-        ));
-
-        $this->addElement('select', 'operator', array(
-            'label'        => $this->translate('Operator'),
-            'required'     => true,
-            'multiOptions' => Node::getOperators()
-        ));
-
-        $display = $this->getNode()->getDisplay() ?: 1;
-        $this->addElement('select', 'display', array(
-            'label'        => $this->translate('Visualization'),
-            'required'     => true,
-            'description'  => $this->translate(
-                'Where to show this process'
-            ),
-            'value' => $display,
-            'multiOptions' => array(
-                "$display" => $this->translate('Toplevel Process'),
-                '0' => $this->translate('Subprocess only'),
-            )
-        ));
-
-        $this->addElement('text', 'infoUrl', array(
-            'label'        => $this->translate('Info URL'),
-            'description' => $this->translate(
-                'URL pointing to more information about this node'
-            )
-        ));
-    }
+    /** @var SessionNamespace */
+    protected $session;
 
     /**
-     * @return string|null
-     */
-    protected function selectNodeType($monitoredNodeType = null)
-    {
-        if ($this->hasParentNode()) {
-            $this->addElement('hidden', 'node_type', [
-                'disabled'      => true,
-                'decorators'    => ['ViewHelper'],
-                'value'         => $monitoredNodeType
-            ]);
-
-            return $monitoredNodeType;
-        } elseif (! $this->hasProcesses()) {
-            $this->addElement('hidden', 'node_type', array(
-                'ignore'     => true,
-                'decorators' => array('ViewHelper'),
-                'value'      => 'new-process'
-            ));
-
-            return 'new-process';
-        }
-    }
-
-    protected function selectHost()
-    {
-        $this->addElement('select', 'children', array(
-            'required'      => true,
-            'value'         => $this->getNode()->getName(),
-            'multiOptions'  => $this->enumHostList(),
-            'label'         => $this->translate('Host'),
-            'description'   => $this->translate('The host for this business process node'),
-            'validators'    => [[new NoDuplicateChildrenValidator($this, $this->bp, $this->parent), true]]
-        ));
-
-        $this->addHostOverrideCheckbox();
-        $hostOverrideSent = $this->getSentValue('host_override');
-        if ($hostOverrideSent === '1'
-            || ($hostOverrideSent === null && $this->getElement('host_override')->isChecked())
-        ) {
-            $this->addHostOverrideElement();
-        }
-    }
-
-    protected function selectService()
-    {
-        $this->addHostElement();
-
-        if ($this->getSentValue('hosts') === null) {
-            $this->addServicesElement($this->host);
-            $this->addServiceOverrideCheckbox();
-            if ($this->getElement('service_override')->isChecked() || $this->getSentValue('service_override') === '1') {
-                $this->addServiceOverrideElement();
-            }
-        } elseif ($host = $this->getSentValue('hosts')) {
-            $this->addServicesElement($host);
-            $this->addServiceOverrideCheckbox();
-            if ($this->getSentValue('service_override') === '1') {
-                $this->addServiceOverrideElement();
-            }
-        } else {
-            $this->setSubmitLabel($this->translate('Next'));
-        }
-    }
-
-    protected function addHostElement()
-    {
-        $this->addElement('select', 'hosts', array(
-            'label'        => $this->translate('Host'),
-            'required'     => true,
-            'ignore'       => true,
-            'class'        => 'autosubmit',
-            'multiOptions' => $this->optionalEnum($this->enumHostForServiceList()),
-        ));
-
-        $this->getElement('hosts')->setValue($this->host);
-    }
-
-    protected function addHostOverrideCheckbox()
-    {
-        $this->addElement('checkbox', 'host_override', [
-            'ignore'        => true,
-            'class'         => 'autosubmit',
-            'value'         => ! empty($this->parent->getStateOverrides($this->node->getName())),
-            'label'         => $this->translate('Override Host State'),
-            'description'   => $this->translate('Enable host state overrides')
-        ]);
-    }
-
-    protected function addHostOverrideElement()
-    {
-        $this->addElement('stateOverrides', 'stateOverrides', [
-            'required'  => true,
-            'states'    => $this->enumHostStateList(),
-            'value'     => $this->parent->getStateOverrides($this->node->getName()),
-            'label'     => $this->translate('State Overrides')
-        ]);
-    }
-
-    protected function addServicesElement($host)
-    {
-        $this->addElement('select', 'children', array(
-            'required'      => true,
-            'value'         => $this->getNode()->getName(),
-            'multiOptions'  => $this->enumServiceList($host),
-            'label'         => $this->translate('Service'),
-            'description'   => $this->translate('The service for this business process node'),
-            'validators'    => [[new NoDuplicateChildrenValidator($this, $this->bp, $this->parent), true]]
-        ));
-    }
-
-    protected function addServiceOverrideCheckbox()
-    {
-        $this->addElement('checkbox', 'service_override', [
-            'ignore'        => true,
-            'class'         => 'autosubmit',
-            'value'         => ! empty($this->parent->getStateOverrides($this->node->getName())),
-            'label'         => $this->translate('Override Service State'),
-            'description'   => $this->translate('Enable service state overrides')
-        ]);
-    }
-
-    protected function addServiceOverrideElement()
-    {
-        $this->addElement('stateOverrides', 'stateOverrides', [
-            'required'  => true,
-            'states'    => $this->enumServiceStateList(),
-            'value'     => $this->parent->getStateOverrides($this->node->getName()),
-            'label'     => $this->translate('State Overrides')
-        ]);
-    }
-
-    protected function selectProcess()
-    {
-        $this->addElement('multiselect', 'children', array(
-            'label'        => $this->translate('Process nodes'),
-            'required'     => true,
-            'size'         => 8,
-            'multiOptions' => $this->enumProcesses(),
-            'description'  => $this->translate(
-                'Other processes that should be part of this business process node'
-            )
-        ));
-    }
-
-    /**
-     * @param BpNode|null $node
+     * Set the affected configuration
+     *
+     * @param BpConfig $bp
+     *
      * @return $this
      */
-    public function setParentNode(BpNode $node = null)
+    public function setProcess(BpConfig $bp): self
     {
-        $this->parent = $node;
+        $this->bp = $bp;
+
         return $this;
     }
 
     /**
-     * @return bool
-     */
-    public function hasParentNode()
-    {
-        return $this->parent !== null;
-    }
-
-    protected function hasProcesses()
-    {
-        return count($this->enumProcesses()) > 0;
-    }
-
-    protected function enumProcesses()
-    {
-        $list = array();
-
-        $parents = array();
-
-        if ($this->hasParentNode()) {
-            $this->collectAllParents($this->parent, $parents);
-            $parents[$this->parent->getName()] = $this->parent;
-        }
-
-        foreach ($this->bp->getNodes() as $node) {
-            if ($node instanceof BpNode && ! isset($parents[$node->getName()])) {
-                $list[$node->getName()] = $node->getName(); // display name?
-            }
-        }
-
-        return $list;
-    }
-
-    /**
-     * Collect the given node's parents recursively into the given array by their names
+     * Set the affected node
      *
-     * @param   BpNode      $node
-     * @param   BpNode[]    $parents
-     */
-    protected function collectAllParents(BpNode $node, array &$parents)
-    {
-        foreach ($node->getParents() as $parent) {
-            $parents[$parent->getName()] = $parent;
-            $this->collectAllParents($parent, $parents);
-        }
-    }
-
-    /**
      * @param Node $node
+     *
      * @return $this
      */
-    public function setNode(Node $node)
+    public function setNode(Node $node): self
     {
         $this->node = $node;
+
+        $this->populate([
+            'node-search' => $node->getName(),
+            'node-label' => $node->getAlias()
+        ]);
+
         return $this;
     }
 
-    public function getNode()
+    /**
+     * Set the affected sub-process
+     *
+     * @param ?BpNode $node
+     *
+     * @return $this
+     */
+    public function setParentNode(BpNode $node = null): self
     {
-        return $this->node;
+        $this->parent = $node;
+
+        if ($this->node !== null) {
+            $stateOverrides = $this->parent->getStateOverrides($this->node->getName());
+            if (! empty($stateOverrides)) {
+                $this->populate([
+                    'overrideStates' => 'y',
+                    'stateOverrides' => $stateOverrides
+                ]);
+            }
+        }
+
+        return $this;
     }
 
-    public function onSuccess()
+    /**
+     * Set the user's session
+     *
+     * @param SessionNamespace $session
+     *
+     * @return $this
+     */
+    public function setSession(SessionNamespace $session): self
+    {
+        $this->session = $session;
+
+        return $this;
+    }
+
+    /**
+     * Identify and return the node the user has chosen
+     *
+     * @return Node
+     */
+    protected function identifyChosenNode(): Node
+    {
+        $userInput = $this->getPopulatedValue('node');
+        $nodeName = $this->getPopulatedValue('node-search');
+        $nodeLabel = $this->getPopulatedValue('node-label');
+
+        if ($nodeName && $userInput === $nodeLabel) {
+            // User accepted a suggestion and didn't change it manually
+            $node = $this->bp->getNode($nodeName);
+        } elseif ($userInput && (! $nodeLabel || $userInput !== $nodeLabel)) {
+            // User didn't choose a suggestion or changed it manually
+            $node = $this->bp->getNode(BpConfig::joinNodeName($userInput, 'Hoststatus'));
+        } else {
+            // If the search and user input are both empty, it can only be the initial value
+            $node = $this->node;
+        }
+
+        return $node;
+    }
+
+    protected function assemble()
+    {
+        $this->addHtml(new HtmlElement('h2', null, FormattedString::create(
+            $this->translate('Modify "%s"'),
+            $this->node->getAlias() ?? $this->node->getName()
+        )));
+
+        if ($this->node instanceof ServiceNode) {
+            $this->assembleServiceElements();
+        } else {
+            $this->assembleHostElements();
+        }
+
+        $this->addElement('submit', 'btn_submit', [
+            'label' => $this->translate('Save Changes')
+        ]);
+    }
+
+    protected function assembleServiceElements(): void
+    {
+        if ($this->bp->getBackend() instanceof MonitoringBackend) {
+            $suggestionsPath = 'businessprocess/suggestions/monitoring-service';
+        } else {
+            $suggestionsPath = 'businessprocess/suggestions/icingadb-service';
+        }
+
+        $node = $this->identifyChosenNode();
+
+        $this->addHtml($this->createSearchInput(
+            $this->translate('Service'),
+            $node->getAlias() ?? $node->getName(),
+            $suggestionsPath
+        ));
+
+        $this->addElement('checkbox', 'overrideStates', [
+            'ignore' => true,
+            'class' => 'autosubmit',
+            'label' => $this->translate('Override Service State')
+        ]);
+        if ($this->getPopulatedValue('overrideStates') === 'y') {
+            $this->addElement(new IplStateOverrides('stateOverrides', [
+                'label' => $this->translate('State Overrides'),
+                'options' => [
+                    0 => $this->translate('OK'),
+                    1 => $this->translate('WARNING'),
+                    2 => $this->translate('CRITICAL'),
+                    3 => $this->translate('UNKNOWN'),
+                    99 => $this->translate('PENDING'),
+                ]
+            ]));
+        }
+    }
+
+    protected function assembleHostElements(): void
+    {
+        if ($this->bp->getBackend() instanceof MonitoringBackend) {
+            $suggestionsPath = 'businessprocess/suggestions/monitoring-host';
+        } else {
+            $suggestionsPath = 'businessprocess/suggestions/icingadb-host';
+        }
+
+        $node = $this->identifyChosenNode();
+
+        $this->addHtml($this->createSearchInput(
+            $this->translate('Host'),
+            $node->getAlias() ?? $node->getName(),
+            $suggestionsPath
+        ));
+
+        $this->addElement('checkbox', 'overrideStates', [
+            'ignore' => true,
+            'class' => 'autosubmit',
+            'label' => $this->translate('Override Host State')
+        ]);
+        if ($this->getPopulatedValue('overrideStates') === 'y') {
+            $this->addElement(new IplStateOverrides('stateOverrides', [
+                'label' => $this->translate('State Overrides'),
+                'options' => [
+                    0 => $this->translate('UP'),
+                    1 => $this->translate('DOWN'),
+                    99 => $this->translate('PENDING')
+                ]
+            ]));
+        }
+    }
+
+    protected function createSearchInput(string $label, string $value, string $suggestionsPath): ValidHtml
+    {
+        $userInput = $this->createElement('text', 'node', [
+            'ignore' => true,
+            'required' => true,
+            'autocomplete' => 'off',
+            'label' => $label,
+            'value' => $value,
+            'data-enrichment-type' => 'completion',
+            'data-term-suggestions' => '#node-suggestions',
+            'data-suggest-url' => Url::fromPath($suggestionsPath, [
+                'node' => isset($this->parent) ? $this->parent->getName() : null,
+                'config' => $this->bp->getName(),
+                'showCompact' => true,
+                '_disableLayout' => true
+            ]),
+            'validators' => ['callback' => function ($_, $validator) {
+                $newName = $this->identifyChosenNode()->getName();
+                if ($newName === $this->node->getName()) {
+                    return true;
+                }
+
+                $term = new ValidatedTerm($newName);
+
+                (new HostServiceTermValidator())
+                    ->setParent($this->parent)
+                    ->isValid($term);
+
+                if (! $term->isValid()) {
+                    $validator->addMessage($term->getMessage());
+                    return false;
+                }
+
+                return true;
+            }]
+        ]);
+
+        $fieldset = new HtmlElement('fieldset');
+
+        $searchInput = $this->createElement('hidden', 'node-search', ['ignore' => true]);
+        $this->registerElement($searchInput);
+        $fieldset->addHtml($searchInput);
+
+        $labelInput = $this->createElement('hidden', 'node-label', ['ignore' => true]);
+        $this->registerElement($labelInput);
+        $fieldset->addHtml($labelInput);
+
+        $this->registerElement($userInput);
+        $this->decorate($userInput);
+
+        $fieldset->addHtml(
+            $userInput,
+            new HtmlElement('div', Attributes::create([
+                'id' => 'node-suggestions',
+                'class' => 'search-suggestions'
+            ]))
+        );
+
+        return $fieldset;
+    }
+
+    protected function onSuccess()
     {
         $changes = ProcessChanges::construct($this->bp, $this->session);
 
+        $children = $this->parent->getChildNames();
+        $previousPos = array_search($this->node->getName(), $children, true);
+        $node = $this->identifyChosenNode();
+        $nodeName = $node->getName();
+
         $changes->deleteNode($this->node, $this->parent->getName());
+        $changes->addChildrenToNode([$nodeName], $this->parent);
 
-        switch ($this->getValue('node_type')) {
-            case 'host':
-            case 'service':
-                $stateOverrides = $this->getValue('stateOverrides') ?: [];
-                if (! empty($stateOverrides)) {
-                    $stateOverrides = array_merge(
-                        $this->parent->getStateOverrides(),
-                        [$this->getValue('children') => $stateOverrides]
-                    );
-                } else {
-                    $stateOverrides = $this->parent->getStateOverrides();
-                    unset($stateOverrides[$this->getValue('children')]);
-                }
-
-                $changes->modifyNode($this->parent, ['stateOverrides' => $stateOverrides]);
-                // Fallthrough
-            case 'process':
-                $changes->addChildrenToNode($this->getValue('children'), $this->parent);
-                break;
-            case 'new-process':
-                $properties = $this->getValues();
-                unset($properties['name']);
-                if ($this->hasParentNode()) {
-                    $properties['parentName'] = $this->parent->getName();
-                }
-                $changes->createNode($this->getValue('name'), $properties);
-                break;
+        $stateOverrides = $this->getValue('stateOverrides');
+        if (! empty($stateOverrides)) {
+            $changes->modifyNode($this->parent, [
+                'stateOverrides' => array_merge($this->parent->getStateOverrides(), [
+                    $nodeName => $stateOverrides
+                ])
+            ]);
         }
 
-        // Trigger session destruction to make sure it get's stored.
-        // TODO: figure out why this is necessary, might be an unclean shutdown on redirect
+        if ($this->bp->getMetadata()->isManuallyOrdered() && ($newPos = count($children) - 1) > $previousPos) {
+            $changes->moveNode(
+                $node,
+                $newPos,
+                $previousPos,
+                $this->parent->getName(),
+                $this->parent->getName()
+            );
+        }
+
         unset($changes);
-
-        parent::onSuccess();
-    }
-
-    public function isValid($data)
-    {
-        // Don't allow to override disabled elements. This is probably too harsh
-        // but also wouldn't be necessary if this would be a Icinga\Web\Form...
-        foreach ($this->getElements() as $element) {
-            /** @var \Zend_Form_Element $element */
-            if ($element->getAttrib('disabled')) {
-                $data[$element->getName()] = $element->getValue();
-            }
-        }
-
-        return parent::isValid($data);
     }
 }
