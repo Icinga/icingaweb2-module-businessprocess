@@ -145,6 +145,10 @@ abstract class Renderer extends HtmlDocument
      */
     public function appliesCustomSorting(): bool
     {
+        if (empty($this->getSort())) {
+            return false;
+        }
+
         list($sortBy, $_) = Str::symmetricSplit($this->getSort(), ' ', 2);
         list($defaultSortBy, $_) = Str::symmetricSplit($this->getDefaultSort(), ' ', 2);
 
