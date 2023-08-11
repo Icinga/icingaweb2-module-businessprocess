@@ -111,8 +111,8 @@ abstract class NodeAction
     public static function create($actionName, $nodeName)
     {
         $className = __NAMESPACE__ . '\\Node' . ucfirst($actionName) . 'Action';
-        $object = new $className($nodeName);
-        return $object;
+
+        return new $className($nodeName);
     }
 
     /**
