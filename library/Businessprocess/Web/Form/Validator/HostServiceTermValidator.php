@@ -44,6 +44,7 @@ class HostServiceTermValidator extends BaseValidator
             $terms = [$terms];
         }
 
+        $isValid = true;
         $testConfig = new BpConfig();
 
         foreach ($terms as $term) {
@@ -60,6 +61,7 @@ class HostServiceTermValidator extends BaseValidator
 
             if ($this->parent->hasChild($term->getSearchValue())) {
                 $term->setMessage($this->translate('Already defined in this process'));
+                $isValid = false;
             } else {
                 $testConfig->getNode('__unbound__')
                     ->addChild($node);
@@ -81,10 +83,14 @@ class HostServiceTermValidator extends BaseValidator
                 } else {
                     $term->setMessage($this->translate('Host not found'));
                 }
+
+                $isValid = false;
             } else {
                 $term->setLabel($node->getAlias());
                 $term->setClass($node->getObjectClassName());
             }
         }
+
+        return $isValid;
     }
 }
