@@ -4,6 +4,7 @@ namespace Icinga\Module\Businessprocess\Web;
 
 use Icinga\Application\Icinga;
 use Icinga\Application\Web;
+use Icinga\Web\Request;
 use Icinga\Web\Url as WebUrl;
 
 /**
@@ -15,6 +16,9 @@ use Icinga\Web\Url as WebUrl;
  */
 class Url extends WebUrl
 {
+    /**
+     * @return FakeRequest|Request
+     */
     protected static function getRequest()
     {
         $app = Icinga::app();
