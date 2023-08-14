@@ -155,7 +155,7 @@ class BpUploadForm extends BpConfigBaseForm
 
     protected function processUploadedSource()
     {
-        /** @var \Zend_Form_Element_File $el */
+        /** @var ?\Zend_Form_Element_File $el */
         $el = $this->getElement('uploaded_file');
 
         if ($el && $this->hasBeenSent()) {

@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess\Web\Form;
 
 use Icinga\Application\Icinga;
+use Icinga\Application\Web;
 use Icinga\Exception\ProgrammingError;
 use Icinga\Web\Notification;
 use Icinga\Web\Request;
@@ -428,14 +429,18 @@ abstract class QuickForm extends QuickBaseForm
 
     protected function redirectAndExit($url)
     {
+        /** @var Web $app */
+        $app = Icinga::app();
         /** @var Response $response */
-        $response = Icinga::app()->getFrontController()->getResponse();
+        $response = $app->getFrontController()->getResponse();
         $response->redirectAndExit($url);
     }
 
     protected function setHttpResponseCode($code)
     {
-        Icinga::app()->getFrontController()->getResponse()->setHttpResponseCode($code);
+        /** @var Web $app */
+        $app = Icinga::app();
+        $app->getFrontController()->getResponse()->setHttpResponseCode($code);
         return $this;
     }
 
@@ -461,8 +466,10 @@ abstract class QuickForm extends QuickBaseForm
     public function getRequest()
     {
         if ($this->request === null) {
+            /** @var Web $app */
+            $app = Icinga::app();
             /** @var Request $request */
-            $request = Icinga::app()->getFrontController()->getRequest();
+            $request = $app->getFrontController()->getRequest();
             $this->setRequest($request);
         }
         return $this->request;
@@ -471,14 +478,15 @@ abstract class QuickForm extends QuickBaseForm
     public function hasBeenSent()
     {
         if ($this->hasBeenSent === null) {
-
-            /** @var Request $req */
             if ($this->request === null) {
-                $req = Icinga::app()->getFrontController()->getRequest();
+                /** @var Web $app */
+                $app = Icinga::app();
+                $req = $app->getFrontController()->getRequest();
             } else {
                 $req = $this->request;
             }
 
+            /** @var Request $req */
             if ($req->isPost()) {
                 $post = $req->getPost();
                 $this->hasBeenSent = array_key_exists(self::ID, $post) &&

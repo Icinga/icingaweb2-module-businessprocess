@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess\Web;
 
 use Icinga\Application\Icinga;
+use Icinga\Application\Web;
 use Icinga\Web\Url as WebUrl;
 
 /**
@@ -19,8 +20,9 @@ class Url extends WebUrl
         $app = Icinga::app();
         if ($app->isCli()) {
             return new FakeRequest();
-        } else {
-            return $app->getRequest();
         }
+
+        /** @var Web $app */
+        return $app->getRequest();
     }
 }
