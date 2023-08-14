@@ -74,7 +74,7 @@ abstract class Node
     /**
      * Node state
      *
-     * @var int
+     * @var ?int
      */
     protected $state;
 
