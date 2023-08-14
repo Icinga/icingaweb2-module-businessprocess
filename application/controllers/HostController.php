@@ -7,6 +7,7 @@ use Icinga\Module\Businessprocess\IcingaDbObject;
 use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
 use Icinga\Module\Icingadb\Model\Host;
 use Icinga\Module\Monitoring\Controller;
+use Icinga\Module\Monitoring\DataView\DataView;
 use Icinga\Web\Url;
 use ipl\Stdlib\Filter;
 
@@ -54,7 +55,9 @@ class HostController extends Controller
                 ->from('hoststatus', array('host_name'))
                 ->where('host_name', $hostName);
 
-            if ($this->applyRestriction('monitoring/filter/objects', $query)->fetchRow() !== false) {
+            /** @var DataView $restrictedQuery */
+            $restrictedQuery = $this->applyRestriction('monitoring/filter/objects', $query);
+            if ($restrictedQuery->fetchRow() !== false) {
                 $this->redirectNow(Url::fromPath('monitoring/host/show')->setParams($this->params));
             }
         }
