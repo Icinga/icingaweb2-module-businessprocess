@@ -21,7 +21,7 @@ class BpNode extends Node
 
     protected $display = 0;
 
-    /** @var  Node[] */
+    /** @var  ?Node[] */
     protected $children;
 
     /** @var array */
