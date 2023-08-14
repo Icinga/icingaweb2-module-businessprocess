@@ -443,7 +443,7 @@ abstract class Node
         throw new ProgrammingError(
             'Got invalid state for node %s: %s',
             $this->getName(),
-            var_export($state, 1) . var_export($this->stateToSortStateMap, 1)
+            var_export($state, true) . var_export($this->stateToSortStateMap, true)
         );
     }
 
