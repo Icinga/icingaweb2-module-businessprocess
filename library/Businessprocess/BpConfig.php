@@ -631,7 +631,7 @@ class BpConfig
 
     /**
      * @param   string  $name
-     * @return  Node
+     * @return  MonitoredNode|BpNode
      * @throws  Exception
      */
     public function getNode($name)
