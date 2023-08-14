@@ -11,7 +11,7 @@ use Icinga\Module\Businessprocess\Metadata;
 
 class LegacyConfigParser
 {
-    /** @var string */
+    /** @var ?string */
     protected static $prevKey;
 
     /** @var int */
