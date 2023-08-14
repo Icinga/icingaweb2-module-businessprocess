@@ -19,12 +19,10 @@ class ProcessProblemsBadge extends BadgeNavigationItemRenderer
 
     public function getCount()
     {
+        $count = 0;
         if ($this->count === null) {
             $storage = LegacyStorage::getInstance();
-            $count = 0;
             $bp = $storage->loadProcess($this->getBpConfigName());
-
-
             foreach ($bp->getRootNodes() as $rootNode) {
                 if (! $rootNode->isEmpty() &&
                     $rootNode->getState() !== $rootNode::ICINGA_PENDING
