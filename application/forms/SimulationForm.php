@@ -12,7 +12,7 @@ class SimulationForm extends BpConfigBaseForm
     /** @var MonitoredNode */
     protected $node;
 
-    /** @var MonitoredNode */
+    /** @var ?MonitoredNode */
     protected $simulatedNode;
 
     /** @var Simulation */
