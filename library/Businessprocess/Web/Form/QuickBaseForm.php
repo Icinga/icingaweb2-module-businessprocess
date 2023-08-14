@@ -13,7 +13,7 @@ abstract class QuickBaseForm extends Zend_Form implements ValidHtml
      * The Icinga module this form belongs to. Usually only set if the
      * form is initialized through the FormLoader
      *
-     * @var Module
+     * @var ?Module
      */
     protected $icingaModule;
 
@@ -123,7 +123,6 @@ abstract class QuickBaseForm extends Zend_Form implements ValidHtml
         }
 
         if (array_key_exists('icingaModule', $options)) {
-            /** @var Module icingaModule */
             $this->icingaModule = $options['icingaModule'];
             $this->icingaModuleName = $this->icingaModule->getName();
             unset($options['icingaModule']);
