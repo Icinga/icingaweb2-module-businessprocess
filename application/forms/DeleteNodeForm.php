@@ -13,7 +13,7 @@ class DeleteNodeForm extends BpConfigBaseForm
     /** @var Node */
     protected $node;
 
-    /** @var BpNode */
+    /** @var ?BpNode */
     protected $parentNode;
 
     public function setup()
