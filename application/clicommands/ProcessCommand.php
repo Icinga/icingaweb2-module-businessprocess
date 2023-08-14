@@ -110,8 +110,8 @@ class ProcessCommand extends Command
             exit(1);
         }
 
+        $name = $this->params->get('config');
         try {
-            $name = $this->params->get('config');
             if ($name === null) {
                 $name = $this->getFirstProcessName();
             }
