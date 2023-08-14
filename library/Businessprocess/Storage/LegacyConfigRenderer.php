@@ -11,6 +11,8 @@ class LegacyConfigRenderer
     /** @var array */
     protected $renderedNodes;
 
+    protected $config;
+
     /**
      * LecagyConfigRenderer constructor
      *
