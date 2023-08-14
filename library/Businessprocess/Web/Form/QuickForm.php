@@ -46,7 +46,7 @@ abstract class QuickForm extends QuickBaseForm
     protected $request;
 
     /**
-     * @var Url
+     * @var ?Url
      */
     protected $successUrl;
 
@@ -252,6 +252,10 @@ abstract class QuickForm extends QuickBaseForm
     {
     }
 
+    /**
+     * @param $action string|Url
+     * @return $this
+     */
     public function setAction($action)
     {
         if ($action instanceof Url) {
