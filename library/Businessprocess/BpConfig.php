@@ -226,7 +226,7 @@ class BpConfig
     /**
      * Whether changes have been applied to this configuration
      *
-     * @return int
+     * @return bool
      */
     public function hasChanges()
     {
