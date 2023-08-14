@@ -49,7 +49,7 @@ abstract class BaseTestCase extends \Icinga\Test\BaseTestCase
     }
 
     /**
-     * @param null $subDir
+     * @param ?string $subDir
      * @return string
      */
     protected function getTestsBaseDir($subDir = null)
