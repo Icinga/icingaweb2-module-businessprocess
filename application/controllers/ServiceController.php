@@ -62,9 +62,8 @@ class ServiceController extends Controller
                 ->where('host_name', $hostName)
                 ->where('service_description', $serviceName);
 
-            /** @var DataView $restrictedQuery */
-            $restrictedQuery = $this->applyRestriction('monitoring/filter/objects', $query);
-            if ($restrictedQuery->fetchRow() !== false) {
+            $this->applyRestriction('monitoring/filter/objects', $query);
+            if ($query->fetchRow() !== false) {
                 $this->redirectNow(Url::fromPath('monitoring/service/show')->setParams($this->params));
             }
         }
