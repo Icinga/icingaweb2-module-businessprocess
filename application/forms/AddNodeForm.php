@@ -378,9 +378,11 @@ class AddNodeForm extends CompatForm
 
             $changes->createNode(BpConfig::escapeName($this->getValue('name')), $properties);
         } else {
+            /** @var TermInput $term */
+            $term = $this->getElement('children');
             $children = array_unique(array_map(function ($term) {
                 return $term->getSearchValue();
-            }, $this->getElement('children')->getTerms()));
+            }, $term->getTerms()));
 
             if ($nodeType === 'host' || $nodeType === 'service') {
                 $stateOverrides = $this->getValue('stateOverrides');

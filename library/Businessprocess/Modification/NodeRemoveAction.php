@@ -68,10 +68,9 @@ class NodeRemoveAction extends NodeAction
         $parentName = $this->getParentName();
         $node = $config->getNode($name);
 
-        $this->updateStateOverrides(
-            $node,
-            $parentName ? $config->getNode($parentName) : null
-        );
+        /** @var ?BpNode $parentBpNode */
+        $parentBpNode = $parentName ? $config->getNode($parentName) : null;
+        $this->updateStateOverrides($node, $parentBpNode);
 
         if ($parentName === null) {
             if (! $config->hasBpNode($name)) {

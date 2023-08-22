@@ -47,7 +47,7 @@ abstract class Node
         self::NODE_EMPTY      => 0
     );
 
-    /** @var string Alias of the node */
+    /** @var ?string Alias of the node */
     protected $alias;
 
     /**
@@ -346,7 +346,7 @@ abstract class Node
     /**
      * Get the alias of the node
      *
-     * @return string
+     * @return ?string
      */
     public function getAlias()
     {
