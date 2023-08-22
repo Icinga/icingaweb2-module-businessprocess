@@ -1,5 +1,8 @@
+includes:
+	- phpstan-baseline.neon
+
 parameters:
-    level: 5
+    level: max
 
     checkFunctionNameCase: true
     checkInternalClassCaseSensitivity: true
