@@ -16,7 +16,11 @@ parameters:
         - vendor
 
     ignoreErrors:
-        - '#Unsafe usage of new static\(\)#'
+        -
+            messages:
+                - '#Unsafe usage of new static\(\)#'
+                - '#. but return statement is missing#'
+            reportUnmatched: false
 
     universalObjectCratesClasses:
         - Icinga\Web\View
