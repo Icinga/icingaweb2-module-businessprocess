@@ -98,7 +98,7 @@ abstract class Node
     /**
      * This node's icon
      *
-     * @var string
+     * @var ?string
      */
     protected $icon;
 
