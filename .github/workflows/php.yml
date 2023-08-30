@@ -40,16 +40,16 @@ jobs:
           git clone --depth 1 -b snapshot/nightly https://github.com/Icinga/icinga-php-thirdparty.git vendor/icinga-php-thirdparty
 
       - name: PHP Lint
-        if: success() || matrix.allow_failure
+        if: ${{ ! cancelled() }}
         run: ./vendor/bin/phplint -n --exclude={^vendor/.*} -- .
 
       - name: PHP CodeSniffer
-        if: success() || matrix.allow_failure
+        if: ${{ ! cancelled() }}
         run: phpcs
 
       - name: PHPStan
+        if: ${{ ! cancelled() }}
         uses: php-actions/phpstan@v3
-        if: success() || matrix.allow_failure
 
   test:
     name: Unit tests with php ${{ matrix.php }} on ${{ matrix.os }}
