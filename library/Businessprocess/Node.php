@@ -47,7 +47,7 @@ abstract class Node
         self::NODE_EMPTY      => 0
     );
 
-    /** @var string Alias of the node */
+    /** @var ?string Alias of the node */
     protected $alias;
 
     /**
@@ -74,7 +74,7 @@ abstract class Node
     /**
      * Node state
      *
-     * @var int
+     * @var ?int
      */
     protected $state;
 
@@ -98,7 +98,7 @@ abstract class Node
     /**
      * This node's icon
      *
-     * @var string
+     * @var ?string
      */
     protected $icon;
 
@@ -346,7 +346,7 @@ abstract class Node
     /**
      * Get the alias of the node
      *
-     * @return string
+     * @return ?string
      */
     public function getAlias()
     {
@@ -443,7 +443,7 @@ abstract class Node
         throw new ProgrammingError(
             'Got invalid state for node %s: %s',
             $this->getName(),
-            var_export($state, 1) . var_export($this->stateToSortStateMap, 1)
+            var_export($state, true) . var_export($this->stateToSortStateMap, true)
         );
     }
 

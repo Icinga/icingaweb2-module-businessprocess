@@ -11,7 +11,7 @@ use Icinga\Module\Businessprocess\Metadata;
 
 class LegacyConfigParser
 {
-    /** @var string */
+    /** @var ?string */
     protected static $prevKey;
 
     /** @var int */
@@ -247,6 +247,7 @@ class LegacyConfigParser
     {
         // state_overrides <bp-node>!<child>|n-n[,n-n]!<child>|n-n[,n-n]
         $segments = preg_split('~\s*!\s*~', substr($line, 16));
+        /** @var BpNode $node */
         $node = $bp->getNode(array_shift($segments));
         foreach ($segments as $overrideDef) {
             list($childName, $overrides) = preg_split('~\s*\|\s*~', $overrideDef, 2);

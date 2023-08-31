@@ -111,8 +111,8 @@ abstract class NodeAction
     public static function create($actionName, $nodeName)
     {
         $className = __NAMESPACE__ . '\\Node' . ucfirst($actionName) . 'Action';
-        $object = new $className($nodeName);
-        return $object;
+
+        return new $className($nodeName);
     }
 
     /**
@@ -144,7 +144,7 @@ abstract class NodeAction
      */
     public static function unSerialize($string)
     {
-        $object = json_decode($string, JSON_FORCE_OBJECT);
+        $object = json_decode($string, true);
         $action = self::create($object['actionName'], $object['nodeName']);
 
         foreach ($object['properties'] as $key => $val) {

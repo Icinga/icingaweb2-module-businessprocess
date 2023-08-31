@@ -48,6 +48,7 @@ class Breadcrumb extends BaseHtmlElement
 
         $parts = array();
         while ($nodeName = array_pop($path)) {
+            /** @var BpNode $node */
             $node = $bp->getNode($nodeName);
             $renderer->setParentNode($node);
             array_unshift(

@@ -210,6 +210,7 @@ class Controller extends CompatController
     protected function loadBpConfig()
     {
         $name = $this->params->get('config');
+        /** @var LegacyStorage $storage */
         $storage = $this->storage();
 
         if (! $storage->hasProcess($name)) {
@@ -248,7 +249,7 @@ class Controller extends CompatController
     }
 
     /**
-     * @return LegacyStorage|Storage
+     * @return LegacyStorage
      */
     protected function storage()
     {

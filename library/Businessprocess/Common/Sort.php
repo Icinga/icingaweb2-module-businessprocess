@@ -10,10 +10,10 @@ use ipl\Stdlib\Str;
 
 trait Sort
 {
-    /** @var string Current sort specification */
+    /** @var ?string Current sort specification */
     protected $sort;
 
-    /** @var callable Actual sorting function */
+    /** @var ?callable Actual sorting function */
     protected $sortFn;
 
     /**
@@ -29,14 +29,18 @@ trait Sort
     /**
      * Set the sort specification
      *
-     * @param string $sort
+     * @param ?string $sort
      *
      * @return $this
      *
      * @throws InvalidArgumentException When sorting according to the specified specification is not possible
      */
-    public function setSort(string $sort): self
+    public function setSort(?string $sort): self
     {
+        if (empty($sort)) {
+            return $this;
+        }
+
         list($sortBy, $direction) = Str::symmetricSplit($sort, ' ', 2, 'asc');
 
         switch ($sortBy) {

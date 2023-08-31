@@ -145,6 +145,10 @@ abstract class Renderer extends HtmlDocument
      */
     public function appliesCustomSorting(): bool
     {
+        if (empty($this->getSort())) {
+            return false;
+        }
+
         list($sortBy, $_) = Str::symmetricSplit($this->getSort(), ' ', 2);
         list($defaultSortBy, $_) = Str::symmetricSplit($this->getDefaultSort(), ' ', 2);
 
@@ -165,12 +169,10 @@ abstract class Renderer extends HtmlDocument
 
     /**
      * @param $summary
-     * @return BaseHtmlElement
+     * @return ?BaseHtmlElement
      */
     public function renderStateBadges($summary, $totalChildren)
     {
-        $elements = [];
-
         $itemCount = Html::tag(
             'span',
             [
@@ -181,7 +183,7 @@ abstract class Renderer extends HtmlDocument
             sprintf(mtp('businessprocess', '%u Child', '%u Children', $totalChildren), $totalChildren)
         );
 
-        $elements[] = array_filter([
+        $elements = array_filter([
             $this->createBadgeGroup($summary, 'CRITICAL'),
             $this->createBadgeGroup($summary, 'UNKNOWN'),
             $this->createBadgeGroup($summary, 'WARNING'),

@@ -35,6 +35,7 @@ use ipl\Html\HtmlString;
 use ipl\Html\TemplateString;
 use ipl\Html\Text;
 use ipl\Web\Control\SortControl;
+use ipl\Web\FormElement\TermInput;
 use ipl\Web\Widget\Link;
 use ipl\Web\Widget\Icon;
 
@@ -199,7 +200,7 @@ class ProcessController extends Controller
         $controls->add(Breadcrumb::create(clone $renderer));
         if (! $this->showFullscreen && ! $this->view->compact) {
             $controls->add(
-                new RenderedProcessActionBar($bp, $renderer, $this->Auth(), $this->url())
+                new RenderedProcessActionBar($bp, $renderer, $this->url())
             );
         }
 
@@ -282,7 +283,9 @@ class ProcessController extends Controller
                 ->handleRequest($this->getServerRequest());
 
             if ($form->hasElement('children')) {
-                foreach ($form->getElement('children')->prepareMultipartUpdate($this->getServerRequest()) as $update) {
+                /** @var TermInput $childrenElement */
+                $childrenElement = $form->getElement('children');
+                foreach ($childrenElement->prepareMultipartUpdate($this->getServerRequest()) as $update) {
                     if (! is_array($update)) {
                         $update = [$update];
                     }

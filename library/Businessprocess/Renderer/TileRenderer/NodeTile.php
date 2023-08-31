@@ -35,9 +35,8 @@ class NodeTile extends BaseHtmlElement
     /**
      * NodeTile constructor.
      * @param Renderer $renderer
-     * @param $name
      * @param Node $node
-     * @param null $path
+     * @param ?array $path
      */
     public function __construct(Renderer $renderer, Node $node, $path = null)
     {
