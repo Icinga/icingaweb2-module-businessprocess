@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\State;
 
+use DateTime;
 use Exception;
 use Icinga\Application\Benchmark;
 use Icinga\Module\Businessprocess\BpConfig;
@@ -127,7 +128,11 @@ class IcingaDbState
         }
 
         if ($row->state->last_state_change !== null) {
-            $node->setLastStateChange($row->state->last_state_change/1000);
+            if ($row->state->last_state_change instanceof DateTime) {
+                $node->setLastStateChange($row->state->last_state_change->getTimestamp());
+            } else {
+                $node->setLastStateChange($row->state->last_state_change/1000);
+            }
         }
         if ($row->state->in_downtime) {
             $node->setDowntime(true);
