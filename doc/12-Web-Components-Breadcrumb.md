@@ -1,5 +1,4 @@
-<a id="Web-Components-Breadcrumb"></a>Web Components: Breadcrumb
-================================================================
+# Web Components: Breadcrumb
 
 All Business Process renderers show a **breadcrumb** component to always give
 you a quick indication of your current location. 
@@ -24,8 +23,7 @@ column view to make it obvious that you moved to another context. It is also
 perfectly legal to open any of the available links in a new browser tab or
 window.
 
-Available actions below the Breadcrumb
---------------------------------------
+## Available actions below the Breadcrumb
 
 ### Choose a renderer
 
@@ -60,8 +58,7 @@ settings for the your currently loaded *Business Process Configuration*:
 But there is more. When unlocked, all nodes provide links allowing you to modify or
 to delete them. Host/Service Nodes now allow you to simulate a specific state.
 
-Other main actions
-------------------
+## Other main actions
 
 ### Add content to your Dashboard
 

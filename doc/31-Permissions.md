@@ -1,10 +1,8 @@
-<a id="Permission System"></a>Permission System
-=================================================
+# Permission System
 
 The permission system of the module is based on permissions and restrictions.
 
-Permissions
------------
+## Permissions
 
 The module has five levels of permissions:
 
@@ -14,8 +12,7 @@ The module has five levels of permissions:
 * Permission to view all business processes regardless restrictions. (`businessprocess/showall`)
 * Full permissions. (`businessprocess/*`)
 
-Restrictions
------------
+## Restrictions
 
 There are two ways to configure restrictions: prefix-based and access controls
 

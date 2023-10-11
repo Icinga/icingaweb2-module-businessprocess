@@ -1,5 +1,4 @@
-<a id="Importing-Processes"></a>Importing Processes
-===================================================
+# Importing Processes
 
 To avoid redundancy and make complex *Business Process Configurations* easier
 to maintain it is possible to import processes from other configurations.
@@ -9,8 +8,7 @@ import processes into the root level.
 
 ![Subprocesses Only](screenshot/05_importing_nodes/0401_subprocesses_only.png)
 
-Importing a Process
--------------------
+## Importing a Process
 
 Once the related configuration form is open, choose `Existing Process` and wait
 for the form to refresh.
@@ -37,8 +35,7 @@ to save your changes!
 
 ![Import Successful](screenshot/05_importing_nodes/0405_import_successful.png)
 
-Navigation with Imported Processes
-----------------------------------
+## Navigation with Imported Processes
 
 ### Seamless Breadcrumbs
 

@@ -1,5 +1,4 @@
-<a id="Customize-Node-Order"></a>Customize Node Order
-=====================================================
+# Customize Node Order
 
 By default all nodes are ordered alphabetically while viewing them in the UI.
 Though, it is also possible to order nodes entirely manually.
@@ -9,8 +8,7 @@ Though, it is also possible to order nodes entirely manually.
 > Once manual order is applied (no matter where) alphabetical order is
 > disabled for the entire configuration.
 
-Reorder by Drag'n'Drop
-----------------------
+## Reorder by Drag'n'Drop
 
 Make sure to unlock the configuration first to be able to reorder nodes.
 
@@ -34,8 +32,7 @@ The tree view also has an advantage the tile view has not. It is possible to
 move nodes within the entire hierarchy. But remember to unfold processes first,
 if you want to move a node into them.
 
-File Format Extensions
-----------------------
+## File Format Extensions
 
 The configuration file format has slightly been changed to accommodate the new
 manual order. Though, previous configurations are perfectly upwards compatible.
