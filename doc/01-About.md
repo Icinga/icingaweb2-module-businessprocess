@@ -1,10 +1,9 @@
-# Icinga Business Process Modelling
+# Icinga Business Process Modeling
 
 If you want to visualize and monitor hierarchical business processes based on
-any or all objects monitored by Icinga, the Icinga Web 2 business process
-module is the way to go.
+objects monitored by Icinga, Icinga Business Process Modeling is the solution.
 
-[![Dashboard](screenshot/16_dashboard/1603_businessprocesses_on_dashboard.png)](doc/16-Add-To-Dashboard.md)
+[![Dashboard](screenshot/16_dashboard/1603_businessprocesses_on_dashboard.png)](16-Add-To-Dashboard.md)
 
 Want to create custom process-based dashboards? Trigger notifications at
 process or sub-process level? Provide a quick top-level view for thousands of

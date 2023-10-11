@@ -1,15 +1,13 @@
-Project History
-===============
+# Project History
 
-The Business Process module is based on the ideas of the Nagios(tm) [Business
+Icinga Business Process Modeling is based on the ideas of the Nagios(tm) [Business
 Process AddOn](http://bp-addon.monitoringexchange.org/) written by Bernd
 Strößenreuther. We always loved its simplicity, and while it looks pretty
 oldschool right now there are still many shops happily using it in production.
 
 ![BpAddOn Overview](screenshot/81_history/8101_bpaddon-overview.png)
 
-Compatibility
--------------
+## Compatibility
 
 We fully support the BPaddon configuration language and will continue to do so.
 It's also perfectly valid to run both products in parallel based on the very same
@@ -33,8 +31,7 @@ backends like SQL databases or the Icinga 2 DSL.
 
 This would make it easier to distribute configuration in large environments.
 
-Improvements
-------------
+## Improvements
 
 Major focus has been put on execution speed. So while the Web integration shows
 much more details at once and is able to display huge unfolded trees, it should

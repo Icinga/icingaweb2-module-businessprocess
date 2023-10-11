@@ -1,20 +1,24 @@
-# Installation
+<!-- {% if index %} -->
+# Installing Icinga Business Process Modeling
 
-## Requirements
+The recommended way to install Icinga Business Process Modeling is to use prebuilt packages for
+all supported platforms from our official release repository.
+Please note that [Icinga Web](https://icinga.com/docs/icinga-web) is required to run Icinga
+Business Process Modeling and if it is not already set up, it is best to do this first.
 
-* PHP (>= 7.2)
-* Icinga Web 2 (>= 2.9)
-* Icinga Web 2 libraries:
-  * [Icinga PHP Library (ipl)](https://github.com/Icinga/icinga-php-library) (>= 0.8)
-  * [Icinga PHP Thirdparty](https://github.com/Icinga/icinga-php-thirdparty) (>= 0.11)
-* Icinga Web 2 modules:
-  * The `monitoring` or `icingadb` module needs to be configured and enabled.
+The following steps will guide you through installing and setting up Icinga Business Process Modeling.
+<!-- {% else %} -->
+<!-- {% if not icingaDocs %} -->
 
-## Install Icinga Business Process Modeling
+## Installing the Package
 
-Install it [like any other module](https://icinga.com/docs/icinga-web-2/latest/doc/08-Modules/#installation).
-Use `businessprocess` as name.
+If the [repository](https://packages.icinga.com) is not configured yet, please add it first.
+Then use your distribution's package manager to install the `icinga-businessprocess` package
+or install [from source](02-Installation.md.d/From-Source.md).
+<!-- {% endif %} --><!-- {# end if not icingaDocs #} -->
 
-## Create your first Business Process definition
+## Configuring Icinga Business Process Modeling
 
-That's it, *Business Process* is now ready for use. Please read more on [how to get started](03-Getting-Started.md).
+That's it, Icinga Business Process Modeling is now ready to use.
+Please read more on [how to get started](03-Getting-Started.md).
+<!-- {% endif %} --><!-- {# end else if index #} -->

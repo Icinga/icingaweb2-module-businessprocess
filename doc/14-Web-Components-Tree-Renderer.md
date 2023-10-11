@@ -1,5 +1,4 @@
-<a id="Web-Components-Tree-Renderer"></a>Web Components: Tree Renderer
-======================================================================
+# Web Components: Tree Renderer
 
 The main advantage of the *Tree Renderer* is that it is able to show all nodes
 of Business Process trees at once. This works fine even for huge trees with lots

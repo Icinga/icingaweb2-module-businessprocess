@@ -1,5 +1,4 @@
-<a id="Web-Components-Tile-Renderer"></a>Web Components: Tile Renderer
-======================================================================
+# Web Components: Tile Renderer
 
 The default Business Process *Renderer* is the *Tile Renderer*. It always shows
 one level of your tree, enriched with badges giving some hint on lower level
