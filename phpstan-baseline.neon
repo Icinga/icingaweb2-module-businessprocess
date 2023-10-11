@@ -2801,11 +2801,6 @@ parameters:
 			path: library/Businessprocess/Renderer/Breadcrumb.php
 
 		-
-			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Breadcrumb\\:\\:\\$defaultAttributes type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: library/Businessprocess/Renderer/Breadcrumb.php
-
-		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:applyManualSorting\\(\\) has parameter \\$bpNodes with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: library/Businessprocess/Renderer/Renderer.php
@@ -3716,36 +3711,6 @@ parameters:
 			path: library/Businessprocess/Storage/Storage.php
 
 		-
-			message: "#^Call to an undefined method Icinga\\\\Web\\\\Request\\:\\:shouldReceive\\(\\)\\.$#"
-			count: 1
-			path: library/Businessprocess/Test/BaseTestCase.php
-
-		-
-			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Test\\\\BaseTestCase\\:\\:emptyConfigSection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: library/Businessprocess/Test/BaseTestCase.php
-
-		-
-			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Test\\\\BaseTestCase\\:\\:makeLoop\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: library/Businessprocess/Test/BaseTestCase.php
-
-		-
-			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Test\\\\Bootstrap\\:\\:cli\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: library/Businessprocess/Test/Bootstrap.php
-
-		-
-			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Test\\\\Bootstrap\\:\\:cli\\(\\) has parameter \\$basedir with no type specified\\.$#"
-			count: 1
-			path: library/Businessprocess/Test/Bootstrap.php
-
-		-
-			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\ActionBar\\:\\:\\$defaultAttributes type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: library/Businessprocess/Web/Component/ActionBar.php
-
-		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\BpDashboardTile\\:\\:__construct\\(\\) has parameter \\$attributes with no type specified\\.$#"
 			count: 1
 			path: library/Businessprocess/Web/Component/BpDashboardTile.php
@@ -3776,26 +3741,6 @@ parameters:
 			path: library/Businessprocess/Web/Component/BpDashboardTile.php
 
 		-
-			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\BpDashboardTile\\:\\:\\$defaultAttributes type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: library/Businessprocess/Web/Component/BpDashboardTile.php
-
-		-
-			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\Content\\:\\:\\$defaultAttributes type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: library/Businessprocess/Web/Component/Content.php
-
-		-
-			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\Controls\\:\\:\\$defaultAttributes type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: library/Businessprocess/Web/Component/Controls.php
-
-		-
-			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\Dashboard\\:\\:\\$defaultAttributes type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: library/Businessprocess/Web/Component/Dashboard.php
-
-		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\DashboardAction\\:\\:__construct\\(\\) has parameter \\$attributes with no type specified\\.$#"
 			count: 1
 			path: library/Businessprocess/Web/Component/DashboardAction.php
@@ -3822,11 +3767,6 @@ parameters:
 
 		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\DashboardAction\\:\\:__construct\\(\\) has parameter \\$urlParams with no type specified\\.$#"
-			count: 1
-			path: library/Businessprocess/Web/Component/DashboardAction.php
-
-		-
-			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\DashboardAction\\:\\:\\$defaultAttributes type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: library/Businessprocess/Web/Component/DashboardAction.php
 
