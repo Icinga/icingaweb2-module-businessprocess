@@ -6,11 +6,18 @@ use Icinga\Module\Businessprocess\ImportedNode;
 use Icinga\Module\Businessprocess\Renderer\TileRenderer\NodeTile;
 use Icinga\Module\Businessprocess\Web\Form\CsrfToken;
 use ipl\Html\Html;
+use ipl\Web\Widget\EmptyState;
 
 class TileRenderer extends Renderer
 {
     public function assemble()
     {
+        if (empty($this->getChildNodes())) {
+            $this->addHtml(new EmptyState(t('This node does not contain any children')));
+
+            return;
+        }
+
         $bp = $this->config;
         $nodesDiv = Html::tag(
             'div',
