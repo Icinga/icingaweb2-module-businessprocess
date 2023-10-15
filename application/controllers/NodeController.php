@@ -2,8 +2,13 @@
 
 namespace Icinga\Module\Businessprocess\Controllers;
 
+
 use Exception;
+
+use GuzzleHttp\Psr7\ServerRequest;
+
 use Icinga\Application\Modules\Module;
+use Icinga\Module\Businessprocess\Forms\AddNodeToProcessForm;
 use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
 use Icinga\Module\Businessprocess\Renderer\Breadcrumb;
 use Icinga\Module\Businessprocess\Renderer\TileRenderer;
@@ -12,8 +17,13 @@ use Icinga\Module\Businessprocess\State\IcingaDbState;
 use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Web\Controller;
 use Icinga\Module\Businessprocess\Web\Url;
+
 use ipl\Html\Html;
 use ipl\Web\Widget\Link;
+
+use ipl\Web\Url as iplUrl;
+use ipl\Web\Widget\ButtonLink;
+
 
 class NodeController extends Controller
 {
@@ -144,5 +154,33 @@ class NodeController extends Controller
 
             $content->addHtml($elem);
         }
+
+        $content->add(
+            (new ButtonLink(t('Add to process'), iplUrl::fromPath('businessprocess/node/add', ['name' => $name])))
+                ->setAttribute('data-base-target', '_self')
+        );
+    }
+
+    public function addAction(): void
+    {
+        $this->controls()->add(
+            $this->singleTab($this->translate('Add Node'))
+        );
+
+        $objectName = $this->params->getRequired('name');
+
+        $this->addTitle(sprintf(t('Add %s to process'), $objectName));
+
+        $form = (new AddNodeToProcessForm())
+            ->populate(['config' => $this->params->get('config')])
+            ->setStorage($this->storage())
+            ->setNodeName($objectName)
+            ->setSession($this->session())
+            ->on(AddNodeToProcessForm::ON_SUCCESS, function($form) use ($objectName) {
+                $this->redirectNow(iplUrl::fromPath('businessprocess/node/impact', ['name' => $objectName]));
+            })
+            ->handleRequest(ServerRequest::fromGlobals());
+
+        $this->content()->add($form);
     }
 }
