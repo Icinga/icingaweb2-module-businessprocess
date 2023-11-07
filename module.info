@@ -1,5 +1,5 @@
 Name: Businessprocess
-Version: 2.5.0-feature/dashboard
+Version: 2.5.0.2023110701
 Requires:
   Libraries: icinga-php-library (>=0.13.0), icinga-php-thirdparty (>=0.12.0)
   Modules: monitoring (>=2.9.0), icingadb (>=1.1.0)
