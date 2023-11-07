@@ -130,6 +130,9 @@ class BpConfig
     /** @var ProcessChanges */
     protected $appliedChanges;
 
+    /** @var bool Whether the config is faulty */
+    protected $isFaulty = false;
+
     public function __construct()
     {
     }
@@ -223,7 +226,7 @@ class BpConfig
     /**
      * Whether changes have been applied to this configuration
      *
-     * @return int
+     * @return bool
      */
     public function hasChanges()
     {
@@ -432,33 +435,12 @@ class BpConfig
      */
     public function getRootNodes()
     {
-        if ($this->getMetadata()->isManuallyOrdered()) {
-            uasort($this->root_nodes, function (BpNode $a, BpNode $b) {
-                $a = $a->getDisplay();
-                $b = $b->getDisplay();
-                return $a > $b ? 1 : ($a < $b ? -1 : 0);
-            });
-        } else {
-            ksort($this->root_nodes, SORT_NATURAL | SORT_FLAG_CASE);
-        }
-
         return $this->root_nodes;
     }
 
     public function listRootNodes()
     {
-        $names = array_keys($this->root_nodes);
-        if ($this->getMetadata()->isManuallyOrdered()) {
-            uasort($names, function ($a, $b) {
-                $a = $this->root_nodes[$a]->getDisplay();
-                $b = $this->root_nodes[$b]->getDisplay();
-                return $a > $b ? 1 : ($a < $b ? -1 : 0);
-            });
-        } else {
-            natcasesort($names);
-        }
-
-        return $names;
+        return array_keys($this->root_nodes);
     }
 
     public function getNodes()
@@ -492,7 +474,7 @@ class BpConfig
             )
         );
         $node->setBpConfig($this);
-        $this->nodes[$host . ';' . $service] = $node;
+        $this->nodes[$node->getName()] = $node;
         $this->hosts[$host] = true;
         return $node;
     }
@@ -501,7 +483,7 @@ class BpConfig
     {
         $node = new HostNode((object) array('hostname' => $host));
         $node->setBpConfig($this);
-        $this->nodes[$host . ';Hoststatus'] = $node;
+        $this->nodes[$node->getName()] = $node;
         $this->hosts[$host] = true;
         return $node;
     }
@@ -598,7 +580,13 @@ class BpConfig
     public function getImportedConfig($name)
     {
         if (! isset($this->importedConfigs[$name])) {
-            $import = $this->storage()->loadProcess($name);
+            try {
+                $import = $this->storage()->loadProcess($name);
+            } catch (Exception $e) {
+                $import = (new static())
+                    ->setName($name)
+                    ->setFaulty();
+            }
 
             if ($this->usesSoftStates()) {
                 $import->useSoftStates();
@@ -643,7 +631,7 @@ class BpConfig
 
     /**
      * @param   string  $name
-     * @return  Node
+     * @return  MonitoredNode|BpNode
      * @throws  Exception
      */
     public function getNode($name)
@@ -663,15 +651,13 @@ class BpConfig
 
         // Fallback: if it is a service, create an empty one:
         $this->warn(sprintf('The node "%s" doesn\'t exist', $name));
-        $pos = strpos($name, ';');
-        if ($pos !== false) {
-            $host = substr($name, 0, $pos);
-            $service = substr($name, $pos + 1);
-            // TODO: deactivated, this scares me, test it
-            if ($service === 'Hoststatus') {
-                return $this->createHost($host);
+
+        [$name, $suffix] = self::splitNodeName($name);
+        if ($suffix !== null) {
+            if ($suffix === 'Hoststatus') {
+                return $this->createHost($name);
             } else {
-                return $this->createService($host, $service);
+                return $this->createService($name, $suffix);
             }
         }
 
@@ -710,9 +696,17 @@ class BpConfig
     {
         if ($this->hasBpNode($name)) {
             return $this->nodes[$name];
-        } else {
-            throw new NotFoundError('Trying to access a missing business process node "%s"', $name);
         }
+
+        $msg = $this->isFaulty()
+            ? sprintf(
+                t('Trying to import node "%s" from faulty config file "%s.conf"'),
+                self::unescapeName($name),
+                $this->getName()
+            )
+            : sprintf(t('Trying to access a missing business process node "%s"'), $name);
+
+        throw new NotFoundError($msg);
     }
 
     /**
@@ -826,16 +820,6 @@ class BpConfig
             $nodes[$name] = $name === $alias ? $name : sprintf('%s (%s)', $alias, $node);
         }
 
-        if ($this->getMetadata()->isManuallyOrdered()) {
-            uasort($nodes, function ($a, $b) {
-                $a = $this->nodes[$a]->getDisplay();
-                $b = $this->nodes[$b]->getDisplay();
-                return $a > $b ? 1 : ($a < $b ? -1 : 0);
-            });
-        } else {
-            natcasesort($nodes);
-        }
-
         return $nodes;
     }
 
@@ -945,7 +929,10 @@ class BpConfig
             throw new IcingaException($msg);
         }
 
-        $this->errors[] = $msg;
+        if (! in_array($msg, $this->errors)) {
+            $this->errors[] = $msg;
+        }
+
         return $this;
     }
 
@@ -1045,5 +1032,86 @@ class BpConfig
         }
 
         return $data;
+    }
+
+    /**
+     * Escape the given node name
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    public static function escapeName(string $name): string
+    {
+        return preg_replace('/((?<!\\\\);)/', '\\\\$1', $name);
+    }
+
+    /**
+     * Unescape the given node name
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    public static function unescapeName(string $name): string
+    {
+        return str_replace('\\;', ';', $name);
+    }
+
+    /**
+     * Join the given two name parts together
+     *
+     * The used separator is the semicolon. If a semicolon exists in either part, it's escaped.
+     *
+     * @param string $name
+     * @param ?string $suffix
+     *
+     * @return string
+     */
+    public static function joinNodeName(string $name, ?string $suffix = null): string
+    {
+        return self::escapeName($name) . ($suffix ? ";$suffix" : '');
+    }
+
+    /**
+     * Split the given node name into two parts
+     *
+     * The first part is always a string, with any semicolons unescaped.
+     * The second part may be null or a string otherwise.
+     *
+     * @param string $nodeName
+     *
+     * @return array
+     */
+    public static function splitNodeName(string $nodeName): array
+    {
+        $parts = preg_split('/(?<!\\\\);/', $nodeName, 2);
+        $parts[0] = self::unescapeName($parts[0]);
+
+        return array_pad($parts, 2, null);
+    }
+
+    /**
+     * Set whether the config is faulty
+     *
+     * @param bool $isFaulty
+     *
+     * @return $this
+     */
+    public function setFaulty(bool $isFaulty = true): self
+    {
+        $this->isFaulty = $isFaulty;
+
+        return $this;
+    }
+
+    /**
+     * Get whether the config is faulty
+     *
+     * @return bool
+     */
+    public function isFaulty(): bool
+    {
+        return $this->isFaulty;
     }
 }

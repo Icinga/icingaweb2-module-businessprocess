@@ -23,12 +23,19 @@ class BpConfigForm extends BpConfigBaseForm
                         'max' => 40
                     )
                 ),
-                array(
+                [
                     'validator' => 'Regex',
-                    'options' => array(
-                        'pattern' => '/^[a-zA-Z0-9](?:[a-zA-Z0-9 ._-]*)?[a-zA-Z0-9_]$/'
-                    )
-                )
+                    'options'   => [
+                        'pattern' => '/^[a-zA-Z0-9](?:[\w\h._-]*)?\w$/',
+                        'messages'  => [
+                            'regexNotMatch' => $this->translate(
+                                'Id must only consist of alphanumeric characters.'
+                                . ' Underscore at the beginning and space, dot and hyphen at the beginning'
+                                . ' and end are not allowed.'
+                            )
+                        ]
+                    ]
+                ]
             ),
             'description' => $this->translate(
                 'This is the unique identifier of this process'
@@ -109,12 +116,12 @@ class BpConfigForm extends BpConfigBaseForm
             ),
         ));
 
-        if ($this->config === null) {
+        if ($this->bp === null) {
             $this->setSubmitLabel(
                 $this->translate('Add')
             );
         } else {
-            $config = $this->config;
+            $config = $this->bp;
 
             $meta = $config->getMetadata();
             foreach ($meta->getProperties() as $k => $v) {
@@ -149,13 +156,13 @@ class BpConfigForm extends BpConfigBaseForm
         $name = $this->getValue('name');
 
         if ($this->shouldBeDeleted()) {
-            if ($this->config->isReferenced()) {
+            if ($this->bp->isReferenced()) {
                 $this->addError(sprintf(
                     $this->translate('Process "%s" cannot be deleted as it has been referenced in other processes'),
                     $name
                 ));
             } else {
-                $this->config->clearAppliedChanges();
+                $this->bp->clearAppliedChanges();
                 $this->storage->deleteProcess($name);
                 $this->setSuccessUrl('businessprocess');
                 $this->redirectOnSuccess(sprintf('Process %s has been deleted', $name));
@@ -167,7 +174,7 @@ class BpConfigForm extends BpConfigBaseForm
     {
         $name = $this->getValue('name');
 
-        if ($this->config === null) {
+        if ($this->bp === null) {
             if ($this->storage->hasProcess($name)) {
                 $this->addError(sprintf(
                     $this->translate('A process named "%s" already exists'),
@@ -192,7 +199,7 @@ class BpConfigForm extends BpConfigBaseForm
             );
             $this->setSuccessMessage(sprintf('Process %s has been created', $name));
         } else {
-            $config = $this->config;
+            $config = $this->bp;
             $this->setSuccessMessage(sprintf('Process %s has been stored', $name));
         }
         $meta = $config->getMetadata();

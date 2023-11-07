@@ -3,6 +3,8 @@
 namespace Icinga\Module\Businessprocess\Modification;
 
 use Icinga\Module\Businessprocess\BpConfig;
+use Icinga\Module\Businessprocess\BpNode;
+use Icinga\Module\Businessprocess\Node;
 
 /**
  * NodeRemoveAction
@@ -64,6 +66,12 @@ class NodeRemoveAction extends NodeAction
     {
         $name = $this->getNodeName();
         $parentName = $this->getParentName();
+        $node = $config->getNode($name);
+
+        /** @var ?BpNode $parentBpNode */
+        $parentBpNode = $parentName ? $config->getNode($parentName) : null;
+        $this->updateStateOverrides($node, $parentBpNode);
+
         if ($parentName === null) {
             if (! $config->hasBpNode($name)) {
                 $config->removeNode($name);
@@ -82,13 +90,36 @@ class NodeRemoveAction extends NodeAction
                 }
             }
         } else {
-            $node = $config->getNode($name);
             $parent = $config->getBpNode($parentName);
             $parent->removeChild($name);
             $node->removeParent($parentName);
             if (! $node->hasParents()) {
                 $config->removeNode($name);
             }
+        }
+    }
+
+    /**
+     * Update state overrides
+     *
+     * @param Node $node
+     * @param BpNode|null $nodeParent
+     *
+     * @return void
+     */
+    private function updateStateOverrides(Node $node, ?BpNode $nodeParent): void
+    {
+        $parents = [];
+        if ($nodeParent !== null) {
+            $parents = [$nodeParent];
+        } else {
+            $parents = $node->getParents();
+        }
+
+        foreach ($parents as $parent) {
+            $parentStateOverrides = $parent->getStateOverrides();
+            unset($parentStateOverrides[$node->getName()]);
+            $parent->setStateOverrides($parentStateOverrides);
         }
     }
 }

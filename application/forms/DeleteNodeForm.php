@@ -3,43 +3,34 @@
 namespace Icinga\Module\Businessprocess\Forms;
 
 use Icinga\Module\Businessprocess\BpNode;
-use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Node;
-use Icinga\Module\Businessprocess\Web\Form\QuickForm;
-use Icinga\Module\Monitoring\Backend\MonitoringBackend;
-use Icinga\Web\Session\SessionNamespace;
-use ipl\Sql\Connection as IcingaDbConnection;
+use Icinga\Module\Businessprocess\Web\Form\BpConfigBaseForm;
+use Icinga\Web\View;
 
-class DeleteNodeForm extends QuickForm
+class DeleteNodeForm extends BpConfigBaseForm
 {
-    /** @var MonitoringBackend|IcingaDbConnection */
-    protected $backend;
-
-    /** @var BpConfig */
-    protected $bp;
-
     /** @var Node */
     protected $node;
 
-    /** @var BpNode */
+    /** @var ?BpNode */
     protected $parentNode;
-
-    /** @var SessionNamespace */
-    protected $session;
 
     public function setup()
     {
         $node = $this->node;
+        $nodeName = $node->getAlias() ?? $node->getName();
+
+        /** @var View $view */
         $view = $this->getView();
         $this->addHtml(
             '<h2>' . $view->escape(
-                sprintf($this->translate('Delete "%s"'), $node->getAlias())
+                sprintf($this->translate('Delete "%s"'), $nodeName)
             ) . '</h2>'
         );
 
         $biLink = $view->qlink(
-            $node->getAlias(),
+            $nodeName,
             'businessprocess/node/impact',
             array('name' => $node->getName()),
             array('data-base-target' => '_next')
@@ -61,7 +52,7 @@ class DeleteNodeForm extends QuickForm
         } else {
             $yesMsg = sprintf(
                 $this->translate('Delete root node "%s"'),
-                $this->node->getAlias()
+                $nodeName
             );
         }
 
@@ -74,30 +65,9 @@ class DeleteNodeForm extends QuickForm
             'multiOptions' => $this->optionalEnum(array(
                 'no'  => $this->translate('No'),
                 'yes' => $yesMsg,
-                'all' => sprintf($this->translate('Delete all occurrences of %s'), $node->getAlias()),
+                'all' => sprintf($this->translate('Delete all occurrences of %s'), $nodeName),
             ))
         ));
-    }
-
-    /**
-     * @param MonitoringBackend|IcingaDbConnection $backend
-     * @return $this
-     */
-    public function setBackend($backend)
-    {
-        $this->backend = $backend;
-        return $this;
-    }
-
-    /**
-     * @param BpConfig $process
-     * @return $this
-     */
-    public function setProcess(BpConfig $process)
-    {
-        $this->bp = $process;
-        $this->setBackend($process->getBackend());
-        return $this;
     }
 
     /**
@@ -117,16 +87,6 @@ class DeleteNodeForm extends QuickForm
     public function setParentNode(BpNode $node = null)
     {
         $this->parentNode = $node;
-        return $this;
-    }
-
-    /**
-     * @param SessionNamespace $session
-     * @return $this
-     */
-    public function setSession(SessionNamespace $session)
-    {
-        $this->session = $session;
         return $this;
     }
 

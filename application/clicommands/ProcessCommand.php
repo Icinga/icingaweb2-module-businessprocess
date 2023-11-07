@@ -110,8 +110,8 @@ class ProcessCommand extends Command
             exit(1);
         }
 
+        $name = $this->params->get('config');
         try {
-            $name = $this->params->get('config');
             if ($name === null) {
                 $name = $this->getFirstProcessName();
             }
@@ -132,8 +132,8 @@ class ProcessCommand extends Command
             }
         }
 
-        /** @var BpNode $node */
         try {
+            /** @var BpNode $node */
             $node = $bp->getNode($nodeName);
             if (Module::exists('icingadb')
                 && (! $bp->hasBackendName() && IcingadbSupport::useIcingaDbAsBackend())

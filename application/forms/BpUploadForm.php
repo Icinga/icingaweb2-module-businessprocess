@@ -10,8 +10,6 @@ use Icinga\Web\Notification;
 
 class BpUploadForm extends BpConfigBaseForm
 {
-    protected $backend;
-
     protected $node;
 
     protected $objectList = array();
@@ -49,12 +47,19 @@ class BpUploadForm extends BpConfigBaseForm
                         'max' => 40
                     )
                 ),
-                array(
+                [
                     'validator' => 'Regex',
-                    'options' => array(
-                        'pattern' => '/^[a-zA-Z0-9](?:[a-zA-Z0-9 ._-]*)?[a-zA-Z0-9_]$/'
-                    )
-                )
+                    'options'   => [
+                        'pattern'   => '/^[a-zA-Z0-9](?:[\w\h._-]*)?\w$/',
+                        'messages'  => [
+                            'regexNotMatch' => $this->translate(
+                                'Id must only consist of alphanumeric characters.'
+                                . ' Underscore at the beginning and space, dot and hyphen at the beginning'
+                                . ' and end are not allowed.'
+                            )
+                        ]
+                    ]
+                ]
             ),
         ));
 
@@ -150,7 +155,7 @@ class BpUploadForm extends BpConfigBaseForm
 
     protected function processUploadedSource()
     {
-        /** @var \Zend_Form_Element_File $el */
+        /** @var ?\Zend_Form_Element_File $el */
         $el = $this->getElement('uploaded_file');
 
         if ($el && $this->hasBeenSent()) {

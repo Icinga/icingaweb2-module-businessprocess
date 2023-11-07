@@ -31,11 +31,11 @@ class HostNode extends MonitoredNode
 
     protected $className = 'host';
 
-    protected $icon = 'host';
+    protected $icon = 'laptop';
 
     public function __construct($object)
     {
-        $this->name     = $object->hostname . ';Hoststatus';
+        $this->name = BpConfig::joinNodeName($object->hostname, 'Hoststatus');
         $this->hostname = $object->hostname;
         if (isset($object->state)) {
             $this->setState($object->state);

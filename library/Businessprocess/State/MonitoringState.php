@@ -115,12 +115,12 @@ class MonitoringState
 
     protected function handleDbRow($row, BpConfig $config)
     {
-        $key = $row->hostname;
-        if (property_exists($row, 'service')) {
-            $key .= ';' . $row->service;
-        } else {
-            $key .= ';Hoststatus';
-        }
+        $key = BpConfig::joinNodeName(
+            $row->hostname,
+            property_exists($row, 'service')
+                ? $row->service
+                : 'Hoststatus'
+        );
 
         // We fetch more states than we need, so skip unknown ones
         if (! $config->hasNode($key)) {

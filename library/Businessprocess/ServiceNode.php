@@ -3,9 +3,12 @@
 namespace Icinga\Module\Businessprocess;
 
 use Icinga\Module\Businessprocess\Web\Url;
+use ipl\I18n\Translation;
 
 class ServiceNode extends MonitoredNode
 {
+    use Translation;
+
     protected $hostname;
 
     /** @var string Alias of the host */
@@ -15,11 +18,11 @@ class ServiceNode extends MonitoredNode
 
     protected $className = 'service';
 
-    protected $icon = 'service';
+    protected $icon = 'gear';
 
     public function __construct($object)
     {
-        $this->name = $object->hostname . ';' . $object->service;
+        $this->name = BpConfig::joinNodeName($object->hostname, $object->service);
         $this->hostname = $object->hostname;
         $this->service  = $object->service;
         if (isset($object->state)) {
@@ -65,7 +68,15 @@ class ServiceNode extends MonitoredNode
 
     public function getAlias()
     {
-        return $this->getHostAlias() . ': ' . $this->alias;
+        if ($this->getHostAlias() === null || $this->alias === null) {
+            return null;
+        }
+
+        return sprintf(
+            $this->translate('%s on %s', '<service> on <host>'),
+            $this->alias,
+            $this->getHostAlias()
+        );
     }
 
     public function getUrl()

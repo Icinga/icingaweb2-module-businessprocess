@@ -16,7 +16,7 @@ use ipl\Html\ValidHtml;
 
 class ServiceDetailExtension extends ServiceDetailExtensionHook
 {
-    /** @var LegacyStorage */
+    /** @var ?LegacyStorage */
     private $storage;
 
     /** @var string */

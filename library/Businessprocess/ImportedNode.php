@@ -28,7 +28,7 @@ class ImportedNode extends BpNode
     {
         $this->parentBp = $parentBp;
         $this->configName = $object->configName;
-        $this->nodeName = $object->node;
+        $this->nodeName = BpConfig::escapeName($object->node);
 
         parent::__construct((object) [
             'name'          => '@' . $this->configName . ':' . $this->nodeName,
@@ -69,11 +69,7 @@ class ImportedNode extends BpNode
 
     public function getAlias()
     {
-        if ($this->alias === null) {
-            $this->alias = $this->importedNode()->getAlias();
-        }
-
-        return $this->alias;
+        return $this->importedNode()->getAlias();
     }
 
     public function getOperator()
@@ -92,6 +88,15 @@ class ImportedNode extends BpNode
         }
 
         return $this->childNames;
+    }
+
+    public function isMissing()
+    {
+        if ($this->missing === null && $this->getBpConfig()->isFaulty()) {
+            $this->missing = true;
+        }
+
+        return parent::isMissing();
     }
 
     /**
@@ -125,10 +130,9 @@ class ImportedNode extends BpNode
         ));
         $node->setBpConfig($this->getBpConfig());
         $node->setState(2);
-        $node->setMissing(false)
+        $node->setMissing()
             ->setDowntime(false)
-            ->setAck(false)
-            ->setAlias($e->getMessage());
+            ->setAck(false);
 
         return $node;
     }

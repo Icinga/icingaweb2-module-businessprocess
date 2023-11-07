@@ -1,5 +1,4 @@
-<a id="Store-Config"></a>Store your Configuration
-=================================================
+# Store your Configuration
 
 Changes to your *Business Process Configuration* are added to a stack and will
 not be stored immediately. In case there are pending unstored changes, this will
@@ -13,8 +12,7 @@ you created your [very first configuration](03-Getting-Started.md):
 
 ![Store Config](screenshot/21_store-config/2102_Store-Config.png)
 
-Config Diff
------------
+## Config Diff
 
 If unsure what changes you're going to store, you can still check the *Config Diff*
 before finally storing to disk:

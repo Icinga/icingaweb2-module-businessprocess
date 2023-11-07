@@ -1,13 +1,11 @@
-<a id="Getting-Started"></a>Getting Started
-===========================================
+# Getting Started
 
-Once you enable the *Business Process* module, it will pop up in your menu.
-When you click on it, it will show you a new Dashboard:
+Once you enable Icinga Business Process Modeling, it will pop up in your menu.
+If you click on it, it will show you a new Dashboard:
 
 ![Empty Dashboard](screenshot/03_getting-started/0201_empty-dashboard.png)
 
-A new Business Process configuration
--------------------------------------------
+## A new Business Process configuration
 
 From here we choose to create a new *Business Process configuration*:
 
@@ -65,8 +63,7 @@ first five configurations a user is allowed to see will be shown there:
 That's all for now, click `Add` to store your new (still empty) Business Process
 configuration.
 
-Empty configuration
-===================
+## Empty configuration
 
 You are redirected to your newly created Business Process configuration:
 

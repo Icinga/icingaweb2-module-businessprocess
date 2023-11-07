@@ -4,6 +4,7 @@ namespace Icinga\Module\Businessprocess;
 
 use Icinga\Exception\ProgrammingError;
 use ipl\Html\Html;
+use ipl\Web\Widget\Icon;
 
 abstract class Node
 {
@@ -46,7 +47,7 @@ abstract class Node
         self::NODE_EMPTY      => 0
     );
 
-    /** @var string Alias of the node */
+    /** @var ?string Alias of the node */
     protected $alias;
 
     /**
@@ -73,7 +74,7 @@ abstract class Node
     /**
      * Node state
      *
-     * @var int
+     * @var ?int
      */
     protected $state;
 
@@ -97,7 +98,7 @@ abstract class Node
     /**
      * This node's icon
      *
-     * @var string
+     * @var ?string
      */
     protected $icon;
 
@@ -345,7 +346,7 @@ abstract class Node
     /**
      * Get the alias of the node
      *
-     * @return string
+     * @return ?string
      */
     public function getAlias()
     {
@@ -442,7 +443,7 @@ abstract class Node
         throw new ProgrammingError(
             'Got invalid state for node %s: %s',
             $this->getName(),
-            var_export($state, 1) . var_export($this->stateToSortStateMap, 1)
+            var_export($state, true) . var_export($this->stateToSortStateMap, true)
         );
     }
 
@@ -463,14 +464,12 @@ abstract class Node
 
     public function getLink()
     {
-        return Html::tag('a', ['href' => '#', 'class' => 'toggle'], Html::tag('i', [
-            'class' => 'icon icon-down-dir'
-        ]));
+        return Html::tag('a', ['href' => '#', 'class' => 'toggle'], new Icon('caret-down'));
     }
 
-    public function getIcon()
+    public function getIcon(): Icon
     {
-        return Html::tag('i', ['class' => 'icon icon-' . ($this->icon ?: 'attention-circled')]);
+        return new Icon($this->icon ?? 'circle-exclamation');
     }
 
     public function operatorHtml()
@@ -481,6 +480,31 @@ abstract class Node
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Get the Node operators
+     *
+     * @return array
+     */
+    public static function getOperators(): array
+    {
+        return [
+            '&' => t('AND'),
+            '|' => t('OR'),
+            '^' => t('XOR'),
+            '!' => t('NOT'),
+            '%' => t('DEGRADED'),
+            '1' => t('MIN 1'),
+            '2' => t('MIN 2'),
+            '3' => t('MIN 3'),
+            '4' => t('MIN 4'),
+            '5' => t('MIN 5'),
+            '6' => t('MIN 6'),
+            '7' => t('MIN 7'),
+            '8' => t('MIN 8'),
+            '9' => t('MIN 9'),
+        ];
     }
 
     public function getIdentifier()

@@ -1,8 +1,8 @@
 Name: Businessprocess
-Version: 2.4.0
+Version: 2.5.0
 Requires:
-  Libraries: icinga-php-library (>=0.8.0), icinga-php-thirdparty (>=0.11.0)
-  Modules: monitoring (>=2.9.0), icingadb (>=1.0.0)
+  Libraries: icinga-php-library (>=0.13.0), icinga-php-thirdparty (>=0.12.0)
+  Modules: monitoring (>=2.9.0), icingadb (>=1.1.0)
 Description: A Business Process viewer and modeler
  Provides a web-based process modeler for Icinga. It integrates as a module
  into Icinga Web 2 and provides a plugin check command for Icinga. Tile and tree

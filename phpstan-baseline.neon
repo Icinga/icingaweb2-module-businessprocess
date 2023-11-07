@@ -1,0 +1,4476 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Clicommands\\\\CheckCommand\\:\\:listActions\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/clicommands/CheckCommand.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Clicommands\\\\CheckCommand\\:\\:processAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/clicommands/CheckCommand.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Clicommands\\\\CleanupCommand\\:\\:init\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/clicommands/CleanupCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getNode\\(\\) expects string, int\\|string given\\.$#"
+			count: 1
+			path: application/clicommands/CleanupCommand.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Clicommands\\\\CleanupCommand\\:\\:\\$defaultActionName has no type specified\\.$#"
+			count: 1
+			path: application/clicommands/CleanupCommand.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Clicommands\\\\ProcessCommand\\:\\:checkAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/clicommands/ProcessCommand.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Clicommands\\\\ProcessCommand\\:\\:getFirstProcessName\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/clicommands/ProcessCommand.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Clicommands\\\\ProcessCommand\\:\\:init\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/clicommands/ProcessCommand.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Clicommands\\\\ProcessCommand\\:\\:listAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/clicommands/ProcessCommand.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Clicommands\\\\ProcessCommand\\:\\:listBpNames\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/clicommands/ProcessCommand.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Clicommands\\\\ProcessCommand\\:\\:listConfigNames\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/clicommands/ProcessCommand.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Clicommands\\\\ProcessCommand\\:\\:listConfigNames\\(\\) has parameter \\$withTitle with no type specified\\.$#"
+			count: 1
+			path: application/clicommands/ProcessCommand.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Clicommands\\\\ProcessCommand\\:\\:renderProblemTree\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/clicommands/ProcessCommand.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Clicommands\\\\ProcessCommand\\:\\:renderProblemTree\\(\\) has parameter \\$depth with no type specified\\.$#"
+			count: 1
+			path: application/clicommands/ProcessCommand.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Clicommands\\\\ProcessCommand\\:\\:renderProblemTree\\(\\) has parameter \\$tree with no type specified\\.$#"
+			count: 1
+			path: application/clicommands/ProcessCommand.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Clicommands\\\\ProcessCommand\\:\\:renderProblemTree\\(\\) has parameter \\$useColors with no type specified\\.$#"
+			count: 1
+			path: application/clicommands/ProcessCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getNode\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: application/clicommands/ProcessCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$rootCause of method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:getProblemTreeBlame\\(\\) expects bool, mixed given\\.$#"
+			count: 1
+			path: application/clicommands/ProcessCommand.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Clicommands\\\\ProcessCommand\\:\\:\\$hostColors has no type specified\\.$#"
+			count: 1
+			path: application/clicommands/ProcessCommand.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Clicommands\\\\ProcessCommand\\:\\:\\$serviceColors has no type specified\\.$#"
+			count: 1
+			path: application/clicommands/ProcessCommand.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\HostController\\:\\:moduleInit\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/HostController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\HostController\\:\\:showAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/HostController.php
+
+		-
+			message: "#^Parameter \\#2 \\$value of method Icinga\\\\Web\\\\UrlParams\\:\\:add\\(\\) expects bool\\|string, mixed given\\.$#"
+			count: 1
+			path: application/controllers/HostController.php
+
+		-
+			message: "#^Parameter \\#2 \\$value of static method ipl\\\\Stdlib\\\\Filter\\:\\:equal\\(\\) expects array\\|bool\\|float\\|int\\|string, mixed given\\.$#"
+			count: 1
+			path: application/controllers/HostController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\IndexController\\:\\:indexAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/IndexController.php
+
+		-
+			message: "#^Binary operation \"\\+\" between int\\|string and 1 results in an error\\.$#"
+			count: 1
+			path: application/controllers/NodeController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\NodeController\\:\\:impactAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/NodeController.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getNode\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: application/controllers/NodeController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:configAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:createAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:createConfigActionBar\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:createConfigActionBar\\(\\) has parameter \\$showDiff with no type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:downloadAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:getNode\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:getProcessTabs\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:handleFormatRequest\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:handleSimulations\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:loadActionForm\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:prepareControls\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:prepareControls\\(\\) has parameter \\$bp with no type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:prepareControls\\(\\) has parameter \\$renderer with no type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:prepareRenderer\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:prepareRenderer\\(\\) has parameter \\$bp with no type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:prepareRenderer\\(\\) has parameter \\$node with no type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:setDynamicAutorefresh\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:showAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:showErrors\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:showHints\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:showWarnings\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:sourceAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:tabsForConfig\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:tabsForShow\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ProcessController\\:\\:uploadAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getNode\\(\\) expects string, mixed given\\.$#"
+			count: 6
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Parameter \\#1 \\$node of method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\AddNodeForm\\:\\:setParentNode\\(\\) expects Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\|null, Icinga\\\\Module\\\\Businessprocess\\\\Node\\|null given\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Parameter \\#1 \\$node of method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\EditNodeForm\\:\\:setParentNode\\(\\) expects Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\|null, Icinga\\\\Module\\\\Businessprocess\\\\Node\\|null given\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Parameter \\#1 \\$path of method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:setPath\\(\\) expects array, mixed given\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Parameter \\#1 \\$stream of function fpassthru expects resource, resource\\|false given\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Parameter \\#1 \\$stream of function fputcsv expects resource, resource\\|false given\\.$#"
+			count: 2
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Parameter \\#1 \\$stream of function rewind expects resource, resource\\|false given\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function strtolower expects string, mixed given\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Parameter \\#1 \\(mixed\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ServiceController\\:\\:moduleInit\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ServiceController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\ServiceController\\:\\:showAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/ServiceController.php
+
+		-
+			message: "#^Parameter \\#2 \\$value of method Icinga\\\\Web\\\\UrlParams\\:\\:add\\(\\) expects bool\\|string, mixed given\\.$#"
+			count: 2
+			path: application/controllers/ServiceController.php
+
+		-
+			message: "#^Parameter \\#2 \\$value of static method ipl\\\\Stdlib\\\\Filter\\:\\:equal\\(\\) expects array\\|bool\\|float\\|int\\|string, mixed given\\.$#"
+			count: 2
+			path: application/controllers/ServiceController.php
+
+		-
+			message: "#^Cannot access property \\$display_name on mixed\\.$#"
+			count: 2
+			path: application/controllers/SuggestionsController.php
+
+		-
+			message: "#^Cannot access property \\$host on mixed\\.$#"
+			count: 2
+			path: application/controllers/SuggestionsController.php
+
+		-
+			message: "#^Cannot access property \\$name on mixed\\.$#"
+			count: 2
+			path: application/controllers/SuggestionsController.php
+
+		-
+			message: "#^Cannot call method getExcludeTerms\\(\\) on ipl\\\\Web\\\\FormElement\\\\TermInput\\\\TermSuggestions\\|null\\.$#"
+			count: 5
+			path: application/controllers/SuggestionsController.php
+
+		-
+			message: "#^Cannot call method getOriginalSearchValue\\(\\) on ipl\\\\Web\\\\FormElement\\\\TermInput\\\\TermSuggestions\\|null\\.$#"
+			count: 14
+			path: application/controllers/SuggestionsController.php
+
+		-
+			message: "#^Cannot call method getSearchTerm\\(\\) on ipl\\\\Web\\\\FormElement\\\\TermInput\\\\TermSuggestions\\|null\\.$#"
+			count: 26
+			path: application/controllers/SuggestionsController.php
+
+		-
+			message: "#^Cannot call method matchSearch\\(\\) on ipl\\\\Web\\\\FormElement\\\\TermInput\\\\TermSuggestions\\|null\\.$#"
+			count: 2
+			path: application/controllers/SuggestionsController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\SuggestionsController\\:\\:icingadbHostAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/SuggestionsController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\SuggestionsController\\:\\:icingadbServiceAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/SuggestionsController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\SuggestionsController\\:\\:monitoringHostAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/SuggestionsController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\SuggestionsController\\:\\:monitoringServiceAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/SuggestionsController.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Controllers\\\\SuggestionsController\\:\\:processAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/controllers/SuggestionsController.php
+
+		-
+			message: "#^Parameter \\#1 \\$filter of method Icinga\\\\Module\\\\Monitoring\\\\DataView\\\\DataView\\:\\:applyFilter\\(\\) expects Icinga\\\\Data\\\\Filter\\\\Filter, Icinga\\\\Data\\\\Filter\\\\Filter\\|null given\\.$#"
+			count: 2
+			path: application/controllers/SuggestionsController.php
+
+		-
+			message: "#^Parameter \\#2 \\$filter of static method Icinga\\\\Data\\\\Filter\\\\Filter\\:\\:where\\(\\) expects string, string\\|null given\\.$#"
+			count: 14
+			path: application/controllers/SuggestionsController.php
+
+		-
+			message: "#^Parameter \\#2 \\$value of static method ipl\\\\Stdlib\\\\Filter\\:\\:equal\\(\\) expects array\\|bool\\|float\\|int\\|string, string\\|null given\\.$#"
+			count: 12
+			path: application/controllers/SuggestionsController.php
+
+		-
+			message: "#^Parameter \\#2 \\$value of static method ipl\\\\Stdlib\\\\Filter\\:\\:like\\(\\) expects array\\<string\\>\\|string, string\\|null given\\.$#"
+			count: 12
+			path: application/controllers/SuggestionsController.php
+
+		-
+			message: "#^Cannot call method getBackend\\(\\) on Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\|null\\.$#"
+			count: 2
+			path: application/forms/AddNodeForm.php
+
+		-
+			message: "#^Cannot call method getMetadata\\(\\) on Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\|null\\.$#"
+			count: 1
+			path: application/forms/AddNodeForm.php
+
+		-
+			message: "#^Cannot call method getName\\(\\) on Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\|null\\.$#"
+			count: 2
+			path: application/forms/AddNodeForm.php
+
+		-
+			message: "#^Cannot call method getNode\\(\\) on Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\|null\\.$#"
+			count: 1
+			path: application/forms/AddNodeForm.php
+
+		-
+			message: "#^Cannot call method getRootNodes\\(\\) on Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\|null\\.$#"
+			count: 1
+			path: application/forms/AddNodeForm.php
+
+		-
+			message: "#^Cannot call method getStateOverrides\\(\\) on Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\|null\\.$#"
+			count: 1
+			path: application/forms/AddNodeForm.php
+
+		-
+			message: "#^Cannot call method hasNode\\(\\) on Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\|null\\.$#"
+			count: 1
+			path: application/forms/AddNodeForm.php
+
+		-
+			message: "#^Cannot call method hasRootNode\\(\\) on Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\|null\\.$#"
+			count: 1
+			path: application/forms/AddNodeForm.php
+
+		-
+			message: "#^Cannot call method isEmpty\\(\\) on Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\|null\\.$#"
+			count: 2
+			path: application/forms/AddNodeForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\AddNodeForm\\:\\:applyManualSorting\\(\\) has parameter \\$bpNodes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: application/forms/AddNodeForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\AddNodeForm\\:\\:applyManualSorting\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: application/forms/AddNodeForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\AddNodeForm\\:\\:assemble\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/AddNodeForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\AddNodeForm\\:\\:onSuccess\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/AddNodeForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\AddNodeForm\\:\\:sort\\(\\) has parameter \\$nodes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: application/forms/AddNodeForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\AddNodeForm\\:\\:sort\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: application/forms/AddNodeForm.php
+
+		-
+			message: "#^Parameter \\#1 \\$bp of static method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\ProcessChanges\\:\\:construct\\(\\) expects Icinga\\\\Module\\\\Businessprocess\\\\BpConfig, Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\|null given\\.$#"
+			count: 1
+			path: application/forms/AddNodeForm.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of static method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:escapeName\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: application/forms/AddNodeForm.php
+
+		-
+			message: "#^Parameter \\#1 \\$node of method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\ProcessChanges\\:\\:modifyNode\\(\\) expects Icinga\\\\Module\\\\Businessprocess\\\\Node, Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\|null given\\.$#"
+			count: 1
+			path: application/forms/AddNodeForm.php
+
+		-
+			message: "#^Parameter \\#1 \\$parent of method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\Validator\\\\HostServiceTermValidator\\:\\:setParent\\(\\) expects Icinga\\\\Module\\\\Businessprocess\\\\BpNode, Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\|null given\\.$#"
+			count: 1
+			path: application/forms/AddNodeForm.php
+
+		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: application/forms/AddNodeForm.php
+
+		-
+			message: "#^Cannot call method getLabel\\(\\) on Zend_Form_Element\\|null\\.$#"
+			count: 1
+			path: application/forms/BpConfigForm.php
+
+		-
+			message: "#^Cannot call method setAttrib\\(\\) on Zend_Form_Element\\|null\\.$#"
+			count: 1
+			path: application/forms/BpConfigForm.php
+
+		-
+			message: "#^Cannot call method setValue\\(\\) on Zend_Form_Element\\|null\\.$#"
+			count: 1
+			path: application/forms/BpConfigForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpConfigForm\\:\\:hasDeleteButton\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/BpConfigForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpConfigForm\\:\\:onRequest\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/BpConfigForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpConfigForm\\:\\:onSetup\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/BpConfigForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpConfigForm\\:\\:onSuccess\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/BpConfigForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpConfigForm\\:\\:setup\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/BpConfigForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpConfigForm\\:\\:shouldBeDeleted\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/BpConfigForm.php
+
+		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			count: 5
+			path: application/forms/BpConfigForm.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpConfigForm\\:\\:\\$deleteButtonName has no type specified\\.$#"
+			count: 1
+			path: application/forms/BpConfigForm.php
+
+		-
+			message: "#^Access to an undefined property Zend_Form_Element_File\\:\\:\\$file\\.$#"
+			count: 1
+			path: application/forms/BpUploadForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpUploadForm\\:\\:getTempDir\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/BpUploadForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpUploadForm\\:\\:getUploadedConfig\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/BpUploadForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpUploadForm\\:\\:hasSource\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/BpUploadForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpUploadForm\\:\\:onSuccess\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/BpUploadForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpUploadForm\\:\\:parseSubmittedSourceCode\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/BpUploadForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpUploadForm\\:\\:processUploadedSource\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/BpUploadForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpUploadForm\\:\\:setup\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/BpUploadForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpUploadForm\\:\\:showDetails\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/BpUploadForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpUploadForm\\:\\:showUpload\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/BpUploadForm.php
+
+		-
+			message: "#^Parameter \\#1 \\$filename of function file_get_contents expects string, string\\|false given\\.$#"
+			count: 1
+			path: application/forms/BpUploadForm.php
+
+		-
+			message: "#^Parameter \\#1 \\$filename of function unlink expects string, string\\|false given\\.$#"
+			count: 2
+			path: application/forms/BpUploadForm.php
+
+		-
+			message: "#^Parameter \\#2 \\$options of method Zend_Form_Element_File\\:\\:addFilter\\(\\) expects array\\|string\\|null, string\\|false given\\.$#"
+			count: 1
+			path: application/forms/BpUploadForm.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpUploadForm\\:\\:\\$deleteButtonName has no type specified\\.$#"
+			count: 1
+			path: application/forms/BpUploadForm.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpUploadForm\\:\\:\\$node has no type specified\\.$#"
+			count: 1
+			path: application/forms/BpUploadForm.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpUploadForm\\:\\:\\$objectList has no type specified\\.$#"
+			count: 1
+			path: application/forms/BpUploadForm.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpUploadForm\\:\\:\\$processList has no type specified\\.$#"
+			count: 1
+			path: application/forms/BpUploadForm.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\BpUploadForm\\:\\:\\$sourceCode has no type specified\\.$#"
+			count: 1
+			path: application/forms/BpUploadForm.php
+
+		-
+			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: application/forms/CleanupNodeForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\CleanupNodeForm\\:\\:onSuccess\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/CleanupNodeForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\CleanupNodeForm\\:\\:setup\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/CleanupNodeForm.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getNode\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: application/forms/CleanupNodeForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\DeleteNodeForm\\:\\:onSuccess\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/DeleteNodeForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\DeleteNodeForm\\:\\:setup\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/DeleteNodeForm.php
+
+		-
+			message: "#^Cannot call method getAlias\\(\\) on Icinga\\\\Module\\\\Businessprocess\\\\Node\\|null\\.$#"
+			count: 1
+			path: application/forms/EditNodeForm.php
+
+		-
+			message: "#^Cannot call method getBackend\\(\\) on Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\|null\\.$#"
+			count: 2
+			path: application/forms/EditNodeForm.php
+
+		-
+			message: "#^Cannot call method getChildNames\\(\\) on Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\|null\\.$#"
+			count: 1
+			path: application/forms/EditNodeForm.php
+
+		-
+			message: "#^Cannot call method getMetadata\\(\\) on Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\|null\\.$#"
+			count: 1
+			path: application/forms/EditNodeForm.php
+
+		-
+			message: "#^Cannot call method getName\\(\\) on Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\|null\\.$#"
+			count: 1
+			path: application/forms/EditNodeForm.php
+
+		-
+			message: "#^Cannot call method getName\\(\\) on Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\|null\\.$#"
+			count: 3
+			path: application/forms/EditNodeForm.php
+
+		-
+			message: "#^Cannot call method getName\\(\\) on Icinga\\\\Module\\\\Businessprocess\\\\Node\\|null\\.$#"
+			count: 3
+			path: application/forms/EditNodeForm.php
+
+		-
+			message: "#^Cannot call method getNode\\(\\) on Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\|null\\.$#"
+			count: 2
+			path: application/forms/EditNodeForm.php
+
+		-
+			message: "#^Cannot call method getStateOverrides\\(\\) on Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\|null\\.$#"
+			count: 2
+			path: application/forms/EditNodeForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\EditNodeForm\\:\\:assemble\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/EditNodeForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\EditNodeForm\\:\\:identifyChosenNode\\(\\) should return Icinga\\\\Module\\\\Businessprocess\\\\Node but returns Icinga\\\\Module\\\\Businessprocess\\\\Node\\|null\\.$#"
+			count: 1
+			path: application/forms/EditNodeForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\EditNodeForm\\:\\:onSuccess\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/EditNodeForm.php
+
+		-
+			message: "#^Parameter \\#1 \\$bp of static method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\ProcessChanges\\:\\:construct\\(\\) expects Icinga\\\\Module\\\\Businessprocess\\\\BpConfig, Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\|null given\\.$#"
+			count: 1
+			path: application/forms/EditNodeForm.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of static method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:joinNodeName\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: application/forms/EditNodeForm.php
+
+		-
+			message: "#^Parameter \\#1 \\$node of method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\ProcessChanges\\:\\:deleteNode\\(\\) expects Icinga\\\\Module\\\\Businessprocess\\\\Node, Icinga\\\\Module\\\\Businessprocess\\\\Node\\|null given\\.$#"
+			count: 1
+			path: application/forms/EditNodeForm.php
+
+		-
+			message: "#^Parameter \\#1 \\$node of method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\ProcessChanges\\:\\:modifyNode\\(\\) expects Icinga\\\\Module\\\\Businessprocess\\\\Node, Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\|null given\\.$#"
+			count: 1
+			path: application/forms/EditNodeForm.php
+
+		-
+			message: "#^Parameter \\#1 \\$parent of method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\Validator\\\\HostServiceTermValidator\\:\\:setParent\\(\\) expects Icinga\\\\Module\\\\Businessprocess\\\\BpNode, Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\|null given\\.$#"
+			count: 1
+			path: application/forms/EditNodeForm.php
+
+		-
+			message: "#^Parameter \\#3 \\$to of method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\ProcessChanges\\:\\:moveNode\\(\\) expects int, int\\|string\\|false given\\.$#"
+			count: 1
+			path: application/forms/EditNodeForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\MoveNodeForm\\:\\:hasBeenSent\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/MoveNodeForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\MoveNodeForm\\:\\:onSuccess\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/MoveNodeForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\MoveNodeForm\\:\\:setup\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/MoveNodeForm.php
+
+		-
+			message: "#^Parameter \\#1 \\$token of static method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\CsrfToken\\:\\:isValid\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: application/forms/MoveNodeForm.php
+
+		-
+			message: "#^Parameter \\#2 \\$from of method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\ProcessChanges\\:\\:moveNode\\(\\) expects int, mixed given\\.$#"
+			count: 1
+			path: application/forms/MoveNodeForm.php
+
+		-
+			message: "#^Parameter \\#3 \\$to of method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\ProcessChanges\\:\\:moveNode\\(\\) expects int, mixed given\\.$#"
+			count: 1
+			path: application/forms/MoveNodeForm.php
+
+		-
+			message: "#^Parameter \\#4 \\$newParent of method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\ProcessChanges\\:\\:moveNode\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: application/forms/MoveNodeForm.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\MoveNodeForm\\:\\:\\$parentNode \\(Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\) does not accept Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\|null\\.$#"
+			count: 1
+			path: application/forms/MoveNodeForm.php
+
+		-
+			message: "#^Cannot call method setValue\\(\\) on Zend_Form_Element\\|null\\.$#"
+			count: 4
+			path: application/forms/ProcessForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\ProcessForm\\:\\:onSuccess\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/ProcessForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\ProcessForm\\:\\:setup\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/ProcessForm.php
+
+		-
+			message: "#^Parameter \\#1 \\$nodeName of method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\ProcessChanges\\:\\:createNode\\(\\) expects Icinga\\\\Module\\\\Businessprocess\\\\Node\\|string, mixed given\\.$#"
+			count: 1
+			path: application/forms/ProcessForm.php
+
+		-
+			message: "#^Cannot access property \\$acknowledged on mixed\\.$#"
+			count: 1
+			path: application/forms/SimulationForm.php
+
+		-
+			message: "#^Cannot access property \\$in_downtime on mixed\\.$#"
+			count: 1
+			path: application/forms/SimulationForm.php
+
+		-
+			message: "#^Cannot access property \\$state on mixed\\.$#"
+			count: 1
+			path: application/forms/SimulationForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\SimulationForm\\:\\:enumStateNames\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: application/forms/SimulationForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\SimulationForm\\:\\:onSuccess\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/SimulationForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\SimulationForm\\:\\:setNode\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/SimulationForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\SimulationForm\\:\\:setNode\\(\\) has parameter \\$node with no type specified\\.$#"
+			count: 1
+			path: application/forms/SimulationForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\SimulationForm\\:\\:setSimulation\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/SimulationForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\SimulationForm\\:\\:setup\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/forms/SimulationForm.php
+
+		-
+			message: "#^Method Zend_View_Helper_FormSimpleNote\\:\\:formSimpleNote\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/views/helpers/FormSimpleNote.php
+
+		-
+			message: "#^Method Zend_View_Helper_FormSimpleNote\\:\\:formSimpleNote\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: application/views/helpers/FormSimpleNote.php
+
+		-
+			message: "#^Method Zend_View_Helper_FormSimpleNote\\:\\:formSimpleNote\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: application/views/helpers/FormSimpleNote.php
+
+		-
+			message: "#^Method Zend_View_Helper_RenderStateBadges\\:\\:renderStateBadges\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: application/views/helpers/RenderStateBadges.php
+
+		-
+			message: "#^Method Zend_View_Helper_RenderStateBadges\\:\\:renderStateBadges\\(\\) has parameter \\$summary with no type specified\\.$#"
+			count: 1
+			path: application/views/helpers/RenderStateBadges.php
+
+		-
+			message: "#^Cannot access offset 0 on array\\<int, string\\>\\|false\\.$#"
+			count: 2
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Cannot use array destructuring on array\\<int, string\\>\\|false\\.$#"
+			count: 2
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:addNode\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:addRootNode\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:addRootNode\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:beginLoopDetection\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:beginLoopDetection\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:calculateAllStates\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:clearAllStates\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:clearAppliedChanges\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:countSimulations\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:createHost\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:createHost\\(\\) has parameter \\$host with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:createImportedNode\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:createImportedNode\\(\\) has parameter \\$config with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:createImportedNode\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:createMissingBp\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:createMissingBp\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:createService\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:createService\\(\\) has parameter \\$host with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:createService\\(\\) has parameter \\$service with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:endLoopDetection\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:endLoopDetection\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:escapeName\\(\\) should return string but returns string\\|null\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getBackend\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getBackendName\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getBpNode\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getErrors\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getImportedConfig\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getImportedConfig\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getImportedNodes\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getMissingChildren\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getNodes\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getStateType\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getTitle\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getWarnings\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:hasBackend\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:hasBackendName\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:hasBeenChanged\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:hasBpNode\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:hasNode\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:hasNode\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:hasRootNode\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:hasRootNode\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:hasSimulations\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:hasTitle\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:isReferenced\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:isRootNode\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:isRootNode\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:listBpNodes\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:listInvolvedConfigs\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:listInvolvedConfigs\\(\\) has parameter \\$configs with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:listInvolvedHostNames\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:listInvolvedHostNames\\(\\) has parameter \\$usedConfigs with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:listRootNodes\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:removeNode\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:removeNode\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:removeRootNode\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:removeRootNode\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:setBackend\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:setBackend\\(\\) has parameter \\$backend with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:setName\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:setTitle\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:setTitle\\(\\) has parameter \\$title with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:splitNodeName\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:translate\\(\\) has parameter \\$msg with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:useHardStates\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:useSoftStates\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:usesHardStates\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:usesSoftStates\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:warn\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:warn\\(\\) has parameter \\$msg with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Parameter \\#1 \\$alias of method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:setAlias\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Parameter \\#1 \\$format of function sprintf expects string, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Parameter \\#2 \\$values of function vsprintf expects array\\<bool\\|float\\|int\\|string\\|null\\>, array\\<int, mixed\\> given\\.$#"
+			count: 2
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:\\$changeCount has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:\\$errors type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:\\$hosts type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:\\$loopDetection has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:\\$nodes type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:\\$root_nodes type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:\\$simulationCount has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:\\$warnings type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:__construct\\(\\) has parameter \\$object with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:assertNumericOperator\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:assertValidOperator\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:assertValidOperator\\(\\) has parameter \\$operator with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:checkForLoops\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:getChildBpNodes\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:getChildByName\\(\\) has parameter \\$childName with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:getChildNames\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:getChildren\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:getChildren\\(\\) has parameter \\$filter with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:getDisplay\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:getHtmlId\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:getInfoUrl\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:getMissingChildren\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:getOperator\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:getProblemTree\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:getProblemTreeBlame\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:getProblematicChildren\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:getState\\(\\) should return int but returns int\\|null\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:getStateOverrides\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:getStateOverrides\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:getStateSummary\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:hasChild\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:hasChild\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:hasChildren\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:hasChildren\\(\\) has parameter \\$filter with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:hasInfoUrl\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:hasProblems\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:invertSortingState\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:invertSortingState\\(\\) has parameter \\$state with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:isEmpty\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:isMissing\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:operatorHtml\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:removeChild\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:removeChild\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:setChildNames\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:setChildNames\\(\\) has parameter \\$names with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:setDisplay\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:setDisplay\\(\\) has parameter \\$display with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:setInfoUrl\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:setInfoUrl\\(\\) has parameter \\$url with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:setOperator\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:setOperator\\(\\) has parameter \\$operator with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:setStateOverrides\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:setStateOverrides\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:setStateOverrides\\(\\) has parameter \\$overrides with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\<Icinga\\\\Module\\\\Businessprocess\\\\Node\\>\\|null given\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:\\$childNames type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:\\$className has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:\\$counters has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:\\$display has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:\\$empty has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:\\$emptyStateSummary has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:\\$missing has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:\\$missingChildren has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:\\$operator has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:\\$sortStateInversionMap has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:\\$stateOverrides has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:\\$url has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Director\\\\ShipConfigFiles\\:\\:fetchFiles\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Director/ShipConfigFiles.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\HostNode\\:\\:__construct\\(\\) has parameter \\$object with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/HostNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\HostNode\\:\\:getHostname\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/HostNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\HostNode\\:\\:getUrl\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/HostNode.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\HostNode\\:\\:\\$className has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/HostNode.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\HostNode\\:\\:\\$hostname has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/HostNode.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\HostNode\\:\\:\\$sortStateToStateMap has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/HostNode.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\HostNode\\:\\:\\$stateNames has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/HostNode.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\HostNode\\:\\:\\$stateToSortStateMap has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/HostNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\IcingaDbObject\\:\\:applyIcingaDbRestrictions\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/IcingaDbObject.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\IcingaDbObject\\:\\:applyIcingaDbRestrictions\\(\\) has parameter \\$query with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/IcingaDbObject.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\IcingaDbObject\\:\\:fetchDb\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/IcingaDbObject.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\IcingaDbObject\\:\\:fetchHosts\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/IcingaDbObject.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\IcingaDbObject\\:\\:fetchHosts\\(\\) has parameter \\$filter with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/IcingaDbObject.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\IcingaDbObject\\:\\:fetchServices\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/IcingaDbObject.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\IcingaDbObject\\:\\:fetchServices\\(\\) has parameter \\$filter with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/IcingaDbObject.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\IcingaDbObject\\:\\:yieldHostnames\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/IcingaDbObject.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\IcingaDbObject\\:\\:yieldHostnames\\(\\) has parameter \\$filter with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/IcingaDbObject.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\IcingaDbObject\\:\\:yieldServicenames\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/IcingaDbObject.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\IcingaDbObject\\:\\:yieldServicenames\\(\\) has parameter \\$host with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/IcingaDbObject.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\ImportedNode\\:\\:__construct\\(\\) has parameter \\$object with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/ImportedNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\ImportedNode\\:\\:getBpConfig\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/ImportedNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\ImportedNode\\:\\:getChildNames\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/ImportedNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\ImportedNode\\:\\:getIdentifier\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/ImportedNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\ImportedNode\\:\\:getOperator\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/ImportedNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\ImportedNode\\:\\:isMissing\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/ImportedNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:__construct\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:assertKeyExists\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:assertKeyExists\\(\\) has parameter \\$key with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:canModify\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:canRead\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:get\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:get\\(\\) has parameter \\$default with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:get\\(\\) has parameter \\$key with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:getAuth\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:getExtendedTitle\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:getProperties\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:getTitle\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:has\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:has\\(\\) has parameter \\$key with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:hasKey\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:hasKey\\(\\) has parameter \\$key with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:hasOneOfTheAllowedRoles\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:hasRestrictions\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:isInAllowedUserList\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:isInAllowedUserList\\(\\) has parameter \\$username with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:isManuallyOrdered\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:isMemberOfAllowedGroups\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:isNull\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:isNull\\(\\) has parameter \\$key with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:listAllowedGroups\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:listAllowedRoles\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:listAllowedUsers\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:nameIsPrefixedWithOneOf\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:nameIsPrefixedWithOneOf\\(\\) has parameter \\$prefixes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:ownerIs\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:ownerIs\\(\\) has parameter \\$username with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:set\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:set\\(\\) has parameter \\$key with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:set\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:splitCommaSeparated\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:splitCommaSeparated\\(\\) has parameter \\$string with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:userCanRead\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Metadata\\:\\:\\$properties has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Metadata.php
+
+		-
+			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeAction.php
+
+		-
+			message: "#^Cannot access offset 'actionName' on mixed\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeAction.php
+
+		-
+			message: "#^Cannot access offset 'nodeName' on mixed\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeAction.php
+
+		-
+			message: "#^Cannot access offset 'properties' on mixed\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeAction\\:\\:create\\(\\) should return static\\(Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeAction\\) but returns object\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeAction\\:\\:error\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeAction\\:\\:hasNode\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeAction\\:\\:serialize\\(\\) should return string but returns string\\|false\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeAction\\:\\:unSerialize\\(\\) has parameter \\$string with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeAction.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(mixed   \\.\\.\\.\\)\\: Unexpected token \"\\\\n     \\*\", expected variable at offset 100$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeAction.php
+
+		-
+			message: "#^Parameter \\#1 \\$actionName of static method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeAction\\:\\:create\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeAction.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function ucfirst expects string, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeAction.php
+
+		-
+			message: "#^Parameter \\#2 \\$nodeName of static method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeAction\\:\\:create\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeAction.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeAction\\:\\:\\$preserveProperties type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeAction.php
+
+		-
+			message: "#^Cannot use array destructuring on array\\<int, string\\>\\|false\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeAddChildrenAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeAddChildrenAction\\:\\:getChildren\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeAddChildrenAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeAddChildrenAction\\:\\:setChildren\\(\\) has parameter \\$children with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeAddChildrenAction.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeAddChildrenAction\\:\\:\\$children has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeAddChildrenAction.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeAddChildrenAction\\:\\:\\$preserveProperties type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeAddChildrenAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeApplyManualOrderAction\\:\\:applyManualSorting\\(\\) has parameter \\$bpNodes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeApplyManualOrderAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeApplyManualOrderAction\\:\\:applyManualSorting\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeApplyManualOrderAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeApplyManualOrderAction\\:\\:sort\\(\\) has parameter \\$nodes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeApplyManualOrderAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeApplyManualOrderAction\\:\\:sort\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeApplyManualOrderAction.php
+
+		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeApplyManualOrderAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeCopyAction\\:\\:applyManualSorting\\(\\) has parameter \\$bpNodes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeCopyAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeCopyAction\\:\\:applyManualSorting\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeCopyAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeCopyAction\\:\\:sort\\(\\) has parameter \\$nodes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeCopyAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeCopyAction\\:\\:sort\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeCopyAction.php
+
+		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeCopyAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeCreateAction\\:\\:getProperties\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeCreateAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeCreateAction\\:\\:setParent\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeCreateAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeCreateAction\\:\\:setParentName\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeCreateAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeCreateAction\\:\\:setProperties\\(\\) has parameter \\$properties with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeCreateAction.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeCreateAction\\:\\:\\$preserveProperties type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeCreateAction.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeCreateAction\\:\\:\\$properties type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeCreateAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeModifyAction\\:\\:getFormerProperties\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeModifyAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeModifyAction\\:\\:getProperties\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeModifyAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeModifyAction\\:\\:setFormerProperties\\(\\) has parameter \\$properties with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeModifyAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeModifyAction\\:\\:setNodeProperties\\(\\) has parameter \\$properties with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeModifyAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeModifyAction\\:\\:setProperties\\(\\) has parameter \\$properties with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeModifyAction.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeModifyAction\\:\\:\\$formerProperties has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeModifyAction.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeModifyAction\\:\\:\\$preserveProperties type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeModifyAction.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeModifyAction\\:\\:\\$properties has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeModifyAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:applyManualSorting\\(\\) has parameter \\$bpNodes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:applyManualSorting\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:getFrom\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:getNewParent\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:getParent\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:getTo\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:setFrom\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:setFrom\\(\\) has parameter \\$from with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:setNewParent\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:setNewParent\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:setParent\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:setParent\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:setTo\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:setTo\\(\\) has parameter \\$to with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:sort\\(\\) has parameter \\$nodes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:sort\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:\\$from \\(int\\) does not accept int\\|false\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:\\$from \\(int\\) does not accept int\\|string\\|false\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:\\$preserveProperties type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:\\$to \\(int\\) does not accept int\\|false\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:\\$to \\(int\\) does not accept int\\|string\\|false\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeMoveAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeRemoveAction\\:\\:setParentName\\(\\) has parameter \\$parentName with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeRemoveAction.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getNode\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeRemoveAction.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeRemoveAction\\:\\:\\$parentName has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeRemoveAction.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeRemoveAction\\:\\:\\$preserveProperties type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeRemoveAction.php
+
+		-
+			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/ProcessChanges.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\ProcessChanges\\:\\:addChildrenToNode\\(\\) has parameter \\$children with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/ProcessChanges.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\ProcessChanges\\:\\:copyNode\\(\\) has parameter \\$nodeName with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/ProcessChanges.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\ProcessChanges\\:\\:createNode\\(\\) has parameter \\$properties with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/ProcessChanges.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\ProcessChanges\\:\\:hasBeenModified\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/ProcessChanges.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\ProcessChanges\\:\\:modifyNode\\(\\) has parameter \\$properties with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/ProcessChanges.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\ProcessChanges\\:\\:pop\\(\\) should return bool\\|Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeAction but returns Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeAction\\|null\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/ProcessChanges.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\ProcessChanges\\:\\:serialize\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/ProcessChanges.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\ProcessChanges\\:\\:shift\\(\\) should return bool\\|Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeAction but returns Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeAction\\|null\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/ProcessChanges.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\MonitoredNode\\:\\:getLink\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/MonitoredNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\MonitoredNode\\:\\:getUrl\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/MonitoredNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Monitoring\\\\Backend\\\\Ido\\\\Query\\\\HostStatusQuery\\:\\:joinCustomvar\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Monitoring/Backend/Ido/Query/HostStatusQuery.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Monitoring\\\\Backend\\\\Ido\\\\Query\\\\HostStatusQuery\\:\\:joinCustomvar\\(\\) has parameter \\$customvar with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Monitoring/Backend/Ido/Query/HostStatusQuery.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/Monitoring/Backend/Ido/Query/HostStatusQuery.php
+
+		-
+			message: "#^Parameter \\#4 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/Monitoring/Backend/Ido/Query/HostStatusQuery.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Monitoring\\\\Backend\\\\Ido\\\\Query\\\\HostStatusQuery\\:\\:\\$customVarsJoinTemplate has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Monitoring/Backend/Ido/Query/HostStatusQuery.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Monitoring\\\\Backend\\\\Ido\\\\Query\\\\ServiceStatusQuery\\:\\:joinCustomvar\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Monitoring/Backend/Ido/Query/ServiceStatusQuery.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Monitoring\\\\Backend\\\\Ido\\\\Query\\\\ServiceStatusQuery\\:\\:joinCustomvar\\(\\) has parameter \\$customvar with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Monitoring/Backend/Ido/Query/ServiceStatusQuery.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/Monitoring/Backend/Ido/Query/ServiceStatusQuery.php
+
+		-
+			message: "#^Parameter \\#4 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/Monitoring/Backend/Ido/Query/ServiceStatusQuery.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Monitoring\\\\Backend\\\\Ido\\\\Query\\\\ServiceStatusQuery\\:\\:\\$customVarsJoinTemplate has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Monitoring/Backend/Ido/Query/ServiceStatusQuery.php
+
+		-
+			message: "#^Call to an undefined method Icinga\\\\Data\\\\ConnectionInterface\\:\\:getResource\\(\\)\\.$#"
+			count: 1
+			path: library/Businessprocess/Monitoring/DataView/HostStatus.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Monitoring\\\\DataView\\\\HostStatus\\:\\:__construct\\(\\) has parameter \\$columns with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Monitoring/DataView/HostStatus.php
+
+		-
+			message: "#^Call to an undefined method Icinga\\\\Data\\\\ConnectionInterface\\:\\:getResource\\(\\)\\.$#"
+			count: 1
+			path: library/Businessprocess/Monitoring/DataView/ServiceStatus.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Monitoring\\\\DataView\\\\ServiceStatus\\:\\:__construct\\(\\) has parameter \\$columns with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Monitoring/DataView/ServiceStatus.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:addParent\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:countChildren\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:countChildren\\(\\) has parameter \\$filter with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:enumStateNames\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:getBpConfig\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:getChildren\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:getChildren\\(\\) has parameter \\$filter with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:getDuration\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:getIdentifier\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:getLastStateChange\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:getLink\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:getMissingChildren\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:getName\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:getObjectClassName\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:getOperators\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:getPaths\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:getSortingState\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:getSortingState\\(\\) has parameter \\$state with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:getState\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:getStateName\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:getStateName\\(\\) has parameter \\$state with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:hasAlias\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:hasBeenChanged\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:hasChildren\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:hasChildren\\(\\) has parameter \\$filter with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:hasInfoUrl\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:hasMissingChildren\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:hasParentName\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:hasParentName\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:hasParents\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:isAcknowledged\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:isEmpty\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:isHandled\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:isInDowntime\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:isMissing\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:isProblem\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:operatorHtml\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:removeParent\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:removeParent\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:setAck\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:setAck\\(\\) has parameter \\$ack with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:setAckIsOk\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:setBpConfig\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:setDowntime\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:setDowntime\\(\\) has parameter \\$downtime with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:setDowntimeIsOk\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:setLastStateChange\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:setLastStateChange\\(\\) has parameter \\$timestamp with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:setMissing\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:setMissing\\(\\) has parameter \\$missing with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:setState\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:setState\\(\\) has parameter \\$state with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:sortStateTostate\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:sortStateTostate\\(\\) has parameter \\$sortState with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:stateToSortState\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:stateToSortState\\(\\) has parameter \\$state with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:toArray\\(\\) has parameter \\$parent with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:\\$className has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:\\$duration has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:\\$empty has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:\\$missing has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:\\$parents type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:\\$sortStateToStateMap has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:\\$stateNames has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Node\\:\\:\\$stateToSortStateMap has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Node.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of static method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:joinNodeName\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/ProvidedHook/Icingadb/HostActions.php
+
+		-
+			message: "#^Cannot access property \\$name on mixed\\.$#"
+			count: 1
+			path: library/Businessprocess/ProvidedHook/Icingadb/ServiceActions.php
+
+		-
+			message: "#^Parameter \\#2 \\$suffix of static method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:joinNodeName\\(\\) expects string\\|null, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/ProvidedHook/Icingadb/ServiceActions.php
+
+		-
+			message: "#^Cannot access offset 'icingacli…' on mixed\\.$#"
+			count: 2
+			path: library/Businessprocess/ProvidedHook/Icingadb/ServiceDetailExtension.php
+
+		-
+			message: "#^Cannot access offset 'icingaweb…' on mixed\\.$#"
+			count: 1
+			path: library/Businessprocess/ProvidedHook/Icingadb/ServiceDetailExtension.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\ProvidedHook\\\\Icingadb\\\\ServiceDetailExtension\\:\\:init\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/ProvidedHook/Icingadb/ServiceDetailExtension.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\ProvidedHook\\\\Icingadb\\\\ServiceDetailExtension\\:\\:\\$commandName \\(string\\) does not accept mixed\\.$#"
+			count: 1
+			path: library/Businessprocess/ProvidedHook/Icingadb/ServiceDetailExtension.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\ProvidedHook\\\\Monitoring\\\\DetailviewExtension\\:\\:init\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/ProvidedHook/Monitoring/DetailviewExtension.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\ProvidedHook\\\\Monitoring\\\\DetailviewExtension\\:\\:\\$commandName \\(string\\) does not accept mixed\\.$#"
+			count: 1
+			path: library/Businessprocess/ProvidedHook/Monitoring/DetailviewExtension.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\ProvidedHook\\\\Monitoring\\\\HostActions\\:\\:getActionsForHost\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/ProvidedHook/Monitoring/HostActions.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\ProvidedHook\\\\Monitoring\\\\ServiceActions\\:\\:getActionsForService\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/ProvidedHook/Monitoring/ServiceActions.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Breadcrumb\\:\\:renderNode\\(\\) has parameter \\$path with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Breadcrumb.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:applyManualSorting\\(\\) has parameter \\$bpNodes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:applyManualSorting\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:createBadge\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:createBadge\\(\\) has parameter \\$state with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:createBadge\\(\\) has parameter \\$summary with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:createBadgeGroup\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:createBadgeGroup\\(\\) has parameter \\$state with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:createBadgeGroup\\(\\) has parameter \\$summary with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:createUnboundParent\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:getCurrentPath\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:getId\\(\\) has parameter \\$path with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:getNodeClasses\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:getPath\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:getUrl\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:isBreadcrumb\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:renderStateBadges\\(\\) has parameter \\$summary with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:renderStateBadges\\(\\) has parameter \\$totalChildren with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:rendersImportedNode\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:setParentNode\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:setPath\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:setPath\\(\\) has parameter \\$path with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:sort\\(\\) has parameter \\$nodes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:sort\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:\\$parent \\(Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\) does not accept Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\|null\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:\\$path type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/Renderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TileRenderer\\:\\:assemble\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TileRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TileRenderer\\\\NodeTile\\:\\:__construct\\(\\) has parameter \\$path with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TileRenderer/NodeTile.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TileRenderer\\\\NodeTile\\:\\:actions\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TileRenderer/NodeTile.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TileRenderer\\\\NodeTile\\:\\:addActionLinks\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TileRenderer/NodeTile.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TileRenderer\\\\NodeTile\\:\\:addActions\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TileRenderer/NodeTile.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TileRenderer\\\\NodeTile\\:\\:addDetailsActions\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TileRenderer/NodeTile.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TileRenderer\\\\NodeTile\\:\\:buildBaseNodeUrl\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TileRenderer/NodeTile.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TileRenderer\\\\NodeTile\\:\\:getMainNodeUrl\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TileRenderer/NodeTile.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TileRenderer\\\\NodeTile\\:\\:makeBpUrl\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TileRenderer/NodeTile.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TileRenderer\\\\NodeTile\\:\\:\\$name has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TileRenderer/NodeTile.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TileRenderer\\\\NodeTile\\:\\:\\$node has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TileRenderer/NodeTile.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TileRenderer\\\\NodeTile\\:\\:\\$path has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TileRenderer/NodeTile.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TileRenderer\\\\NodeTile\\:\\:\\$renderer has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TileRenderer/NodeTile.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:actionIcon\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:actionIcon\\(\\) has parameter \\$icon with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:actionIcon\\(\\) has parameter \\$title with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:actionIcon\\(\\) has parameter \\$url with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:assemble\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:createEditAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:createInfoAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:createSimulationAction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:getActionIcons\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:getNodeIcons\\(\\) has parameter \\$path with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:getOverriddenState\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:getOverriddenState\\(\\) has parameter \\$fakeState with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:getStateClassNames\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:renderAddNewNode\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:renderAddNewNode\\(\\) has parameter \\$parent with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:renderBp\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:renderChild\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:renderChild\\(\\) has parameter \\$bp with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:renderChild\\(\\) has parameter \\$path with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:renderNode\\(\\) has parameter \\$path with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Parameter \\#1 \\$node of method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:getSourceUrl\\(\\) expects Icinga\\\\Module\\\\Businessprocess\\\\BpNode, Icinga\\\\Module\\\\Businessprocess\\\\Node given\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Parameter \\#2 \\$parent of method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\TreeRenderer\\:\\:renderChild\\(\\) expects Icinga\\\\Module\\\\Businessprocess\\\\BpNode, Icinga\\\\Module\\\\Businessprocess\\\\Node given\\.$#"
+			count: 1
+			path: library/Businessprocess/Renderer/TreeRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\ServiceNode\\:\\:__construct\\(\\) has parameter \\$object with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/ServiceNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\ServiceNode\\:\\:getHostname\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/ServiceNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\ServiceNode\\:\\:getServiceDescription\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/ServiceNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\ServiceNode\\:\\:getUrl\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/ServiceNode.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\ServiceNode\\:\\:\\$className has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/ServiceNode.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\ServiceNode\\:\\:\\$hostname has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/ServiceNode.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\ServiceNode\\:\\:\\$service has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/ServiceNode.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Simulation\\:\\:__construct\\(\\) has parameter \\$simulations with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Simulation.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Simulation\\:\\:create\\(\\) has parameter \\$simulations with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Simulation.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Simulation\\:\\:getNode\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Simulation.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Simulation\\:\\:hasNode\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Simulation.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Simulation\\:\\:remove\\(\\) has parameter \\$node with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Simulation.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Simulation\\:\\:set\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Simulation.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Simulation\\:\\:set\\(\\) has parameter \\$node with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Simulation.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Simulation\\:\\:set\\(\\) has parameter \\$properties with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Simulation.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Simulation\\:\\:setSimulations\\(\\) has parameter \\$simulations with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Simulation.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Simulation\\:\\:simulations\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Simulation.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Simulation\\:\\:\\$simulations \\(array\\) does not accept mixed\\.$#"
+			count: 1
+			path: library/Businessprocess/Simulation.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Simulation\\:\\:\\$simulations type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Simulation.php
+
+		-
+			message: "#^Cannot access property \\$hex_id on mixed\\.$#"
+			count: 8
+			path: library/Businessprocess/State/IcingaDbState.php
+
+		-
+			message: "#^Cannot access property \\$id on mixed\\.$#"
+			count: 6
+			path: library/Businessprocess/State/IcingaDbState.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\State\\\\IcingaDbState\\:\\:apply\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/State/IcingaDbState.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\State\\\\IcingaDbState\\:\\:handleDbRow\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/State/IcingaDbState.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\State\\\\IcingaDbState\\:\\:handleDbRow\\(\\) has parameter \\$row with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/State/IcingaDbState.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\State\\\\IcingaDbState\\:\\:handleDbRow\\(\\) has parameter \\$type with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/State/IcingaDbState.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\State\\\\IcingaDbState\\:\\:reallyRetrieveStatesFromBackend\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/State/IcingaDbState.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\State\\\\IcingaDbState\\:\\:retrieveStatesFromBackend\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/State/IcingaDbState.php
+
+		-
+			message: "#^Parameter \\#1 \\$msg of method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:addError\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/State/IcingaDbState.php
+
+		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$arrays of function array_merge expects array, mixed given\\.$#"
+			count: 2
+			path: library/Businessprocess/State/IcingaDbState.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\State\\\\MonitoringState\\:\\:apply\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/State/MonitoringState.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\State\\\\MonitoringState\\:\\:handleDbRow\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/State/MonitoringState.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\State\\\\MonitoringState\\:\\:handleDbRow\\(\\) has parameter \\$row with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/State/MonitoringState.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\State\\\\MonitoringState\\:\\:reallyRetrieveStatesFromBackend\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/State/MonitoringState.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\State\\\\MonitoringState\\:\\:retrieveStatesFromBackend\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/State/MonitoringState.php
+
+		-
+			message: "#^Parameter \\#1 \\$msg of method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:addError\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/State/MonitoringState.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\ConfigDiff\\:\\:__construct\\(\\) has parameter \\$a with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/ConfigDiff.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\ConfigDiff\\:\\:__construct\\(\\) has parameter \\$b with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/ConfigDiff.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\ConfigDiff\\:\\:create\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/ConfigDiff.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\ConfigDiff\\:\\:create\\(\\) has parameter \\$a with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/ConfigDiff.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\ConfigDiff\\:\\:create\\(\\) has parameter \\$b with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/ConfigDiff.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\ConfigDiff\\:\\:renderHtmlInline\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/ConfigDiff.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\ConfigDiff\\:\\:renderHtmlSideBySide\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/ConfigDiff.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\ConfigDiff\\:\\:renderTextContext\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/ConfigDiff.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\ConfigDiff\\:\\:renderTextUnified\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/ConfigDiff.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\ConfigDiff\\:\\:\\$a has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/ConfigDiff.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\ConfigDiff\\:\\:\\$b has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/ConfigDiff.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\ConfigDiff\\:\\:\\$diff has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/ConfigDiff.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\ConfigDiff\\:\\:\\$opcodes has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/ConfigDiff.php
+
+		-
+			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
+			count: 5
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Cannot use array destructuring on array\\<int, string\\>\\|false\\.$#"
+			count: 7
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:__construct\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:emptyHeader\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:parseDisplay\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:parseDisplay\\(\\) has parameter \\$line with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:parseError\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:parseError\\(\\) has parameter \\$msg with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:parseExtraLine\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:parseExtraLine\\(\\) has parameter \\$line with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:parseExtraLine\\(\\) has parameter \\$typeLength with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:parseFile\\(\\) has parameter \\$filename with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:parseFile\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:parseHeaderLine\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:parseHeaderLine\\(\\) has parameter \\$line with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:parseInfoUrl\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:parseInfoUrl\\(\\) has parameter \\$line with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:parseLine\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:parseLine\\(\\) has parameter \\$line with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:parseStateOverrides\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:parseStateOverrides\\(\\) has parameter \\$line with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:parseString\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:parseString\\(\\) has parameter \\$string with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:readHeaderString\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:readHeaderString\\(\\) has parameter \\$string with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:readMetadataFromFileHeader\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:readMetadataFromFileHeader\\(\\) has parameter \\$filename with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:readMetadataFromFileHeader\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:readMetadataFromString\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:readMetadataFromString\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:readMetadataFromString\\(\\) has parameter \\$string with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:reallyParseFile\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:reallyParseFile\\(\\) has parameter \\$filename with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:resolveMissingNodes\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:splitCommaSeparated\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:splitCommaSeparated\\(\\) has parameter \\$string with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Offset 0 does not exist on string\\|null\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of function array_shift expects array, array\\<int, string\\>\\|false given\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|null given\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getNode\\(\\) expects string, string\\|null given\\.$#"
+			count: 2
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Parameter \\#1 \\$stream of function fgets expects resource, resource\\|false given\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, string\\|null given\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Parameter \\#2 \\$subject of function preg_split expects string, string\\|null given\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:\\$missingNodes type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigParser\\:\\:\\$name has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigRenderer\\:\\:renderStateOverrides\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigRenderer.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigRenderer\\:\\:\\$config has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigRenderer.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyConfigRenderer\\:\\:\\$renderedNodes type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigRenderer.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyStorage\\:\\:deleteProcess\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyStorage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyStorage\\:\\:getConfigDir\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyStorage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyStorage\\:\\:getFilename\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyStorage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyStorage\\:\\:getFilename\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyStorage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyStorage\\:\\:getSource\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyStorage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyStorage\\:\\:getSource\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyStorage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyStorage\\:\\:hasProcess\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyStorage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyStorage\\:\\:listAllProcessNames\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyStorage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyStorage\\:\\:listProcessNames\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyStorage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyStorage\\:\\:listProcesses\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyStorage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyStorage\\:\\:loadFromString\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyStorage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyStorage\\:\\:loadFromString\\(\\) has parameter \\$string with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyStorage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyStorage\\:\\:loadProcess\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyStorage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\LegacyStorage\\:\\:prepareDefaultConfigDir\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyStorage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\Storage\\:\\:deleteProcess\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/Storage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\Storage\\:\\:getInstance\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/Storage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\Storage\\:\\:hasProcess\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/Storage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\Storage\\:\\:init\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/Storage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\Storage\\:\\:listAllProcessNames\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/Storage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\Storage\\:\\:listProcessNames\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/Storage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\Storage\\:\\:listProcesses\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/Storage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\Storage\\:\\:loadProcess\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/Storage.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\BpDashboardTile\\:\\:__construct\\(\\) has parameter \\$attributes with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Component/BpDashboardTile.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\BpDashboardTile\\:\\:__construct\\(\\) has parameter \\$description with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Component/BpDashboardTile.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\BpDashboardTile\\:\\:__construct\\(\\) has parameter \\$icon with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Component/BpDashboardTile.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\BpDashboardTile\\:\\:__construct\\(\\) has parameter \\$title with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Component/BpDashboardTile.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\BpDashboardTile\\:\\:__construct\\(\\) has parameter \\$url with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Component/BpDashboardTile.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\BpDashboardTile\\:\\:__construct\\(\\) has parameter \\$urlParams with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Component/BpDashboardTile.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\DashboardAction\\:\\:__construct\\(\\) has parameter \\$attributes with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Component/DashboardAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\DashboardAction\\:\\:__construct\\(\\) has parameter \\$description with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Component/DashboardAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\DashboardAction\\:\\:__construct\\(\\) has parameter \\$icon with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Component/DashboardAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\DashboardAction\\:\\:__construct\\(\\) has parameter \\$title with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Component/DashboardAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\DashboardAction\\:\\:__construct\\(\\) has parameter \\$url with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Component/DashboardAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\DashboardAction\\:\\:__construct\\(\\) has parameter \\$urlParams with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Component/DashboardAction.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\RenderedProcessActionBar\\:\\:currentProcessParams\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Component/RenderedProcessActionBar.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Component\\\\WtfTabs\\:\\:render\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Component/WtfTabs.php
+
+		-
+			message: "#^Access to an undefined property Zend_Controller_Action_HelperBroker\\:\\:\\$viewRenderer\\.$#"
+			count: 3
+			path: library/Businessprocess/Web/Controller.php
+
+		-
+			message: "#^Call to an undefined method Zend_Controller_Action_HelperBroker\\:\\:layout\\(\\)\\.$#"
+			count: 2
+			path: library/Businessprocess/Web/Controller.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Controller\\:\\:addTitle\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Controller.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Controller\\:\\:addTitle\\(\\) has parameter \\$title with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Controller.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Controller\\:\\:doNotRender\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Controller.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Controller\\:\\:loadBpConfig\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Controller.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Controller\\:\\:loadForm\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Controller.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Controller\\:\\:loadForm\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Controller.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Controller\\:\\:loadModifiedBpConfig\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Controller.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Controller\\:\\:session\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Controller.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Controller\\:\\:setViewScript\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Controller.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Controller\\:\\:setViewScript\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Controller.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Controller\\:\\:singleTab\\(\\) has parameter \\$label with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Controller.php
+
+		-
+			message: "#^Parameter \\#1 \\$key of function array_key_exists expects int\\|string, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Controller.php
+
+		-
+			message: "#^Parameter \\#2 \\$values of function vsprintf expects array\\<bool\\|float\\|int\\|string\\|null\\>, array\\<int, mixed\\> given\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Controller.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\FakeRequest\\:\\:getBaseUrl\\(\\) has parameter \\$raw with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/FakeRequest.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\FakeRequest\\:\\:setConfiguredBaseUrl\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/FakeRequest.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\FakeRequest\\:\\:setConfiguredBaseUrl\\(\\) has parameter \\$url with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/FakeRequest.php
+
+		-
+			message: "#^Cannot call method addError\\(\\) on Zend_Form_Element\\|null\\.$#"
+			count: 2
+			path: library/Businessprocess/Web/Form/BpConfigBaseForm.php
+
+		-
+			message: "#^Cannot call method getUsername\\(\\) on Icinga\\\\User\\|null\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/BpConfigBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\BpConfigBaseForm\\:\\:listAvailableBackends\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/BpConfigBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\BpConfigBaseForm\\:\\:prepareMetadata\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/BpConfigBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\BpConfigBaseForm\\:\\:setPreferredDecorators\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/BpConfigBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\CsrfToken\\:\\:getSessionId\\(\\) should return string but returns string\\|false\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/CsrfToken.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\Element\\\\IplStateOverrides\\:\\:assemble\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/Element/IplStateOverrides.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\Element\\\\IplStateOverrides\\:\\:getOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/Element/IplStateOverrides.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\Element\\\\IplStateOverrides\\:\\:getValues\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/Element/IplStateOverrides.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\Element\\\\IplStateOverrides\\:\\:registerAttributeCallbacks\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/Element/IplStateOverrides.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\Element\\\\IplStateOverrides\\:\\:setOptions\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/Element/IplStateOverrides.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\Element\\\\IplStateOverrides\\:\\:\\$options type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/Element/IplStateOverrides.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\FormLoader\\:\\:load\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/FormLoader.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\FormLoader\\:\\:load\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/FormLoader.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of function array_pop expects array, array\\<int, string\\>\\|false given\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/FormLoader.php
+
+		-
+			message: "#^Cannot call method setDecorators\\(\\) on Zend_Form_Element\\|null\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Cannot call method setValue\\(\\) on Zend_Form_Element\\|null\\.$#"
+			count: 2
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:addHidden\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:addHidden\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:addHidden\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:addHtml\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:addHtml\\(\\) has parameter \\$html with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:addHtml\\(\\) has parameter \\$options with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:addHtmlHint\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:addHtmlHint\\(\\) has parameter \\$html with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:addHtmlHint\\(\\) has parameter \\$options with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:addPrefixPathsForBusinessprocess\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:addPrefixPathsForModule\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:callZfConstructor\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:callZfConstructor\\(\\) has parameter \\$options with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:handleOptions\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:handleOptions\\(\\) has parameter \\$options with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:initializePrefixPaths\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:loadForm\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:loadForm\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:optionalEnum\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:optionalEnum\\(\\) has parameter \\$enum with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:optionalEnum\\(\\) has parameter \\$nullLabel with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:setIcingaModule\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:translate\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:translate\\(\\) has parameter \\$string with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:valueIsEmpty\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:valueIsEmpty\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:\\$hintCount has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:\\$icingaModuleName has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickBaseForm.php
+
+		-
+			message: "#^Cannot call method setHttpResponseCode\\(\\) on Zend_Controller_Response_Abstract\\|null\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Cannot call method setIgnore\\(\\) on Zend_Form_Element\\|null\\.$#"
+			count: 2
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:addException\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:addException\\(\\) has parameter \\$elementName with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:addSimpleDisplayGroup\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:addSimpleDisplayGroup\\(\\) has parameter \\$elements with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:addSimpleDisplayGroup\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:addSimpleDisplayGroup\\(\\) has parameter \\$options with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:addSubmitButtonIfSet\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:beforeSetup\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:beforeValidation\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:beforeValidation\\(\\) has parameter \\$data with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:createIdElement\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:detectName\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:getActionFromRequest\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:getSentValue\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:getSentValue\\(\\) has parameter \\$default with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:getSentValue\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:getSubmitLabel\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:getSuccessMessage\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:getSuccessMessage\\(\\) has parameter \\$message with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:getSuccessUrl\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:handleRequest\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:hasBeenSent\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:hasBeenSubmitted\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:hasSubmitButton\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:isApiRequest\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:notifyError\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:notifyError\\(\\) has parameter \\$message with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:notifySuccess\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:notifySuccess\\(\\) has parameter \\$message with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:onFailure\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:onRequest\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:onSetup\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:onSuccess\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:prepareElements\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:pressedButton\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:pressedButton\\(\\) has parameter \\$label with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:pressedButton\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:redirectAndExit\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:redirectAndExit\\(\\) has parameter \\$url with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:redirectOnSuccess\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:redirectOnSuccess\\(\\) has parameter \\$message with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:regenerateCsrfToken\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:removeCsrfToken\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:setApiRequest\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:setApiRequest\\(\\) has parameter \\$isApiRequest with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:setHttpResponseCode\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:setHttpResponseCode\\(\\) has parameter \\$code with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:setPreferredDecorators\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:setRequest\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:setSubmitLabel\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:setSubmitLabel\\(\\) has parameter \\$label with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:setSuccessMessage\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:setSuccessMessage\\(\\) has parameter \\$message with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:setSuccessUrl\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:setSuccessUrl\\(\\) has parameter \\$params with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:setSuccessUrl\\(\\) has parameter \\$url with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:setup\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of function array_pop expects array, array\\<int, string\\>\\|false given\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:\\$deleteButtonName has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:\\$didSetup has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:\\$fakeSubmitButtonName has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:\\$formName has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:\\$hasBeenSent has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:\\$hasBeenSubmitted has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:\\$isApiRequest has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:\\$request has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:\\$submitButtonName has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:\\$submitLabel has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:\\$successMessage has no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php
+
+		-
+			message: "#^Call to an undefined method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\|Icinga\\\\Module\\\\Businessprocess\\\\MonitoredNode\\:\\:addChild\\(\\)\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/Validator/HostServiceTermValidator.php
+
+		-
+			message: "#^Parameter \\#1 \\$label of method ipl\\\\Web\\\\FormElement\\\\TermInput\\\\Term\\:\\:setLabel\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/Validator/HostServiceTermValidator.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Navigation\\\\Renderer\\\\ProcessProblemsBadge\\:\\:getBpConfigName\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Navigation/Renderer/ProcessProblemsBadge.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Navigation\\\\Renderer\\\\ProcessProblemsBadge\\:\\:setBpConfigName\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Navigation/Renderer/ProcessProblemsBadge.php
+
+		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Navigation\\\\Renderer\\\\ProcessProblemsBadge\\:\\:setBpConfigName\\(\\) has parameter \\$bpConfigName with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Navigation/Renderer/ProcessProblemsBadge.php

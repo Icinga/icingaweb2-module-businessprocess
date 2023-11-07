@@ -11,9 +11,9 @@ abstract class MonitoredNode extends Node
     public function getLink()
     {
         if ($this->isMissing()) {
-            return Html::tag('a', ['href' => '#'], $this->getAlias());
+            return Html::tag('a', ['href' => '#'], $this->getAlias() ?? $this->getName());
         } else {
-            return Html::tag('a', ['href' => $this->getUrl()], $this->getAlias());
+            return Html::tag('a', ['href' => $this->getUrl()], $this->getAlias() ?? $this->getName());
         }
     }
 }

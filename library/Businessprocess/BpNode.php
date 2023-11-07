@@ -5,20 +5,23 @@ namespace Icinga\Module\Businessprocess;
 use Icinga\Exception\ConfigurationError;
 use Icinga\Exception\NotFoundError;
 use Icinga\Module\Businessprocess\Exception\NestingError;
+use ipl\Web\Widget\Icon;
 
 class BpNode extends Node
 {
     const OP_AND = '&';
     const OP_OR  = '|';
+    const OP_XOR  = '^';
     const OP_NOT  = '!';
     const OP_DEGRADED  = '%';
 
     protected $operator = '&';
+
     protected $url;
-    protected $info_command;
+
     protected $display = 0;
 
-    /** @var  Node[] */
+    /** @var  ?Node[] */
     protected $children;
 
     /** @var array */
@@ -54,7 +57,8 @@ class BpNode extends Node
 
     public function __construct($object)
     {
-        $this->name = $object->name;
+        $this->name = BpConfig::escapeName($object->name);
+        $this->alias = BpConfig::unescapeName($object->name);
         $this->operator = $object->operator;
         $this->childNames = $object->child_names;
     }
@@ -133,7 +137,6 @@ class BpNode extends Node
 
         $this->children[$name] = $node;
         $this->childNames[] = $name;
-        $this->reorderChildren();
         $node->addParent($this);
         return $this;
     }
@@ -170,6 +173,8 @@ class BpNode extends Node
             if (! empty($this->children)) {
                 unset($this->children[$name]);
             }
+
+            $this->childNames = array_values($this->childNames);
         }
 
         return $this;
@@ -272,11 +277,11 @@ class BpNode extends Node
 
             foreach ($this->getChildren() as $child) {
                 if ($child->isMissing()) {
-                    $missing[$child->getName()] = $child;
+                    $missing[$child->getAlias() ?? $child->getName()] = $child;
                 }
 
                 foreach ($child->getMissingChildren() as $m) {
-                    $missing[$m->getName()] = $m;
+                    $missing[$m->getAlias() ?? $m->getName()] = $m;
                 }
             }
 
@@ -303,6 +308,7 @@ class BpNode extends Node
         switch ($operator) {
             case self::OP_AND:
             case self::OP_OR:
+            case self::OP_XOR:
             case self::OP_NOT:
             case self::OP_DEGRADED:
                 return;
@@ -332,21 +338,6 @@ class BpNode extends Node
     public function getInfoUrl()
     {
         return $this->url;
-    }
-
-    public function setInfoCommand($cmd)
-    {
-        $this->info_command = $cmd;
-    }
-
-    public function hasInfoCommand()
-    {
-        return $this->info_command !== null;
-    }
-
-    public function getInfoCommand()
-    {
-        return $this->info_command;
     }
 
     public function setStateOverrides(array $overrides, $name = null)
@@ -476,6 +467,21 @@ class BpNode extends Node
             case self::OP_OR:
                 $sort_state = min($sort_states);
                 break;
+            case self::OP_XOR:
+                $actualGood = 0;
+                foreach ($sort_states as $s) {
+                    if ($this->sortStateTostate($s) === self::ICINGA_OK) {
+                        $actualGood++;
+                    }
+                }
+
+                if ($actualGood === 1) {
+                    $this->state = self::ICINGA_OK;
+                } else {
+                    $this->state = self::ICINGA_CRITICAL;
+                }
+
+                return $this;
             case self::OP_DEGRADED:
                 $maxState = max($sort_states);
                 $flags = $maxState & 0xf;
@@ -546,7 +552,6 @@ class BpNode extends Node
     {
         $this->childNames = $names;
         $this->children = null;
-        $this->reorderChildren();
         return $this;
     }
 
@@ -565,7 +570,6 @@ class BpNode extends Node
     {
         if ($this->children === null) {
             $this->children = [];
-            $this->reorderChildren();
             foreach ($this->getChildNames() as $name) {
                 $this->children[$name] = $this->getBpConfig()->getNode($name);
                 $this->children[$name]->addParent($this);
@@ -573,29 +577,6 @@ class BpNode extends Node
         }
 
         return $this->children;
-    }
-
-    /**
-     * Reorder this node's children, in case manual order is not applied
-     */
-    protected function reorderChildren()
-    {
-        if ($this->getBpConfig()->getMetadata()->isManuallyOrdered()) {
-            return;
-        }
-
-        $childNames = $this->getChildNames();
-        natcasesort($childNames);
-        $this->childNames = array_values($childNames);
-
-        if (! empty($this->children)) {
-            $children = [];
-            foreach ($this->childNames as $name) {
-                $children[$name] = $this->children[$name];
-            }
-
-            $this->children = $children;
-        }
     }
 
     /**
@@ -642,16 +623,14 @@ class BpNode extends Node
         switch ($this->getOperator()) {
             case self::OP_AND:
                 return 'AND';
-                break;
             case self::OP_OR:
                 return 'OR';
-                break;
+            case self::OP_XOR:
+                return 'XOR';
             case self::OP_NOT:
                 return 'NOT';
-                break;
             case self::OP_DEGRADED:
                 return 'DEG';
-                break;
             default:
                 // MIN
                 $this->assertNumericOperator();
@@ -659,7 +638,7 @@ class BpNode extends Node
         }
     }
 
-    public function getIcon()
+    public function getIcon(): Icon
     {
         $this->icon = $this->hasParents() ? 'cubes' : 'sitemap';
         return parent::getIcon();

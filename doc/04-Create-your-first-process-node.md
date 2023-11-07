@@ -1,5 +1,4 @@
-<a id="Create-your-first-process-node"></a>Create your first Business Process Node
-==================================================================================
+# Create your first Business Process Node
 
 A *Business Process Node* consists of a *name*, *title*, an *operator* and one or
 more child nodes. It can be a Root Node, child node of other Business Process
@@ -7,8 +6,7 @@ Nodes - or both.
 
 ![Empty Config](screenshot/04_first-root-node/0301_empty-config.png)
 
-Configuring our first node
---------------------------
+## Configuring our first node
 
 To create our first *Business Process Node* we click the *Add* button. This
 leads to the related configuration form:

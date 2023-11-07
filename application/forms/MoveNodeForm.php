@@ -3,18 +3,19 @@
 namespace Icinga\Module\Businessprocess\Forms;
 
 use Icinga\Application\Icinga;
+use Icinga\Application\Web;
 use Icinga\Exception\Http\HttpException;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\Exception\ModificationError;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\Node;
+use Icinga\Module\Businessprocess\Web\Form\BpConfigBaseForm;
 use Icinga\Module\Businessprocess\Web\Form\CsrfToken;
-use Icinga\Module\Businessprocess\Web\Form\QuickForm;
 use Icinga\Web\Session;
 use Icinga\Web\Session\SessionNamespace;
 
-class MoveNodeForm extends QuickForm
+class MoveNodeForm extends BpConfigBaseForm
 {
     /** @var BpConfig */
     protected $bp;
@@ -96,16 +97,6 @@ class MoveNodeForm extends QuickForm
     }
 
     /**
-     * @param BpConfig $process
-     * @return $this
-     */
-    public function setProcess(BpConfig $process)
-    {
-        $this->bp = $process;
-        return $this;
-    }
-
-    /**
      * @param Node $node
      * @return $this
      */
@@ -122,16 +113,6 @@ class MoveNodeForm extends QuickForm
     public function setParentNode(BpNode $node = null)
     {
         $this->parentNode = $node;
-        return $this;
-    }
-
-    /**
-     * @param SessionNamespace $session
-     * @return $this
-     */
-    public function setSession(SessionNamespace $session)
-    {
-        $this->session = $session;
         return $this;
     }
 
@@ -156,7 +137,9 @@ class MoveNodeForm extends QuickForm
             );
         } catch (ModificationError $e) {
             $this->notifyError($e->getMessage());
-            Icinga::app()->getResponse()
+            /** @var Web $app */
+            $app = Icinga::app();
+            $app->getResponse()
                 // Web 2's JS forces a content update for non-200s. Our own JS
                 // can't prevent this, hence we're not making this a 400 :(
                 //->setHttpResponseCode(400)
@@ -171,7 +154,11 @@ class MoveNodeForm extends QuickForm
         $this->notifySuccess($this->getSuccessMessage($this->translate('Node order updated')));
 
         $response = $this->getRequest()->getResponse()
-            ->setHeader('X-Icinga-Container', 'ignore');
+            ->setHeader('X-Icinga-Container', 'ignore')
+            ->setHeader('X-Icinga-Extra-Updates', implode(';', [
+                $this->getRequest()->getHeader('X-Icinga-Container'),
+                $this->getSuccessUrl()->getAbsoluteUrl()
+            ]));
 
         Session::getSession()->write();
         $response->sendResponse();

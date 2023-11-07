@@ -4,14 +4,15 @@ namespace Icinga\Module\Businessprocess\Forms;
 
 use Icinga\Module\Businessprocess\MonitoredNode;
 use Icinga\Module\Businessprocess\Simulation;
-use Icinga\Module\Businessprocess\Web\Form\QuickForm;
+use Icinga\Module\Businessprocess\Web\Form\BpConfigBaseForm;
+use Icinga\Web\View;
 
-class SimulationForm extends QuickForm
+class SimulationForm extends BpConfigBaseForm
 {
     /** @var MonitoredNode */
     protected $node;
 
-    /** @var MonitoredNode */
+    /** @var ?MonitoredNode */
     protected $simulatedNode;
 
     /** @var Simulation */
@@ -36,6 +37,7 @@ class SimulationForm extends QuickForm
             $node = $this->node;
         }
 
+        /** @var View $view */
         $view = $this->getView();
         if ($hasSimulation) {
             $title = $this->translate('Modify simulation for %s');
@@ -44,7 +46,7 @@ class SimulationForm extends QuickForm
         }
         $this->addHtml(
             '<h2>'
-            . $view->escape(sprintf($title, $node->getAlias()))
+            . $view->escape(sprintf($title, $node->getAlias() ?? $node->getName()))
             . '</h2>'
         );
 

@@ -6,6 +6,8 @@ use Icinga\Application\Modules\Module;
 use Icinga\Date\DateFormatter;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
+use Icinga\Module\Businessprocess\Forms\AddNodeForm;
+use Icinga\Module\Businessprocess\Forms\EditNodeForm;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
 use Icinga\Module\Businessprocess\Renderer\Breadcrumb;
@@ -26,8 +28,16 @@ use Icinga\Web\Notification;
 use Icinga\Web\Url;
 use Icinga\Web\Widget\Tabextension\DashboardAction;
 use Icinga\Web\Widget\Tabextension\OutputFormat;
+use ipl\Html\Form;
 use ipl\Html\Html;
+use ipl\Html\HtmlElement;
 use ipl\Html\HtmlString;
+use ipl\Html\TemplateString;
+use ipl\Html\Text;
+use ipl\Web\Control\SortControl;
+use ipl\Web\FormElement\TermInput;
+use ipl\Web\Widget\Link;
+use ipl\Web\Widget\Icon;
 
 class ProcessController extends Controller
 {
@@ -114,20 +124,56 @@ class ProcessController extends Controller
 
         $this->tabs()->extend(new OutputFormat());
 
-        $missing = $bp->getMissingChildren();
-        if (! empty($missing)) {
-            if (($count = count($missing)) > 10) {
-                $missing = array_slice($missing, 0, 10);
-                $missing[] = '...';
-            }
-            $bp->addError('There are %d missing nodes: %s', $count, implode(', ', $missing));
-        }
-        $this->content()->add($this->showHints($bp));
+        $this->content()->add($this->showHints($bp, $renderer));
         $this->content()->add($this->showWarnings($bp));
         $this->content()->add($this->showErrors($bp));
         $this->content()->add($renderer);
         $this->loadActionForm($bp, $node);
         $this->setDynamicAutorefresh();
+    }
+
+    /**
+     * Create a sort control and apply its sort specification to the given renderer
+     *
+     * @param Renderer $renderer
+     * @param BpConfig $config
+     *
+     * @return SortControl
+     */
+    protected function createBpSortControl(Renderer $renderer, BpConfig $config): SortControl
+    {
+        $defaultSort = $this->session()->get('sort.default', $renderer->getDefaultSort());
+        $options = [
+            'display_name asc'  => $this->translate('Name'),
+            'state desc'        => $this->translate('State')
+        ];
+        if ($config->getMetadata()->isManuallyOrdered()) {
+            $options['manual asc'] = $this->translate('Manual');
+        } elseif ($defaultSort === 'manual desc') {
+            $defaultSort = $renderer->getDefaultSort();
+        }
+
+        $sortControl = SortControl::create($options)
+            ->setDefault($defaultSort)
+            ->setMethod('POST')
+            ->setAttribute('name', 'bp-sort-control')
+            ->on(Form::ON_SUCCESS, function (SortControl $sortControl) use ($renderer) {
+                $sort = $sortControl->getSort();
+                if ($sort === $renderer->getDefaultSort()) {
+                    $this->session()->delete('sort.default');
+                    $url = Url::fromRequest()->without($sortControl->getSortParam());
+                } else {
+                    $this->session()->set('sort.default', $sort);
+                    $url = Url::fromRequest()->with($sortControl->getSortParam(), $sort);
+                }
+
+                $this->redirectNow($url);
+            })->handleRequest($this->getServerRequest());
+
+        $renderer->setSort($sortControl->getSort());
+        $this->params->shift($sortControl->getSortParam());
+
+        return $sortControl;
     }
 
     protected function prepareControls($bp, $renderer)
@@ -140,10 +186,9 @@ class ProcessController extends Controller
                 'a',
                 [
                     'href'  => $this->url()->without('showFullscreen')->without('view'),
-                    'title' => $this->translate('Leave full screen and switch back to normal mode'),
-                    'style' => 'float: right'
+                    'title' => $this->translate('Leave full screen and switch back to normal mode')
                 ],
-                Html::tag('i', ['class' => 'icon icon-resize-small'])
+                new Icon('down-left-and-up-right-to-center')
             ));
         }
 
@@ -155,9 +200,11 @@ class ProcessController extends Controller
         $controls->add(Breadcrumb::create(clone $renderer));
         if (! $this->showFullscreen && ! $this->view->compact) {
             $controls->add(
-                new RenderedProcessActionBar($bp, $renderer, $this->Auth(), $this->url())
+                new RenderedProcessActionBar($bp, $renderer, $this->url())
             );
         }
+
+        $controls->addHtml($this->createBpSortControl($renderer, $bp));
     }
 
     protected function getNode(BpConfig $bp)
@@ -225,21 +272,43 @@ class ProcessController extends Controller
         $canEdit =  $bp->getMetadata()->canModify();
 
         if ($action === 'add' && $canEdit) {
-            $form = $this->loadForm('AddNode')
-                ->setSuccessUrl(Url::fromRequest()->without('action'))
-                ->setStorage($this->storage())
+            $form = (new AddNodeForm())
                 ->setProcess($bp)
                 ->setParentNode($node)
+                ->setStorage($this->storage())
+                ->setSession($this->session())
+                ->on(AddNodeForm::ON_SUCCESS, function () {
+                    $this->redirectNow(Url::fromRequest()->without('action'));
+                })
+                ->handleRequest($this->getServerRequest());
+
+            if ($form->hasElement('children')) {
+                /** @var TermInput $childrenElement */
+                $childrenElement = $form->getElement('children');
+                foreach ($childrenElement->prepareMultipartUpdate($this->getServerRequest()) as $update) {
+                    if (! is_array($update)) {
+                        $update = [$update];
+                    }
+
+                    $this->addPart(...$update);
+                }
+            }
+        } elseif ($action === 'cleanup' && $canEdit) {
+            $form = $this->loadForm('CleanupNode')
+                ->setSuccessUrl(Url::fromRequest()->without('action'))
+                ->setProcess($bp)
                 ->setSession($this->session())
                 ->handleRequest();
         } elseif ($action === 'editmonitored' && $canEdit) {
-            $form = $this->loadForm('EditNode')
-                ->setSuccessUrl(Url::fromRequest()->without('action'))
+            $form = (new EditNodeForm())
                 ->setProcess($bp)
                 ->setNode($bp->getNode($this->params->get('editmonitorednode')))
                 ->setParentNode($node)
                 ->setSession($this->session())
-                ->handleRequest();
+                ->on(EditNodeForm::ON_SUCCESS, function () {
+                    $this->redirectNow(Url::fromRequest()->without(['action', 'editmonitorednode']));
+                })
+                ->handleRequest($this->getServerRequest());
         } elseif ($action === 'delete' && $canEdit) {
             $form = $this->loadForm('DeleteNode')
                 ->setSuccessUrl(Url::fromRequest()->without('action'))
@@ -262,7 +331,21 @@ class ProcessController extends Controller
                 ->setSimulation(Simulation::fromSession($this->session()))
                 ->handleRequest();
         } elseif ($action === 'move') {
+            $successUrl = $this->url()->without(['action', 'movenode']);
+            if ($this->params->get('mode') === 'tree') {
+                // If the user moves a node from a subtree, the `node` param exists
+                $successUrl->getParams()->remove('node');
+            }
+
+            if ($this->session()->get('sort.default')) {
+                // If there's a default sort specification in the session, it can only be `display_name desc`,
+                // as otherwise the user wouldn't be able to trigger this action. So it's safe to just define
+                // descending manual order now.
+                $successUrl->getParams()->add(SortControl::DEFAULT_SORT_PARAM, 'manual desc');
+            }
+
             $form = $this->loadForm('MoveNode')
+                ->setSuccessUrl($successUrl)
                 ->setProcess($bp)
                 ->setParentNode($node)
                 ->setSession($this->session())
@@ -285,8 +368,11 @@ class ProcessController extends Controller
             return;
         }
 
-        if ($this->params->get('action')) {
-            $this->setAutorefreshInterval(45);
+        if ($this->params->has('action')) {
+            if ($this->params->get('action') !== 'add') {
+                // The new add form uses the term input, which doesn't support value persistence across refreshes
+                $this->setAutorefreshInterval(45);
+            }
         } else {
             $this->setAutorefreshInterval(10);
         }
@@ -320,12 +406,14 @@ class ProcessController extends Controller
         }
     }
 
-    protected function showHints(BpConfig $bp)
+    protected function showHints(BpConfig $bp, Renderer $renderer)
     {
         $ul = Html::tag('ul', ['class' => 'error']);
+        $this->prepareMissingNodeLinks($ul);
         foreach ($bp->getErrors() as $error) {
-            $ul->add(Html::tag('li')->setContent($error));
+            $ul->addHtml(Html::tag('li', $error));
         }
+
         if ($bp->hasChanges()) {
             $li = Html::tag('li')->setSeparator(' ');
             $li->add(sprintf(
@@ -359,10 +447,84 @@ class ProcessController extends Controller
             $ul->add($li);
         }
 
+        if (! $renderer->isLocked() && $renderer->appliesCustomSorting()) {
+            $ul->addHtml(Html::tag('li', null, [
+                Text::create($this->translate('Drag&Drop disabled. Custom sort order applied.')),
+                (new Form())
+                    ->setAttribute('class', 'inline')
+                    ->addElement('submitButton', SortControl::DEFAULT_SORT_PARAM, [
+                        'label' => $this->translate('Reset to default'),
+                        'value' => $renderer->getDefaultSort(),
+                        'class' => 'link-button'
+                    ])
+                    ->addElement('hidden', 'uid', ['value' => 'bp-sort-control'])
+            ])->setSeparator(' '));
+        }
+
         if (! $ul->isEmpty()) {
             return $ul;
         } else {
             return null;
+        }
+    }
+
+    protected function prepareMissingNodeLinks(HtmlElement $ul): void
+    {
+        $missing = array_keys($this->bp->getMissingChildren());
+        if (! empty($missing)) {
+            $missingLinkedNodes = null;
+            foreach ($this->bp->getImportedNodes() as $process) {
+                if ($process->hasMissingChildren()) {
+                    $missingLinkedNodes = array_keys($process->getMissingChildren());
+                    $link = Url::fromPath('businessprocess/process/show')
+                        ->addParams(['config' => $process->getConfigName()]);
+
+                    $ul->addHtml(Html::tag(
+                        'li',
+                        [
+                            TemplateString::create(
+                                tp(
+                                    'Linked node %s has one missing child node: {{#link}}Show{{/link}}',
+                                    'Linked node %s has %d missing child nodes: {{#link}}Show{{/link}}',
+                                    count($missingLinkedNodes)
+                                ),
+                                $process->getAlias(),
+                                count($missingLinkedNodes),
+                                ['link' => new Link(null, (string) $link)]
+                            )
+                        ]
+                    ));
+                }
+            }
+
+            if (! empty($missingLinkedNodes)) {
+                return;
+            }
+
+            $count = count($missing);
+            if ($count > 10) {
+                $missing = array_slice($missing, 0, 10);
+                $missing[] = '...';
+            }
+
+            $link = Url::fromPath('businessprocess/process/show')
+                ->addParams(['config' => $this->bp->getName(), 'action' => 'cleanup']);
+
+            $ul->addHtml(Html::tag(
+                'li',
+                [
+                    TemplateString::create(
+                        tp(
+                            '{{#link}}Cleanup{{/link}} one missing node: %2$s',
+                            '{{#link}}Cleanup{{/link}} %d missing nodes: %s',
+                            count($missing)
+                        ),
+                        ['link' => new Link(null, (string) $link)],
+                        $count,
+                        implode(', ', $missing)
+                    )
+                ]
+            ));
         }
     }
 
@@ -447,7 +609,7 @@ class ProcessController extends Controller
             ->setParams($this->getRequest()->getUrl()->getParams());
         $this->content()->add(
             $this->loadForm('bpConfig')
-                ->setProcessConfig($bp)
+                ->setProcess($bp)
                 ->setStorage($this->storage())
                 ->setSuccessUrl($url)
                 ->handleRequest()
@@ -464,10 +626,12 @@ class ProcessController extends Controller
                 'a',
                 [
                     'href'  => Url::fromPath('businessprocess/process/source', $params),
-                    'class' => 'icon-doc-text',
                     'title' => $this->translate('Show source code')
                 ],
-                $this->translate('Source')
+                [
+                    new Icon('file-lines'),
+                    $this->translate('Source'),
+                ]
             ));
         } else {
             $params = array(
@@ -479,10 +643,12 @@ class ProcessController extends Controller
                 'a',
                 [
                     'href'  => Url::fromPath('businessprocess/process/source', $params),
-                    'class' => 'icon-flapping',
                     'title' => $this->translate('Highlight changes')
                 ],
-                $this->translate('Diff')
+                [
+                    new Icon('shuffle'),
+                    $this->translate('Diff')
+                ]
             ));
         }
 
@@ -490,11 +656,13 @@ class ProcessController extends Controller
             'a',
             [
                 'href'      => Url::fromPath('businessprocess/process/download', ['config' => $config->getName()]),
-                'class'     => 'icon-download',
                 'target'    => '_blank',
                 'title'     => $this->translate('Download process configuration')
             ],
-            $this->translate('Download')
+            [
+                new Icon('download'),
+                $this->translate('Download')
+            ]
         ));
 
         return $actionBar;
@@ -584,7 +752,7 @@ class ProcessController extends Controller
                     if (isset($node['since'])) {
                         $data[] = DateFormatter::formatDateTime($node['since']);
                     }
-                    
+
                     if (isset($node['in_downtime'])) {
                         $data[] = $node['in_downtime'];
                     }

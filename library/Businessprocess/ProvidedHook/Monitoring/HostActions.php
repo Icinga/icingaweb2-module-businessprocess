@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\ProvidedHook\Monitoring;
 
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Monitoring\Hook\HostActionsHook;
 use Icinga\Module\Monitoring\Object\Host;
 
@@ -12,7 +13,7 @@ class HostActions extends HostActionsHook
         $label = mt('businessprocess', 'Business Impact');
         return array(
             $label => 'businessprocess/node/impact?name='
-                . rawurlencode($host->getName() . ';Hoststatus')
+                . rawurlencode(BpConfig::joinNodeName($host->getName(), 'Hoststatus'))
         );
     }
 }

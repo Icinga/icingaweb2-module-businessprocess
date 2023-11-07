@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\ProvidedHook\Icingadb;
 
+use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Icingadb\Hook\HostActionsHook;
 use Icinga\Module\Icingadb\Model\Host;
 use ipl\Web\Widget\Link;
@@ -15,7 +16,7 @@ class HostActions extends HostActionsHook
             new Link(
                 $label,
                 'businessprocess/node/impact?name='
-                . rawurlencode($host->name . ';Hoststatus')
+                . rawurlencode(BpConfig::joinNodeName($host->name, 'Hoststatus'))
             )
         );
     }

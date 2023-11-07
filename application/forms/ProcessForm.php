@@ -3,49 +3,37 @@
 namespace Icinga\Module\Businessprocess\Forms;
 
 use Icinga\Module\Businessprocess\BpNode;
-use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
-use Icinga\Module\Businessprocess\Web\Form\QuickForm;
-use Icinga\Module\Monitoring\Backend\MonitoringBackend;
+use Icinga\Module\Businessprocess\Node;
+use Icinga\Module\Businessprocess\Web\Form\BpConfigBaseForm;
 use Icinga\Web\Notification;
-use Icinga\Web\Session\SessionNamespace;
-use ipl\Sql\Connection as IcingaDbConnection;
+use Icinga\Web\View;
 
-class ProcessForm extends QuickForm
+class ProcessForm extends BpConfigBaseForm
 {
-    /** @var MonitoringBackend|IcingaDbConnection */
-    protected $backend;
-
-    /** @var BpConfig */
-    protected $bp;
-
     /** @var BpNode */
     protected $node;
 
-    protected $objectList = array();
-
-    protected $processList = array();
-
-    /** @var SessionNamespace */
-    protected $session;
-
     public function setup()
     {
-        if ($this->node === null) {
-            $this->addElement('text', 'name', array(
-                'label'        => $this->translate('ID'),
-                'required'     => true,
-                'description' => $this->translate(
-                    'This is the unique identifier of this process'
-                ),
-            ));
-        } else {
+        if ($this->node !== null) {
+            /** @var View $view */
+            $view = $this->getView();
+
             $this->addHtml(
-                '<h2>' . $this->getView()->escape(
+                '<h2>' . $view->escape(
                     sprintf($this->translate('Modify "%s"'), $this->node->getAlias())
                 ) . '</h2>'
             );
         }
+
+        $this->addElement('text', 'name', [
+            'label'         => $this->translate('ID'),
+            'value'         => (string) $this->node,
+            'required'      => true,
+            'readonly'      => $this->node ? true : null,
+            'description'   => $this->translate('This is the unique identifier of this process')
+        ]);
 
         $this->addElement('text', 'alias', array(
             'label'        => $this->translate('Display Name'),
@@ -58,21 +46,7 @@ class ProcessForm extends QuickForm
         $this->addElement('select', 'operator', array(
             'label'        => $this->translate('Operator'),
             'required'     => true,
-            'multiOptions' => array(
-                '&' => $this->translate('AND'),
-                '|' => $this->translate('OR'),
-                '!' => $this->translate('NOT'),
-                '%' => $this->translate('DEGRADED'),
-                '1' => $this->translate('MIN 1'),
-                '2' => $this->translate('MIN 2'),
-                '3' => $this->translate('MIN 3'),
-                '4' => $this->translate('MIN 4'),
-                '5' => $this->translate('MIN 5'),
-                '6' => $this->translate('MIN 6'),
-                '7' => $this->translate('MIN 7'),
-                '8' => $this->translate('MIN 8'),
-                '9' => $this->translate('MIN 9'),
-            )
+            'multiOptions' => Node::getOperators()
         ));
 
         if ($this->node !== null) {
@@ -112,43 +86,12 @@ class ProcessForm extends QuickForm
     }
 
     /**
-     * @param MonitoringBackend|IcingaDbConnection $backend
-     * @return $this
-     */
-    public function setBackend($backend)
-    {
-        $this->backend = $backend;
-        return $this;
-    }
-
-    /**
-     * @param BpConfig $process
-     * @return $this
-     */
-    public function setProcess(BpConfig $process)
-    {
-        $this->bp = $process;
-        $this->setBackend($process->getBackend());
-        return $this;
-    }
-
-    /**
      * @param BpNode $node
      * @return $this
      */
     public function setNode(BpNode $node)
     {
         $this->node = $node;
-        return $this;
-    }
-
-    /**
-     * @param SessionNamespace $session
-     * @return $this
-     */
-    public function setSession(SessionNamespace $session)
-    {
-        $this->session = $session;
         return $this;
     }
 

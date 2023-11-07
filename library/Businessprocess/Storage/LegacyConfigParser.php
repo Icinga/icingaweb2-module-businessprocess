@@ -11,7 +11,7 @@ use Icinga\Module\Businessprocess\Metadata;
 
 class LegacyConfigParser
 {
-    /** @var string */
+    /** @var ?string */
     protected static $prevKey;
 
     /** @var int */
@@ -196,6 +196,10 @@ class LegacyConfigParser
      */
     protected static function parseHeaderLine($line, Metadata $metadata)
     {
+        if (empty($line)) {
+            return;
+        }
+
         if (preg_match('/^\s*#\s+(.+?)\s*:\s*(.+)$/', trim($line), $m)) {
             if ($metadata->hasKey($m[1])) {
                 static::$prevKey = $m[1];
@@ -226,33 +230,16 @@ class LegacyConfigParser
      */
     protected function parseDisplay(&$line, BpConfig $bp)
     {
-        list($display, $name, $desc) = preg_split('~\s*;\s*~', substr($line, 8), 3);
+        list($display, $name, $desc) = preg_split('~\s*(?<!\\\\);\s*~', substr($line, 8), 3);
         $bp->getBpNode($name)->setAlias($desc)->setDisplay($display);
         if ($display > 0) {
             $bp->addRootNode($name);
         }
     }
 
-    /**
-     * @param $line
-     * @param BpConfig $bp
-     */
-    protected function parseExternalInfo(&$line, BpConfig $bp)
-    {
-        list($name, $script) = preg_split('~\s*;\s*~', substr($line, 14), 2);
-        $bp->getBpNode($name)->setInfoCommand($script);
-    }
-
-    protected function parseExtraInfo(&$line, BpConfig $bp)
-    {
-        // TODO: Not yet
-        // list($name, $script) = preg_split('~\s*;\s*~', substr($line, 14), 2);
-        // $this->getNode($name)->setExtraInfo($script);
-    }
-
     protected function parseInfoUrl(&$line, BpConfig $bp)
     {
-        list($name, $url) = preg_split('~\s*;\s*~', substr($line, 9), 2);
+        list($name, $url) = preg_split('~\s*(?<!\\\\);\s*~', substr($line, 9), 2);
         $bp->getBpNode($name)->setInfoUrl($url);
     }
 
@@ -260,6 +247,7 @@ class LegacyConfigParser
     {
         // state_overrides <bp-node>!<child>|n-n[,n-n]!<child>|n-n[,n-n]
         $segments = preg_split('~\s*!\s*~', substr($line, 16));
+        /** @var BpNode $node */
         $node = $bp->getNode(array_shift($segments));
         foreach ($segments as $overrideDef) {
             list($childName, $overrides) = preg_split('~\s*\|\s*~', $overrideDef, 2);
@@ -284,10 +272,7 @@ class LegacyConfigParser
 
         switch ($type) {
             case 'external_info':
-                $this->parseExternalInfo($line, $bp);
-                break;
             case 'extra_info':
-                $this->parseExtraInfo($line, $bp);
                 break;
             case 'info_url':
                 $this->parseInfoUrl($line, $bp);
@@ -340,12 +325,8 @@ class LegacyConfigParser
 
         list($name, $value) = preg_split('~\s*=\s*~', $line, 2);
 
-        if (strpos($name, ';') !== false) {
-            $this->parseError('No semicolon allowed in varname');
-        }
-
         $op = '&';
-        if (preg_match_all('~(?<!\\\\)([\|\+&\!\%])~', $value, $m)) {
+        if (preg_match_all('~(?<!\\\\)([\|\+&\!\%\^])~', $value, $m)) {
             $op = implode('', $m[1]);
             for ($i = 1; $i < strlen($op); $i++) {
                 if ($op[$i] !== $op[$i - 1]) {
@@ -374,16 +355,16 @@ class LegacyConfigParser
 
         $cmps = preg_split('~\s*(?<!\\\\)\\' . $op . '\s*~', $value, -1, PREG_SPLIT_NO_EMPTY);
         foreach ($cmps as $val) {
-            $val = preg_replace('~(\\\\([\|\+&\!\%]))~', '$2', $val);
-            if (strpos($val, ';') !== false) {
+            $val = preg_replace('~(\\\\([\|\+&\!\%\^]))~', '$2', $val);
+            if (preg_match('~(?<!\\\\);~', $val)) {
                 if ($bp->hasNode($val)) {
                     $node->addChild($bp->getNode($val));
                 } else {
-                    list($host, $service) = preg_split('~;~', $val, 2);
+                    list($host, $service) = preg_split('~(?<!\\\\);~', $val, 2);
                     if ($service === 'Hoststatus') {
-                        $node->addChild($bp->createHost($host));
+                        $node->addChild($bp->createHost(str_replace('\\;', ';', $host)));
                     } else {
-                        $node->addChild($bp->createService($host, $service));
+                        $node->addChild($bp->createService(str_replace('\\;', ';', $host), $service));
                     }
                 }
             } elseif ($val[0] === '@') {
