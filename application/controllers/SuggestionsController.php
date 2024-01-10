@@ -101,7 +101,8 @@ class SuggestionsController extends Controller
                     ) {
                         yield [
                             'search' => $search,
-                            'label'  => ($bpNode->getAlias() ?? $bpNode->getName())." (".implode("->",$bpNode->getPaths()[0]).")",
+                            'label'  => ($bpNode->getAlias() ?? $bpNode->getName())
+                                . " (" . implode("->", $bpNode->getPaths()[0]) . ")",
                             'config' => $config
                         ];
                     }
