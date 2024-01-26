@@ -370,6 +370,12 @@ class BpNode extends Node
         return $this->alias ? preg_replace('~_~', ' ', $this->alias) : $this->name;
     }
 
+    public function getLabel()
+    {
+        return ($this->alias ?? $this->name)
+            . ' (' . implode(' » ', $this->getPaths()[0]) . ')';
+    }
+    
     /**
      * @return int
      */
