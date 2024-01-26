@@ -367,6 +367,17 @@ abstract class Node
         return $this;
     }
 
+    /**
+     * Get the label of the node
+     *
+     * @return ?string
+     */
+    public function getLabel()
+    {
+        return ($this->alias ?? $this->name)
+            . ' (' . implode(' » ', $this->getPaths()[0]) . ')';
+    }
+
     public function hasParents()
     {
         return count($this->parents) > 0;

@@ -371,17 +371,6 @@ class BpNode extends Node
     }
 
     /**
-     * Get the label of the node
-     *
-     * @return ?string
-     */
-    public function getLabel()
-    {
-        return ($this->alias ?? $this->name)
-            . ' (' . implode(' » ', $this->getPaths()[0]) . ')';
-    }
-    
-    /**
      * @return int
      */
     public function getState()
