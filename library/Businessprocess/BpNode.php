@@ -370,6 +370,11 @@ class BpNode extends Node
         return $this->alias ? preg_replace('~_~', ' ', $this->alias) : $this->name;
     }
 
+    /**
+     * Get the label of the node
+     *
+     * @return ?string
+     */
     public function getLabel()
     {
         return ($this->alias ?? $this->name)
