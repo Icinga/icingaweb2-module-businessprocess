@@ -236,7 +236,7 @@ class AddNodeForm extends CompatForm
                                 if (! $bp->hasNode($nodeName)) {
                                     $term->setMessage($this->translate('No node with this name found in config'));
                                 } else {
-                                    $term->setLabel($bp->getNode($nodeName)->getAlias());
+                                    $term->setLabel($bp->getNode($nodeName)->getLabel());
                                 }
                             }
                         }
