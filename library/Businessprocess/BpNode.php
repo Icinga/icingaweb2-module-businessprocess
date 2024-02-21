@@ -99,13 +99,16 @@ class BpNode extends Node
         return $this->counters;
     }
 
-    public function hasProblems()
+    public function hasProblems(bool $ignoreHandledStates = false)
     {
-        if ($this->isProblem()) {
+        if ($this->isProblem() && ($ignoreHandledStates || ! $this->isHandled())) {
             return true;
         }
 
-        $okStates = array('OK', 'UP', 'PENDING', 'MISSING');
+        $okStates = ['OK', 'UP', 'PENDING', 'MISSING'];
+        if (! $ignoreHandledStates) {
+            array_push($okStates, 'CRITICAL-HANDLED', 'WARNING-HANDLED', 'UNKNOWN-HANDLED');
+        }
 
         foreach ($this->getStateSummary() as $state => $cnt) {
             if ($cnt !== 0 && ! in_array($state, $okStates)) {
@@ -149,7 +152,7 @@ class BpNode extends Node
             if (isset($this->stateOverrides[$child->getName()])) {
                 $problem = $this->getChildState($child) > 0;
             } else {
-                $problem = $child->isProblem() || ($child instanceof BpNode && $child->hasProblems());
+                $problem = $child->isProblem() || ($child instanceof BpNode && $child->hasProblems(true));
             }
 
             if ($problem) {

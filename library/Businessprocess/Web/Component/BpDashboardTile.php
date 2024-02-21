@@ -30,6 +30,9 @@ class BpDashboardTile extends BaseHtmlElement
 
         foreach ($bp->getChildren() as $node) {
             $state = strtolower($node->getStateName());
+            if ($node->isHandled()) {
+                $state .= ' handled';
+            }
 
             $tiles->add(Html::tag(
                 'a',
