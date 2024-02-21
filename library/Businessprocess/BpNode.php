@@ -105,7 +105,7 @@ class BpNode extends Node
             return true;
         }
 
-        $okStates = array('OK', 'UP', 'PENDING', 'MISSING');
+        $okStates = ['OK', 'UP', 'PENDING', 'MISSING', 'CRITICAL-HANDLED', 'WARNING-HANDLED', 'UNKNOWN-HANDLED'];
 
         foreach ($this->getStateSummary() as $state => $cnt) {
             if ($cnt !== 0 && ! in_array($state, $okStates)) {

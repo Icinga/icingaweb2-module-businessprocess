@@ -163,7 +163,7 @@ abstract class Node
 
     public function isProblem()
     {
-        return $this->getState() > 0;
+        return $this->getState() > 0 && ! $this->isHandled();
     }
 
     public function hasBeenChanged()
