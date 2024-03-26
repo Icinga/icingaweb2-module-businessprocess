@@ -286,26 +286,6 @@ parameters:
 			path: application/controllers/ProcessController.php
 
 		-
-			message: "#^Parameter \\#1 \\$stream of function fpassthru expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: application/controllers/ProcessController.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fputcsv expects resource, resource\\|false given\\.$#"
-			count: 2
-			path: application/controllers/ProcessController.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function rewind expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: application/controllers/ProcessController.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function strtolower expects string, mixed given\\.$#"
-			count: 1
-			path: application/controllers/ProcessController.php
-
-		-
 			message: "#^Parameter \\#1 \\(mixed\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: application/controllers/ProcessController.php
@@ -502,11 +482,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$parent of method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\Validator\\\\HostServiceTermValidator\\:\\:setParent\\(\\) expects Icinga\\\\Module\\\\Businessprocess\\\\BpNode, Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\|null given\\.$#"
-			count: 1
-			path: application/forms/AddNodeForm.php
-
-		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
 			count: 1
 			path: application/forms/AddNodeForm.php
 
@@ -1281,11 +1256,6 @@ parameters:
 			path: library/Businessprocess/BpConfig.php
 
 		-
-			message: "#^Parameter \\#2 \\$values of function vsprintf expects array\\<bool\\|float\\|int\\|string\\|null\\>, array\\<int, mixed\\> given\\.$#"
-			count: 2
-			path: library/Businessprocess/BpConfig.php
-
-		-
 			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:\\$changeCount has no type specified\\.$#"
 			count: 1
 			path: library/Businessprocess/BpConfig.php
@@ -1552,11 +1522,6 @@ parameters:
 
 		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\:\\:setStateOverrides\\(\\) has parameter \\$overrides with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: library/Businessprocess/BpNode.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\<Icinga\\\\Module\\\\Businessprocess\\\\Node\\>\\|null given\\.$#"
 			count: 1
 			path: library/Businessprocess/BpNode.php
 
@@ -1996,11 +1961,6 @@ parameters:
 			path: library/Businessprocess/Modification/NodeAction.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function ucfirst expects string, mixed given\\.$#"
-			count: 1
-			path: library/Businessprocess/Modification/NodeAction.php
-
-		-
 			message: "#^Parameter \\#2 \\$nodeName of static method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeAction\\:\\:create\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: library/Businessprocess/Modification/NodeAction.php
@@ -2056,11 +2016,6 @@ parameters:
 			path: library/Businessprocess/Modification/NodeApplyManualOrderAction.php
 
 		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
-			count: 1
-			path: library/Businessprocess/Modification/NodeApplyManualOrderAction.php
-
-		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeCopyAction\\:\\:applyManualSorting\\(\\) has parameter \\$bpNodes with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: library/Businessprocess/Modification/NodeCopyAction.php
@@ -2077,11 +2032,6 @@ parameters:
 
 		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeCopyAction\\:\\:sort\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: library/Businessprocess/Modification/NodeCopyAction.php
-
-		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
 			count: 1
 			path: library/Businessprocess/Modification/NodeCopyAction.php
 
@@ -2236,11 +2186,6 @@ parameters:
 			path: library/Businessprocess/Modification/NodeMoveAction.php
 
 		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
-			count: 1
-			path: library/Businessprocess/Modification/NodeMoveAction.php
-
-		-
 			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Modification\\\\NodeMoveAction\\:\\:\\$from \\(int\\) does not accept int\\|false\\.$#"
 			count: 1
 			path: library/Businessprocess/Modification/NodeMoveAction.php
@@ -2351,11 +2296,6 @@ parameters:
 			path: library/Businessprocess/Monitoring/Backend/Ido/Query/HostStatusQuery.php
 
 		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, mixed given\\.$#"
-			count: 1
-			path: library/Businessprocess/Monitoring/Backend/Ido/Query/HostStatusQuery.php
-
-		-
 			message: "#^Parameter \\#4 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
 			count: 1
 			path: library/Businessprocess/Monitoring/Backend/Ido/Query/HostStatusQuery.php
@@ -2372,11 +2312,6 @@ parameters:
 
 		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Monitoring\\\\Backend\\\\Ido\\\\Query\\\\ServiceStatusQuery\\:\\:joinCustomvar\\(\\) has parameter \\$customvar with no type specified\\.$#"
-			count: 1
-			path: library/Businessprocess/Monitoring/Backend/Ido/Query/ServiceStatusQuery.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, mixed given\\.$#"
 			count: 1
 			path: library/Businessprocess/Monitoring/Backend/Ido/Query/ServiceStatusQuery.php
 
@@ -2741,17 +2676,7 @@ parameters:
 			path: library/Businessprocess/Node.php
 
 		-
-			message: "#^Parameter \\#1 \\$name of static method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:joinNodeName\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: library/Businessprocess/ProvidedHook/Icingadb/HostActions.php
-
-		-
 			message: "#^Cannot access property \\$name on mixed\\.$#"
-			count: 1
-			path: library/Businessprocess/ProvidedHook/Icingadb/ServiceActions.php
-
-		-
-			message: "#^Parameter \\#2 \\$suffix of static method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:joinNodeName\\(\\) expects string\\|null, mixed given\\.$#"
 			count: 1
 			path: library/Businessprocess/ProvidedHook/Icingadb/ServiceActions.php
 
@@ -2912,11 +2837,6 @@ parameters:
 
 		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Renderer\\\\Renderer\\:\\:sort\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: library/Businessprocess/Renderer/Renderer.php
-
-		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
 			count: 1
 			path: library/Businessprocess/Renderer/Renderer.php
 
@@ -3246,11 +3166,6 @@ parameters:
 			path: library/Businessprocess/State/IcingaDbState.php
 
 		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$arrays of function array_merge expects array, mixed given\\.$#"
-			count: 2
-			path: library/Businessprocess/State/IcingaDbState.php
-
-		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\State\\\\MonitoringState\\:\\:apply\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: library/Businessprocess/State/MonitoringState.php
@@ -3531,11 +3446,6 @@ parameters:
 			path: library/Businessprocess/Storage/LegacyConfigParser.php
 
 		-
-			message: "#^Parameter \\#1 \\$array of function array_shift expects array, array\\<int, string\\>\\|false given\\.$#"
-			count: 1
-			path: library/Businessprocess/Storage/LegacyConfigParser.php
-
-		-
 			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|null given\\.$#"
 			count: 1
 			path: library/Businessprocess/Storage/LegacyConfigParser.php
@@ -3543,16 +3453,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$name of method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getNode\\(\\) expects string, string\\|null given\\.$#"
 			count: 2
-			path: library/Businessprocess/Storage/LegacyConfigParser.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: library/Businessprocess/Storage/LegacyConfigParser.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fgets expects resource, resource\\|false given\\.$#"
-			count: 1
 			path: library/Businessprocess/Storage/LegacyConfigParser.php
 
 		-
@@ -3671,6 +3571,11 @@ parameters:
 			path: library/Businessprocess/Storage/LegacyStorage.php
 
 		-
+			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\Storage\\:\\:__construct\\(\\) has parameter \\$config with generic class Icinga\\\\Data\\\\ConfigObject but does not specify its types\\: TValue$#"
+			count: 1
+			path: library/Businessprocess/Storage/Storage.php
+
+		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\Storage\\:\\:deleteProcess\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: library/Businessprocess/Storage/Storage.php
@@ -3707,6 +3612,11 @@ parameters:
 
 		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\Storage\\:\\:loadProcess\\(\\) has parameter \\$name with no type specified\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/Storage.php
+
+		-
+			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\Storage\\:\\:\\$config with generic class Icinga\\\\Data\\\\ConfigObject does not specify its types\\: TValue$#"
 			count: 1
 			path: library/Businessprocess/Storage/Storage.php
 
@@ -3851,11 +3761,6 @@ parameters:
 			path: library/Businessprocess/Web/Controller.php
 
 		-
-			message: "#^Parameter \\#2 \\$values of function vsprintf expects array\\<bool\\|float\\|int\\|string\\|null\\>, array\\<int, mixed\\> given\\.$#"
-			count: 1
-			path: library/Businessprocess/Web/Controller.php
-
-		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\FakeRequest\\:\\:getBaseUrl\\(\\) has parameter \\$raw with no type specified\\.$#"
 			count: 1
 			path: library/Businessprocess/Web/FakeRequest.php
@@ -3937,11 +3842,6 @@ parameters:
 
 		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\FormLoader\\:\\:load\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: library/Businessprocess/Web/Form/FormLoader.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of function array_pop expects array, array\\<int, string\\>\\|false given\\.$#"
 			count: 1
 			path: library/Businessprocess/Web/Form/FormLoader.php
 
@@ -4387,11 +4287,6 @@ parameters:
 
 		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickForm\\:\\:setup\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: library/Businessprocess/Web/Form/QuickForm.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of function array_pop expects array, array\\<int, string\\>\\|false given\\.$#"
 			count: 1
 			path: library/Businessprocess/Web/Form/QuickForm.php
 
