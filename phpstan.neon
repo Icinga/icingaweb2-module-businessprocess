@@ -13,7 +13,9 @@ parameters:
         - library
 
     scanDirectories:
-        - vendor
+        - /icingaweb2
+        - /usr/share/icinga-php
+        - /usr/share/icingaweb2-modules
 
     excludePaths:
         - library/Businessprocess/Test
