@@ -10,16 +10,17 @@ a:focus {
     float: left;
     display: flex;
     align-items: center;
-    font-size: 1.3em;
     color: @icinga-blue;
+    margin-bottom: 0.5em;
+    margin-right: 0.5em;
+
+    & > *:not(:last-child) {
+        margin-right: 1em;
+    }
 
     > a {
         &:hover::before {
             text-decoration: none;
-        }
-
-        &:not(:last-child) {
-            margin-right: 1em;
         }
 
         &.button-link {
@@ -29,16 +30,10 @@ a:focus {
             &:active, &:focus {
                 text-decoration: none;
             }
-
-            &:last-child {
-                margin-left: auto;
-            }
         }
     }
 
     > div.view-toggle {
-        margin-right: 1em;
-
         span {
             color: @gray;
             margin-right: .5em;
@@ -78,7 +73,7 @@ a:focus {
 }
 
 .controls {
-    &.sort-control,
+    .sort-control,
     &.want-fullscreen > a {
         float: right;
     }
