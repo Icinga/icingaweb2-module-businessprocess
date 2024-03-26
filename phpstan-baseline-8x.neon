@@ -1,0 +1,81 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Parameter \\#1 \\$stream of function fpassthru expects resource, resource\\|false given\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Parameter \\#1 \\$stream of function fputcsv expects resource, resource\\|false given\\.$#"
+			count: 2
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Parameter \\#1 \\$stream of function rewind expects resource, resource\\|false given\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function strtolower expects string, mixed given\\.$#"
+			count: 1
+			path: application/controllers/ProcessController.php
+
+		-
+			message: "#^Parameter \\#2 \\$values of function vsprintf expects array\\<bool\\|float\\|int\\|string\\|null\\>, array\\<int, mixed\\> given\\.$#"
+			count: 2
+			path: library/Businessprocess/BpConfig.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\<Icinga\\\\Module\\\\Businessprocess\\\\Node\\>\\|null given\\.$#"
+			count: 1
+			path: library/Businessprocess/BpNode.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function ucfirst expects string, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/Modification/NodeAction.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/Monitoring/Backend/Ido/Query/HostStatusQuery.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, mixed given\\.$#"
+			count: 1
+			path: library/Businessprocess/Monitoring/Backend/Ido/Query/ServiceStatusQuery.php
+
+		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$arrays of function array_merge expects array, mixed given\\.$#"
+			count: 2
+			path: library/Businessprocess/State/IcingaDbState.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of function array_shift expects array, array\\<int, string\\>\\|false given\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Parameter \\#1 \\$stream of function fgets expects resource, resource\\|false given\\.$#"
+			count: 1
+			path: library/Businessprocess/Storage/LegacyConfigParser.php
+
+		-
+			message: "#^Parameter \\#2 \\$values of function vsprintf expects array\\<bool\\|float\\|int\\|string\\|null\\>, array\\<int, mixed\\> given\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Controller.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of function array_pop expects array, array\\<int, string\\>\\|false given\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/FormLoader.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of function array_pop expects array, array\\<int, string\\>\\|false given\\.$#"
+			count: 1
+			path: library/Businessprocess/Web/Form/QuickForm.php

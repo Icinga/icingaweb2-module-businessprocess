@@ -32,12 +32,12 @@ jobs:
 
       - name: Setup dependencies
         run: |
-          composer require -n --no-progress overtrue/phplint
-          git clone --depth 1 https://github.com/Icinga/icingaweb2.git vendor/icingaweb2
-          git clone --depth 1 https://github.com/Icinga/icingadb-web.git vendor/icingadb-web
-          git clone --depth 1 https://github.com/Icinga/icingaweb2-module-director.git vendor/icingaweb2-module-director
-          git clone --depth 1 -b snapshot/nightly https://github.com/Icinga/icinga-php-library.git vendor/icinga-php-library
-          git clone --depth 1 -b snapshot/nightly https://github.com/Icinga/icinga-php-thirdparty.git vendor/icinga-php-thirdparty
+          composer require -n --no-progress overtrue/phplint phpstan/phpstan
+          sudo git clone --depth 1 https://github.com/Icinga/icingaweb2.git /icingaweb2
+          sudo git clone --depth 1 -b snapshot/nightly https://github.com/Icinga/icinga-php-library.git /usr/share/icinga-php/ipl
+          sudo git clone --depth 1 -b snapshot/nightly https://github.com/Icinga/icinga-php-thirdparty.git /usr/share/icinga-php/vendor
+          sudo git clone --depth 1 https://github.com/Icinga/icingadb-web.git /usr/share/icingaweb2-modules/icingadb-web
+          sudo git clone --depth 1 https://github.com/Icinga/icingaweb2-module-director.git /usr/share/icingaweb2-modules/icingaweb2-module-director
 
       - name: PHP Lint
         if: ${{ ! cancelled() }}
@@ -49,7 +49,7 @@ jobs:
 
       - name: PHPStan
         if: ${{ ! cancelled() }}
-        uses: php-actions/phpstan@v3
+        run: ./vendor/bin/phpstan analyse
 
   test:
     name: Unit tests with php ${{ matrix.php }} on ${{ matrix.os }}
@@ -61,7 +61,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.2', '7.3', '7.4', '8.0', '8.1', '8.2']
+        php: ['7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3']
         os: ['ubuntu-latest']
 
     steps:
