@@ -122,7 +122,9 @@
                 ].join('&');
 
                 var $container = $source.closest('.container');
-                icinga.loader.loadUrl(actionUrl, $container, data, 'POST');
+                var icingaLoader = this.module.icinga.loader;
+                icingaLoader.loadUrl(actionUrl, $container, data, 'POST')
+                    .done((_, __, req) => icingaLoader.processNotificationHeader(req));
             }
         },
 
@@ -155,7 +157,10 @@
                 ].join('&');
 
                 var $container = $target.closest('.container');
-                icinga.loader.loadUrl(actionUrl, $container, data, 'POST');
+                var icingaLoader = this.module.icinga.loader;
+                icingaLoader.loadUrl(actionUrl, $container, data, 'POST')
+                    .done((_, __, req) => icingaLoader.processNotificationHeader(req));
+
                 event.stopPropagation();
             }
         },

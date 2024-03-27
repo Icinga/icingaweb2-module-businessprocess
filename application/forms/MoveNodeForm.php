@@ -151,7 +151,7 @@ class MoveNodeForm extends BpConfigBaseForm
         // Trigger session destruction to make sure it get's stored.
         unset($changes);
 
-        $this->notifySuccess($this->getSuccessMessage($this->translate('Node order updated')));
+        $this->notifySuccess($this->translate('Node order updated'));
 
         $response = $this->getRequest()->getResponse()
             ->setHeader('X-Icinga-Container', 'ignore')
