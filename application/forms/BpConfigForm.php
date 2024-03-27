@@ -165,7 +165,7 @@ class BpConfigForm extends BpConfigBaseForm
                 $this->bp->clearAppliedChanges();
                 $this->storage->deleteProcess($name);
                 $this->setSuccessUrl('businessprocess');
-                $this->redirectOnSuccess(sprintf('Process %s has been deleted', $name));
+                $this->redirectOnSuccess(sprintf($this->translate('Process %s has been deleted'), $name));
             }
         }
     }
@@ -197,10 +197,10 @@ class BpConfigForm extends BpConfigBaseForm
                     array('config' => $name, 'unlocked' => true)
                 )
             );
-            $this->setSuccessMessage(sprintf('Process %s has been created', $name));
+            $this->setSuccessMessage(sprintf($this->translate('Process %s has been created'), $name));
         } else {
             $config = $this->bp;
-            $this->setSuccessMessage(sprintf('Process %s has been stored', $name));
+            $this->setSuccessMessage(sprintf($this->translate('Process %s has been stored'), $name));
         }
         $meta = $config->getMetadata();
         foreach ($this->getValues() as $key => $value) {
