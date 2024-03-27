@@ -4346,16 +4346,6 @@ parameters:
 			path: library/Businessprocess/Web/Form/QuickForm.php
 
 		-
-			message: "#^Call to an undefined method Icinga\\\\Module\\\\Businessprocess\\\\BpNode\\|Icinga\\\\Module\\\\Businessprocess\\\\MonitoredNode\\:\\:addChild\\(\\)\\.$#"
-			count: 1
-			path: library/Businessprocess/Web/Form/Validator/HostServiceTermValidator.php
-
-		-
-			message: "#^Parameter \\#1 \\$label of method ipl\\\\Web\\\\FormElement\\\\TermInput\\\\Term\\:\\:setLabel\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: library/Businessprocess/Web/Form/Validator/HostServiceTermValidator.php
-
-		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Navigation\\\\Renderer\\\\ProcessProblemsBadge\\:\\:getBpConfigName\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: library/Businessprocess/Web/Navigation/Renderer/ProcessProblemsBadge.php
