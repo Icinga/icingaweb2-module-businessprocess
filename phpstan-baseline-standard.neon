@@ -631,22 +631,12 @@ parameters:
 			path: application/forms/BpUploadForm.php
 
 		-
-			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: application/forms/CleanupNodeForm.php
-
-		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\CleanupNodeForm\\:\\:onSuccess\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: application/forms/CleanupNodeForm.php
 
 		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Forms\\\\CleanupNodeForm\\:\\:setup\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: application/forms/CleanupNodeForm.php
-
-		-
-			message: "#^Parameter \\#1 \\$name of method Icinga\\\\Module\\\\Businessprocess\\\\BpConfig\\:\\:getNode\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: application/forms/CleanupNodeForm.php
 
@@ -3962,16 +3952,6 @@ parameters:
 
 		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:setIcingaModule\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: library/Businessprocess/Web/Form/QuickBaseForm.php
-
-		-
-			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:translate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: library/Businessprocess/Web/Form/QuickBaseForm.php
-
-		-
-			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Web\\\\Form\\\\QuickBaseForm\\:\\:translate\\(\\) has parameter \\$string with no type specified\\.$#"
 			count: 1
 			path: library/Businessprocess/Web/Form/QuickBaseForm.php
 
