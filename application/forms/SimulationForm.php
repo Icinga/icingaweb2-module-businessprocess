@@ -106,7 +106,7 @@ class SimulationForm extends BpConfigBaseForm
         $state = $this->getValue('state');
 
         if ($state !== null && ctype_digit($state)) {
-            $this->notifySuccess($this->translate('Simulation has been set'));
+            $this->setSuccessMessage($this->translate('Simulation has been set'));
             $this->simulation->set($nodeName, (object) array(
                 'state'        => $this->getValue('state'),
                 'acknowledged' => $this->getValue('acknowledged'),
@@ -114,7 +114,7 @@ class SimulationForm extends BpConfigBaseForm
             ));
         } else {
             if ($this->simulation->remove($nodeName)) {
-                $this->notifySuccess($this->translate('Simulation has been removed'));
+                $this->setSuccessMessage($this->translate('Simulation has been removed'));
             }
         }
 

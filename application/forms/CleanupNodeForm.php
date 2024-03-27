@@ -54,6 +54,15 @@ class CleanupNodeForm extends BpConfigBaseForm
             $changes->deleteNode($node);
         }
 
+        $count = count($nodesToCleanup);
+        if ($count === 1) {
+            $successMsg = sprintf($this->translate('Successfully removed missing node %s'), $nodeName);
+        } else {
+            $successMsg = sprintf($this->translate('Successfully removed %d missing nodes'), $count);
+        }
+
+        $this->setSuccessMessage($successMsg);
+
         unset($changes);
 
         parent::onSuccess();
