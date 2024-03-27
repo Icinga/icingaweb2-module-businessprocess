@@ -45,7 +45,8 @@ class HostServiceTermValidator extends BaseValidator
         }
 
         $isValid = true;
-        $testConfig = new BpConfig();
+        $testConfig = (new BpConfig())
+            ->setBackend($this->parent->getBpConfig()->getBackend());
 
         foreach ($terms as $term) {
             /** @var Term $term */
@@ -68,7 +69,7 @@ class HostServiceTermValidator extends BaseValidator
             }
         }
 
-        if ($this->parent->getBpConfig()->getBackend() instanceof MonitoringBackend) {
+        if ($testConfig->getBackend() instanceof MonitoringBackend) {
             MonitoringState::apply($testConfig);
         } else {
             IcingaDbState::apply($testConfig);
