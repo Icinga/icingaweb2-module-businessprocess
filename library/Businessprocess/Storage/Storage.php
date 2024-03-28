@@ -15,13 +15,13 @@ abstract class Storage
     protected static $instance;
 
     /**
-     * @var ConfigObject
+     * @var ConfigObject<string>
      */
     protected $config;
 
     /**
      * Storage constructor.
-     * @param ConfigObject $config
+     * @param ConfigObject<string> $config
      */
     public function __construct(ConfigObject $config)
     {
