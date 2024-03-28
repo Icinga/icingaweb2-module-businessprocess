@@ -193,6 +193,7 @@ class ProcessCommand extends Command
             $node = $subtree['node'];
             $state = $parent !== null ? $parent->getChildState($node) : $node->getState();
 
+            $colors = [];
             if ($node instanceof HostNode) {
                 $colors = $this->hostColors[$state];
             } elseif ($node instanceof ServiceNode) {
@@ -200,7 +201,7 @@ class ProcessCommand extends Command
             }
 
             $state = sprintf('[%s]', $node->getStateName($state));
-            if ($useColors) {
+            if ($useColors && ! empty($colors)) {
                 $state = $this->screen->colorize($state, $colors[0], $colors[1]);
             }
 
