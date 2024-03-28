@@ -3571,11 +3571,6 @@ parameters:
 			path: library/Businessprocess/Storage/LegacyStorage.php
 
 		-
-			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\Storage\\:\\:__construct\\(\\) has parameter \\$config with generic class Icinga\\\\Data\\\\ConfigObject but does not specify its types\\: TValue$#"
-			count: 1
-			path: library/Businessprocess/Storage/Storage.php
-
-		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\Storage\\:\\:deleteProcess\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: library/Businessprocess/Storage/Storage.php
@@ -3612,11 +3607,6 @@ parameters:
 
 		-
 			message: "#^Method Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\Storage\\:\\:loadProcess\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: library/Businessprocess/Storage/Storage.php
-
-		-
-			message: "#^Property Icinga\\\\Module\\\\Businessprocess\\\\Storage\\\\Storage\\:\\:\\$config with generic class Icinga\\\\Data\\\\ConfigObject does not specify its types\\: TValue$#"
 			count: 1
 			path: library/Businessprocess/Storage/Storage.php
 
