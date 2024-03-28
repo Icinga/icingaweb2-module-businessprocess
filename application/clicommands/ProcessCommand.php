@@ -11,6 +11,7 @@ use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\HostNode;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
+use Icinga\Module\Businessprocess\ServiceNode;
 use Icinga\Module\Businessprocess\State\IcingaDbState;
 use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
@@ -194,7 +195,7 @@ class ProcessCommand extends Command
 
             if ($node instanceof HostNode) {
                 $colors = $this->hostColors[$state];
-            } else {
+            } elseif ($node instanceof ServiceNode) {
                 $colors = $this->serviceColors[$state];
             }
 
