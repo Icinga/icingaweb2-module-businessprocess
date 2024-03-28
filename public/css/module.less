@@ -12,14 +12,16 @@ a:focus {
     align-items: center;
     font-size: 1.3em;
     color: @icinga-blue;
+    flex-wrap: wrap;
+    white-space: nowrap;
+
+    & > * {
+        margin: 0 1em 0.5em 0.25em;
+    }
 
     > a {
         &:hover::before {
             text-decoration: none;
-        }
-
-        &:not(:last-child) {
-            margin-right: 1em;
         }
 
         &.button-link {
@@ -29,16 +31,10 @@ a:focus {
             &:active, &:focus {
                 text-decoration: none;
             }
-
-            &:last-child {
-                margin-left: auto;
-            }
         }
     }
 
     > div.view-toggle {
-        margin-right: 1em;
-
         span {
             color: @gray;
             margin-right: .5em;
@@ -78,7 +74,7 @@ a:focus {
 }
 
 .controls {
-    &.sort-control,
+    .sort-control,
     &.want-fullscreen > a {
         float: right;
     }
