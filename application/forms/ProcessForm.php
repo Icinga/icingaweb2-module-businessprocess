@@ -143,7 +143,7 @@ class ProcessForm extends BpConfigBaseForm
 
             Notification::success(
                 sprintf(
-                    'Process %s has been modified',
+                    $this->translate('Process %s has been modified'),
                     $this->bp->getName()
                 )
             );
