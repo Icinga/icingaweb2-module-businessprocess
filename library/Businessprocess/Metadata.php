@@ -122,9 +122,19 @@ class Metadata
             }
         }
 
+        if ($auth->hasPermission('businessprocess/showall/readonly') &&  ! $auth->hasPermission('businessprocess/showall')) {
+            $prefixes = $auth->getRestrictions('businessprocess/prefix');
+            if (! empty($prefixes)) {
+                if (! $this->nameIsPrefixedWithOneOf($prefixes)) {
+                    return false;
+                }
+            }
+        }
+
         return $this->canRead($auth) && (
-            $auth->hasPermission('businessprocess/modify')
-            || $this->ownerIs($auth->getUser()->getUsername())
+            $auth->hasPermission('businessprocess/modify') ||
+            $this->ownerIs($auth->getUser()->getUsername()
+            )
         );
     }
 
@@ -139,6 +149,10 @@ class Metadata
         }
 
         if ($auth->hasPermission('businessprocess/showall')) {
+            return true;
+        }
+
+        if ($auth->hasPermission('businessprocess/showall/readonly')) {
             return true;
         }
 

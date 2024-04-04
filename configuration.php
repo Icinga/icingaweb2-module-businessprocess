@@ -43,8 +43,12 @@ try {
 }
 
 $this->providePermission(
+    'businessprocess/showall/readonly',
+    $this->translate('Allow to see all available processes, regardless of configured restrictions. Permissions are restricted.')
+);
+$this->providePermission(
     'businessprocess/showall',
-    $this->translate('Allow to see all available processes, regardless of configured restrictions')
+    $this->translate('Allow to see all available processes, regardless of configured restrictions. Permissions are not restricted.'),
 );
 $this->providePermission(
     'businessprocess/create',

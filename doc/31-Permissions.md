@@ -9,7 +9,8 @@ The module has five levels of permissions:
 * Granting general module access allows a user to view business processes. (`module/businessprocess`)
 * Create permissions allow to create new business processes. (`businessprocess/create`)
 * Modify permissions allow to modify already existing ones. (`businessprocess/modify`)
-* Permission to view all business processes regardless restrictions. (`businessprocess/showall`)
+* Permission to view all business processes regardless restrictions. Other permissions will be restricted. (`businessprocess/showall/read`)
+* Permission to view all business processes regardless restrictions. Other permissions won't be restricted. (`businessprocess/showall/inherit`)
 * Full permissions. (`businessprocess/*`)
 
 ## Restrictions
