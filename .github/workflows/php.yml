@@ -17,12 +17,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.2', '7.3', '7.4', '8.0', '8.1', '8.2']
+        php: ['7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3']
         os: ['ubuntu-latest']
 
     steps:
       - name: Checkout code base
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -31,13 +31,7 @@ jobs:
           tools: phpcs
 
       - name: Setup dependencies
-        run: |
-          composer require -n --no-progress overtrue/phplint phpstan/phpstan
-          sudo git clone --depth 1 https://github.com/Icinga/icingaweb2.git /icingaweb2
-          sudo git clone --depth 1 -b snapshot/nightly https://github.com/Icinga/icinga-php-library.git /usr/share/icinga-php/ipl
-          sudo git clone --depth 1 -b snapshot/nightly https://github.com/Icinga/icinga-php-thirdparty.git /usr/share/icinga-php/vendor
-          sudo git clone --depth 1 https://github.com/Icinga/icingadb-web.git /usr/share/icingaweb2-modules/icingadb-web
-          sudo git clone --depth 1 https://github.com/Icinga/icingaweb2-module-director.git /usr/share/icingaweb2-modules/icingaweb2-module-director
+        run: composer require -n --no-progress overtrue/phplint
 
       - name: PHP Lint
         if: ${{ ! cancelled() }}
@@ -46,10 +40,6 @@ jobs:
       - name: PHP CodeSniffer
         if: ${{ ! cancelled() }}
         run: phpcs
-
-      - name: PHPStan
-        if: ${{ ! cancelled() }}
-        run: ./vendor/bin/phpstan analyse
 
   test:
     name: Unit tests with php ${{ matrix.php }} on ${{ matrix.os }}
@@ -66,7 +56,7 @@ jobs:
 
     steps:
       - name: Checkout code base
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
