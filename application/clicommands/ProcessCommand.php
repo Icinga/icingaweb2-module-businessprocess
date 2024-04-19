@@ -11,6 +11,7 @@ use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\HostNode;
 use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
+use Icinga\Module\Businessprocess\ServiceNode;
 use Icinga\Module\Businessprocess\State\IcingaDbState;
 use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
@@ -192,14 +193,15 @@ class ProcessCommand extends Command
             $node = $subtree['node'];
             $state = $parent !== null ? $parent->getChildState($node) : $node->getState();
 
+            $colors = [];
             if ($node instanceof HostNode) {
                 $colors = $this->hostColors[$state];
-            } else {
+            } elseif ($node instanceof ServiceNode) {
                 $colors = $this->serviceColors[$state];
             }
 
             $state = sprintf('[%s]', $node->getStateName($state));
-            if ($useColors) {
+            if ($useColors && ! empty($colors)) {
                 $state = $this->screen->colorize($state, $colors[0], $colors[1]);
             }
 
