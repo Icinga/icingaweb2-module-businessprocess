@@ -41,7 +41,6 @@ trait Sort
             return $this;
         }
 
-        /** @var array<int, string> $res */
         $res = Str::symmetricSplit($sort, ' ', 2, 'asc');
         [$sortBy, $direction] = $res;
 
