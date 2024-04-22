@@ -5,10 +5,13 @@ namespace Icinga\Module\Businessprocess\Web\Form;
 use Icinga\Application\Icinga;
 use Icinga\Application\Modules\Module;
 use ipl\Html\ValidHtml;
+use ipl\I18n\Translation;
 use Zend_Form;
 
 abstract class QuickBaseForm extends Zend_Form implements ValidHtml
 {
+    use Translation;
+
     /**
      * The Icinga module this form belongs to. Usually only set if the
      * form is initialized through the FormLoader
@@ -153,14 +156,5 @@ abstract class QuickBaseForm extends Zend_Form implements ValidHtml
         }
 
         return strlen($value) === 0;
-    }
-
-    public function translate($string)
-    {
-        if ($this->icingaModuleName === null) {
-            return t($string);
-        } else {
-            return mt($this->icingaModuleName, $string);
-        }
     }
 }

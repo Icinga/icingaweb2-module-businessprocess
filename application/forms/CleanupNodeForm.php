@@ -45,14 +45,27 @@ class CleanupNodeForm extends BpConfigBaseForm
     {
         $changes = ProcessChanges::construct($this->bp, $this->session);
 
+        /** @var string[] $nodesToCleanup */
         $nodesToCleanup = $this->getValue('cleanup_all') === '1'
             ? array_keys($this->bp->getMissingChildren())
             : $this->getValue('nodes');
 
+        $nodeName = null;
         foreach ($nodesToCleanup as $nodeName) {
             $node = $this->bp->getNode($nodeName);
             $changes->deleteNode($node);
         }
+
+
+        $count = count($nodesToCleanup);
+        $this->setSuccessMessage(sprintf(
+            $this->translatePlural(
+                'Successfully removed missing node %s',
+                'Successfully removed %d missing nodes',
+                $count
+            ),
+            $count === 1 ? $nodeName : $count
+        ));
 
         unset($changes);
 

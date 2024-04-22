@@ -98,9 +98,17 @@ class DeleteNodeForm extends BpConfigBaseForm
         switch ($confirm) {
             case 'yes':
                 $changes->deleteNode($this->node, $this->parentNode === null ? null : $this->parentNode->getName());
+                $this->setSuccessMessage(sprintf(
+                    $this->translate('Node %s has been deleted'),
+                    $this->node->getAlias()
+                ));
                 break;
             case 'all':
                 $changes->deleteNode($this->node);
+                $this->setSuccessMessage(sprintf(
+                    $this->translate('All occurrences of node %s have been deleted'),
+                    $this->node->getAlias()
+                ));
                 break;
             case 'no':
                 $this->setSuccessMessage($this->translate('Well, maybe next time'));
