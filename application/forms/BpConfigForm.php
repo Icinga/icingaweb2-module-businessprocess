@@ -139,7 +139,8 @@ class BpConfigForm extends BpConfigBaseForm
 
             $label = $this->translate('Delete');
             $el = $this->createElement('submit', $label, array(
-                'data-base-target' => '_main'
+                'data-base-target' => '_main',
+                'onclick'          => sprintf('return confirm("%s")', $this->translate('Confirm deletion')),
             ))->setLabel($label)->setDecorators(array('ViewHelper'));
             $this->deleteButtonName = $el->getName();
             $this->addElement($el);
