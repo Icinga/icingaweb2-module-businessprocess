@@ -49,6 +49,7 @@ class Controller extends CompatController
         $this->view->showFullscreen
             = $this->showFullscreen
             = (bool) $this->_helper->layout()->showFullscreen;
+
         $this->setViewScript('default');
     }
 

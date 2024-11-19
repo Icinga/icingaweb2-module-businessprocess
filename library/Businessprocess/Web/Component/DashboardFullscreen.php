@@ -15,13 +15,11 @@ use ipl\Html\Html;
 
 class DashboardFullscreen extends BaseHtmlElement
 {
-    /** @var string */
     protected $contentSeparator = "\n";
 
-    /** @var string */
     protected $tag = 'div';
 
-    protected $defaultAttributes = array('class' => 'overview-dashboard', 'data-base-target' => '_next');
+    protected $defaultAttributes = ['class' => 'overview-dashboard', 'data-base-target' => '_next'];
 
     /** @var Storage */
     protected $storage;
@@ -33,7 +31,11 @@ class DashboardFullscreen extends BaseHtmlElement
     protected function __construct(Storage $storage)
     {
         $this->storage = $storage;
-        $processes = $storage->listProcessNames();
+    }
+
+    protected function assemble()
+    {
+        $processes = $this->storage->listProcessNames();
         if (empty($processes)) {
             $this->add(Html::tag(
                 'div',
@@ -45,7 +47,7 @@ class DashboardFullscreen extends BaseHtmlElement
         }
 
         foreach ($processes as $name) {
-            $meta = $storage->loadMetadata($name);
+            $meta = $this->storage->loadMetadata($name);
             $title = $meta->get('Title');
 
             if ($title === null) {
@@ -53,15 +55,12 @@ class DashboardFullscreen extends BaseHtmlElement
             }
 
             try {
-                $bp = $storage->loadProcess($name);
+                $bp = $this->storage->loadProcess($name);
             } catch (Exception $e) {
-                $this->add(new BpDashboardTile(
-                    new BpConfig(),
+                $this->add(new BpDashboardFullscreenTile(
+                    (new BpConfig())->setName($name),
                     $title,
-                    sprintf(t('File %s has faulty config'), $name . '.conf'),
-                    'file-circle-xmark',
-                    'businessprocess/process/show',
-                    ['config' => $name]
+                    sprintf(mt('businessprocess', 'File %s has faulty config'), $name . '.conf')
                 ));
 
                 continue;
@@ -79,19 +78,15 @@ class DashboardFullscreen extends BaseHtmlElement
                 $bp,
                 $title,
                 $meta->get('Description'),
-                'sitemap',
-                'businessprocess/process/show',
-                array('config' => $name)
             ));
         }
     }
 
     /**
-     * @param Auth $auth
      * @param Storage $storage
      * @return static
      */
-    public static function create(Auth $auth, Storage $storage)
+    public static function create(Storage $storage)
     {
         return new static($storage);
     }

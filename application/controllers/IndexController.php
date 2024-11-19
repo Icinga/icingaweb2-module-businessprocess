@@ -15,14 +15,12 @@ class IndexController extends Controller
     {
         $this->setTitle($this->translate('Business Process Overview'));
 
-        /** View */
-        $view = $this->view;
-        if (! $view->compact) {
+        if (! $this->view->compact) {
             $this->controls()->add($this->overviewTab());
         }
 
-        if ($view->showFullscreen) {
-            $this->content()->add(DashboardFullscreen::create($this->Auth(), $this->storage()));
+        if ($this->view->showFullscreen) {
+            $this->content()->add(DashboardFullscreen::create($this->storage()));
             $this->setAutorefreshInterval(120);
             $this->controls()->getAttributes()->add('class', 'want-fullscreen');
         } else {
