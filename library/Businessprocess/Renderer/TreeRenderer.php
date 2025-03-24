@@ -125,16 +125,16 @@ class TreeRenderer extends Renderer
             $icons[] = $node->getIcon();
         }
         $state = strtolower($node->getStateName($parent !== null ? $parent->getChildState($node) : null));
-        if ($node->isHandled()) {
-            $state = $state . ' handled';
-        }
-        $icons[] = (new StateBall($state, StateBall::SIZE_MEDIUM))->addAttributes([
-            'title' => sprintf(
-                '%s %s',
-                $state,
-                DateFormatter::timeSince($node->getLastStateChange())
-            )
-        ]);
+        $icons[] = (new StateBall($state, StateBall::SIZE_MEDIUM))
+            ->setHandled($node->isHandled())
+            ->addAttributes([
+                'title' => sprintf(
+                    '%s%s %s',
+                    $state,
+                    $node->isHandled() ? ' (handled)' : '',
+                    DateFormatter::timeSince($node->getLastStateChange())
+                )
+            ]);
 
         if ($node->isAcknowledged()) {
             $icons[] = new Icon('check');
