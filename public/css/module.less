@@ -383,6 +383,33 @@ ul.broken-files {
         }
     }
 }
+
+#layout.fullscreen-layout {
+    @noOfBadgesPerRow: 3;
+
+    .overview-dashboard {
+        display: flex;
+        flex-wrap: wrap;
+
+        .dashboard-tile {
+            flex: 1 1 auto;
+
+            .bp-root-tiles-fullscreen {
+                @columnGapWidth: 1px;
+
+                display: flex;
+                flex-wrap: wrap;
+                gap: @columnGapWidth;
+
+                .badge {
+                    @minColumnWidth: 100%/@noOfBadgesPerRow;
+                    flex: 1 1 ~"calc(@{minColumnWidth} - @{columnGapWidth})";
+                    .text-ellipsis();
+                }
+            }
+        }
+    }
+}
 /** END Dashboard **/
 
 // State summary badges
