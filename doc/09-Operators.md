@@ -41,3 +41,7 @@ analysis of the statuses.
 The `MIN` operator selects the **WORST** state out of the **BEST n** child node states:
 
 ![MIN](screenshot/09_operators/0904_min-operator.png)
+
+## RATE n
+
+The `RATE` operator selects the **WORST** state out of the **BEST n** rate child node states.

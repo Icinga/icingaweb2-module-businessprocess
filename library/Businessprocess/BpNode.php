@@ -495,19 +495,24 @@ class BpNode extends Node
                 $sort_state = ($maxIcingaState === self::ICINGA_CRITICAL) ? $warningState : $maxState;
                 break;
             default:
-                // MIN:
+                // MIN/RATE:
                 $sort_state = 3 << self::SHIFT_FLAGS;
 
                 if (count($sort_states) >= $this->operator) {
                     $actualGood = 0;
+                    $totalChecked = 0;
                     foreach ($sort_states as $s) {
+                        $totalChecked++;
                         if (($s >> self::SHIFT_FLAGS) === self::ICINGA_OK) {
                             $actualGood++;
                         }
                     }
 
-                    if ($actualGood >= $this->operator) {
-                        // condition is fulfilled
+                    if ($this->operator < 10 and $actualGood >= $this->operator) {
+                        // condition is fulfilled (MIN)
+                        $sort_state = self::ICINGA_OK;
+                    } elseif ($actualGood >= intdiv($this->operator * $totalChecked, 100)) {
+                        // condition is fulfilled (RATE)
                         $sort_state = self::ICINGA_OK;
                     } else {
                         // worst state if not fulfilled
@@ -635,9 +640,12 @@ class BpNode extends Node
             case self::OP_DEGRADED:
                 return 'DEG';
             default:
-                // MIN
+                // MIN/RATE
                 $this->assertNumericOperator();
-                return 'min:' . $this->operator;
+                if ($this->operator < 10) {
+                    return 'min:' . $this->operator;
+                }
+                return 'rate:' . $this->operator;
         }
     }
 
