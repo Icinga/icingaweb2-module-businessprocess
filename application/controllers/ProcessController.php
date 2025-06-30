@@ -409,7 +409,11 @@ class ProcessController extends Controller
     protected function showHints(BpConfig $bp, Renderer $renderer)
     {
         $ul = Html::tag('ul', ['class' => 'error']);
-        $this->prepareMissingNodeLinks($ul);
+
+        if (! $renderer->isLocked()) {
+            $this->prepareMissingNodeLinks($ul);
+        }
+
         foreach ($bp->getErrors() as $error) {
             $ul->addHtml(Html::tag('li', $error));
         }
