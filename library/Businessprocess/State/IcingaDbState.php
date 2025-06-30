@@ -180,12 +180,38 @@ class IcingaDbState
             $node->setLastStateChange($row->last_state_change / 1000.0);
         }
 
-        $node->setDowntime($row->in_downtime === 'y');
-        $node->setAck($row->is_acknowledged === 'y');
+        $node->setDowntime($this->toBoolean($row->in_downtime));
+        $node->setAck($this->toBoolean($row->is_acknowledged));
         $node->setAlias($row->display_name);
 
         if ($node instanceof ServiceNode) {
             $node->setHostAlias($row->host_display_name);
         }
+    }
+
+    private function toBoolean($value): bool
+    {
+        switch (true) {
+            // Icinga Redis >= 6 (is_acknowledged, in_downtime)
+            case $value === true:
+            case $value === false:
+                return $value;
+            // Icinga Redis < 6 (is_acknowledged)
+            case $value === 1:
+            case $value === 2:
+                return true;
+            case $value === 0:
+                return false;
+            // Icinga DB < 1.4 (is_acknowledged)
+            case $value === 'sticky':
+                return true;
+            // Icinga DB >= * (is_acknowledged, in_downtime)
+            case $value === 'y':
+                return true;
+            case $value === 'n':
+                return false;
+        }
+
+        return false;
     }
 }
