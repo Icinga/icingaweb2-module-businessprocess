@@ -548,7 +548,7 @@ abstract class Node
             'state' => $this->getStateName(),
             'since' => $this->getLastStateChange(),
             'in_downtime' => $this->isInDowntime() ? true : false,
-            'in_acknowledged' => $this->isAcknowledged() ? true : false
+            'is_acknowledged' => $this->isAcknowledged() ? true : false
         ];
 
         if ($parent !== null) {
