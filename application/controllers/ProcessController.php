@@ -204,7 +204,9 @@ class ProcessController extends Controller
             );
         }
 
-        $controls->addHtml($this->createBpSortControl($renderer, $bp));
+        if (! ($this->showFullscreen || $this->view->compact)) {
+            $controls->addHtml($this->createBpSortControl($renderer, $bp));
+        }
     }
 
     protected function getNode(BpConfig $bp)
