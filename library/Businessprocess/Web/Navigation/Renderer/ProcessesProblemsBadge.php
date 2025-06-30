@@ -3,6 +3,7 @@
 namespace Icinga\Module\Businessprocess\Web\Navigation\Renderer;
 
 use Icinga\Application\Modules\Module;
+use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
 use Icinga\Module\Businessprocess\State\IcingaDbState;
 use Icinga\Module\Businessprocess\State\MonitoringState;
@@ -36,8 +37,7 @@ class ProcessesProblemsBadge extends BadgeNavigationItemRenderer
 
                 foreach ($bp->getRootNodes() as $rootNode) {
                     if (! $rootNode->isEmpty() &&
-                        $rootNode->getState() !== $rootNode::ICINGA_PENDING
-                        && $rootNode->hasProblems()) {
+                        ! in_array($rootNode->getState(), [Node::ICINGA_OK, Node::ICINGA_PENDING], true)) {
                         $count++;
                         break;
                     }

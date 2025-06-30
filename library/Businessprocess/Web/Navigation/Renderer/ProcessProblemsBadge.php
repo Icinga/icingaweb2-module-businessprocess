@@ -2,6 +2,7 @@
 
 namespace Icinga\Module\Businessprocess\Web\Navigation\Renderer;
 
+use Icinga\Module\Businessprocess\Node;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Web\Navigation\Renderer\BadgeNavigationItemRenderer;
 
@@ -25,8 +26,7 @@ class ProcessProblemsBadge extends BadgeNavigationItemRenderer
             $bp = $storage->loadProcess($this->getBpConfigName());
             foreach ($bp->getRootNodes() as $rootNode) {
                 if (! $rootNode->isEmpty() &&
-                    $rootNode->getState() !== $rootNode::ICINGA_PENDING
-                    && $rootNode->hasProblems()) {
+                    ! in_array($rootNode->getState(), [Node::ICINGA_OK, Node::ICINGA_PENDING], true)) {
                     $count++;
                 }
             }
