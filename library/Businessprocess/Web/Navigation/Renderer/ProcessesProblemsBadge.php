@@ -25,6 +25,7 @@ class ProcessesProblemsBadge extends BadgeNavigationItemRenderer
     {
         if ($this->count === null) {
             $count = 0;
+            $state = Node::ICINGA_OK;
 
             try {
                 $storage = LegacyStorage::getInstance();
@@ -40,9 +41,17 @@ class ProcessesProblemsBadge extends BadgeNavigationItemRenderer
                     }
 
                     foreach ($bp->getRootNodes() as $rootNode) {
+                        $nodeState = $rootNode->getState();
                         if (! $rootNode->isEmpty() &&
-                            ! in_array($rootNode->getState(), [Node::ICINGA_OK, Node::ICINGA_PENDING], true)) {
-                            $count++;
+                            ! in_array($nodeState, [Node::ICINGA_OK, Node::ICINGA_PENDING], true)
+                        ) {
+                            if ($nodeState === $state) {
+                                $count++;
+                            } elseif ($nodeState > $state) {
+                                $count = 1;
+                                $state = $nodeState;
+                            }
+
                             break;
                         }
                     }
@@ -52,7 +61,7 @@ class ProcessesProblemsBadge extends BadgeNavigationItemRenderer
             }
 
             $this->count = $count;
-            $this->setState(self::STATE_CRITICAL);
+            $this->setState(ProcessProblemsBadge::NODE_STATE_TO_BADGE_STATE[$state] ?? self::STATE_UNKNOWN);
         }
 
         return $this->count;

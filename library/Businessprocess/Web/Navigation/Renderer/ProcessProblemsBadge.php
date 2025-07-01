@@ -11,6 +11,19 @@ use Throwable;
 class ProcessProblemsBadge extends BadgeNavigationItemRenderer
 {
     /**
+     * Icinga state to badge state mapping
+     *
+     * @var array<int, string>
+     */
+    public const NODE_STATE_TO_BADGE_STATE = [
+        Node::ICINGA_OK => self::STATE_OK,
+        Node::ICINGA_WARNING => self::STATE_WARNING,
+        Node::ICINGA_CRITICAL => self::STATE_CRITICAL,
+        Node::ICINGA_UNKNOWN => self::STATE_UNKNOWN,
+        Node::ICINGA_PENDING => self::STATE_PENDING
+    ];
+
+    /**
      * Cached count
      *
      * @var int
@@ -24,6 +37,7 @@ class ProcessProblemsBadge extends BadgeNavigationItemRenderer
     {
         if ($this->count === null) {
             $count = 0;
+            $state = Node::ICINGA_OK;
 
             try {
                 $storage = LegacyStorage::getInstance();
@@ -33,9 +47,16 @@ class ProcessProblemsBadge extends BadgeNavigationItemRenderer
                 // Probably, but it is how it is for a very long time. So it is unlikely to change. (Finger crossed.)
                 $bp = $storage->loadProcess($this->getBpConfigName());
                 foreach ($bp->getRootNodes() as $rootNode) {
+                    $nodeState = $rootNode->getState();
                     if (! $rootNode->isEmpty() &&
-                        ! in_array($rootNode->getState(), [Node::ICINGA_OK, Node::ICINGA_PENDING], true)) {
-                        $count++;
+                        ! in_array($nodeState, [Node::ICINGA_OK, Node::ICINGA_PENDING], true)
+                    ) {
+                        if ($nodeState === $state) {
+                            $count++;
+                        } elseif ($nodeState > $state) {
+                            $count = 1;
+                            $state = $nodeState;
+                        }
                     }
                 }
             } catch (Throwable $e) {
@@ -44,9 +65,9 @@ class ProcessProblemsBadge extends BadgeNavigationItemRenderer
 
             $this->count = $count;
 
-            $this->setState(self::STATE_CRITICAL);
+            $this->setState(self::NODE_STATE_TO_BADGE_STATE[$state] ?? self::STATE_UNKNOWN);
             $this->setTitle(sprintf(
-                tp('One unhandled root node critical', '%d unhandled root nodes critical', $count),
+                tp('One unhandled root node', '%d unhandled root nodes', $count),
                 $count
             ));
         }
