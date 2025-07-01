@@ -1,6 +1,5 @@
 # Icinga Business Process Modeling
 
-[![PHP Support](https://img.shields.io/badge/php-%3E%3D%207.2-777BB4?logo=PHP)](https://php.net/)
 [![Build Status](https://github.com/Icinga/icingaweb2-module-businessprocess/actions/workflows/php.yml/badge.svg)](https://github.com/Icinga/icingaweb2-module-businessprocess/actions/workflows/php.yml)
 [![Github Tag](https://img.shields.io/github/tag/Icinga/icingaweb2-module-businessprocess.svg)](https://github.com/Icinga/icingaweb2-module-businessprocess/releases/latest)
 
