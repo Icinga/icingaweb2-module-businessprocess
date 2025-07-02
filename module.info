@@ -1,5 +1,5 @@
 Name: Businessprocess
-Version: 2.5.1
+Version: 2.5.2
 Requires:
   Libraries: icinga-php-library (>=0.15.0), icinga-php-thirdparty (>=0.12.0)
   Modules: monitoring (>=2.9.0), icingadb (>=1.1.0)
