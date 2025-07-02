@@ -218,7 +218,7 @@ class TreeRenderer extends Renderer
 
         $summary->add($this->getNodeIcons($node, $path));
 
-        $summary->add(Html::tag('span', null, $node->getAlias()));
+        $summary->add(Html::tag('span', ['class' => 'text', 'title' => $node->getAlias()], $node->getAlias()));
 
         if ($node instanceof BpNode) {
             $summary->add(Html::tag('span', ['class' => 'op'], $node->operatorHtml()));
