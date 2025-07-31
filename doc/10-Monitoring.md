@@ -39,7 +39,7 @@ configuration:
 checkcommand_name=businessprocess-check
 ```
 
-A service can define specific custom variables for this. Mandatory ones
+A service, or its host, can define specific custom variables for this. Mandatory ones
 that are not defined, cause the detail view integration to not be active.
 
 | Variable Name                        | Mandatory | Description                                  |
@@ -47,3 +47,13 @@ that are not defined, cause the detail view integration to not be active.
 | icingacli\_businessprocess\_process  | Yes       | The `<process>` being checked                |
 | icingacli\_businessprocess\_config   | No        | Name of the config that contains `<process>` |
 | icingaweb\_businessprocess\_as\_tree | No        | Whether to show `<process>` as tree or tiles |
+
+These variable names can also be customized in the module configuration:
+
+**/etc/icingaweb2/modules/businessprocess/config.ini**
+```ini
+[DetailviewExtension]
+config_var=my_bp_config
+process_var=my_bp_proces
+tree_var=my_as_tree_view
+```

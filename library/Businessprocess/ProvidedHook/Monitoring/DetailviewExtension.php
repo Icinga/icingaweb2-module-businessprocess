@@ -19,6 +19,15 @@ class DetailviewExtension extends DetailviewExtensionHook
     /** @var string */
     private $commandName;
 
+    /** @var string */
+    private $configVar;
+
+    /** @var string */
+    private $processVar;
+
+    /** @var string */
+    private $treeVar;
+
     /**
      * Initialize storage
      */
@@ -30,6 +39,21 @@ class DetailviewExtension extends DetailviewExtensionHook
                 'DetailviewExtension',
                 'checkcommand_name',
                 'icingacli-businessprocess'
+            );
+            $this->configVar = $this->getModule()->getConfig()->get(
+                'DetailviewExtension',
+                'config_var',
+                'icingacli_businessprocess_config'
+            );
+            $this->processVar = $this->getModule()->getConfig()->get(
+                'DetailviewExtension',
+                'process_var',
+                'icingacli_businessprocess_process'
+            );
+            $this->treeVar = $this->getModule()->getConfig()->get(
+                'DetailviewExtension',
+                'tree_var',
+                'icingaweb_businessprocess_as_tree'
             );
         } catch (\Exception $e) {
             // Ignore and don't display anything
@@ -52,12 +76,14 @@ class DetailviewExtension extends DetailviewExtensionHook
             return '';
         }
 
-        $bpName = $object->_service_icingacli_businessprocess_config;
+        $customvars = array_merge($object->fetchHostVariables()->hostVariables, $object->fetchCustomvars()->customvars);  #Must grab customvars with this method, object access will not work with coalesce operator
+
+        $bpName = $customvars[$this->configVar] ?? null; 
         if (! $bpName) {
             $bpName = key($this->storage->listProcessNames());
         }
 
-        $nodeName = $object->_service_icingacli_businessprocess_process;
+        $nodeName = $customvars[$this->processVar] ?? null;
         if (! $nodeName) {
             return '';
         }
@@ -67,7 +93,7 @@ class DetailviewExtension extends DetailviewExtensionHook
 
         MonitoringState::apply($bp);
 
-        if (filter_var($object->_service_icingaweb_businessprocess_as_tree, FILTER_VALIDATE_BOOLEAN)) {
+        if (filter_var( $customvars[$this->treeVar] ?? false, FILTER_VALIDATE_BOOLEAN)) {
             $renderer = new TreeRenderer($bp, $node);
             $tag = 'ul';
         } else {
