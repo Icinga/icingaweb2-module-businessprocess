@@ -22,6 +22,15 @@ class ServiceDetailExtension extends ServiceDetailExtensionHook
     /** @var string */
     private $commandName;
 
+    /** @var string */
+    private $configVar;
+
+    /** @var string */
+    private $processVar;
+
+    /** @var string */
+    private $treeVar;
+
     protected function init()
     {
         $this->setSection(self::GRAPH_SECTION);
@@ -33,6 +42,22 @@ class ServiceDetailExtension extends ServiceDetailExtensionHook
                 'checkcommand_name',
                 'icingacli-businessprocess'
             );
+            $this->configVar = $this->getModule()->getConfig()->get(
+                'DetailviewExtension',
+                'config_var',
+                'icingacli_businessprocess_config'
+            );
+            $this->processVar = $this->getModule()->getConfig()->get(
+                'DetailviewExtension',
+                'process_var',
+                'icingacli_businessprocess_process'
+            );
+            $this->treeVar = $this->getModule()->getConfig()->get(
+                'DetailviewExtension',
+                'tree_var',
+                'icingaweb_businessprocess_as_tree'
+            );
+
         } catch (\Exception $e) {
             // Ignore and don't display anything
         }
@@ -46,12 +71,14 @@ class ServiceDetailExtension extends ServiceDetailExtensionHook
             return HtmlString::create('');
         }
 
-        $bpName = $service->customvars['icingacli_businessprocess_config'] ?? null;
+        $customvars = array_merge($service->host->customvars, $service->customvars);
+
+        $bpName = $customvars[$this->configVar] ?? null;
         if (! $bpName) {
             $bpName = key($this->storage->listProcessNames());
         }
 
-        $nodeName = $service->customvars['icingacli_businessprocess_process'] ?? null;
+        $nodeName = $customvars[$this->processVar] ?? null;
         if (! $nodeName) {
             return HtmlString::create('');
         }
@@ -61,7 +88,7 @@ class ServiceDetailExtension extends ServiceDetailExtensionHook
 
         IcingaDbState::apply($bp);
 
-        if ($service->customvars['icingaweb_businessprocess_as_tree'] ?? false) {
+        if ($customvars[$this->treeVar] ?? false) {
             $renderer = new TreeRenderer($bp, $node);
             $tag = 'ul';
         } else {
