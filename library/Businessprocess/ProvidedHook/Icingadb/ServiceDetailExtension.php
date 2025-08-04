@@ -57,7 +57,6 @@ class ServiceDetailExtension extends ServiceDetailExtensionHook
                 'tree_var',
                 'icingaweb_businessprocess_as_tree'
             );
-
         } catch (\Exception $e) {
             // Ignore and don't display anything
         }

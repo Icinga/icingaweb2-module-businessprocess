@@ -76,9 +76,9 @@ class DetailviewExtension extends DetailviewExtensionHook
             return '';
         }
 
-        $customvars = array_merge($object->fetchHostVariables()->hostVariables, $object->fetchCustomvars()->customvars);  #Must grab customvars with this method, object access will not work with coalesce operator
-
-        $bpName = $customvars[$this->configVar] ?? null; 
+        # Grab custom vars first, merge service over host vars
+        $customvars = array_merge($object->hostVariables, $object->customvars);
+        $bpName = $customvars[$this->configVar] ?? null;
         if (! $bpName) {
             $bpName = key($this->storage->listProcessNames());
         }
@@ -93,7 +93,7 @@ class DetailviewExtension extends DetailviewExtensionHook
 
         MonitoringState::apply($bp);
 
-        if (filter_var( $customvars[$this->treeVar] ?? false, FILTER_VALIDATE_BOOLEAN)) {
+        if (filter_var($customvars[$this->treeVar] ?? false, FILTER_VALIDATE_BOOLEAN)) {
             $renderer = new TreeRenderer($bp, $node);
             $tag = 'ul';
         } else {
