@@ -11,7 +11,9 @@ use Icinga\Module\Businessprocess\State\IcingaDbState;
 use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Storage\Storage;
 use ipl\Html\BaseHtmlElement;
+use ipl\Html\FormattedString;
 use ipl\Html\Html;
+use ipl\Html\HtmlElement;
 
 class Dashboard extends BaseHtmlElement
 {

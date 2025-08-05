@@ -176,6 +176,13 @@ ul.bp {
         > span {
             font-size: 1.25em;
 
+            &.text {
+                flex: 1 1 auto;
+                width: 0;
+                .text-ellipsis();
+                white-space: nowrap;
+            }
+
             &.op {
                 padding: .1em .5em;
                 border-radius: .5em;
@@ -339,6 +346,10 @@ ul.broken-files {
         }
 
         .bp-link {
+            .text {
+                .line-clamp(2);
+            }
+
             > a {
                 text-decoration: none;
                 color: @gray;
@@ -349,6 +360,14 @@ ul.broken-files {
 
                 > span.header {
                     color: @text-color;
+
+                    .header-id {
+                        display: block;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        max-width: 100%;
+                    }
                 }
             }
         }
@@ -472,7 +491,8 @@ td > a > .state-badges {
 .tiles > div {
     color: @text-color-on-icinga-blue;
     width: 12em;
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
     float: left;
     vertical-align: top;
     margin-right: 0.2em;
@@ -486,11 +506,8 @@ td > a > .state-badges {
     }
 
     .state-badges {
-        position: absolute;
-        bottom: 0;
-        right: 0;
+        text-align: end;
         margin: 0.5em;
-        text-align: center;
         font-size: 0.5em;
     }
 
@@ -505,12 +522,17 @@ td > a > .state-badges {
 
     > a {
         display: block;
+    }
+
+    > a {
         text-decoration: none;
         font-size: 0.7em;
         text-align: center;
-        padding: 1em 1em 0;
+        padding: 0 1em;
         font-weight: bold;
         word-wrap: break-word;
+        .text-ellipsis();
+        .line-clamp(2);
     }
 
     &:hover {
@@ -656,6 +678,7 @@ td > a > .state-badges {
     color: @icinga-blue;
     margin: 0;
     font-size: 1.2em;
+    max-width: 10em;
     text-decoration: none;
     padding-left: 2em;
     line-height: 2.5em;
@@ -759,6 +782,22 @@ td > a > .state-badges {
     text-decoration: underline;
 }
 
+.text {
+    display: block;
+    .text-ellipsis();
+}
+
+.breadcrumb li a {
+    .process-title {
+        margin-top: -2.5em;
+        margin-left: 1.2em;
+    }
+
+    .text {
+        white-space: nowrap;
+    }
+}
+
 #layout.twocols, #layout.layout-minimal, div.compact {
     .breadcrumb {
         font-size: 0.833em;
@@ -767,6 +806,18 @@ td > a > .state-badges {
 
 /** END of breadcrumb **/
 
+.tiles .process-node {
+    justify-content: space-between;
+}
+
+.tiles .monitored-node {
+    padding-bottom: 1.5em;
+
+    > a {
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+}
 
 ul.error, ul.warning {
     padding: 0;
