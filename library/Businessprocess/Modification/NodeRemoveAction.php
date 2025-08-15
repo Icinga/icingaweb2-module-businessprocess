@@ -76,14 +76,15 @@ class NodeRemoveAction extends NodeAction
             if (! $config->hasBpNode($name)) {
                 $config->removeNode($name);
             } else {
-                $oldDisplay = $config->getBpNode($name)->getDisplay();
                 $config->removeNode($name);
-                if ($config->getMetadata()->isManuallyOrdered()) {
-                    foreach ($config->getRootNodes() as $_ => $node) {
-                        $nodeDisplay = $node->getDisplay();
-                        if ($nodeDisplay > $oldDisplay) {
-                            $node->setDisplay($node->getDisplay() - 1);
-                        } elseif ($nodeDisplay === $oldDisplay) {
+
+                if ($config->hasRootNode($name) && $config->getMetadata()->isManuallyOrdered()) {
+                    $removedNodeDisplay = $node->getDisplay();
+                    foreach ($config->getRootNodes() as $rootNode) {
+                        $nodeDisplay = $rootNode->getDisplay();
+                        if ($nodeDisplay > $removedNodeDisplay) {
+                            $rootNode->setDisplay($nodeDisplay - 1);
+                        } elseif ($nodeDisplay === $removedNodeDisplay) {
                             break;  // Stop immediately to not make things worse ;)
                         }
                     }
