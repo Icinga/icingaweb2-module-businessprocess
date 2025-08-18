@@ -3,8 +3,12 @@
 namespace Icinga\Module\Businessprocess\Web;
 
 use Icinga\Application\Icinga;
+use Icinga\Application\Modules\Module;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
+use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
+use Icinga\Module\Businessprocess\State\IcingaDbState;
+use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Businessprocess\Storage\Storage;
 use Icinga\Module\Businessprocess\Web\Component\ActionBar;
@@ -196,7 +200,21 @@ class Controller extends CompatController
             $changes->clear();
             $this->redirectNow($this->url()->without('dismissChanges')->without('unlocked'));
         }
-        $bp->applyChanges($changes);
+
+        if (! $changes->isEmpty()) {
+            if (! $bp->statesApplied()) {
+                if (Module::exists('icingadb') &&
+                    (! $bp->hasBackendName() && IcingadbSupport::useIcingaDbAsBackend())
+                ) {
+                    IcingaDbState::apply($bp);
+                } else {
+                    MonitoringState::apply($bp);
+                }
+            }
+
+            $bp->applyChanges($changes);
+        }
+
         return $bp;
     }
 
