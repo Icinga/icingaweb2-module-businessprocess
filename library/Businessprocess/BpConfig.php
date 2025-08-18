@@ -12,6 +12,8 @@ use Icinga\Exception\NotFoundError;
 use Icinga\Module\Businessprocess\Exception\NestingError;
 use Icinga\Module\Businessprocess\Modification\ProcessChanges;
 use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
+use Icinga\Module\Businessprocess\State\IcingaDbState;
+use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 use ipl\Sql\Connection as IcingaDbConnection;
@@ -177,6 +179,15 @@ class BpConfig
      */
     public function applyChanges(ProcessChanges $changes)
     {
+        if (
+            Module::exists('icingadb')
+            && (! $this->hasBackendName() && IcingadbSupport::useIcingaDbAsBackend())
+        ) {
+            IcingaDbState::apply($this);
+        } else {
+            MonitoringState::apply($this);
+        }
+
         $cnt = 0;
         foreach ($changes->getChanges() as $change) {
             $cnt++;
