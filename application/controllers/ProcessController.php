@@ -94,12 +94,14 @@ class ProcessController extends Controller
         $bp = $this->loadModifiedBpConfig();
         $node = $this->getNode($bp);
 
-        if (Module::exists('icingadb') &&
-            (! $bp->hasBackendName() && IcingadbSupport::useIcingaDbAsBackend())
-        ) {
-            IcingaDbState::apply($bp);
-        } else {
-            MonitoringState::apply($bp);
+        if (! $bp->statesApplied()) {
+            if (Module::exists('icingadb') &&
+                (! $bp->hasBackendName() && IcingadbSupport::useIcingaDbAsBackend())
+            ) {
+                IcingaDbState::apply($bp);
+            } else {
+                MonitoringState::apply($bp);
+            }
         }
 
         $this->handleSimulations($bp);

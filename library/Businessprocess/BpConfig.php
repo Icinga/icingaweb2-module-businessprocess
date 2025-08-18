@@ -133,6 +133,9 @@ class BpConfig
     /** @var bool Whether the config is faulty */
     protected $isFaulty = false;
 
+    /** @var bool Whether the backend states are applied */
+    protected bool $statesApplied = false;
+
     public function __construct()
     {
     }
@@ -149,6 +152,30 @@ class BpConfig
         }
 
         return $this->metadata;
+    }
+
+    /**
+     * Get whether the backend states are applied
+     *
+     * @return bool
+     */
+    public function statesApplied(): bool
+    {
+        return $this->statesApplied;
+    }
+
+    /**
+     * Set whether the backend states are applied
+     *
+     * @param bool $statesApplied
+     *
+     * @return $this
+     */
+    public function setStatesApplied(bool $statesApplied = true): static
+    {
+        $this->statesApplied = $statesApplied;
+
+        return $this;
     }
 
     /**

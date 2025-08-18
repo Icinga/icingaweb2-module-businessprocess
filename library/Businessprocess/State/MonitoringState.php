@@ -107,6 +107,7 @@ class MonitoringState
             }
         }
 
+        $config->setStatesApplied();
         // TODO: Union, single query?
         Benchmark::measure('Got states for business process ' . $config->getName());
 

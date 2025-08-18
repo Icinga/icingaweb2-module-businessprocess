@@ -146,6 +146,8 @@ class IcingaDbState
             Benchmark::measure('Retrieved states for ' . count($hostIds) .  ' hosts in ' . $config->getName());
         }
 
+        $config->setStatesApplied();
+
         Benchmark::measure('Got states for business process ' . $config->getName());
 
         return $this;
