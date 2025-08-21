@@ -1,5 +1,6 @@
 <?php
 
+use Icinga\Application\Config;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Businessprocess\Web\Navigation\Renderer\ProcessProblemsBadge;
 
@@ -13,6 +14,9 @@ $section = $this->menuSection(N_('Business Processes'), array(
 
 try {
     $storage = LegacyStorage::getInstance();
+    $noMenuProcesses = Config::module('businessprocess')
+        ->getSection('general')
+        ->get('no_menu_processes', 5);
 
     $prio = 0;
     foreach ($storage->listProcessNames() as $name) {
@@ -22,7 +26,7 @@ try {
         }
         $prio++;
 
-        if ($prio > 5) {
+        if ($prio > $noMenuProcesses) {
             $section->add(N_('Show all'), array(
                 'url' => 'businessprocess',
                 'priority' => $prio
@@ -57,6 +61,15 @@ $this->providePermission(
 $this->provideRestriction(
     'businessprocess/prefix',
     $this->translate('Restrict access to configurations with the given prefix')
+);
+
+$this->provideConfigTab(
+    'general',
+    [
+        'title' => $this->translate('General'),
+        'label' => $this->translate('General'),
+        'url'   => 'config/general'
+    ]
 );
 
 $this->provideJsFile('vendor/Sortable.js');
