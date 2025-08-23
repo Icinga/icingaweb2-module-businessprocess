@@ -194,6 +194,24 @@
             return !loopDetected;
         },
 
+        /**
+         * Called by Sortable.js while in Tree-View
+         *
+         * See group option on the sortable elements.
+         *
+         * Currently only used when adding a new child using `Business Impact` action in the Host/Service Details view.
+         *
+         * @param to
+         * @param from
+         * @param item
+         * @param event
+         *
+         * @returns boolean
+         */
+        rowPullAllowed: function(to, from, item, event) {
+            return item.classList.contains('new-child');
+        },
+
         fixTileLinksOnDashboard: function($container) {
             if ($container.closest('div.dashboard').length) {
                 $container.find('div.tiles').data('baseTarget', '_next');
