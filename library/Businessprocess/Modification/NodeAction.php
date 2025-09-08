@@ -2,10 +2,10 @@
 
 namespace Icinga\Module\Businessprocess\Modification;
 
+use Icinga\Exception\ProgrammingError;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Exception\ModificationError;
 use Icinga\Module\Businessprocess\Node;
-use Icinga\Exception\ProgrammingError;
 
 /**
  * Abstract NodeAction class
@@ -35,6 +35,8 @@ abstract class NodeAction
      */
     public function __construct($node = null)
     {
+        var_dump($node);
+        die;
         if ($node !== null) {
             $this->nodeName = (string) $node;
         }

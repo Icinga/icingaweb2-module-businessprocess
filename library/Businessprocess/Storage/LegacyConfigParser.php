@@ -354,6 +354,11 @@ class LegacyConfigParser
         $node->setBpConfig($bp);
 
         $cmps = preg_split('~\s*(?<!\\\\)\\' . $op . '\s*~', $value, -1, PREG_SPLIT_NO_EMPTY);
+
+        $cmps = array_map(function ($val) {
+            return preg_replace('~^["\'](.*)["\']$~', '$1', $val);
+        }, $cmps);
+
         foreach ($cmps as $val) {
             $val = preg_replace('~(\\\\([\|\+&\!\%\^]))~', '$2', $val);
             if (preg_match('~(?<!\\\\);~', $val)) {
