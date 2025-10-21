@@ -2,9 +2,6 @@
 
 use PHPUnit\Framework\TestCase;
 
-/**
- * @codingStandardsIgnoreStart
- */
-class PHPUnit_Framework_TestCase extends TestCase
+class PHPUnit_Framework_TestCase extends TestCase // phpcs:ignore
 {
 }

@@ -8,13 +8,11 @@ class SimpleNote extends FormElement
 
     /**
      * Always ignore this element
-     * @codingStandardsIgnoreStart
      *
      * @var boolean
      */
-    protected $_ignore = true;
-    // @codingStandardsIgnoreEnd
-    
+    protected $_ignore = true; // phpcs:ignore
+
     public function isValid($value, $context = null)
     {
         return true;
