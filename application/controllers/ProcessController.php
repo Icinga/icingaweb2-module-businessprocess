@@ -747,7 +747,7 @@ class ProcessController extends Controller
             case 'csv':
                 $csv = fopen('php://temp', 'w');
 
-                fputcsv($csv, ['Path', 'Name', 'State', 'Since', 'In_Downtime']);
+                fputcsv($csv, ['Path', 'Name', 'State', 'Since', 'In_Downtime'], escape: '\\');
 
                 foreach ($node !== null ? $node->toArray(null, true) : $bp->toArray(true) as $node) {
                     $data = [$node['path'], $node['name']];
@@ -764,7 +764,7 @@ class ProcessController extends Controller
                         $data[] = $node['in_downtime'];
                     }
 
-                    fputcsv($csv, $data);
+                    fputcsv($csv, $data, escape: '\\');
                 }
 
                 $response = $this->getResponse();
