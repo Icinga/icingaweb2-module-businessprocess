@@ -112,11 +112,11 @@ class TreeRenderer extends Renderer
 
     /**
      * @param Node $node
-     * @param array $path
-     * @param BpNode $parent
+     * @param ?array $path
+     * @param ?BpNode $parent
      * @return BaseHtmlElement[]
      */
-    public function getNodeIcons(Node $node, array $path = null, BpNode $parent = null)
+    public function getNodeIcons(Node $node, ?array $path = null, ?BpNode $parent = null)
     {
         $icons = [];
         if (empty($path) && $node instanceof BpNode) {

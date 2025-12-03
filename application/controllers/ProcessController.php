@@ -264,7 +264,7 @@ class ProcessController extends Controller
         $bp->applySimulation($simulation);
     }
 
-    protected function loadActionForm(BpConfig $bp, Node $node = null)
+    protected function loadActionForm(BpConfig $bp, ?Node $node = null)
     {
         $action = $this->params->get('action');
         $form = null;
@@ -720,7 +720,7 @@ class ProcessController extends Controller
         return $tabs;
     }
 
-    protected function handleFormatRequest(BpConfig $bp, BpNode $node = null)
+    protected function handleFormatRequest(BpConfig $bp, ?BpNode $node = null)
     {
         $desiredContentType = $this->getRequest()->getHeader('Accept');
         if ($desiredContentType === 'application/json') {

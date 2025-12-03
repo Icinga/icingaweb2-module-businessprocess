@@ -185,7 +185,7 @@ class ProcessCommand extends Command
         }
     }
 
-    protected function renderProblemTree($tree, $useColors = false, $depth = 0, BpNode $parent = null)
+    protected function renderProblemTree($tree, $useColors = false, $depth = 0, ?BpNode $parent = null)
     {
         $output = '';
 

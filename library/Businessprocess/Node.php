@@ -536,12 +536,12 @@ abstract class Node
     /**
      * Export the node to array
      *
-     * @param   array   $parent The node's parent. Used to construct the path to the node
+     * @param   ?array  $parent The node's parent. Used to construct the path to the node
      * @param   bool    $flat   If false, children will be added to the array key children, else the array will be flat
      *
      * @return  array
      */
-    public function toArray(array $parent = null, $flat = false)
+    public function toArray(?array $parent = null, $flat = false)
     {
         $data = [
             'name'  => $this->getAlias(),
