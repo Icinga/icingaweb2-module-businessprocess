@@ -605,7 +605,7 @@ class BpConfig
     public function listInvolvedConfigs(&$configs = null)
     {
         if ($configs === null) {
-            $configs[$this->getName()] = $this;
+            $configs[$this->getName() ?? ''] = $this;
         }
 
         foreach ($this->importedNodes as $node) {

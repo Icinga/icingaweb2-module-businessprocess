@@ -131,8 +131,8 @@ abstract class QuickForm extends QuickBaseForm
         );
 
         $grp = array(
-            $this->submitButtonName,
-            $this->deleteButtonName
+            $this->submitButtonName ?? '',
+            $this->deleteButtonName ?? ''
         );
         $this->addDisplayGroup($grp, 'buttons', array(
             'decorators' => array(
