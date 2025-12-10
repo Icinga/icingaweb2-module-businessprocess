@@ -142,6 +142,7 @@ class BpUploadForm extends BpConfigBaseForm
         /** @var \Zend_Form_Element_File $el */
         $el = $this->getElement('uploaded_file');
         $el->setValueDisabled(true);
+        $el->setAttrib('required', true);
 
         $this->setSubmitLabel(
             $this->translate('Next')
