@@ -78,7 +78,7 @@ class NodeCreateAction extends NodeAction
         }
 
         $parent = $this->getParentName();
-        if ($parent !== null && !$config->hasBpNode($parent)) {
+        if ($parent !== null && ! $config->hasBpNode($parent)) {
             $this->error('Parent process "%s" missing', $parent);
         }
 

@@ -191,7 +191,7 @@ abstract class Renderer extends HtmlDocument
             $this->createBadge($summary, 'PENDING')
         ]);
 
-        if (!empty($elements)) {
+        if (! empty($elements)) {
             $container = Html::tag('ul', ['class' => 'state-badges']);
             $container->add($itemCount);
             foreach ($elements as $element) {

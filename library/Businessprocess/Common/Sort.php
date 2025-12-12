@@ -1,4 +1,5 @@
 <?php
+
 // Icinga Business Process Modelling | (c) 2023 Icinga GmbH | GPLv2
 
 namespace Icinga\Module\Businessprocess\Common;

@@ -82,7 +82,7 @@ abstract class QuickBaseForm extends Zend_Form implements ValidHtml
             $this->setDefault($name, $value);
             $el->setValue($value);
         }
-    
+
         return $this;
     }
 

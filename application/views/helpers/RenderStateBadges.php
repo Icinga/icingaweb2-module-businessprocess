@@ -10,7 +10,8 @@ class Zend_View_Helper_RenderStateBadges extends Zend_View_Helper_Abstract // ph
         $html = '';
 
         foreach ($summary as $state => $cnt) {
-            if ($cnt === 0
+            if (
+                $cnt === 0
                 || $state === 'OK'
                 || $state === 'UP'
             ) {

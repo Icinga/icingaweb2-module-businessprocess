@@ -80,7 +80,7 @@ class IcingaDbObject
 
     public static function applyIcingaDbRestrictions($query)
     {
-        $object = new self;
+        $object = new self();
         $object->applyRestrictions($query);
 
         return $object;
@@ -88,7 +88,7 @@ class IcingaDbObject
 
     public static function fetchDb()
     {
-        $object = new self;
+        $object = new self();
         return $object->getDb();
     }
 }

@@ -15,9 +15,9 @@ use ipl\Sql\Connection as IcingaDbConnection;
 
 class BpConfig
 {
-    const SOFT_STATE = 0;
+    public const SOFT_STATE = 0;
 
-    const HARD_STATE = 1;
+    public const HARD_STATE = 1;
 
     /**
      * Name of the configured monitoring backend
@@ -295,8 +295,10 @@ class BpConfig
     public function getBackend()
     {
         if ($this->backend === null) {
-            if (Module::exists('icingadb')
-                && (! $this->hasBackendName() && IcingadbSupport::useIcingaDbAsBackend())) {
+            if (
+                Module::exists('icingadb')
+                && (! $this->hasBackendName() && IcingadbSupport::useIcingaDbAsBackend())
+            ) {
                 $this->backend = IcingaDbObject::fetchDb();
             } else {
                 $this->backend = MonitoringBackend::instance(

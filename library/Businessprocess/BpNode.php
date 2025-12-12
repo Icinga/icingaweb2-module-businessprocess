@@ -9,11 +9,11 @@ use ipl\Web\Widget\Icon;
 
 class BpNode extends Node
 {
-    const OP_AND = '&';
-    const OP_OR  = '|';
-    const OP_XOR  = '^';
-    const OP_NOT  = '!';
-    const OP_DEGRADED  = '%';
+    public const OP_AND = '&';
+    public const OP_OR  = '|';
+    public const OP_XOR  = '^';
+    public const OP_NOT  = '!';
+    public const OP_DEGRADED  = '%';
 
     protected $operator = '&';
 
@@ -261,7 +261,7 @@ class BpNode extends Node
                 if ($child instanceof MonitoredNode) {
                     $empty = false;
                     break;
-                } elseif (!$child->isEmpty()) {
+                } elseif (! $child->isEmpty()) {
                     $empty = false;
                 }
             }
@@ -561,7 +561,7 @@ class BpNode extends Node
     public function hasChildren($filter = null)
     {
         $childNames = $this->getChildNames();
-        return !empty($childNames);
+        return ! empty($childNames);
     }
 
     public function getChildNames()

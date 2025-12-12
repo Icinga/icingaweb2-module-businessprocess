@@ -35,7 +35,8 @@ trait CustomVarJoinTemplateOverride
         $this->customVars[strtolower($customvar)] = $alias;
 
         if ($type === 'host') {
-            if ($this instanceof ServicecommentQuery
+            if (
+                $this instanceof ServicecommentQuery
                 || $this instanceof ServicedowntimeQuery
                 || $this instanceof ServicecommenthistoryQuery
                 || $this instanceof ServicedowntimestarthistoryQuery

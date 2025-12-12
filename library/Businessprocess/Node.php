@@ -8,21 +8,21 @@ use ipl\Web\Widget\Icon;
 
 abstract class Node
 {
-    const FLAG_DOWNTIME = 1;
-    const FLAG_ACK      = 2;
-    const FLAG_MISSING  = 4;
-    const FLAG_NONE     = 8;
-    const SHIFT_FLAGS   = 4;
+    public const FLAG_DOWNTIME = 1;
+    public const FLAG_ACK      = 2;
+    public const FLAG_MISSING  = 4;
+    public const FLAG_NONE     = 8;
+    public const SHIFT_FLAGS   = 4;
 
-    const ICINGA_OK          = 0;
-    const ICINGA_WARNING     = 1;
-    const ICINGA_CRITICAL    = 2;
-    const ICINGA_UNKNOWN     = 3;
-    const ICINGA_UP          = 0;
-    const ICINGA_DOWN        = 1;
-    const ICINGA_UNREACHABLE = 2;
-    const ICINGA_PENDING     = 99;
-    const NODE_EMPTY         = 128;
+    public const ICINGA_OK          = 0;
+    public const ICINGA_WARNING     = 1;
+    public const ICINGA_CRITICAL    = 2;
+    public const ICINGA_UNKNOWN     = 3;
+    public const ICINGA_UP          = 0;
+    public const ICINGA_DOWN        = 1;
+    public const ICINGA_UNREACHABLE = 2;
+    public const ICINGA_PENDING     = 99;
+    public const NODE_EMPTY         = 128;
 
     /** @var bool Whether to treat acknowledged hosts/services always as UP/OK */
     protected static $ackIsOk = false;

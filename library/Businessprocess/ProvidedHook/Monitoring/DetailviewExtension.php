@@ -69,7 +69,8 @@ class DetailviewExtension extends DetailviewExtensionHook
      */
     public function getHtmlForObject(MonitoredObject $object)
     {
-        if (! isset($this->storage)
+        if (
+            ! isset($this->storage)
             || ! $object instanceof Service
             || $object->check_command !== $this->commandName
         ) {

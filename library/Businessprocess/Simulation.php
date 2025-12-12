@@ -7,7 +7,7 @@ use Icinga\Web\Session\SessionNamespace;
 
 class Simulation
 {
-    const DEFAULT_SESSION_KEY = 'bp-simulations';
+    public const DEFAULT_SESSION_KEY = 'bp-simulations';
 
     /**
      * @var SessionNamespace
