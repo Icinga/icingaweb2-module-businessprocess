@@ -45,7 +45,7 @@ class NodeRemoveAction extends NodeAction
         $name = $this->getNodeName();
         $parent = $this->getParentName();
         if ($parent === null) {
-            if (!$config->hasNode($name)) {
+            if (! $config->hasNode($name)) {
                 $this->error('Toplevel process "%s" not found', $name);
             }
         } else {

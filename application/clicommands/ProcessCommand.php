@@ -136,7 +136,8 @@ class ProcessCommand extends Command
         try {
             /** @var BpNode $node */
             $node = $bp->getNode($nodeName);
-            if (Module::exists('icingadb')
+            if (
+                Module::exists('icingadb')
                 && (! $bp->hasBackendName() && IcingadbSupport::useIcingaDbAsBackend())
             ) {
                 IcingaDbState::apply($bp);

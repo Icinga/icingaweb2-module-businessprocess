@@ -25,7 +25,7 @@ class Breadcrumb extends BaseHtmlElement
     public static function create(Renderer $renderer)
     {
         $bp = $renderer->getBusinessProcess();
-        $breadcrumb = new static;
+        $breadcrumb = new static();
         $bpUrl = $renderer->getBaseUrl();
         if ($bpUrl->getParam('action') === 'delete') {
             $bpUrl->remove('action');

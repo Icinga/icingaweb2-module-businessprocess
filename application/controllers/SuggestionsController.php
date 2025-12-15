@@ -84,7 +84,8 @@ class SuggestionsController extends Controller
                         $search = "@$config:$search";
                     }
 
-                    if (in_array($search, $suggestions->getExcludeTerms(), true)
+                    if (
+                        in_array($search, $suggestions->getExcludeTerms(), true)
                         || isset($ignoreList[$search])
                         || ($forParent
                             ? $forParent->hasChild($search)
@@ -94,7 +95,8 @@ class SuggestionsController extends Controller
                         continue;
                     }
 
-                    if ($suggestions->matchSearch($bpNode->getName())
+                    if (
+                        $suggestions->matchSearch($bpNode->getName())
                         || (! $bpNode->hasAlias() || $suggestions->matchSearch($bpNode->getAlias()))
                         || $bpNode->getName() === $suggestions->getOriginalSearchValue()
                         || $bpNode->getAlias() === $suggestions->getOriginalSearchValue()

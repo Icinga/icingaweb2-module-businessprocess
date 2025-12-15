@@ -107,7 +107,8 @@ class NodeTile extends BaseHtmlElement
             $this->add(new Link($node->getAlias(), $this->getMainNodeUrl($node)->getAbsoluteUrl()));
         }
 
-        if ($this->renderer->rendersSubNode()
+        if (
+            $this->renderer->rendersSubNode()
             && $this->renderer->getParentNode()->getChildState($node) !== $node->getState()
         ) {
             $this->add(
@@ -122,7 +123,7 @@ class NodeTile extends BaseHtmlElement
             );
         }
 
-        if ($node instanceof BpNode && !$renderer->isBreadcrumb()) {
+        if ($node instanceof BpNode && ! $renderer->isBreadcrumb()) {
             $this->add($renderer->renderStateBadges($node->getStateSummary(), $node->countChildren()));
         }
 
@@ -144,7 +145,8 @@ class NodeTile extends BaseHtmlElement
         $url = $this->renderer->getBaseUrl();
 
         $p = $url->getParams();
-        if ($node instanceof ImportedNode
+        if (
+            $node instanceof ImportedNode
             && $this->renderer->getBusinessProcess()->getName() === $node->getBpConfig()->getName()
         ) {
             $p->set('node', $node->getNodeName());
@@ -304,7 +306,8 @@ class NodeTile extends BaseHtmlElement
             ));
         }
 
-        if ($this->renderer->getBusinessProcess()->getMetadata()->canModify()
+        if (
+            $this->renderer->getBusinessProcess()->getMetadata()->canModify()
             && $this->node->getBpConfig()->getName() === $this->renderer->getBusinessProcess()->getName()
             && $this->node->getName() !== '__unbound__'
         ) {

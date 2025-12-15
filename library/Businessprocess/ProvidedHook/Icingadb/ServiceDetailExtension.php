@@ -64,7 +64,8 @@ class ServiceDetailExtension extends ServiceDetailExtensionHook
 
     public function getHtmlForObject(Service $service): ValidHtml
     {
-        if (! isset($this->storage)
+        if (
+            ! isset($this->storage)
             || $service->checkcommand_name !== $this->commandName
         ) {
             return HtmlString::create('');

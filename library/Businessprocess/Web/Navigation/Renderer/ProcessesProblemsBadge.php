@@ -32,7 +32,8 @@ class ProcessesProblemsBadge extends BadgeNavigationItemRenderer
 
                 foreach ($storage->listProcessNames() as $processName) {
                     $bp = $storage->loadProcess($processName);
-                    if (Module::exists('icingadb') &&
+                    if (
+                        Module::exists('icingadb') &&
                         (! $bp->hasBackendName() && IcingadbSupport::useIcingaDbAsBackend())
                     ) {
                         IcingaDbState::apply($bp);
@@ -42,7 +43,8 @@ class ProcessesProblemsBadge extends BadgeNavigationItemRenderer
 
                     foreach ($bp->getRootNodes() as $rootNode) {
                         $nodeState = $rootNode->getState();
-                        if (! $rootNode->isEmpty() &&
+                        if (
+                            ! $rootNode->isEmpty() &&
                             ! in_array($nodeState, [Node::ICINGA_OK, Node::ICINGA_PENDING], true)
                         ) {
                             if ($nodeState === $state) {

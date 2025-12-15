@@ -56,7 +56,7 @@ class ServiceController extends Controller
         } else {
             $hostName = $this->params->get('host');
             $serviceName = $this->params->get('service');
-            
+
             $query = $this->backend->select()
                 ->from('servicestatus', array('service_description'))
                 ->where('host_name', $hostName)

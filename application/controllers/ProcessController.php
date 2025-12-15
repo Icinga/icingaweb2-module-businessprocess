@@ -94,7 +94,8 @@ class ProcessController extends Controller
         $bp = $this->loadModifiedBpConfig();
         $node = $this->getNode($bp);
 
-        if (Module::exists('icingadb') &&
+        if (
+            Module::exists('icingadb') &&
             (! $bp->hasBackendName() && IcingadbSupport::useIcingaDbAsBackend())
         ) {
             IcingaDbState::apply($bp);
@@ -704,7 +705,7 @@ class ProcessController extends Controller
 
         $tabs = $this->tabs()->add('config', array(
             'label' => $this->translate('Process Configuration'),
-            'url'   =>Url::fromPath('businessprocess/process/config', $params)
+            'url'   => Url::fromPath('businessprocess/process/config', $params)
         ));
 
         if ($this->params->get('showDiff')) {
@@ -713,7 +714,7 @@ class ProcessController extends Controller
 
         $tabs->add('source', array(
             'label' => $this->translate('Source'),
-            'url'   =>Url::fromPath('businessprocess/process/source', $params)
+            'url'   => Url::fromPath('businessprocess/process/source', $params)
         ));
 
         return $tabs;

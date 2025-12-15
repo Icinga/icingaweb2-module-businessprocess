@@ -19,7 +19,7 @@ class CsrfToken
 
         list($seed, $token) = explode('|', $token);
 
-        if (!is_numeric($seed)) {
+        if (! is_numeric($seed)) {
             return false;
         }
 

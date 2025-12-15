@@ -18,7 +18,7 @@ use ipl\Web\Widget\StateBall;
 
 class TreeRenderer extends Renderer
 {
-    const NEW_COLLAPSIBLE_IMPLEMENTATION_SINCE = '2.11.2';
+    public const NEW_COLLAPSIBLE_IMPLEMENTATION_SINCE = '2.11.2';
 
     public function assemble()
     {
@@ -229,7 +229,7 @@ class TreeRenderer extends Renderer
         }
 
         $differentConfig = $node->getBpConfig()->getName() !== $this->getBusinessProcess()->getName();
-        if (! $this->isLocked() && !$differentConfig) {
+        if (! $this->isLocked() && ! $differentConfig) {
             $summary->add($this->getActionIcons($bp, $node));
         } elseif ($differentConfig) {
             $summary->add($this->actionIcon(

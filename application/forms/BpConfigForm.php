@@ -204,8 +204,10 @@ class BpConfigForm extends BpConfigBaseForm
         }
         $meta = $config->getMetadata();
         foreach ($this->getValues() as $key => $value) {
-            if (! in_array($key, ['Title', 'Description', 'Backend'], true)
-                && ($value === null || $value === '')) {
+            if (
+                ! in_array($key, ['Title', 'Description', 'Backend'], true)
+                && ($value === null || $value === '')
+            ) {
                 continue;
             }
 

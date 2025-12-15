@@ -15,7 +15,7 @@ class MinOperatorTest extends BaseTestCase
             'a = 1 of: b;c',
             'a = 2 of: b;c + c;d + d;e',
         );
-        $this->getName();
+
         foreach ($expressions as $expression) {
             $this->assertInstanceOf(
                 'Icinga\\Module\\Businessprocess\\BpConfig',

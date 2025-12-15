@@ -1,84 +1,26 @@
-name: PHP Tests
+name: CI
 
 on:
   push:
     branches:
       - main
       - support/*
-      - release/*
   pull_request:
+    branches:
+      - main
 
 jobs:
-  lint:
-    name: Static analysis for php ${{ matrix.php }} on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      fail-fast: false
-      matrix:
-        php: ['8.2', '8.3', '8.4']
-        os: ['ubuntu-latest']
-
-    steps:
-      - name: Checkout code base
-        uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          tools: phpcs
-
-      - name: Setup dependencies
-        run: composer require -n --no-progress overtrue/phplint
-
-      - name: PHP Lint
-        if: ${{ ! cancelled() }}
-        run: ./vendor/bin/phplint -n --exclude={^vendor/.*} -- .
-
-      - name: PHP CodeSniffer
-        if: ${{ ! cancelled() }}
-        run: phpcs
-
-  test:
-    name: Unit tests with php ${{ matrix.php }} on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-
-    env:
-      phpunit-version: 8.5
-
-    strategy:
-      fail-fast: false
-      matrix:
-        php: ['8.2', '8.3', '8.4']
-        os: ['ubuntu-latest']
-
-    steps:
-      - name: Checkout code base
-        uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          tools: phpunit:${{ matrix.phpunit-version || env.phpunit-version }}
-
-      - name: Setup Icinga Web
-        run: |
-          git clone --depth 1 https://github.com/Icinga/icingaweb2.git _icingaweb2
-          ln -s `pwd` _icingaweb2/modules/businessprocess
-
-      - name: Setup Libraries
-        run: |
-          mkdir _libraries
-          git clone --depth 1 -b snapshot/nightly https://github.com/Icinga/icinga-php-library.git _libraries/ipl
-          git clone --depth 1 -b snapshot/nightly https://github.com/Icinga/icinga-php-thirdparty.git _libraries/vendor
-
-      - name: Setup dependencies
-        run: composer require -d _icingaweb2 -n --no-progress mockery/mockery
-
-      - name: PHPUnit
-        env:
-          ICINGAWEB_LIBDIR: _libraries
-          ICINGAWEB_CONFIGDIR: test/config
-        run: phpunit --verbose --bootstrap _icingaweb2/test/php/bootstrap.php
+  php:
+    name: PHP
+    uses: Icinga/github-actions/.github/workflows/php.yml@main
+    with:
+      php-extensions: ldap
+      dependencies: |
+        {
+          "./vendor/icingaweb2-modules/director"  : "https://github.com/Icinga/icingaweb2-module-director.git",
+          "./vendor/icingaweb2-modules/icingadb"  : "https://github.com/Icinga/icingadb-web.git"
+        }
+      env: |
+        {
+          "ICINGAWEB_CONFIGDIR" : "./test/config"
+        }

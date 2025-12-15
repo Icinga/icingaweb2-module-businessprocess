@@ -2,17 +2,16 @@
 
 /**
  * @deprecated
- * @codingStandardsIgnoreStart
  */
-class Zend_View_Helper_RenderStateBadges extends Zend_View_Helper_Abstract
+class Zend_View_Helper_RenderStateBadges extends Zend_View_Helper_Abstract // phpcs:ignore
 {
-    // @codingStandardsIgnoreEnd
     public function renderStateBadges($summary)
     {
         $html = '';
 
         foreach ($summary as $state => $cnt) {
-            if ($cnt === 0
+            if (
+                $cnt === 0
                 || $state === 'OK'
                 || $state === 'UP'
             ) {
@@ -23,7 +22,7 @@ class Zend_View_Helper_RenderStateBadges extends Zend_View_Helper_Abstract
                    . '" title="' . mt('monitoring', $state) . '">'
                    . $cnt . '</span>';
         }
-    
+
         if ($html !== '') {
             $html = '<div class="badges">' . $html . '</div>';
         }
