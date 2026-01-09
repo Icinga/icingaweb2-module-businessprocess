@@ -133,8 +133,9 @@ class BpConfig
     /** @var bool Whether the config is faulty */
     protected $isFaulty = false;
 
-    public function __construct()
+    public function __construct(string $name = 'dummy')
     {
+        $this->setName($name);
     }
 
     /**
@@ -605,7 +606,7 @@ class BpConfig
     public function listInvolvedConfigs(&$configs = null)
     {
         if ($configs === null) {
-            $configs[$this->getName() ?? ''] = $this;
+            $configs[$this->getName()] = $this;
         }
 
         foreach ($this->importedNodes as $node) {
