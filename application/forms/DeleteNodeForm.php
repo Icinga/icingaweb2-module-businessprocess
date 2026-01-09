@@ -84,7 +84,7 @@ class DeleteNodeForm extends BpConfigBaseForm
      * @param BpNode|null $node
      * @return $this
      */
-    public function setParentNode(BpNode $node = null)
+    public function setParentNode(?BpNode $node = null)
     {
         $this->parentNode = $node;
         return $this;

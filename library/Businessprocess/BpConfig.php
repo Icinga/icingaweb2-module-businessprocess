@@ -133,8 +133,9 @@ class BpConfig
     /** @var bool Whether the config is faulty */
     protected $isFaulty = false;
 
-    public function __construct()
+    public function __construct(string $name = 'dummy')
     {
+        $this->setName($name);
     }
 
     /**

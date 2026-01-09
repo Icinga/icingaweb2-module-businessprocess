@@ -69,12 +69,12 @@ class ProcessChanges
     }
 
     /**
-     * @param Node $node
+     * @param ?Node $node
      * @param $properties
      *
      * @return $this
      */
-    public function addChildrenToNode($children, Node $node = null)
+    public function addChildrenToNode($children, ?Node $node = null)
     {
         $action = new NodeAddChildrenAction($node);
         $action->setChildren($children);
@@ -88,7 +88,7 @@ class ProcessChanges
      *
      * @return $this
      */
-    public function createNode($nodeName, $properties, Node $parent = null)
+    public function createNode($nodeName, $properties, ?Node $parent = null)
     {
         $action = new NodeCreateAction($nodeName);
         $action->setProperties($properties);

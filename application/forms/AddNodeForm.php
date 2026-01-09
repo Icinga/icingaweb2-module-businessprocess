@@ -73,7 +73,7 @@ class AddNodeForm extends CompatForm
      *
      * @return $this
      */
-    public function setParentNode(BpNode $node = null): self
+    public function setParentNode(?BpNode $node = null): self
     {
         $this->parent = $node;
 

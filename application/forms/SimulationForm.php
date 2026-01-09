@@ -127,7 +127,7 @@ class SimulationForm extends BpConfigBaseForm
     protected function enumStateNames()
     {
         $states = array(
-            null => sprintf(
+            '' => sprintf(
                 $this->translate('Use current state (%s)'),
                 $this->translate($this->node->getStateName())
             )

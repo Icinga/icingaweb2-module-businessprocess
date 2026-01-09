@@ -264,7 +264,7 @@ class ProcessController extends Controller
         $bp->applySimulation($simulation);
     }
 
-    protected function loadActionForm(BpConfig $bp, Node $node = null)
+    protected function loadActionForm(BpConfig $bp, ?Node $node = null)
     {
         $action = $this->params->get('action');
         $form = null;
@@ -720,7 +720,7 @@ class ProcessController extends Controller
         return $tabs;
     }
 
-    protected function handleFormatRequest(BpConfig $bp, BpNode $node = null)
+    protected function handleFormatRequest(BpConfig $bp, ?BpNode $node = null)
     {
         $desiredContentType = $this->getRequest()->getHeader('Accept');
         if ($desiredContentType === 'application/json') {
@@ -747,7 +747,7 @@ class ProcessController extends Controller
             case 'csv':
                 $csv = fopen('php://temp', 'w');
 
-                fputcsv($csv, ['Path', 'Name', 'State', 'Since', 'In_Downtime']);
+                fputcsv($csv, ['Path', 'Name', 'State', 'Since', 'In_Downtime'], escape: '\\');
 
                 foreach ($node !== null ? $node->toArray(null, true) : $bp->toArray(true) as $node) {
                     $data = [$node['path'], $node['name']];
@@ -764,7 +764,7 @@ class ProcessController extends Controller
                         $data[] = $node['in_downtime'];
                     }
 
-                    fputcsv($csv, $data);
+                    fputcsv($csv, $data, escape: '\\');
                 }
 
                 $response = $this->getResponse();

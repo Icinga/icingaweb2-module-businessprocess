@@ -66,7 +66,7 @@ class BpConfigForm extends BpConfigBaseForm
                     . ' this process should be retrieved from'
                 ),
                 'multiOptions' => array(
-                        null => $this->translate('Use the configured default backend'),
+                        '' => $this->translate('Use the configured default backend'),
                     ) + $this->listAvailableBackends()
             ));
         }

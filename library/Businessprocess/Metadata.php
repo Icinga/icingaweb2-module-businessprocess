@@ -112,7 +112,7 @@ class Metadata
         return Auth::getInstance();
     }
 
-    public function canModify(Auth $auth = null)
+    public function canModify(?Auth $auth = null)
     {
         if ($auth === null) {
             if (Icinga::app()->isCli()) {
@@ -128,7 +128,7 @@ class Metadata
         );
     }
 
-    public function canRead(Auth $auth = null)
+    public function canRead(?Auth $auth = null)
     {
         if ($auth === null) {
             if (Icinga::app()->isCli()) {

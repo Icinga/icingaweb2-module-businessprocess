@@ -47,7 +47,7 @@ abstract class Renderer extends HtmlDocument
      * @param BpConfig $config
      * @param BpNode|null $parent
      */
-    public function __construct(BpConfig $config, BpNode $parent = null)
+    public function __construct(BpConfig $config, ?BpNode $parent = null)
     {
         $this->config = $config;
         $this->parent = $parent;
