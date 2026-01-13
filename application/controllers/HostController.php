@@ -26,12 +26,12 @@ class HostController extends CompatController
 
         if ($host !== null) {
             $this->redirectNow(Url::fromPath('icingadb/host')->setParams($this->params));
+        } else {
+            $this->getTabs()->disableLegacyExtensions();
+
+            $this->view->host = $hostName;
+            $this->view->tabs = null; // compatController already creates tabs
+            $this->addContent(HtmlString::create($this->view->render('ido-host/show.phtml')));
         }
-
-        $this->getTabs()->disableLegacyExtensions();
-
-        $this->view->host = $hostName;
-        $this->view->tabs = null; // compatController already creates tabs
-        $this->addContent(HtmlString::create($this->view->render('ido-host/show.phtml')));
     }
 }

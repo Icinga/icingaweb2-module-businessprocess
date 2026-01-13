@@ -20,9 +20,9 @@ class IdoServiceController extends Controller
         $this->applyRestriction('monitoring/filter/objects', $query);
         if ($query->fetchRow() !== false) {
             $this->redirectNow(Url::fromPath('monitoring/service/show')->setParams($this->params));
+        } else {
+            $this->view->host = $hostName;
+            $this->view->service = $serviceName;
         }
-
-        $this->view->host = $hostName;
-        $this->view->service = $serviceName;
     }
 }

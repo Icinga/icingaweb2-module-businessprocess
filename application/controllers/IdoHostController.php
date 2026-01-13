@@ -18,8 +18,8 @@ class IdoHostController extends Controller
         $this->applyRestriction('monitoring/filter/objects', $query);
         if ($query->fetchRow() !== false) {
             $this->redirectNow(Url::fromPath('monitoring/host/show')->setParams($this->params));
+        } else {
+            $this->view->host = $hostName;
         }
-
-        $this->view->host = $hostName;
     }
 }

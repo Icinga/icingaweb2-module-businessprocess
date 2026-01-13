@@ -31,13 +31,13 @@ class ServiceController extends CompatController
 
         if ($service !== null) {
             $this->redirectNow(Url::fromPath('icingadb/service')->setParams($this->params));
+        } else {
+            $this->getTabs()->disableLegacyExtensions();
+
+            $this->view->host = $hostName;
+            $this->view->service = $serviceName;
+            $this->view->tabs = null; // compatController already creates tabs
+            $this->addContent(HtmlString::create($this->view->render('ido-service/show.phtml')));
         }
-
-        $this->getTabs()->disableLegacyExtensions();
-
-        $this->view->host = $hostName;
-        $this->view->service = $serviceName;
-        $this->view->tabs = null; // compatController already creates tabs
-        $this->addContent(HtmlString::create($this->view->render('ido-service/show.phtml')));
     }
 }
