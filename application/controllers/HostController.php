@@ -2,65 +2,36 @@
 
 namespace Icinga\Module\Businessprocess\Controllers;
 
-use Icinga\Application\Modules\Module;
 use Icinga\Module\Businessprocess\IcingaDbObject;
-use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
 use Icinga\Module\Icingadb\Model\Host;
-use Icinga\Module\Monitoring\Controller;
-use Icinga\Module\Monitoring\DataView\DataView;
 use Icinga\Web\Url;
+use ipl\Html\HtmlString;
 use ipl\Stdlib\Filter;
+use ipl\Web\Compat\CompatController;
 
-class HostController extends Controller
+class HostController extends CompatController
 {
-    /**
-     * True if business process prefers to use icingadb as backend for it's nodes
-     *
-     * @var bool
-     */
-    protected $isIcingadbPreferred;
-
-    protected function moduleInit()
+    public function showAction(): void
     {
-        $this->isIcingadbPreferred = Module::exists('icingadb')
-            && ! $this->params->has('backend')
-            && IcingadbSupport::useIcingaDbAsBackend();
+        $hostName = $this->params->shift('host');
 
-        if (! $this->isIcingadbPreferred) {
-            parent::moduleInit();
-        }
-    }
+        $query = Host::on(IcingaDbObject::fetchDb());
+        IcingaDbObject::applyIcingaDbRestrictions($query);
 
-    public function showAction()
-    {
-        if ($this->isIcingadbPreferred) {
-            $hostName = $this->params->shift('host');
+        $query->filter(Filter::equal('host.name', $hostName));
 
-            $query = Host::on(IcingaDbObject::fetchDb());
-            IcingaDbObject::applyIcingaDbRestrictions($query);
+        $host = $query->first();
 
-            $query->filter(Filter::equal('host.name', $hostName));
+        $this->params->add('name', $hostName);
 
-            $host = $query->first();
-
-            $this->params->add('name', $hostName);
-
-            if ($host !== null) {
-                $this->redirectNow(Url::fromPath('icingadb/host')->setParams($this->params));
-            }
+        if ($host !== null) {
+            $this->redirectNow(Url::fromPath('icingadb/host')->setParams($this->params));
         } else {
-            $hostName = $this->params->get('host');
+            $this->getTabs()->disableLegacyExtensions();
 
-            $query = $this->backend->select()
-                ->from('hoststatus', array('host_name'))
-                ->where('host_name', $hostName);
-
-            $this->applyRestriction('monitoring/filter/objects', $query);
-            if ($query->fetchRow() !== false) {
-                $this->redirectNow(Url::fromPath('monitoring/host/show')->setParams($this->params));
-            }
+            $this->view->host = $hostName;
+            $this->view->tabs = null; // compatController already creates tabs
+            $this->addContent(HtmlString::create($this->view->render('ido-host/show.phtml')));
         }
-
-        $this->view->host = $hostName;
     }
 }
