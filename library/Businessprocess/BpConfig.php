@@ -158,6 +158,23 @@ class BpConfig
     }
 
     /**
+     * Apply database states
+     *
+     * @return void
+     */
+    public function applyDbStates(): void
+    {
+        if (
+            Module::exists('icingadb')
+            && (! $this->hasBackendName() && IcingadbSupport::useIcingaDbAsBackend())
+        ) {
+            IcingaDbState::apply($this);
+        } else {
+            MonitoringState::apply($this);
+        }
+    }
+
+    /**
      * Set metadata
      *
      * @param Metadata $metadata
@@ -179,14 +196,7 @@ class BpConfig
      */
     public function applyChanges(ProcessChanges $changes)
     {
-        if (
-            Module::exists('icingadb')
-            && (! $this->hasBackendName() && IcingadbSupport::useIcingaDbAsBackend())
-        ) {
-            IcingaDbState::apply($this);
-        } else {
-            MonitoringState::apply($this);
-        }
+        $this->applyDbStates();
 
         $cnt = 0;
         foreach ($changes->getChanges() as $change) {

@@ -8,9 +8,6 @@ namespace Icinga\Module\Businessprocess\Web\Form\Validator;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\ServiceNode;
-use Icinga\Module\Businessprocess\State\IcingaDbState;
-use Icinga\Module\Businessprocess\State\MonitoringState;
-use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 use ipl\I18n\Translation;
 use ipl\Validator\BaseValidator;
 use ipl\Web\FormElement\TermInput\Term;
@@ -72,11 +69,7 @@ class HostServiceTermValidator extends BaseValidator
             }
         }
 
-        if ($testConfig->getBackend() instanceof MonitoringBackend) {
-            MonitoringState::apply($testConfig);
-        } else {
-            IcingaDbState::apply($testConfig);
-        }
+        $testConfig->applyDbStates();
 
         foreach ($terms as $term) {
             /** @var Term $term */

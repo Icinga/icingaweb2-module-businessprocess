@@ -6,11 +6,7 @@
 namespace Icinga\Module\Businessprocess\Web\Navigation\Renderer;
 
 use Icinga\Application\Logger;
-use Icinga\Application\Modules\Module;
 use Icinga\Module\Businessprocess\Node;
-use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
-use Icinga\Module\Businessprocess\State\IcingaDbState;
-use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Web\Navigation\Renderer\BadgeNavigationItemRenderer;
 use Throwable;
@@ -35,14 +31,7 @@ class ProcessesProblemsBadge extends BadgeNavigationItemRenderer
 
                 foreach ($storage->listProcessNames() as $processName) {
                     $bp = $storage->loadProcess($processName);
-                    if (
-                        Module::exists('icingadb') &&
-                        (! $bp->hasBackendName() && IcingadbSupport::useIcingaDbAsBackend())
-                    ) {
-                        IcingaDbState::apply($bp);
-                    } else {
-                        MonitoringState::apply($bp);
-                    }
+                    $bp->applyDbStates();
 
                     foreach ($bp->getRootNodes() as $rootNode) {
                         $nodeState = $rootNode->getState();
