@@ -55,8 +55,8 @@ calculating the state of a Business Process definition.
 
 ### Add to menu
 
-Business Process configurations can be linked to the Icinga Web 2 menu. Only the
-first five configurations a user is allowed to see will be shown there:
+Business Process configurations can be linked to the Icinga Web menu. By default, the
+first five items are shown. This can be adjusted in the module's general configuration.
 
 ![Add to menu](screenshot/03_getting-started/0208_create-new_add-to-menu.png)
 
