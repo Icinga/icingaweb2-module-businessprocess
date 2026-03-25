@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2018 Icinga GmbH <https://icinga.com>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+use Icinga\Application\Config;
+use Icinga\Module\Businessprocess\Forms\GeneralConfigForm;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 use Icinga\Module\Businessprocess\Web\Navigation\Renderer\ProcessProblemsBadge;
 
@@ -16,30 +18,35 @@ $section = $this->menuSection(N_('Business Processes'), array(
 
 try {
     $storage = LegacyStorage::getInstance();
+    $maxMenuProcesses = Config::module('businessprocess')
+        ->getSection('general')
+        ->get('max_menu_processes', GeneralConfigForm::MAX_MENU_PROCESSES);
 
-    $prio = 0;
-    foreach ($storage->listProcessNames() as $name) {
-        $meta = $storage->loadMetadata($name);
-        if ($meta->get('AddToMenu') === 'no') {
-            continue;
-        }
-        $prio++;
+    if ($maxMenuProcesses > 0) {
+        $prio = 0;
+        foreach ($storage->listProcessNames() as $name) {
+            $meta = $storage->loadMetadata($name);
+            if ($meta->get('AddToMenu') === 'no') {
+                continue;
+            }
+            $prio++;
 
-        if ($prio > 5) {
-            $section->add(N_('Show all'), array(
-                'url' => 'businessprocess',
+            if ($prio > $maxMenuProcesses) {
+                $section->add(N_('Show all'), array(
+                    'url' => 'businessprocess',
+                    'priority' => $prio
+                ));
+
+                break;
+            }
+
+            $section->add($meta->getTitle(), array(
+                'renderer' => (new ProcessProblemsBadge())->setBpConfigName($name),
+                'url' => 'businessprocess/process/show',
+                'urlParameters' => array('config' => $name),
                 'priority' => $prio
             ));
-
-            break;
         }
-
-        $section->add($meta->getTitle(), array(
-            'renderer' => (new ProcessProblemsBadge())->setBpConfigName($name),
-            'url' => 'businessprocess/process/show',
-            'urlParameters' => array('config' => $name),
-            'priority' => $prio
-        ));
     }
 } catch (Exception $e) {
     // Well... there is not much we could do here
@@ -60,6 +67,15 @@ $this->providePermission(
 $this->provideRestriction(
     'businessprocess/prefix',
     $this->translate('Restrict access to configurations with the given prefix')
+);
+
+$this->provideConfigTab(
+    'general',
+    [
+        'title' => $this->translate('General'),
+        'label' => $this->translate('General'),
+        'url'   => 'config/general'
+    ]
 );
 
 $this->provideJsFile('vendor/Sortable.js');
