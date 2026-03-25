@@ -6,12 +6,7 @@
 namespace Icinga\Module\Businessprocess\Web\Component;
 
 use Exception;
-use Icinga\Application\Modules\Module;
-use Icinga\Authentication\Auth;
 use Icinga\Module\Businessprocess\BpConfig;
-use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
-use Icinga\Module\Businessprocess\State\IcingaDbState;
-use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Storage\Storage;
 use ipl\Html\BaseHtmlElement;
 use ipl\Html\Html;
@@ -69,14 +64,7 @@ class DashboardFullscreen extends BaseHtmlElement
                 continue;
             }
 
-            if (
-                Module::exists('icingadb') &&
-                (! $bp->hasBackendName() && IcingadbSupport::useIcingaDbAsBackend())
-            ) {
-                IcingaDbState::apply($bp);
-            } else {
-                MonitoringState::apply($bp);
-            }
+            $bp->applyDbStates();
 
             $this->add(new BpDashboardFullscreenTile(
                 $bp,

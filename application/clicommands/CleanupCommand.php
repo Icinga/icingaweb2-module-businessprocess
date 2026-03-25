@@ -7,12 +7,8 @@ namespace Icinga\Module\Businessprocess\Clicommands;
 
 use Exception;
 use Icinga\Application\Logger;
-use Icinga\Application\Modules\Module;
 use Icinga\Cli\Command;
 use Icinga\Module\Businessprocess\Modification\NodeRemoveAction;
-use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
-use Icinga\Module\Businessprocess\State\IcingaDbState;
-use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 
 class CleanupCommand extends Command
@@ -62,14 +58,7 @@ class CleanupCommand extends Command
                 continue;
             }
 
-            if (
-                Module::exists('icingadb')
-                && (! $bp->hasBackendName() && IcingadbSupport::useIcingaDbAsBackend())
-            ) {
-                IcingaDbState::apply($bp);
-            } else {
-                MonitoringState::apply($bp);
-            }
+            $bp->applyDbStates();
 
             $removedNodes = [];
             foreach (array_keys($bp->getMissingChildren()) as $missingNode) {

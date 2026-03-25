@@ -7,16 +7,12 @@ namespace Icinga\Module\Businessprocess\Clicommands;
 
 use Exception;
 use Icinga\Application\Logger;
-use Icinga\Application\Modules\Module;
 use Icinga\Cli\Command;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\BpNode;
 use Icinga\Module\Businessprocess\HostNode;
 use Icinga\Module\Businessprocess\Node;
-use Icinga\Module\Businessprocess\ProvidedHook\Icingadb\IcingadbSupport;
 use Icinga\Module\Businessprocess\ServiceNode;
-use Icinga\Module\Businessprocess\State\IcingaDbState;
-use Icinga\Module\Businessprocess\State\MonitoringState;
 use Icinga\Module\Businessprocess\Storage\LegacyStorage;
 
 class ProcessCommand extends Command
@@ -139,14 +135,7 @@ class ProcessCommand extends Command
         try {
             /** @var BpNode $node */
             $node = $bp->getNode($nodeName);
-            if (
-                Module::exists('icingadb')
-                && (! $bp->hasBackendName() && IcingadbSupport::useIcingaDbAsBackend())
-            ) {
-                IcingaDbState::apply($bp);
-            } else {
-                MonitoringState::apply($bp);
-            }
+            $bp->applyDbStates();
 
             if ($bp->hasErrors()) {
                 Logger::error("Checking Business Process '%s' failed: %s\n", $name, $bp->getErrors());

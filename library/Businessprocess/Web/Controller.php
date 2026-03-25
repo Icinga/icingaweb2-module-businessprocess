@@ -199,7 +199,11 @@ class Controller extends CompatController
             $changes->clear();
             $this->redirectNow($this->url()->without('dismissChanges')->without('unlocked'));
         }
-        $bp->applyChanges($changes);
+
+        if (! $changes->isEmpty()) {
+            $bp->applyChanges($changes);
+        }
+
         return $bp;
     }
 
