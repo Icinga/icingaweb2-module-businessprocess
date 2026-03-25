@@ -126,7 +126,12 @@ class EditNodeForm extends CompatForm
             $node = $this->bp->getNode($nodeName);
         } elseif ($userInput && (! $nodeLabel || $userInput !== $nodeLabel)) {
             // User didn't choose a suggestion or changed it manually
-            $node = $this->bp->getNode(BpConfig::joinNodeName($userInput, 'Hoststatus'));
+            if ($this->node instanceof ServiceNode) {
+                [$service, $host] = explode(' on ', $userInput, 2);
+                $node = $this->bp->createService($host, $service);
+            } else {
+                $node = $this->bp->createHost($userInput);
+            }
         } else {
             // If the search and user input are both empty, it can only be the initial value
             $node = $this->node;
