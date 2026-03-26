@@ -6,10 +6,10 @@ Make sure you use `businessprocess` as the module name. The following requiremen
 
 ## Requirements
 
-* PHP (≥7.2)
-* [Icinga Web](https://github.com/Icinga/icingaweb2) (≥2.9)
-* [Icinga DB Web](https://github.com/Icinga/icingadb-web) (≥1.0)
-* [Icinga PHP Library (ipl)](https://github.com/Icinga/icinga-php-library) (≥0.15.0)
-* [Icinga PHP Thirdparty](https://github.com/Icinga/icinga-php-thirdparty) (≥0.12.0)
+* PHP ≥ 8.2
+* [Icinga Web](https://github.com/Icinga/icingaweb2) ≥ 2.12.5
+* [Icinga DB Web](https://github.com/Icinga/icingadb-web) ≥ 1.1.0
+* [Icinga PHP Library (ipl)](https://github.com/Icinga/icinga-php-library) ≥ 0.19.0
+* [Icinga PHP Thirdparty](https://github.com/Icinga/icinga-php-thirdparty) ≥ 0.15.0
 
 <!-- {% include "02-Installation.md" %} -->

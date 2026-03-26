@@ -1,8 +1,5 @@
 # Icinga Business Process Modeling
 
-[![Build Status](https://github.com/Icinga/icingaweb2-module-businessprocess/actions/workflows/php.yml/badge.svg)](https://github.com/Icinga/icingaweb2-module-businessprocess/actions/workflows/php.yml)
-[![Github Tag](https://img.shields.io/github/tag/Icinga/icingaweb2-module-businessprocess.svg)](https://github.com/Icinga/icingaweb2-module-businessprocess/releases/latest)
-
 ![Icinga Logo](https://icinga.com/wp-content/uploads/2014/06/icinga_logo.png)
 
 If you want to visualize and monitor hierarchical business processes based on
