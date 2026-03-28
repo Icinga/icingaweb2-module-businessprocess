@@ -10,7 +10,9 @@ use Icinga\Authentication\Auth;
 use Icinga\Module\Businessprocess\BpConfig;
 use Icinga\Module\Businessprocess\Storage\Storage;
 use ipl\Html\BaseHtmlElement;
+use ipl\Html\FormattedString;
 use ipl\Html\Html;
+use ipl\Html\HtmlElement;
 
 class Dashboard extends BaseHtmlElement
 {
