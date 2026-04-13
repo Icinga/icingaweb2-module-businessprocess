@@ -19,6 +19,7 @@ use Icinga\Module\Businessprocess\ServiceNode;
 use Icinga\Module\Businessprocess\Web\Controller;
 use Icinga\Module\Icingadb\Model\Host;
 use Icinga\Module\Icingadb\Model\Service;
+use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 use ipl\Stdlib\Filter;
 use ipl\Web\FormElement\TermInput\TermSuggestions;
 
@@ -139,13 +140,13 @@ class SuggestionsController extends Controller
             }
         }
 
-        $suggestions = new TermSuggestions((function () use ($forConfig, $excludes, &$suggestions) {
+        $suggestions = new TermSuggestions((function () use ($excludes, &$suggestions) {
             foreach ($suggestions->getExcludeTerms() as $excludeTerm) {
                 [$hostName, $_] = BpConfig::splitNodeName($excludeTerm);
                 $excludes->add(Filter::equal('host.name', $hostName));
             }
 
-            $hosts = Host::on($forConfig->getBackend())
+            $hosts = Host::on(IcingaDbObject::fetchDb())
                 ->columns(['host.name', 'host.display_name'])
                 ->limit(50);
             IcingaDbObject::applyIcingaDbRestrictions($hosts);
@@ -200,7 +201,7 @@ class SuggestionsController extends Controller
             }
         }
 
-        $suggestions = new TermSuggestions((function () use ($forConfig, $excludes, &$suggestions) {
+        $suggestions = new TermSuggestions((function () use ($excludes, &$suggestions) {
             foreach ($suggestions->getExcludeTerms() as $excludeTerm) {
                 [$hostName, $serviceName] = BpConfig::splitNodeName($excludeTerm);
                 if ($serviceName !== null && $serviceName !== 'Hoststatus') {
@@ -211,7 +212,7 @@ class SuggestionsController extends Controller
                 }
             }
 
-            $services = Service::on($forConfig->getBackend())
+            $services = Service::on(IcingaDbObject::fetchDb())
                 ->columns(['host.name', 'host.display_name', 'service.name', 'service.display_name'])
                 ->limit(50);
             IcingaDbObject::applyIcingaDbRestrictions($services);
@@ -273,7 +274,10 @@ class SuggestionsController extends Controller
                 $excludes->addFilter(LegacyFilter::where('host_name', $hostName));
             }
 
-            $hosts = (new HostStatus($forConfig->getBackend()->select(), ['host_name', 'host_display_name']))
+            $hosts = (new HostStatus(MonitoringBackend::instance($forConfig->getBackendName())->select(), [
+                'host_name',
+                'host_display_name'
+            ]))
                 ->limit(50)
                 ->applyFilter(MonitoringRestrictions::getRestriction('monitoring/filter/objects'))
                 ->applyFilter(LegacyFilter::matchAny(
@@ -336,7 +340,7 @@ class SuggestionsController extends Controller
                 }
             }
 
-            $services = (new ServiceStatus($forConfig->getBackend()->select(), [
+            $services = (new ServiceStatus(MonitoringBackend::instance($forConfig->getBackendName())->select(), [
                 'host_name',
                 'host_display_name',
                 'service_description',
