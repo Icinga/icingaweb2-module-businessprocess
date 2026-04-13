@@ -23,7 +23,7 @@ class MonitoringState
     private function __construct(BpConfig $config)
     {
         $this->config = $config;
-        $this->backend = $config->getBackend();
+        $this->backend = MonitoringBackend::instance($config->getBackendName());
     }
 
     public static function apply(BpConfig $config)
