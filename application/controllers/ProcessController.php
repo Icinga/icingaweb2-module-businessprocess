@@ -199,6 +199,9 @@ class ProcessController extends Controller
 
         if (! ($this->showFullscreen || $this->view->compact)) {
             $controls->addHtml($this->createBpSortControl($renderer, $bp));
+        } else {
+            // No control to apply it, and without one the nodes are not even in the default order
+            $renderer->setSort($this->params->shift('sort') ?: $renderer->getDefaultSort());
         }
     }
 
