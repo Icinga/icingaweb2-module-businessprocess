@@ -190,7 +190,9 @@ class ProcessController extends Controller
             $controls->getAttributes()->add('class', 'separated');
         }
 
-        $controls->add(Breadcrumb::create(clone $renderer));
+        if (! ($this->view->compact && $this->params->shift('hideBreadcrumb'))) {
+            $controls->add(Breadcrumb::create(clone $renderer));
+        }
         if (! $this->showFullscreen && ! $this->view->compact) {
             $controls->add(
                 new RenderedProcessActionBar($bp, $renderer, $this->url())
