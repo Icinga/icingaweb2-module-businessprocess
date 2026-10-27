@@ -13,6 +13,23 @@ use ipl\Web\Widget\EmptyStateBar;
 
 class TileRenderer extends Renderer
 {
+    /** @var ?int One of seven steps of how large the tiles are, null for the stylesheet's own */
+    protected $size;
+
+    /**
+     * Set how large the tiles are, from 1 (smallest) to 7 (largest)
+     *
+     * Only a class is written, `tile-size-<n>`: what a step means is the embedding page's to give, as the tiles'
+     * own stylesheet knows only a float of fixed width. The dashboards module is the one that does, as a share of
+     * its own width.
+     */
+    public function setSize(?int $size): self
+    {
+        $this->size = $size;
+
+        return $this;
+    }
+
     public function assemble()
     {
         if (empty($this->getChildNodes())) {
@@ -25,7 +42,12 @@ class TileRenderer extends Renderer
         $nodesDiv = Html::tag(
             'div',
             [
-                'class'                         => ['sortable', 'tiles', $this->howMany()],
+                'class'                         => array_filter([
+                    'sortable',
+                    'tiles',
+                    $this->howMany(),
+                    $this->size ? 'tile-size-' . $this->size : null
+                ]),
                 'data-base-target'              => '_self',
                 'data-sortable-disabled'        => $this->isLocked() || $this->appliesCustomSorting()
                     ? 'true'

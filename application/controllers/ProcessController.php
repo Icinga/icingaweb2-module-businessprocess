@@ -223,6 +223,11 @@ class ProcessController extends Controller
                 $renderer = new TreeRenderer($bp, $node);
             } else {
                 $renderer = new TileRenderer($bp, $node);
+
+                $size = (int) $this->params->get('tileSize');
+                if ($this->view->compact && $size >= 1 && $size <= 7) {
+                    $renderer->setSize($size);
+                }
             }
             $renderer->setUrl($this->url())
                 ->setPath($this->params->getValues('path'));
