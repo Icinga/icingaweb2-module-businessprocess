@@ -12,6 +12,11 @@ $this->provideHook('icingadb/HostActions');
 $this->provideHook('icingadb/ServiceActions');
 $this->provideHook('icingadb/icingadbSupport');
 $this->provideHook('icingadb/ServiceDetailExtension');
+
+if ($this::exists('dashboards')) {
+    $this->provideHook('Dashboards/Dashlet', 'Dashboards/ProcessView');
+}
+
 //$this->provideHook('director/shipConfigFiles');
 
 if (! static::exists('icingadb') || ! IcingadbSupport::useIcingaDbAsBackend()) {
