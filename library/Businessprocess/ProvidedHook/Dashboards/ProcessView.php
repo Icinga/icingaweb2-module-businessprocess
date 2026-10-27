@@ -27,6 +27,12 @@ class ProcessView extends DashletHook
 {
     private const ROUTE = 'businessprocess/process/show';
 
+    private const MIN_SIZE = 1;
+
+    private const MAX_SIZE = 7;
+
+    private const DEFAULT_SIZE = 4;
+
     /** @var array<string, ?BpConfig> Parsed once per request: `configure()` is called per render */
     private $processes = [];
 
@@ -92,6 +98,18 @@ class ProcessView extends DashletHook
             'tree' => $this->translateInDomain('businessprocess', 'Tree'),
         ], 'tile', 'mode');
 
+        // Ignored in the tree
+        $controls->addElement('input', 'tile_size', [
+            'label'    => $this->translateInDomain('businessprocess', 'Tile Size'),
+            'type'     => 'range',
+            'min'      => self::MIN_SIZE,
+            'max'      => self::MAX_SIZE,
+            'step'     => 1,
+            'value'    => (string) self::DEFAULT_SIZE,
+            'minLabel' => $this->translateInDomain('businessprocess', 'Small'),
+            'maxLabel' => $this->translateInDomain('businessprocess', 'Large'),
+        ]);
+
         $sort = [
             'display_name asc' => $this->translateInDomain('businessprocess', 'Name'),
             'state desc'       => $this->translateInDomain('businessprocess', 'State'),
@@ -129,6 +147,12 @@ class ProcessView extends DashletHook
 
         $url = Url::fromPath(self::ROUTE, ['config' => $config]);
 
+        $size = (int) ($settings['tile_size'] ?? self::DEFAULT_SIZE);
+
+        if ($size >= self::MIN_SIZE && $size <= self::MAX_SIZE) {
+            $url->setParam('tileSize', $size);
+        }
+
         if (($settings['breadcrumb'] ?? 'y') === 'n') {
             $url->setParam('hideBreadcrumb', true);
         }
@@ -154,6 +178,7 @@ class ProcessView extends DashletHook
         $node = $url->shift('node');
         $path = $url->getParams()->getValues('path');
         $hideBreadcrumb = $url->shift('hideBreadcrumb');
+        $size = (int) $url->shift('tileSize');
 
         $url->remove('path');
 
@@ -166,6 +191,10 @@ class ProcessView extends DashletHook
 
         if ($hideBreadcrumb) {
             $claim['breadcrumb'] = 'n';
+        }
+
+        if ($size >= self::MIN_SIZE && $size <= self::MAX_SIZE) {
+            $claim['tile_size'] = (string) $size;
         }
 
         foreach ($chain as $i => $name) {
